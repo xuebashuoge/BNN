@@ -1,0 +1,26 @@
+{
+    "ERM": {
+        "Train Risk (ERM)": 0.48174726963043213,
+        "Test Risk (Pop Risk)": 0.6289253115653992,
+        "Empirical Gen Error (Delta)": 0.14717804193496709,
+        "Theoretical Bound (RHS)": 3.1065499782562256,
+        "Train Acc": 0.7568749785423279,
+        "Test Acc": 0.6941499876976013
+    },
+    "PAC": {
+        "Train Risk (ERM)": 0.49609288573265076,
+        "Test Risk (Pop Risk)": 0.6760506451129913,
+        "Empirical Gen Error (Delta)": 0.17995775938034053,
+        "Theoretical Bound (RHS)": 2.093642473220825,
+        "Train Acc": 0.7562499642372131,
+        "Test Acc": 0.6817999911308289
+    },
+    "BOUND": {
+        "Train Risk (ERM)": 0.5814688205718994,
+        "Test Risk (Pop Risk)": 0.8712949895858765,
+        "Empirical Gen Error (Delta)": 0.28982616901397706,
+        "Theoretical Bound (RHS)": 1.725142478942871,
+        "Train Acc": 0.7012499570846558,
+        "Test Acc": 0.619799987077713
+    }
+}

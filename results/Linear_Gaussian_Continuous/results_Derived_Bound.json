@@ -1,0 +1,12 @@
+{
+    "objective": "Derived_Bound",
+    "population_risk": 1.4286123543977738,
+    "empirical_risk": 1.4490002274513245,
+    "total_upper_bound": 8.109129984205302,
+    "components": {
+        "empirical_risk": 1.4490002274513245,
+        "channel_penalty_term": 3.8042338426381854,
+        "kl_complexity_term": 2.8249087407153364,
+        "variance_term": 0.030987173400454225
+    }
+}

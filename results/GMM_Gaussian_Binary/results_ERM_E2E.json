@@ -1,0 +1,10 @@
+{
+    "objective": "ERM_E2E",
+    "population_risk": 0.09489465061575174,
+    "total_upper_bound": 0.4442512833499908,
+    "components": {
+        "empirical_risk": 0.09710237383842468,
+        "channel_penalty_term": 0.3454037070274353,
+        "kl_complexity_term": 0.0017452024841308593
+    }
+}

@@ -1,0 +1,46 @@
+{
+  "scenario": "proposed",
+  "mode": "train",
+  "objective": "bound",
+  "n_samples": 800,
+  "seed": 2,
+  "dataset": {
+    "name": "make_moons",
+    "noise": 0.3
+  },
+  "model": {
+    "type": "VectorizedBNNEnsemble",
+    "k_ensemble": 10,
+    "in_dim": 2,
+    "hid_dim": 64,
+    "out_dim": 2
+  },
+  "training": {
+    "batch_size": 64,
+    "epochs": 150,
+    "lr": 0.01,
+    "lr_decay_step": 0,
+    "lr_decay_gamma": 0.5,
+    "prior_lambda": 1.0,
+    "epsilon": 0.025,
+    "sigma_sq": 1.0,
+    "sigma_0_sq": 1.0,
+    "reg_coeff": 0.06,
+    "reg_alpha": null,
+    "reg_beta": null,
+    "mi_mc_samples": 10,
+    "lipschitz_method_perfect": null
+  },
+  "channel_train": {
+    "mu_m": 0.5,
+    "std_m": 1.0,
+    "mu_b": 0.0,
+    "std_b": 1.0
+  },
+  "channel_test": {
+    "mu_m": 0.5,
+    "std_m": 1.0,
+    "mu_b": 0.0,
+    "std_b": 1.0
+  }
+}

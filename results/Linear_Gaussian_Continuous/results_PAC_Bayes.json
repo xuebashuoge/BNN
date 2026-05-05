@@ -1,0 +1,12 @@
+{
+    "objective": "PAC_Bayes",
+    "population_risk": 5.71922204643488,
+    "empirical_risk": 0.10651260036975145,
+    "total_upper_bound": 2385.397367040761,
+    "components": {
+        "empirical_risk": 0.10651260036975145,
+        "channel_penalty_term": 2384.645480360019,
+        "kl_complexity_term": 0.6241905354760168,
+        "variance_term": 0.021183544896528034
+    }
+}
