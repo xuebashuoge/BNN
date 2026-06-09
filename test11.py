@@ -10,12 +10,13 @@ from torch.utils.data import TensorDataset, DataLoader
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
-# ERM using deterministic / proposed using new results Theorem 4 (given S)
+
+# ERM using deterministic / proposed using new results Theorem 4 (given S), revise the sweeping
 
 # ==========================================
 # 0. OUTPUT PATHS
 # ==========================================
-RESULTS_DIR = os.path.join('results', 'test10')
+RESULTS_DIR = os.path.join('results', 'test11')
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # ==========================================
@@ -52,8 +53,7 @@ MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting esti
 SEED = 5
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
-# Sweep configuration
-SEEDS = [1, 2, 3, 4, 5]
+
 
 # Channel Distributions (Inference/Test) - HARSH REALITY
 # ERM's fragile boundaries will fail here. Bayesian smoothing should win.
@@ -899,15 +899,18 @@ def train_scenario(
     lipschitz_method_perfect = LIPSCHITZ_METHOD_PERFECT if lipschitz_method_perfect is None else lipschitz_method_perfect
     if lipschitz_method_perfect not in {"grad", "analytical"}:
         raise ValueError("lipschitz_method_perfect must be 'grad' or 'analytical'.")
-    if run_dir is None:
+    if run_dir is None and use_cache:
         run_dir = get_run_dir(
             scenario_name, mode, objective,
             n_samples, seed, mi_mc_samples, lipschitz_method_perfect,
             lr=lr, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
         )
+    else:
+        run_dir = run_dir or "temp_run"
 
     weights_path = os.path.join(run_dir, "weights.pth")
+
     if use_cache and os.path.exists(weights_path):
         print(f"Loading existing weights: {weights_path}")
         model.load_state_dict(torch.load(weights_path, map_location=device))
@@ -1141,19 +1144,19 @@ def train_scenario(
 
     if use_cache:
         torch.save(model.state_dict(), weights_path)
-    plot_training_metrics(history, scenario_name, mode, objective, run_dir)
-    plot_bound_decomposition(history, scenario_name, mode, objective, run_dir)
-    save_training_history(
-        run_dir,
-        scenario_name,
-        mode,
-        objective,
-        history,
-        lr,
-        alpha_coeff,
-        beta_coeff,
-        gamma_coeff,
-    )
+        plot_training_metrics(history, scenario_name, mode, objective, run_dir)
+        plot_bound_decomposition(history, scenario_name, mode, objective, run_dir)
+        save_training_history(
+            run_dir,
+            scenario_name,
+            mode,
+            objective,
+            history,
+            lr,
+            alpha_coeff,
+            beta_coeff,
+            gamma_coeff,
+        )
     model.training_history = history
     model.converged = is_converged_history(history)
             
@@ -1446,6 +1449,14 @@ def summarize_finalists(final_records, erm_records):
         "success": bool(best and best["success"]),
     }
 
+def free_memory(model):
+    """Utility to explicitly delete models and flush MPS / CUDA cache."""
+    del model
+    if torch.backends.mps.is_available():
+        torch.mps.empty_cache()
+    elif torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
 # ==========================================
 # MAIN EXECUTION
 # ==========================================
@@ -1526,28 +1537,24 @@ if __name__ == "__main__":
         print(f"Proposed Bound Reg Loss/Acc:          {loss_prop:.4f} / {acc_prop*100:.2f}%")
         print("="*50)
     else:
-        sweep_results = []
-        erm_records = []
-        include_alpha = bool(channel_kl_total(HIDDEN_DIM) > 1e-12)
-        arch_top_k = 3
-        coeff_top_k = 3
-        finalist_top_k = 3
-        hidden_dim_grid = [32, 64, 128]
-        n_u_sets_grid = [5, 10, 20]
-        m_artificial_channels_grid = [50, 100, 200]
-        lr_pilot_grid = [1e-3, 3e-3, 1e-2]
-        lr_erm_grid = [1e-3, 3e-3, 1e-2]
-        arch_candidates = build_arch_candidates(hidden_dim_grid, n_u_sets_grid, m_artificial_channels_grid)
-        compact_coeff_candidates = build_fixed_coeff_candidates(include_alpha, compact=True)
-        full_coeff_candidates = build_fixed_coeff_candidates(include_alpha, compact=False)
-        if not include_alpha:
-            print("KL_CH_TOTAL is zero; alpha is inactive for proposed train heuristic and will be fixed at 0.0.")
+        # We use a JSON Lines (.jsonl) file to save incrementally without needing to load the array into RAM.
+        results_jsonl_path = os.path.join(RESULTS_DIR, "sweep_results.jsonl")
+        
+        # Clear/Create the file at the start of the run
+        with open(results_jsonl_path, "w", encoding="utf-8") as f:
+            pass 
 
-        loaders_by_seed = {}
-        baselines_by_seed_arch = {}
-
-        # Stage 0: Tune ERM baseline for every seed and architecture that affects ERM.
-        print("\n=== STAGE 0: Tuning ERM Baselines per Seed/Architecture ===")
+        # Sweep configuration
+        SEEDS = [1, 2, 3, 4, 5]
+        # HIDDEN_DIM_GRID = [16, 32, 64, 128]
+        # N_U_SETS_GRID = [5, 10 ,15, 20]
+        # M_ARTIFICIAL_CHANNELS_GRID = [10, 100, 500, 1000]
+        HIDDEN_DIM_GRID = [64]
+        N_U_SETS_GRID = [20]
+        M_ARTIFICIAL_CHANNELS_GRID = [100]
+        LR_GRID = [0.05, 0.01, 0.005, 0.003, 0.001, 0.0005]
+        BETA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
+        GAMMA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
         for seed in SEEDS:
             set_seed(seed)
             train_loader, test_loader, n_trains = get_dataloaders(
@@ -1556,293 +1563,148 @@ if __name__ == "__main__":
                 seed=seed,
                 noise=MOONS_NOISE,
             )
-            loaders_by_seed[seed] = (train_loader, test_loader, n_trains)
 
-            for hidden_dim in hidden_dim_grid:
-                for m_artificial_channels in m_artificial_channels_grid:
-                    best_erm_acc = -1.0
-                    best_erm_record = None
+            for hidden_dim in HIDDEN_DIM_GRID:
+                for n_u_sets in N_U_SETS_GRID:
+                    for m_artificial_channels in M_ARTIFICIAL_CHANNELS_GRID:
+                        for lr in LR_GRID:
 
-                    for erm_lr in lr_erm_grid:
-                        erm_dir = get_run_dir(
-                            'erm',
-                            'train',
-                            'bound',
-                            n_trains,
-                            seed,
-                            MI_MC_SAMPLES,
-                            LIPSCHITZ_METHOD_PERFECT,
-                            lr=erm_lr,
-                            hidden_dim=hidden_dim,
-                            n_u_sets=1,
-                            m_artificial_channels=m_artificial_channels,
-                        )
-                        model_erm = train_scenario(
-                            'erm',
-                            train_loader,
-                            n_trains,
-                            mode='train',
-                            objective='bound',
-                            lr=erm_lr,
-                            seed=seed,
-                            hidden_dim=hidden_dim,
-                            n_u_sets=1,
-                            m_artificial_channels=m_artificial_channels,
-                            use_cache=False,
-                            run_dir=erm_dir,
-                        )
-                        loss_erm, acc_erm = evaluate_inference(
-                            model_erm,
-                            test_loader,
-                            repeats=EVAL_REPEATS,
-                            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
-                        )
-                        update_run_history_inference(
-                            erm_dir,
-                            {"loss": loss_erm, "acc": acc_erm},
-                        )
-                        erm_record = {
-                            "stage": "stage0_erm_baseline_tuning",
-                            "seed": seed,
-                            "scenario": "erm",
-                            "objective": "bound",
-                            "mode": "train",
-                            "lr": erm_lr,
-                            "hidden_dim": hidden_dim,
-                            "n_u_sets": 1,
-                            "m_artificial_channels": m_artificial_channels,
-                            "loss": loss_erm,
-                            "acc": acc_erm,
-                            "run_dir": erm_dir,
-                        }
-                        sweep_results.append(erm_record)
+                            # Baseline ERM (train channel) per seed
+                            model_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=False)
+                            loss_erm, acc_erm = evaluate_inference(
+                                model_erm,
+                                test_loader,
+                                repeats=EVAL_REPEATS,
+                                weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+                            )
+                            erm_result = {
+                                "seed": seed,
+                                "scenario": "erm",
+                                "objective": "bound",
+                                "mode": "train",
+                                "beta_coeff": None,
+                                "gamma_coeff": None,
+                                "hidden_dim": hidden_dim,
+                                "n_u_sets": n_u_sets,
+                                "m_artificial_channels": m_artificial_channels,
+                                "lr": lr,
+                                "loss": loss_erm,
+                                "acc": acc_erm
+                            }
+                            
+                            # Write incrementally
+                            with open(results_jsonl_path, "a", encoding="utf-8") as f:
+                                f.write(json.dumps(erm_result) + "\n")
+                                
+                            # Explicitly clear memory to avoid unified memory leaks on MPS/M-Series chips
+                            free_memory(model_erm)
 
-                        if acc_erm > best_erm_acc:
-                            best_erm_acc = acc_erm
-                            best_erm_record = erm_record
-                    erm_records.append(best_erm_record)
-                    baselines_by_seed_arch[(seed, hidden_dim, m_artificial_channels)] = best_erm_acc
-                    print(
-                        f"--> Seed {seed} hidden={hidden_dim} m={m_artificial_channels} "
-                        f"Best ERM LR: {best_erm_record['lr']} Acc: {best_erm_acc*100:.2f}%"
-                    )
 
-        seed_finalist_specs = {}
 
-        # Stages 1-3: staged proposed sweep.
-        for seed in SEEDS:
-            train_loader, test_loader, n_trains = loaders_by_seed[seed]
+                            for beta_coeff in BETA_COEFF_GRID:
+                                for gamma_coeff in GAMMA_COEFF_GRID:
+                                    model_prop = train_scenario(
+                                        'proposed',
+                                        train_loader,
+                                        n_trains,
+                                        mode='train',
+                                        objective='heuristic',
+                                        hidden_dim=hidden_dim,
+                                        n_u_sets=n_u_sets,
+                                        m_artificial_channels=m_artificial_channels,
+                                        lr=lr,
+                                        alpha_coeff=0.0,
+                                        beta_coeff=beta_coeff,
+                                        gamma_coeff=gamma_coeff,
+                                        seed=seed,
+                                        use_cache=False
+                                    )
+                                    loss_prop, acc_prop = evaluate_inference(
+                                        model_prop,
+                                        test_loader,
+                                        repeats=EVAL_REPEATS,
+                                        weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+                                    )
+                                    prop_result = {
+                                        "seed": seed,
+                                        "scenario": "proposed",
+                                        "objective": "heuristic",
+                                        "mode": "train",
+                                        "hidden_dim": hidden_dim,
+                                        "n_u_sets": n_u_sets,
+                                        "m_artificial_channels": m_artificial_channels,
+                                        "lr": lr,
+                                        "beta_coeff": beta_coeff,
+                                        "gamma_coeff": gamma_coeff,
+                                        "loss": loss_prop,
+                                        "acc": acc_prop
+                                    }
 
-            print(f"\n=== STAGE 1: Architecture + Compact Coefficient Pilot for Seed {seed} ===")
-            arch_pilot_records = []
-            for arch in arch_candidates:
-                baseline_key = (seed, arch["hidden_dim"], arch["m_artificial_channels"])
-                for candidate in compact_coeff_candidates:
-                    record = run_proposed_candidate(
-                        "stage1_arch_coeff_pilot",
-                        seed,
-                        train_loader,
-                        test_loader,
-                        n_trains,
-                        baselines_by_seed_arch[baseline_key],
-                        candidate,
-                        LR_BASE,
-                        arch["hidden_dim"],
-                        arch["n_u_sets"],
-                        arch["m_artificial_channels"],
-                    )
-                    sweep_results.append(record)
-                    arch_pilot_records.append(record)
+                                    # Write incrementally
+                                    with open(results_jsonl_path, "a", encoding="utf-8") as f:
+                                        f.write(json.dumps(prop_result) + "\n")
 
-            arch_pilot_records.sort(key=lambda r: (r["converged"], r["acc"], r["improvement"]), reverse=True)
-            top_arch_records = []
-            seen_arch = set()
-            for record in arch_pilot_records:
-                key = architecture_key(record)
-                if key in seen_arch:
-                    continue
-                seen_arch.add(key)
-                top_arch_records.append(record)
-                if len(top_arch_records) >= arch_top_k:
-                    break
+        print(f"Sweep complete. Incremental results saved to {results_jsonl_path}")
+        
+        # --- End of computation. Post-process the file to calculate the summary. ---
+        
+        sweep_results = []
+        with open(results_jsonl_path, "r", encoding="utf-8") as f:
+            for line in f:
+                sweep_results.append(json.loads(line.strip()))
 
-            print(f"\n=== STAGE 2: Full Fixed Coefficient Grid for Seed {seed} ===")
-            coeff_records = []
-            for arch_record in top_arch_records:
-                for candidate in full_coeff_candidates:
-                    baseline_key = (seed, arch_record["hidden_dim"], arch_record["m_artificial_channels"])
-                    record = run_proposed_candidate(
-                        "stage2_fixed_coeff_grid",
-                        seed,
-                        train_loader,
-                        test_loader,
-                        n_trains,
-                        baselines_by_seed_arch[baseline_key],
-                        candidate,
-                        LR_BASE,
-                        arch_record["hidden_dim"],
-                        arch_record["n_u_sets"],
-                        arch_record["m_artificial_channels"],
-                    )
-                    sweep_results.append(record)
-                    coeff_records.append(record)
+        # 1. Separate results into 'erm' and 'proposed'
+        erm_results = [res for res in sweep_results if res['scenario'] == 'erm']
+        proposed_results = [res for res in sweep_results if res['scenario'] == 'proposed']
 
-            coeff_records.sort(key=lambda r: (r["converged"], r["acc"], r["improvement"]), reverse=True)
-            lr_seed_records = [r for r in coeff_records if r["converged"]][:coeff_top_k]
-            if not lr_seed_records:
-                lr_seed_records = coeff_records[:coeff_top_k]
+        # 2. Find the best overall 'proposed' configuration
+        best_proposed_overall = None
+        if proposed_results:
+            best_proposed_overall = max(proposed_results, key=lambda x: x['acc'])
 
-            print(f"\n=== STAGE 3: Learning Rate Pilot & Refinement for Seed {seed} ===")
-            lr_pilot_records = []
-            for coeff_record in lr_seed_records:
-                candidate = coeff_record["candidate"]
-                baseline_key = (seed, coeff_record["hidden_dim"], coeff_record["m_artificial_channels"])
-                for lr in lr_pilot_grid:
-                    record = run_proposed_candidate(
-                        "stage3_lr_pilot",
-                        seed,
-                        train_loader,
-                        test_loader,
-                        n_trains,
-                        baselines_by_seed_arch[baseline_key],
-                        candidate,
-                        lr,
-                        coeff_record["hidden_dim"],
-                        coeff_record["n_u_sets"],
-                        coeff_record["m_artificial_channels"],
-                    )
-                    sweep_results.append(record)
-                    lr_pilot_records.append(record)
+        # 3. Build a lookup dictionary for ERM baselines for fast comparison
+        # Key: (seed, hidden_dim, n_u_sets, m_artificial_channels, lr)
+        # Value: erm_accuracy
+        erm_baselines = {}
+        for res in erm_results:
+            key = (res['seed'], res['hidden_dim'], res['n_u_sets'], res['m_artificial_channels'], res['lr'])
+            erm_baselines[key] = res['acc']
 
-            lr_pilot_records.sort(key=lambda r: (r["converged"], r["acc"], r["improvement"]), reverse=True)
-            best_lr = lr_pilot_records[0]["lr"] if lr_pilot_records else LR_BASE
-            refined_lr_grid = sorted(set(float(np.clip(best_lr * m, 1e-5, 5e-2)) for m in [0.5, 1.0, 2.0]))
-            lr_refine_records = []
-            print(f"Seed {seed} LR refinement around best lr={best_lr}: {refined_lr_grid}")
-            for coeff_record in lr_seed_records:
-                candidate = coeff_record["candidate"]
-                baseline_key = (seed, coeff_record["hidden_dim"], coeff_record["m_artificial_channels"])
-                for lr in refined_lr_grid:
-                    record = run_proposed_candidate(
-                        "stage3_lr_refine",
-                        seed,
-                        train_loader,
-                        test_loader,
-                        n_trains,
-                        baselines_by_seed_arch[baseline_key],
-                        candidate,
-                        lr,
-                        coeff_record["hidden_dim"],
-                        coeff_record["n_u_sets"],
-                        coeff_record["m_artificial_channels"],
-                    )
-                    sweep_results.append(record)
-                    lr_refine_records.append(record)
+        # 4. Compare 'proposed' against its matching 'erm' baseline
+        proposed_better_configs = []
+        for prop in proposed_results:
+            # Match using the shared hyperparameters
+            key = (prop['seed'], prop['hidden_dim'], prop['n_u_sets'], prop['m_artificial_channels'], prop['lr'])
+            
+            # Get matching ERM accuracy (fallback to 0.0 if not found, though it should always be there)
+            matching_erm_acc = erm_baselines.get(key, 0.0)
+            
+            # Check if proposed beats ERM
+            if prop['acc'] > matching_erm_acc:
+                prop_copy = prop.copy()
+                prop_copy['erm_baseline_acc'] = matching_erm_acc
+                prop_copy['accuracy_improvement'] = prop['acc'] - matching_erm_acc
+                proposed_better_configs.append(prop_copy)
 
-            lr_pool = lr_pilot_records + lr_refine_records
-            lr_pool.sort(key=lambda r: (r["converged"], r["acc"], r["improvement"]), reverse=True)
-            seed_specs = []
-            seen_finalists = set()
-            for record in lr_pool:
-                if not record["converged"] and len(seed_specs) >= 1:
-                    continue
-                key = (
-                    round(record["lr"], 12),
-                    round(record["alpha"], 12),
-                    round(record["beta"], 12),
-                    round(record["gamma"], 12),
-                    int(record["hidden_dim"]),
-                    int(record["n_u_sets"]),
-                    int(record["m_artificial_channels"]),
-                )
-                if key in seen_finalists:
-                    continue
-                seen_finalists.add(key)
-                seed_specs.append({
-                    "lr": record["lr"],
-                    "candidate": {
-                        "alpha": record["alpha"],
-                        "beta": record["beta"],
-                        "gamma": record["gamma"],
-                    },
-                    "hidden_dim": record["hidden_dim"],
-                    "n_u_sets": record["n_u_sets"],
-                    "m_artificial_channels": record["m_artificial_channels"],
-                })
-                if len(seed_specs) >= finalist_top_k:
-                    break
-            seed_finalist_specs[seed] = seed_specs
+        # 5. Determine if it beats ERM and get the best outperforming configuration
+        proposed_beats_erm_flag = len(proposed_better_configs) > 0
+        best_beating_config = None
 
-        # Stage 4: confirm each seed using finalists tuned on that same seed.
-        print("\n=== STAGE 4: Seed-Specific Confirmation ===")
-        final_records = []
-        for seed in SEEDS:
-            train_loader, test_loader, n_trains = loaders_by_seed[seed]
-            for spec in seed_finalist_specs.get(seed, []):
-                baseline_key = (seed, spec["hidden_dim"], spec["m_artificial_channels"])
-                record = run_proposed_candidate(
-                    "stage4_full_confirmation",
-                    seed,
-                    train_loader,
-                    test_loader,
-                    n_trains,
-                    baselines_by_seed_arch[baseline_key],
-                    spec["candidate"],
-                    spec["lr"],
-                    spec["hidden_dim"],
-                    spec["n_u_sets"],
-                    spec["m_artificial_channels"],
-                )
-                sweep_results.append(record)
-                final_records.append(record)
+        if proposed_beats_erm_flag:
+            # Find the config where proposed beat ERM by the largest margin
+            best_beating_config = max(proposed_better_configs, key=lambda x: x['accuracy_improvement'])
 
-        results_path = os.path.join(RESULTS_DIR, "fine_tune_sweep_results.json")
-        with open(results_path, "w", encoding="utf-8") as f:
-            json.dump(sweep_results, f, indent=2)
+        # 6. Construct the final summary dictionary
+        summary_dict = {
+            "best_proposed_overall": best_proposed_overall,
+            "proposed_beats_erm_anywhere": proposed_beats_erm_flag,
+            "total_configs_beating_erm": len(proposed_better_configs),
+            "best_config_beating_erm_by_margin": best_beating_config
+        }
 
-        summary_path = os.path.join(RESULTS_DIR, "fine_tune_best.json")
-        summary = summarize_finalists(final_records, erm_records)
-        summary.update({
-            "include_alpha": include_alpha,
-            "default_kl_ch_total": KL_CH_TOTAL,
-            "coefficient_grid": {
-                "method": "fixed_log_grid",
-                "compact_count": len(compact_coeff_candidates),
-                "full_count": len(full_coeff_candidates),
-                "reason": "avoids unstable scale estimates from untrained model forward passes",
-            },
-            "architecture_grid": {
-                "hidden_dim": hidden_dim_grid,
-                "n_u_sets": n_u_sets_grid,
-                "m_artificial_channels": m_artificial_channels_grid,
-            },
-            "seed_finalist_specs": seed_finalist_specs,
-        })
+        # 7. Save the summary to a JSON file
+        summary_path = os.path.join(RESULTS_DIR, "sweep_summary.json")
         with open(summary_path, "w", encoding="utf-8") as f:
-            json.dump(summary, f, indent=2)
+            json.dump(summary_dict, f, indent=4) # Indent=4 makes it highly readable
 
-        print(f"Sweep complete. Results saved to {results_path}")
-        print(f"Best summary saved to {summary_path}")
-        if summary["best_overall"]:
-            best = summary["best_overall"]
-            print(
-                f"Best proposed heuristic mean acc: {best['mean_acc']*100:.2f}% | "
-                f"Tuned ERM mean acc: {best['mean_erm_acc']*100:.2f}% | "
-                f"Wins: {best['wins']}/{best['n_seeds']} | "
-                f"hidden={best['hidden_dim']} | K={best['n_u_sets']} | m={best['m_artificial_channels']} | "
-                f"Success: {best['success']}"
-            )
-        if summary["best_seed_param"]:
-            best_seed = summary["best_seed_param"]
-            print(
-                f"Best proposed heuristic seed-param win: seed={best_seed['seed']} | "
-                f"acc={best_seed['acc']*100:.2f}% | "
-                f"Tuned ERM acc={best_seed['baseline_erm_acc']*100:.2f}% | "
-                f"improvement={best_seed['improvement']*100:.2f} pp | "
-                f"lr={best_seed['lr']} | alpha={best_seed['alpha']} | "
-                f"beta={best_seed['beta']} | gamma={best_seed['gamma']} | "
-                f"hidden={best_seed['hidden_dim']} | K={best_seed['n_u_sets']} | "
-                f"m={best_seed['m_artificial_channels']}"
-            )
-        else:
-            print("No seed-param proposed heuristic run beat the seed-matched optimized ERM baseline.")
+        print(f"Summary complete. JSON summary saved to {summary_path}")
