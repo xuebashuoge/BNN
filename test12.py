@@ -570,7 +570,7 @@ def free_memory(model):
 # ==========================================
 # PARALLEL WORKER FUNCTION
 # ==========================================
-def run_sweep_task(task_config):
+def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     """
     Executes a single model configuration safely in a parallel process.
     """
@@ -600,7 +600,7 @@ def run_sweep_task(task_config):
             hidden_dim=hidden_dim, n_u_sets=n_u_sets, 
             m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=False
         )
-        loss, acc = evaluate_inference(model, test_loader, repeats=EVAL_REPEATS, weight_mc_samples=INFERENCE_WEIGHT_SAMPLES)
+        loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
         
         return {
@@ -620,7 +620,7 @@ def run_sweep_task(task_config):
             lr=lr, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             seed=seed, use_cache=False
         )
-        loss, acc = evaluate_inference(model, test_loader, repeats=EVAL_REPEATS, weight_mc_samples=INFERENCE_WEIGHT_SAMPLES)
+        loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
         
         return {
@@ -699,7 +699,7 @@ if __name__ == "__main__":
     # We use ProcessPoolExecutor. `as_completed` allows us to safely write to the file 
     # from this main thread as results return, avoiding file locking issues.
     with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_to_task = {executor.submit(run_sweep_task, task): task for task in tasks}
+        future_to_task = {executor.submit(run_sweep_task, task, EVAL_REPEATS, INFERENCE_WEIGHT_SAMPLES): task for task in tasks}
         
         completed = 0
         for future in concurrent.futures.as_completed(future_to_task):
