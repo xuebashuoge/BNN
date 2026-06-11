@@ -650,11 +650,11 @@ if __name__ == "__main__":
 
     SEEDS = [1, 2, 3, 4, 5]
     HIDDEN_DIM_GRID = [64]
-    N_U_SETS_GRID = [20]
-    M_ARTIFICIAL_CHANNELS_GRID = [100]
-    LR_GRID = [0.05, 0.01, 0.005, 0.003, 0.001, 0.0005]
-    BETA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
-    GAMMA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
+    N_U_SETS_GRID = [10, 20, 50]
+    M_ARTIFICIAL_CHANNELS_GRID = [10, 50, 100, 500]
+    LR_GRID = [0.001, 0.002, 0.003, 0.004, 0.005]
+    BETA_COEFF_GRID = [1, 0.1]
+    GAMMA_COEFF_GRID = [0.1, 0.05, 0.02, 0.01, 0.005]
 
     # PRE-GENERATE DATASETS SEQUENTIALLY
     # This prevents multiple worker processes from trying to create and write the .pt file at the same time.
@@ -691,8 +691,8 @@ if __name__ == "__main__":
     # Determine safe number of workers (leave 1 core free for OS)
     MAX_WORKERS = max(1, os.cpu_count() - 1)
     # If running on a powerful server, you might cap this at 32 so you don't overwhelm I/O
-    if MAX_WORKERS > 32: 
-        MAX_WORKERS = 32
+    if MAX_WORKERS > 64: 
+        MAX_WORKERS = 64
         
     print(f"Starting parallel execution with {MAX_WORKERS} workers...")
 
