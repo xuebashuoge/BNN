@@ -3,6 +3,7 @@ import json
 import hashlib
 import numpy as np
 import torch
+import random
 import torch.nn as nn
 import torch.nn.functional as F
 from sklearn.datasets import make_moons
@@ -427,7 +428,9 @@ def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_sa
             "lr": lr, "alpha_coeff": alpha_coeff if scenario_name != 'erm' else "N/A",
             "beta_coeff": beta_coeff if scenario_name != 'erm' else "N/A",
             "gamma_coeff": gamma_coeff if scenario_name != 'erm' else "N/A",
-            "hidden_dim": hidden_dim, "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels,
+            "hidden_dim": hidden_dim, 
+            "n_u_sets": n_u_sets if scenario_name != 'erm' else "N/A",
+            "m_artificial_channels": m_artificial_channels,
         }
     }
 
@@ -597,7 +600,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     if scenario == 'erm':
         model = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
-            hidden_dim=hidden_dim, n_u_sets=n_u_sets, 
+            hidden_dim=hidden_dim, 
             m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=False
         )
         loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
@@ -648,13 +651,20 @@ if __name__ == "__main__":
     with open(results_jsonl_path, "w", encoding="utf-8") as f:
         pass 
 
-    SEEDS = [1, 2, 3, 4, 5]
+    # 1. Set a master seed for reproducibility
+    MASTER_SEED = 42
+    random.seed(MASTER_SEED)
+
+    # 2. Generate a list of 10 unique random seeds
+    num_seeds = 1000
+    # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
+    SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
     HIDDEN_DIM_GRID = [64]
-    N_U_SETS_GRID = [10, 20, 50]
-    M_ARTIFICIAL_CHANNELS_GRID = [10, 50, 100, 500]
-    LR_GRID = [0.001, 0.002, 0.003, 0.004, 0.005]
-    BETA_COEFF_GRID = [1, 0.1]
-    GAMMA_COEFF_GRID = [0.1, 0.05, 0.02, 0.01, 0.005]
+    N_U_SETS_GRID = [10]
+    M_ARTIFICIAL_CHANNELS_GRID = [100]
+    LR_GRID = [0.003]
+    BETA_COEFF_GRID = [0.1]
+    GAMMA_COEFF_GRID = [0.05]
 
     # PRE-GENERATE DATASETS SEQUENTIALLY
     # This prevents multiple worker processes from trying to create and write the .pt file at the same time.
