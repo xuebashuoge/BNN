@@ -41,7 +41,7 @@ OUT_DIM = 2
 MOONS_NOISE = 0.3      # make_moons noise level
 BATCH_SIZE = 64        # Reduced batch size for noisier gradients
 EPOCHS = 150           # Increased epochs to ensure ERM fully memorizes
-LR_BASE = 0.001         # Adjusted base learning rate
+LR_BASE = 0.003         # Adjusted base learning rate
 LR_DECAY_STEP = 0     # StepLR decay period (epochs)
 LR_DECAY_GAMMA = 0.5   # StepLR decay factor
 PRIOR_LAMBDA = 1.0     # Variance of isotropic Gaussian prior
@@ -408,6 +408,78 @@ def scenario_label(scenario_name, mode, objective):
         return f"{scenario_name}_{mode}"
     return f"{scenario_name}_{mode}_{objective}"
 
+def plot_training_metrics(history, scenario_name, mode, objective, run_dir):
+    """Plots and saves loss/accuracy curves."""
+    epochs = list(range(1, len(history['train_loss']) + 1))
+    fig, axes = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+
+    axes[0].plot(epochs, history['train_loss'], label='Train Loss')
+    axes[0].set_ylabel('Loss')
+    axes[0].grid(True, linestyle='--', alpha=0.5)
+    axes[0].legend()
+
+    axes[1].plot(epochs, history['train_acc'], label='Train Acc')
+    axes[1].set_ylabel('Accuracy')
+    axes[1].set_xlabel('Epoch')
+    axes[1].grid(True, linestyle='--', alpha=0.5)
+    axes[1].legend()
+
+    title = f"{scenario_name.upper()} ({mode})"
+    fig.suptitle(title)
+    fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+    filename = os.path.join(run_dir, "metrics.png")
+    fig.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
+
+def plot_bound_decomposition(history, scenario_name, mode, objective, run_dir):
+    """Plots and saves bound decomposition curves if available."""
+    if not history.get('bound_total'):
+        return
+    if max(history['bound_total']) == 0.0 and max(history['bound_term1']) == 0.0 and max(history['bound_term2']) == 0.0:
+        return
+
+    epochs = list(range(1, len(history['bound_total']) + 1))
+    series = [
+        ('Bound Total', history['bound_total']),
+        ('Channel Shifting', history['bound_term1']),
+        ('Channel Overfitting', history['bound_term2']),
+        ('Standard PAC-Bayes', history.get('bound_term3', [])),
+        ('Channel Overfit KL', history.get('channel_overfit_kl', [])),
+        ('D(P_ch || P_art)', history.get('kl_ch_total', [])),
+        ('Mixture KL', history.get('mixture_kl', [])),
+        ('Component E[KL]', history.get('component_expected_kl', [])),
+        ('K_hat', history.get('k_hat', [])),
+        ('Channel Penalty', history.get('channel_penalty', [])),
+        ('K_hat * Channel Penalty', history.get('k_hat_channel_penalty', []))
+    ]
+
+    plotted = [(label, values) for label, values in series if values and max(values) != 0.0]
+    if not plotted:
+        return
+
+    n_rows = len(plotted)
+    fig, axes = plt.subplots(n_rows, 1, figsize=(10, 2.2 * n_rows), sharex=True)
+    if n_rows == 1:
+        axes = [axes]
+
+    for ax, (label, values) in zip(axes, plotted):
+        ax.plot(epochs, values, label=label)
+        ax.set_ylabel(label)
+        ax.grid(True, linestyle='--', alpha=0.5)
+        ax.legend(loc='upper right')
+
+    axes[-1].set_xlabel('Epoch')
+
+    title = f"Bound Decomposition: {scenario_name.upper()} ({mode})"
+    fig.suptitle(title)
+    fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+    filename = os.path.join(run_dir, "bound.png")
+    fig.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
 def config_hash(config):
     payload = json.dumps(config, sort_keys=True, separators=(",", ":"))
     return hashlib.sha1(payload.encode("utf-8")).hexdigest()[:10]
@@ -442,7 +514,59 @@ def get_run_dir(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, 
     os.makedirs(run_dir, exist_ok=True)
     return run_dir
 
-def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='bound', lr=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, mi_mc_samples=None, seed=None, lipschitz_method_perfect=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, use_cache=True, run_dir=None):
+def is_converged_history(history):
+    if not history.get("train_loss") or not history.get("train_acc"):
+        return False
+
+    final_loss = history["train_loss"][-1]
+    final_acc = history["train_acc"][-1]
+    finite_series = all(
+        np.isfinite(v)
+        for key in ("train_loss", "bound_total", "bound_term1", "bound_term2", "bound_term3")
+        for v in history.get(key, [])
+    )
+    if not finite_series or not np.isfinite(final_loss) or not np.isfinite(final_acc):
+        return False
+    if final_acc < 0.55:
+        return False
+    if final_loss > 5.0:
+        return False
+    return True
+
+
+def save_training_history(
+    run_dir,
+    scenario_name,
+    mode,
+    objective,
+    history,
+    lr,
+    alpha_coeff,
+    beta_coeff,
+    gamma_coeff,
+    inference=None,
+):
+    payload = {
+        "scenario": scenario_name,
+        "mode": mode,
+        "objective": objective,
+        "lr": lr,
+        "alpha": alpha_coeff,
+        "beta": beta_coeff,
+        "gamma": gamma_coeff,
+        "converged": is_converged_history(history),
+        "final_train_loss": history["train_loss"][-1] if history.get("train_loss") else None,
+        "final_train_acc": history["train_acc"][-1] if history.get("train_acc") else None,
+        "final_bound_total": history["bound_total"][-1] if history.get("bound_total") else None,
+        "inference": inference,
+        "history": history,
+    }
+    path = os.path.join(run_dir, "history.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+    return payload
+
+def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='bound', lr=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, mi_mc_samples=None, seed=None, lipschitz_method_perfect=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, use_cache=True, run_dir=None, verbose=False):
     lr = LR_BASE if lr is None else lr
     alpha_coeff = ALPHA_COEFF if alpha_coeff is None else alpha_coeff
     beta_coeff = BETA_COEFF if beta_coeff is None else beta_coeff
@@ -460,54 +584,282 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     else:
         model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    scheduler = None
+    if LR_DECAY_STEP and LR_DECAY_STEP > 0:
+        scheduler = torch.optim.lr_scheduler.StepLR(
+            optimizer,
+            step_size=LR_DECAY_STEP,
+            gamma=LR_DECAY_GAMMA,
+        )
 
     mi_mc_samples = MI_MC_SAMPLES if mi_mc_samples is None else mi_mc_samples
     lipschitz_method_perfect = LIPSCHITZ_METHOD_PERFECT if lipschitz_method_perfect is None else lipschitz_method_perfect
+    if lipschitz_method_perfect not in {"grad", "analytical"}:
+        raise ValueError("lipschitz_method_perfect must be 'grad' or 'analytical'.")
+    if run_dir is None and use_cache:
+        run_dir = get_run_dir(
+            scenario_name, mode, objective,
+            n_samples, seed, mi_mc_samples, lipschitz_method_perfect,
+            lr=lr, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
+            hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
+        )
+    else:
+        run_dir = run_dir or "temp_run"
+
+    weights_path = os.path.join(run_dir, "weights.pth")
+
+    if use_cache and os.path.exists(weights_path):
+        print(f"Loading existing weights: {weights_path}")
+        model.load_state_dict(torch.load(weights_path, map_location=device))
+        return model
 
     complexity_term = np.log(np.sqrt(n_samples) / EPSILON)
+
+    history = {
+        'train_loss': [],
+        'train_acc': [],
+        'bound_total': [],
+        'bound_term1': [],
+        'bound_term2': [],
+        'bound_term3': [],
+        'channel_overfit_kl': [],
+        'kl_ch_total': [],
+        'mixture_kl': [],
+        'component_expected_kl': [],
+        'k_hat': [],
+        'channel_penalty': [],
+        'k_hat_channel_penalty': [],
+        'applied_regularization': [],
+        'nonfinite_loss': False,
+    }
     stop_training = False
 
     for epoch in range(EPOCHS):
+        epoch_loss = 0.0
+        epoch_reg = 0.0
+        epoch_bound_total = 0.0
+        epoch_term1 = 0.0
+        epoch_term2 = 0.0
+        epoch_term3 = 0.0
+        epoch_channel_overfit_kl = 0.0
+        epoch_kl_ch_total = 0.0
+        epoch_mixture_kl = 0.0
+        epoch_component_expected_kl = 0.0
+        epoch_k_hat = 0.0
+        epoch_channel_penalty = 0.0
+        epoch_k_hat_channel_penalty = 0.0
+
         model.train()
+        
         for batch_x, batch_y in loader:
             batch_x, batch_y = batch_x.to(device), batch_y.to(device)
             optimizer.zero_grad()
 
             if getattr(model, "is_bnn", False):
+                # For BNN
+                # Forward pass (1 MC sample for speed during CE calculation)
                 theta = model.sample_theta(1).squeeze(0)
+                # Pass mode='train' to sample from the seeded P_art sequence
                 out = model(batch_x, theta, mode=mode)
+
+                # Cross Entropy Loss
                 y_expanded = batch_y.unsqueeze(0).expand(model.K, -1)
                 ce_loss = F.cross_entropy(out.reshape(-1, OUT_DIM), y_expanded.reshape(-1))
             else:
+                # For Deterministic
                 logits = model(batch_x, mode=mode)
                 ce_loss = F.cross_entropy(logits, batch_y)
             
             loss = ce_loss
+            reg_val = 0.0
+            channel_shift_eval = 0.0
+            channel_overfit_eval = 0.0
+            model_complexity_eval = 0.0
+            channel_overfit_kl_val = 0.0
+            kl_ch_total_val = 0.0
+            mixture_kl_val = 0.0
+            component_expected_kl_val = 0.0
+            k_hat_val = 0.0
+            channel_penalty_val = 0.0
+            k_hat_channel_penalty_val = 0.0
 
-            if scenario_name == 'proposed':
-                if mode == 'train':
-                    mixture_kl, channel_overfit_kl = compute_mixture_kl_and_channel_overfit(model, num_samples=mi_mc_samples)
+            if scenario_name == 'l2':
+                l2_penalty = torch.zeros(1, device=ce_loss.device)
+                for param in model.parameters():
+                    l2_penalty = l2_penalty + torch.sum(param ** 2)
+                reg = l2_penalty
+                reg_val = reg.item()
+                model_complexity_eval = reg_val
+                if objective == 'regularization':
+                    loss = ce_loss + l2_penalty
+                elif objective == 'heuristic':
+                    loss = ce_loss + (gamma_coeff * l2_penalty)
+            # elif scenario_name == 'pac_bayes':
+            #     # MC Sampling for bounds
+            #     kl_mix, _ = compute_mixture_kl_and_channel_overfit(model, num_samples=mi_mc_samples)
+
+            #     # Standard Regularization Formula
+            #     reg = torch.sqrt((2 * SIGMA_SQ / (n_samples - 1)) * (torch.clamp(kl_mix, min=0) + complexity_term))
+            #     loss = ce_loss + (reg_coeff * reg)
+            #     reg_val = reg.item()
+            #     model_complexity_eval = reg.item()
+            #     mixture_kl_val = kl_mix.item()
+            elif scenario_name == 'proposed':
+                if mode == 'perfect':
+                    mixture_kl, _ = compute_mixture_kl_and_channel_overfit(model, num_samples=mi_mc_samples)
+                    mixture_kl = torch.clamp(mixture_kl, min=0)
+                    mixture_kl_val = mixture_kl.item()
+
+                    # Lipschitz
+                    if lipschitz_method_perfect == "grad":
+                        grad_theta = torch.autograd.grad(
+                            ce_loss,
+                            theta,
+                            create_graph=True,
+                            retain_graph=True
+                        )[0]
+                        K_hat = torch.norm(grad_theta, p=2)
+                    else:
+                        K_hat = model.compute_analytical_lipschitz(batch_x, theta, mode=mode)
+                    k_hat_val = K_hat.item()
+
+                    channel_penalty_val = channel_penalty.item()
+
+                    channel_shift = K_hat * channel_penalty
+                    model_complexity = torch.sqrt((2 * SIGMA_SQ / (n_samples - 1)) * (mixture_kl + complexity_term))
+                    reg = channel_shift + model_complexity
+                    channel_shift_eval = channel_shift.item()
+                    model_complexity_eval = model_complexity.item()
+                    k_hat_channel_penalty_val = channel_shift_eval
+                    reg_val = reg.item()
+
+                    if objective == 'bound':
+                        loss = ce_loss + reg
+                    elif objective == 'heuristic':
+                        loss = ce_loss + (alpha_coeff * channel_shift + gamma_coeff * model_complexity)
+                elif mode == 'train':
+                    component_expected_kl = compute_component_expected_kl(model)
+                    component_expected_kl_val = component_expected_kl.item()
+
+                    mixture_kl, channel_overfit_kl = compute_mixture_kl_and_channel_overfit(
+                        model,
+                        num_samples=mi_mc_samples,
+                    )
                     mixture_kl = torch.clamp(mixture_kl, min=0)
                     channel_overfit_kl = torch.clamp(channel_overfit_kl, min=0)
 
                     channel_shift = ce_loss.new_tensor(np.sqrt(2 * SIGMA_ART_SQ * kl_ch_total))
                     channel_overfit = torch.sqrt((2 * SIGMA_ART_SQ / m_artificial_channels) * channel_overfit_kl)
                     model_complexity = torch.sqrt((2 * SIGMA_SQ / (n_samples - 1)) * (mixture_kl + complexity_term))
+                    reg = channel_shift + channel_overfit + model_complexity
+                    channel_shift_eval = channel_shift.item()
+                    channel_overfit_eval = channel_overfit.item()
+                    model_complexity_eval = model_complexity.item()
+                    channel_overfit_kl_val = channel_overfit_kl.item()
+                    mixture_kl_val = mixture_kl.item()
+                    kl_ch_total_val = kl_ch_total
                     
-                    if objective == 'heuristic':
+                    if objective == 'bound':
+                        loss = ce_loss + reg
+                    elif objective == 'heuristic':
                         loss = ce_loss + (alpha_coeff * channel_shift + beta_coeff * channel_overfit + gamma_coeff * model_complexity)
+                    reg_val = reg.item()
 
             if not torch.isfinite(loss):
+                print(f"Stopping early: non-finite loss at epoch {epoch + 1}.")
+                history['nonfinite_loss'] = True
                 stop_training = True
                 break
 
             loss.backward()
             optimizer.step()
             
+            epoch_loss += ce_loss.item()
+            epoch_reg += reg_val # Log the scaled applied bound
+            epoch_bound_total += reg_val
+            epoch_term1 += channel_shift_eval
+            epoch_term2 += channel_overfit_eval
+            epoch_term3 += model_complexity_eval
+            epoch_channel_overfit_kl += channel_overfit_kl_val
+            epoch_kl_ch_total += kl_ch_total_val
+            epoch_mixture_kl += mixture_kl_val
+            epoch_component_expected_kl += component_expected_kl_val
+            epoch_k_hat += k_hat_val
+            epoch_channel_penalty += channel_penalty_val
+            epoch_k_hat_channel_penalty += k_hat_channel_penalty_val
+
+        train_loss, train_acc = evaluate_model(model, loader, mode=mode)
+
+        history['train_loss'].append(train_loss)
+        history['train_acc'].append(train_acc)
+        history['bound_total'].append(epoch_bound_total / len(loader))
+        history['bound_term1'].append(epoch_term1 / len(loader))
+        history['bound_term2'].append(epoch_term2 / len(loader))
+        history['bound_term3'].append(epoch_term3 / len(loader))
+        history['channel_overfit_kl'].append(epoch_channel_overfit_kl / len(loader))
+        history['kl_ch_total'].append(epoch_kl_ch_total / len(loader))
+        history['mixture_kl'].append(epoch_mixture_kl / len(loader))
+        history['component_expected_kl'].append(epoch_component_expected_kl / len(loader))
+        history['k_hat'].append(epoch_k_hat / len(loader))
+        history['channel_penalty'].append(epoch_channel_penalty / len(loader))
+        history['k_hat_channel_penalty'].append(epoch_k_hat_channel_penalty / len(loader))
+        history['applied_regularization'].append(epoch_reg / len(loader))
+
+        if verbose:
+            if (epoch + 1) % 20 == 0:
+                print(
+                    f"Epoch {epoch+1}/{EPOCHS} | "
+                    f"CE Loss: {epoch_loss/len(loader):.4f} | "
+                    f"Reg Bound: {epoch_reg/len(loader):.4f} | "
+                    f"Bound T1: {epoch_term1/len(loader):.4f} | "
+                    f"Bound T2: {epoch_term2/len(loader):.4f} | "
+                    f"Bound T3: {epoch_term3/len(loader):.4f} | "
+                    f"Train Acc: {train_acc*100:.2f}%"
+                )
+
+        if scheduler is not None:
+            scheduler.step()
         if stop_training:
             break
 
-    model.converged = not stop_training
+    if not history['train_loss']:
+        history['train_loss'].append(float("nan"))
+        history['train_acc'].append(0.0)
+        history['bound_total'].append(float("nan"))
+        history['bound_term1'].append(float("nan"))
+        history['bound_term2'].append(float("nan"))
+        history['bound_term3'].append(float("nan"))
+        history['applied_regularization'].append(float("nan"))
+
+    if verbose:
+        print(
+            f"Epoch {EPOCHS}/{EPOCHS} | "
+            f"CE Loss: {epoch_loss/len(loader):.4f} | "
+            f"Reg Bound: {epoch_reg/len(loader):.4f} | "
+            f"Bound T1: {epoch_term1/len(loader):.4f} | "
+            f"Bound T2: {epoch_term2/len(loader):.4f} | "
+            f"Bound T3: {epoch_term3/len(loader):.4f} | "
+            f"Train Acc: {train_acc*100:.2f}%"
+        )
+
+    if use_cache:
+        torch.save(model.state_dict(), weights_path)
+        plot_training_metrics(history, scenario_name, mode, objective, run_dir)
+        plot_bound_decomposition(history, scenario_name, mode, objective, run_dir)
+        save_training_history(
+            run_dir,
+            scenario_name,
+            mode,
+            objective,
+            history,
+            lr,
+            alpha_coeff,
+            beta_coeff,
+            gamma_coeff,
+        )
+    model.training_history = history
+    model.converged = is_converged_history(history)
+            
     return model
 
 # ==========================================
@@ -583,9 +935,10 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     seed = task_config['seed']
     scenario = task_config['scenario']
     hidden_dim = task_config['hidden_dim']
-    n_u_sets = task_config['n_u_sets']
     m_artificial_channels = task_config['m_artificial_channels']
     lr = task_config['lr']
+    use_cacahe = task_config['use_cache']
+    verbose = task_config['verbose']
 
     set_seed(seed)
     
@@ -601,7 +954,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         model = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
             hidden_dim=hidden_dim, 
-            m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=False
+            m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=use_cacahe, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
@@ -609,19 +962,20 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         return {
             "seed": seed, "scenario": "erm", "objective": "bound", "mode": "train",
             "beta_coeff": None, "gamma_coeff": None, "hidden_dim": hidden_dim,
-            "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels,
+            "n_u_sets": None, "m_artificial_channels": m_artificial_channels,
             "lr": lr, "loss": loss, "acc": acc
         }
         
     elif scenario == 'proposed':
         beta_coeff = task_config['beta_coeff']
         gamma_coeff = task_config['gamma_coeff']
+        n_u_sets = task_config['n_u_sets']
         
         model = train_scenario(
             'proposed', train_loader, n_trains, mode='train', objective='heuristic',
             hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
             lr=lr, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
-            seed=seed, use_cache=False
+            seed=seed, use_cache=use_cacahe, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
@@ -656,7 +1010,9 @@ if __name__ == "__main__":
             model_erm_perfect,
             test_loader,
             repeats=EVAL_REPEATS,
-            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
+            use_cache=True,
+            verbose=True,
         )
 
         # Scenario B: Standard ERM + train channel (overfitting to P_art)
@@ -665,7 +1021,9 @@ if __name__ == "__main__":
             model_erm,
             test_loader,
             repeats=EVAL_REPEATS,
-            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
+            use_cache=True,
+            verbose=True,
         )
 
         # Scenario C: L2 Regularization + perfect channel
@@ -674,7 +1032,9 @@ if __name__ == "__main__":
             model_l2_perfect,
             test_loader,
             repeats=EVAL_REPEATS,
-            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
+            use_cache=True,
+            verbose=True,
         )
 
         # Scenario D: L2 Regularization + train channel
@@ -683,7 +1043,9 @@ if __name__ == "__main__":
             model_l2,
             test_loader,
             repeats=EVAL_REPEATS,
-            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
+            use_cache=True,
+            verbose=True,
         )
 
         # Scenario E: Proposed Bound + perfect channel
@@ -692,7 +1054,9 @@ if __name__ == "__main__":
             model_prop_perfect,
             test_loader,
             repeats=EVAL_REPEATS,
-            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
+            use_cache=True,
+            verbose=True,
         )
 
         # Scenario F: Proposed Bound Regularization
@@ -701,7 +1065,9 @@ if __name__ == "__main__":
             model_prop,
             test_loader,
             repeats=EVAL_REPEATS,
-            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
+            use_cache=True,
+            verbose=True,
         )
 
         print("\n" + "="*50)
@@ -738,6 +1104,8 @@ if __name__ == "__main__":
         LR_GRID = [0.003]
         BETA_COEFF_GRID = [0.1]
         GAMMA_COEFF_GRID = [0.05]
+        use_cacahe = False
+        verbose = False
 
         # PRE-GENERATE DATASETS SEQUENTIALLY
         # This prevents multiple worker processes from trying to create and write the .pt file at the same time.
@@ -756,7 +1124,8 @@ if __name__ == "__main__":
                             # Append ERM Task
                             tasks.append({
                                 "scenario": "erm", "seed": seed, "hidden_dim": hidden_dim,
-                                "m_artificial_channels": m_artificial_channels, "lr": lr
+                                "m_artificial_channels": m_artificial_channels, "lr": lr,
+                                use_cacahe: use_cacahe, "verbose": verbose,
                             })
                             
                             # Append Proposed Tasks
@@ -765,7 +1134,8 @@ if __name__ == "__main__":
                                     tasks.append({
                                         "scenario": "proposed", "seed": seed, "hidden_dim": hidden_dim,
                                         "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels, 
-                                        "lr": lr, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff
+                                        "lr": lr, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff,
+                                        use_cacahe: use_cacahe, "verbose": verbose,
                                     })
 
         print(f"Total tasks generated: {len(tasks)}")
