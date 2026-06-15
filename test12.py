@@ -49,11 +49,11 @@ EPSILON = 0.025         # PAC-Bayes confidence parameter
 SIGMA_SQ = 1.0         # Assumed sub-Gaussian parameter
 SIGMA_ART_SQ = 1.0     # Assumed sub-Gaussian parameter for artificial-channel loss
 ALPHA_COEFF = 0.0      # Weighting factor for the channel-shifting term in the objective
-BETA_COEFF = 0.19976502246972636       # Weighting factor for the channel-overfitting term in the objective
-GAMMA_COEFF = 0.05989606713587279     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
+BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in the objective
+GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 5
+SEED = 1879792991
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -638,138 +638,211 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    # Ensure safe context for Linux multiprocessing with PyTorch
-    try:
-        mp.set_start_method('spawn', force=True)
-    except RuntimeError:
-        pass
+    RUN_SWEEP = False
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
 
-    results_jsonl_path = os.path.join(RESULTS_DIR, "sweep_results.jsonl")
-    with open(results_jsonl_path, "w", encoding="utf-8") as f:
-        pass 
+    if not RUN_SWEEP:
+        set_seed(SEED)
+        train_loader, test_loader, n_trains = get_dataloaders(
+            N_SAMPLES,
+            batch_size=BATCH_SIZE,
+            noise=MOONS_NOISE,
+        )
+        # Scenario A: Standard ERM + perfect channel
+        model_erm_perfect = train_scenario('erm', train_loader, n_trains, mode='perfect', objective='bound', seed=SEED)
+        loss_erm_perfect, acc_erm_perfect = evaluate_inference(
+            model_erm_perfect,
+            test_loader,
+            repeats=EVAL_REPEATS,
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+        )
 
-    # 1. Set a master seed for reproducibility
-    MASTER_SEED = 42
-    random.seed(MASTER_SEED)
+        # Scenario B: Standard ERM + train channel (overfitting to P_art)
+        model_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', seed=SEED)
+        loss_erm, acc_erm = evaluate_inference(
+            model_erm,
+            test_loader,
+            repeats=EVAL_REPEATS,
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+        )
 
-    # 2. Generate a list of 10 unique random seeds
-    num_seeds = 1000
-    # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
-    SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
-    HIDDEN_DIM_GRID = [64]
-    N_U_SETS_GRID = [10]
-    M_ARTIFICIAL_CHANNELS_GRID = [100]
-    LR_GRID = [0.003]
-    BETA_COEFF_GRID = [0.1]
-    GAMMA_COEFF_GRID = [0.05]
+        # Scenario C: L2 Regularization + perfect channel
+        model_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED)
+        loss_l2_perfect, acc_l2_perfect = evaluate_inference(
+            model_l2_perfect,
+            test_loader,
+            repeats=EVAL_REPEATS,
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+        )
 
-    # PRE-GENERATE DATASETS SEQUENTIALLY
-    # This prevents multiple worker processes from trying to create and write the .pt file at the same time.
-    print("Pre-generating dataset .pt files to prevent race conditions...")
-    for seed in SEEDS:
-        get_dataloaders(N_SAMPLES, batch_size=BATCH_SIZE, seed=seed, noise=MOONS_NOISE)
+        # Scenario D: L2 Regularization + train channel
+        model_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED)
+        loss_l2, acc_l2 = evaluate_inference(
+            model_l2,
+            test_loader,
+            repeats=EVAL_REPEATS,
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+        )
 
-    # BUILD TASK LIST
-    print("Building task queue...")
-    tasks = []
-    for seed in SEEDS:
-        for hidden_dim in HIDDEN_DIM_GRID:
-            for n_u_sets in N_U_SETS_GRID:
-                for m_artificial_channels in M_ARTIFICIAL_CHANNELS_GRID:
-                    for lr in LR_GRID:
-                        # Append ERM Task
-                        tasks.append({
-                            "scenario": "erm", "seed": seed, "hidden_dim": hidden_dim,
-                            "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels, "lr": lr
-                        })
+        # Scenario E: Proposed Bound + perfect channel
+        model_prop_perfect = train_scenario('proposed', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED)
+        loss_prop_perfect, acc_prop_perfect = evaluate_inference(
+            model_prop_perfect,
+            test_loader,
+            repeats=EVAL_REPEATS,
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+        )
+
+        # Scenario F: Proposed Bound Regularization
+        model_prop = train_scenario('proposed', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED)
+        loss_prop, acc_prop = evaluate_inference(
+            model_prop,
+            test_loader,
+            repeats=EVAL_REPEATS,
+            weight_mc_samples=INFERENCE_WEIGHT_SAMPLES
+        )
+
+        print("\n" + "="*50)
+        print("FINAL INFERENCE RESULTS (EVALUATED ON P_ch)")
+        print("="*50)
+        print(f"Standard ERM + Perfect Channel Loss/Acc: {loss_erm_perfect:.4f} / {acc_erm_perfect*100:.2f}%")
+        print(f"Standard ERM Loss/Acc:                {loss_erm:.4f} / {acc_erm*100:.2f}%")
+        print(f"L2 Reg + Perfect Channel Loss/Acc:    {loss_l2_perfect:.4f} / {acc_l2_perfect*100:.2f}%")
+        print(f"L2 Reg + Train Channel Loss/Acc:      {loss_l2:.4f} / {acc_l2*100:.2f}%")
+        print(f"Proposed Bound + Perfect Loss/Acc:    {loss_prop_perfect:.4f} / {acc_prop_perfect*100:.2f}%")
+        print(f"Proposed Bound Reg Loss/Acc:          {loss_prop:.4f} / {acc_prop*100:.2f}%")
+        print("="*50)
+    else:
+        # Ensure safe context for Linux multiprocessing with PyTorch
+        try:
+            mp.set_start_method('spawn', force=True)
+        except RuntimeError:
+            pass
+        results_jsonl_path = os.path.join(RESULTS_DIR, "sweep_results.jsonl")
+        with open(results_jsonl_path, "w", encoding="utf-8") as f:
+            pass 
+
+        # 1. Set a master seed for reproducibility
+        MASTER_SEED = 42
+        random.seed(MASTER_SEED)
+
+        # 2. Generate a list of 10 unique random seeds
+        num_seeds = 1000
+        # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
+        SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
+        HIDDEN_DIM_GRID = [64]
+        N_U_SETS_GRID = [10]
+        M_ARTIFICIAL_CHANNELS_GRID = [100]
+        LR_GRID = [0.003]
+        BETA_COEFF_GRID = [0.1]
+        GAMMA_COEFF_GRID = [0.05]
+
+        # PRE-GENERATE DATASETS SEQUENTIALLY
+        # This prevents multiple worker processes from trying to create and write the .pt file at the same time.
+        print("Pre-generating dataset .pt files to prevent race conditions...")
+        for seed in SEEDS:
+            get_dataloaders(N_SAMPLES, batch_size=BATCH_SIZE, seed=seed, noise=MOONS_NOISE)
+
+        # BUILD TASK LIST
+        print("Building task queue...")
+        tasks = []
+        for seed in SEEDS:
+            for hidden_dim in HIDDEN_DIM_GRID:
+                for n_u_sets in N_U_SETS_GRID:
+                    for m_artificial_channels in M_ARTIFICIAL_CHANNELS_GRID:
+                        for lr in LR_GRID:
+                            # Append ERM Task
+                            tasks.append({
+                                "scenario": "erm", "seed": seed, "hidden_dim": hidden_dim,
+                                "m_artificial_channels": m_artificial_channels, "lr": lr
+                            })
+                            
+                            # Append Proposed Tasks
+                            for beta_coeff in BETA_COEFF_GRID:
+                                for gamma_coeff in GAMMA_COEFF_GRID:
+                                    tasks.append({
+                                        "scenario": "proposed", "seed": seed, "hidden_dim": hidden_dim,
+                                        "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels, 
+                                        "lr": lr, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff
+                                    })
+
+        print(f"Total tasks generated: {len(tasks)}")
+
+        # EXECUTE IN PARALLEL
+        # Determine safe number of workers (leave 1 core free for OS)
+        MAX_WORKERS = max(1, os.cpu_count() - 1)
+        # If running on a powerful server, you might cap this at 32 so you don't overwhelm I/O
+        if MAX_WORKERS > 64: 
+            MAX_WORKERS = 64
+            
+        print(f"Starting parallel execution with {MAX_WORKERS} workers...")
+
+        # We use ProcessPoolExecutor. `as_completed` allows us to safely write to the file 
+        # from this main thread as results return, avoiding file locking issues.
+        with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            future_to_task = {executor.submit(run_sweep_task, task, EVAL_REPEATS, INFERENCE_WEIGHT_SAMPLES): task for task in tasks}
+            
+            completed = 0
+            for future in concurrent.futures.as_completed(future_to_task):
+                completed += 1
+                try:
+                    result = future.result()
+                    with open(results_jsonl_path, "a", encoding="utf-8") as f:
+                        f.write(json.dumps(result) + "\n")
                         
-                        # Append Proposed Tasks
-                        for beta_coeff in BETA_COEFF_GRID:
-                            for gamma_coeff in GAMMA_COEFF_GRID:
-                                tasks.append({
-                                    "scenario": "proposed", "seed": seed, "hidden_dim": hidden_dim,
-                                    "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels, 
-                                    "lr": lr, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff
-                                })
+                    if completed % 50 == 0:
+                        print(f"Progress: {completed}/{len(tasks)} tasks completed.")
+                except Exception as exc:
+                    print(f"A task generated an exception: {exc}")
 
-    print(f"Total tasks generated: {len(tasks)}")
-
-    # EXECUTE IN PARALLEL
-    # Determine safe number of workers (leave 1 core free for OS)
-    MAX_WORKERS = max(1, os.cpu_count() - 1)
-    # If running on a powerful server, you might cap this at 32 so you don't overwhelm I/O
-    if MAX_WORKERS > 64: 
-        MAX_WORKERS = 64
+        print(f"Sweep complete. Incremental results saved to {results_jsonl_path}")
         
-    print(f"Starting parallel execution with {MAX_WORKERS} workers...")
+        # --- Post-process the file to calculate the summary ---
+        sweep_results = []
+        with open(results_jsonl_path, "r", encoding="utf-8") as f:
+            for line in f:
+                sweep_results.append(json.loads(line.strip()))
 
-    # We use ProcessPoolExecutor. `as_completed` allows us to safely write to the file 
-    # from this main thread as results return, avoiding file locking issues.
-    with concurrent.futures.ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_to_task = {executor.submit(run_sweep_task, task, EVAL_REPEATS, INFERENCE_WEIGHT_SAMPLES): task for task in tasks}
-        
-        completed = 0
-        for future in concurrent.futures.as_completed(future_to_task):
-            completed += 1
-            try:
-                result = future.result()
-                with open(results_jsonl_path, "a", encoding="utf-8") as f:
-                    f.write(json.dumps(result) + "\n")
-                    
-                if completed % 50 == 0:
-                    print(f"Progress: {completed}/{len(tasks)} tasks completed.")
-            except Exception as exc:
-                print(f"A task generated an exception: {exc}")
+        erm_results = [res for res in sweep_results if res['scenario'] == 'erm']
+        proposed_results = [res for res in sweep_results if res['scenario'] == 'proposed']
 
-    print(f"Sweep complete. Incremental results saved to {results_jsonl_path}")
-    
-    # --- Post-process the file to calculate the summary ---
-    sweep_results = []
-    with open(results_jsonl_path, "r", encoding="utf-8") as f:
-        for line in f:
-            sweep_results.append(json.loads(line.strip()))
+        best_proposed_overall = None
+        if proposed_results:
+            best_proposed_overall = max(proposed_results, key=lambda x: x['acc'])
 
-    erm_results = [res for res in sweep_results if res['scenario'] == 'erm']
-    proposed_results = [res for res in sweep_results if res['scenario'] == 'proposed']
+        erm_baselines = {}
+        for res in erm_results:
+            key = (res['seed'], res['hidden_dim'], res['n_u_sets'], res['m_artificial_channels'], res['lr'])
+            erm_baselines[key] = res['acc']
 
-    best_proposed_overall = None
-    if proposed_results:
-        best_proposed_overall = max(proposed_results, key=lambda x: x['acc'])
+        proposed_better_configs = []
+        for prop in proposed_results:
+            key = (prop['seed'], prop['hidden_dim'], prop['n_u_sets'], prop['m_artificial_channels'], prop['lr'])
+            matching_erm_acc = erm_baselines.get(key, 0.0)
+            
+            if prop['acc'] > matching_erm_acc:
+                prop_copy = prop.copy()
+                prop_copy['erm_baseline_acc'] = matching_erm_acc
+                prop_copy['accuracy_improvement'] = prop['acc'] - matching_erm_acc
+                proposed_better_configs.append(prop_copy)
 
-    erm_baselines = {}
-    for res in erm_results:
-        key = (res['seed'], res['hidden_dim'], res['n_u_sets'], res['m_artificial_channels'], res['lr'])
-        erm_baselines[key] = res['acc']
+        proposed_beats_erm_flag = len(proposed_better_configs) > 0
+        best_beating_config = None
 
-    proposed_better_configs = []
-    for prop in proposed_results:
-        key = (prop['seed'], prop['hidden_dim'], prop['n_u_sets'], prop['m_artificial_channels'], prop['lr'])
-        matching_erm_acc = erm_baselines.get(key, 0.0)
-        
-        if prop['acc'] > matching_erm_acc:
-            prop_copy = prop.copy()
-            prop_copy['erm_baseline_acc'] = matching_erm_acc
-            prop_copy['accuracy_improvement'] = prop['acc'] - matching_erm_acc
-            proposed_better_configs.append(prop_copy)
+        if proposed_beats_erm_flag:
+            best_beating_config = max(proposed_better_configs, key=lambda x: x['accuracy_improvement'])
 
-    proposed_beats_erm_flag = len(proposed_better_configs) > 0
-    best_beating_config = None
+        summary_dict = {
+            "best_proposed_overall": best_proposed_overall,
+            "proposed_beats_erm_anywhere": proposed_beats_erm_flag,
+            "total_configs_beating_erm": len(proposed_better_configs),
+            "best_config_beating_erm_by_margin": best_beating_config
+        }
 
-    if proposed_beats_erm_flag:
-        best_beating_config = max(proposed_better_configs, key=lambda x: x['accuracy_improvement'])
+        summary_path = os.path.join(RESULTS_DIR, "sweep_summary.json")
+        with open(summary_path, "w", encoding="utf-8") as f:
+            json.dump(summary_dict, f, indent=4)
 
-    summary_dict = {
-        "best_proposed_overall": best_proposed_overall,
-        "proposed_beats_erm_anywhere": proposed_beats_erm_flag,
-        "total_configs_beating_erm": len(proposed_better_configs),
-        "best_config_beating_erm_by_margin": best_beating_config
-    }
-
-    summary_path = os.path.join(RESULTS_DIR, "sweep_summary.json")
-    with open(summary_path, "w", encoding="utf-8") as f:
-        json.dump(summary_dict, f, indent=4)
-
-    print(f"Summary complete. JSON summary saved to {summary_path}")
+        print(f"Summary complete. JSON summary saved to {summary_path}")
