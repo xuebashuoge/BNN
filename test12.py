@@ -939,7 +939,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     hidden_dim = task_config['hidden_dim']
     m_artificial_channels = task_config['m_artificial_channels']
     lr = task_config['lr']
-    use_cacahe = task_config['use_cache']
+    use_cache = task_config['use_cache']
     verbose = task_config['verbose']
 
     set_seed(seed)
@@ -956,7 +956,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         model = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
             hidden_dim=hidden_dim, 
-            m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=use_cacahe, verbose=verbose
+            m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=use_cache, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
@@ -977,7 +977,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
             'proposed', train_loader, n_trains, mode='train', objective='heuristic',
             hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
             lr=lr, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
-            seed=seed, use_cache=use_cacahe, verbose=verbose
+            seed=seed, use_cache=use_cache, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
@@ -1100,7 +1100,7 @@ if __name__ == "__main__":
         LR_GRID = [0.003]
         BETA_COEFF_GRID = [0.1]
         GAMMA_COEFF_GRID = [0.05]
-        use_cacahe = False
+        use_cache = False
         verbose = False
 
         # PRE-GENERATE DATASETS SEQUENTIALLY
@@ -1121,7 +1121,7 @@ if __name__ == "__main__":
                             tasks.append({
                                 "scenario": "erm", "seed": seed, "hidden_dim": hidden_dim,
                                 "m_artificial_channels": m_artificial_channels, "lr": lr,
-                                use_cacahe: use_cacahe, "verbose": verbose,
+                                "use_cache": use_cache, "verbose": verbose,
                             })
                             
                             # Append Proposed Tasks
@@ -1131,7 +1131,7 @@ if __name__ == "__main__":
                                         "scenario": "proposed", "seed": seed, "hidden_dim": hidden_dim,
                                         "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels, 
                                         "lr": lr, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff,
-                                        use_cacahe: use_cacahe, "verbose": verbose,
+                                        "use_cache": use_cache, "verbose": verbose,
                                     })
 
         print(f"Total tasks generated: {len(tasks)}")
