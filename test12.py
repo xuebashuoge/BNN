@@ -1005,69 +1005,57 @@ if __name__ == "__main__":
             noise=MOONS_NOISE,
         )
         # Scenario A: Standard ERM + perfect channel
-        model_erm_perfect = train_scenario('erm', train_loader, n_trains, mode='perfect', objective='bound', seed=SEED)
+        model_erm_perfect = train_scenario('erm', train_loader, n_trains, mode='perfect', objective='bound', seed=SEED, use_cache=True, verbose=True)
         loss_erm_perfect, acc_erm_perfect = evaluate_inference(
             model_erm_perfect,
             test_loader,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
-            use_cache=True,
-            verbose=True,
         )
 
         # Scenario B: Standard ERM + train channel (overfitting to P_art)
-        model_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', seed=SEED)
+        model_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', seed=SEED, use_cache=True, verbose=True)
         loss_erm, acc_erm = evaluate_inference(
             model_erm,
             test_loader,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
-            use_cache=True,
-            verbose=True,
         )
 
         # Scenario C: L2 Regularization + perfect channel
-        model_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED)
+        model_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_l2_perfect, acc_l2_perfect = evaluate_inference(
             model_l2_perfect,
             test_loader,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
-            use_cache=True,
-            verbose=True,
         )
 
         # Scenario D: L2 Regularization + train channel
-        model_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED)
+        model_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_l2, acc_l2 = evaluate_inference(
             model_l2,
             test_loader,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
-            use_cache=True,
-            verbose=True,
         )
 
         # Scenario E: Proposed Bound + perfect channel
-        model_prop_perfect = train_scenario('proposed', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED)
+        model_prop_perfect = train_scenario('proposed', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_prop_perfect, acc_prop_perfect = evaluate_inference(
             model_prop_perfect,
             test_loader,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
-            use_cache=True,
-            verbose=True,
         )
 
         # Scenario F: Proposed Bound Regularization
-        model_prop = train_scenario('proposed', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED)
+        model_prop = train_scenario('proposed', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_prop, acc_prop = evaluate_inference(
             model_prop,
             test_loader,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
-            use_cache=True,
-            verbose=True,
         )
 
         print("\n" + "="*50)
