@@ -865,10 +865,12 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
 # ==========================================
 # 7. EVALUATION ON INFERENCE CHANNEL (P_ch)
 # ==========================================
-def evaluate_inference(model, loader, repeats=1, weight_mc_samples=1):
+def evaluate_inference(model, loader, seed, repeats=1, weight_mc_samples=1):
     model.eval()
     loss_runs = []
     acc_runs = []
+
+    set_seed(seed)
 
     with torch.no_grad():
         for _ in range(repeats):
@@ -956,7 +958,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
             hidden_dim=hidden_dim, 
             m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=use_cacahe, verbose=verbose
         )
-        loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
+        loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
         
         return {
@@ -992,7 +994,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = False
+    RUN_SWEEP = True
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1009,6 +1011,7 @@ if __name__ == "__main__":
         loss_erm_perfect, acc_erm_perfect = evaluate_inference(
             model_erm_perfect,
             test_loader,
+            seed=SEED,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
         )
@@ -1018,6 +1021,7 @@ if __name__ == "__main__":
         loss_erm, acc_erm = evaluate_inference(
             model_erm,
             test_loader,
+            seed=SEED,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
         )
@@ -1027,6 +1031,7 @@ if __name__ == "__main__":
         loss_l2_perfect, acc_l2_perfect = evaluate_inference(
             model_l2_perfect,
             test_loader,
+            seed=SEED,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
         )
@@ -1036,6 +1041,7 @@ if __name__ == "__main__":
         loss_l2, acc_l2 = evaluate_inference(
             model_l2,
             test_loader,
+            seed=SEED,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
         )
@@ -1045,6 +1051,7 @@ if __name__ == "__main__":
         loss_prop_perfect, acc_prop_perfect = evaluate_inference(
             model_prop_perfect,
             test_loader,
+            seed=SEED,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
         )
@@ -1054,6 +1061,7 @@ if __name__ == "__main__":
         loss_prop, acc_prop = evaluate_inference(
             model_prop,
             test_loader,
+            seed=SEED,
             repeats=EVAL_REPEATS,
             weight_mc_samples=INFERENCE_WEIGHT_SAMPLES,
         )
