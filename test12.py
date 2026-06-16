@@ -979,7 +979,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
             lr=lr, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             seed=seed, use_cache=use_cache, verbose=verbose
         )
-        loss, acc = evaluate_inference(model, test_loader, repeats=repeats, weight_mc_samples=weight_mc_samples)
+        loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
         
         return {
@@ -1091,7 +1091,7 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 1000
+        num_seeds = 2000
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
         SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
         HIDDEN_DIM_GRID = [64]
@@ -1180,12 +1180,12 @@ if __name__ == "__main__":
 
         erm_baselines = {}
         for res in erm_results:
-            key = (res['seed'], res['hidden_dim'], res['n_u_sets'], res['m_artificial_channels'], res['lr'])
+            key = (res['seed'], res['hidden_dim'], res['m_artificial_channels'], res['lr'])
             erm_baselines[key] = res['acc']
 
         proposed_better_configs = []
         for prop in proposed_results:
-            key = (prop['seed'], prop['hidden_dim'], prop['n_u_sets'], prop['m_artificial_channels'], prop['lr'])
+            key = (prop['seed'], prop['hidden_dim'], prop['m_artificial_channels'], prop['lr'])
             matching_erm_acc = erm_baselines.get(key, 0.0)
             
             if prop['acc'] > matching_erm_acc:

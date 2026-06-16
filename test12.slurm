@@ -16,7 +16,7 @@
 #SBATCH --ntasks=1                 # Run a single task (the python script)
 #SBATCH --cpus-per-task=32         # Request 32 CPU cores for the multiprocessing pool
 #SBATCH --mem=40G                  # Request 32 GB of total RAM
-#SBATCH --time=4:00:00            # Time limit (HH:MM:SS)
+#SBATCH --time=6:00:00            # Time limit (HH:MM:SS)
   
 
 #=========================================================
