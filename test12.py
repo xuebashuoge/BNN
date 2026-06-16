@@ -42,7 +42,7 @@ MOONS_NOISE = 0.3      # make_moons noise level
 BATCH_SIZE = 64        # Reduced batch size for noisier gradients
 EPOCHS = 150           # Increased epochs to ensure ERM fully memorizes
 LR_BASE = 0.003         # Adjusted base learning rate
-LR_DECAY_STEP = 0     # StepLR decay period (epochs)
+LR_DECAY_STEP = 50     # StepLR decay period (epochs)
 LR_DECAY_GAMMA = 0.5   # StepLR decay factor
 PRIOR_LAMBDA = 1.0     # Variance of isotropic Gaussian prior
 EPSILON = 0.025         # PAC-Bayes confidence parameter
@@ -994,7 +994,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = True
+    RUN_SWEEP = False
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
