@@ -484,8 +484,13 @@ def config_hash(config):
     payload = json.dumps(config, sort_keys=True, separators=(",", ":"))
     return hashlib.sha1(payload.encode("utf-8")).hexdigest()[:10]
 
-def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, lr=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
+def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
+    batch_size = BATCH_SIZE if batch_size is None else batch_size
+    moon_noise = MOONS_NOISE if moon_noise is None else moon_noise
+    epochs = EPOCHS if epochs is None else epochs
     lr = LR_BASE if lr is None else lr
+    lr_decay_step = LR_DECAY_STEP if lr_decay_step is None else lr_decay_step
+    lr_decay_gamma = LR_DECAY_GAMMA if lr_decay_gamma is None else lr_decay_gamma
     alpha_coeff = ALPHA_COEFF if alpha_coeff is None else alpha_coeff
     beta_coeff = BETA_COEFF if beta_coeff is None else beta_coeff
     gamma_coeff = GAMMA_COEFF if gamma_coeff is None else gamma_coeff
@@ -495,9 +500,12 @@ def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_sa
     return {
         "scenario_name": scenario_name, "mode": mode,
         "objective": "N/A" if scenario_name == 'erm' else objective,
-        "n_samples_train": n_samples, "seed": seed,
+        "n_samples": n_samples, "seed": seed,
+        "batch_size": batch_size, "moon_noise": moon_noise,
         "training": {
-            "lr": lr, "alpha_coeff": alpha_coeff if scenario_name != 'erm' else "N/A",
+            "epochs": epochs,
+            "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma,
+            "alpha_coeff": alpha_coeff if scenario_name != 'erm' else "N/A",
             "beta_coeff": beta_coeff if scenario_name != 'erm' else "N/A",
             "gamma_coeff": gamma_coeff if scenario_name != 'erm' else "N/A",
             "hidden_dim": hidden_dim, 
@@ -506,8 +514,8 @@ def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_sa
         }
     }
 
-def get_run_dir(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, lr=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
-    param_cfg = build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, lr=lr, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff, hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels)
+def get_run_dir(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
+    param_cfg = build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff, hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels)
     run_id = config_hash(param_cfg)
     label = scenario_label(scenario_name, mode, objective)
     run_dir = os.path.join(RESULTS_DIR, label, f"param_{run_id}")
@@ -539,8 +547,14 @@ def save_training_history(
     scenario_name,
     mode,
     objective,
+    batch_size,
+    moon_noise,
+    n_samples,
+    epochs,
     history,
     lr,
+    lr_decay_step,
+    lr_decay_gamma,
     alpha_coeff,
     beta_coeff,
     gamma_coeff,
@@ -550,7 +564,13 @@ def save_training_history(
         "scenario": scenario_name,
         "mode": mode,
         "objective": objective,
+        "batch_size": batch_size,
+        "moon_noise": moon_noise,
+        "n_samples": n_samples,
+        "epochs": epochs,
         "lr": lr,
+        "lr_decay_step": lr_decay_step,
+        "lr_decay_gamma": lr_decay_gamma,
         "alpha": alpha_coeff,
         "beta": beta_coeff,
         "gamma": gamma_coeff,
@@ -566,8 +586,13 @@ def save_training_history(
         json.dump(payload, f, indent=2)
     return payload
 
-def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='bound', lr=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, mi_mc_samples=None, seed=None, lipschitz_method_perfect=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, use_cache=True, run_dir=None, verbose=False):
+def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='bound', batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, mi_mc_samples=None, seed=None, lipschitz_method_perfect=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, use_cache=True, run_dir=None, verbose=False):
+    batch_size = BATCH_SIZE if batch_size is None else batch_size
+    moon_noise = MOONS_NOISE if moon_noise is None else moon_noise
+    epochs = EPOCHS if epochs is None else epochs
     lr = LR_BASE if lr is None else lr
+    lr_decay_step = LR_DECAY_STEP if lr_decay_step is None else lr_decay_step
+    lr_decay_gamma = LR_DECAY_GAMMA if lr_decay_gamma is None else lr_decay_gamma
     alpha_coeff = ALPHA_COEFF if alpha_coeff is None else alpha_coeff
     beta_coeff = BETA_COEFF if beta_coeff is None else beta_coeff
     gamma_coeff = GAMMA_COEFF if gamma_coeff is None else gamma_coeff
@@ -585,11 +610,11 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
         model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = None
-    if LR_DECAY_STEP and LR_DECAY_STEP > 0:
+    if lr_decay_step and lr_decay_step > 0:
         scheduler = torch.optim.lr_scheduler.StepLR(
             optimizer,
-            step_size=LR_DECAY_STEP,
-            gamma=LR_DECAY_GAMMA,
+            step_size=lr_decay_step,
+            gamma=lr_decay_gamma,
         )
 
     mi_mc_samples = MI_MC_SAMPLES if mi_mc_samples is None else mi_mc_samples
@@ -599,8 +624,8 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     if run_dir is None and use_cache:
         run_dir = get_run_dir(
             scenario_name, mode, objective,
-            n_samples, seed, mi_mc_samples, lipschitz_method_perfect,
-            lr=lr, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
+            n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs,
+            lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
         )
     else:
@@ -634,7 +659,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     }
     stop_training = False
 
-    for epoch in range(EPOCHS):
+    for epoch in range(epochs):
         epoch_loss = 0.0
         epoch_reg = 0.0
         epoch_bound_total = 0.0
@@ -851,8 +876,14 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             scenario_name,
             mode,
             objective,
+            batch_size,
+            moon_noise,
+            n_samples,
+            epochs,
             history,
             lr,
+            lr_decay_step,
+            lr_decay_gamma,
             alpha_coeff,
             beta_coeff,
             gamma_coeff,
@@ -937,8 +968,14 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     seed = task_config['seed']
     scenario = task_config['scenario']
     hidden_dim = task_config['hidden_dim']
+    batch_size = task_config['batch_size']
+    moon_noise = task_config['moon_noise']
+    n_samples = task_config['n_samples']
+    epochs = task_config['epochs']
     m_artificial_channels = task_config['m_artificial_channels']
     lr = task_config['lr']
+    lr_decay_step = task_config['lr_decay_step']
+    lr_decay_gamma = task_config['lr_decay_gamma']
     use_cache = task_config['use_cache']
     verbose = task_config['verbose']
 
@@ -946,26 +983,26 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     
     # Load safe pre-generated datasets from disk
     train_loader, test_loader, n_trains = get_dataloaders(
-        N_SAMPLES,
-        batch_size=BATCH_SIZE,
+        n_samples,
+        batch_size=batch_size,
         seed=seed,
-        noise=MOONS_NOISE,
+        noise=moon_noise,
     )
 
     if scenario == 'erm':
         model = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
-            hidden_dim=hidden_dim, 
-            m_artificial_channels=m_artificial_channels, lr=lr, seed=seed, use_cache=use_cache, verbose=verbose
+            hidden_dim=hidden_dim, epochs=epochs, batch_size=batch_size, moon_noise=moon_noise, n_samples=n_samples,
+            m_artificial_channels=m_artificial_channels, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, seed=seed, use_cache=use_cache, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
         free_memory(model)
         
         return {
             "seed": seed, "scenario": "erm", "objective": "bound", "mode": "train",
-            "beta_coeff": None, "gamma_coeff": None, "hidden_dim": hidden_dim,
+            "beta_coeff": None, "gamma_coeff": None, "hidden_dim": hidden_dim, "batch_size": batch_size, "moon_noise": moon_noise, "n_samples": n_samples, "epochs": epochs,
             "n_u_sets": None, "m_artificial_channels": m_artificial_channels,
-            "lr": lr, "loss": loss, "acc": acc
+            "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma, "loss": loss, "acc": acc
         }
         
     elif scenario == 'proposed':
@@ -975,8 +1012,9 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         
         model = train_scenario(
             'proposed', train_loader, n_trains, mode='train', objective='heuristic',
-            hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
-            lr=lr, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
+            hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, n_samples=n_samples, epochs=epochs,
+            n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
+            lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             seed=seed, use_cache=use_cache, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
@@ -984,8 +1022,9 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         
         return {
             "seed": seed, "scenario": "proposed", "objective": "heuristic", "mode": "train",
-            "hidden_dim": hidden_dim, "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels,
-            "lr": lr, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff,
+            "hidden_dim": hidden_dim, "batch_size": batch_size, "moon_noise": moon_noise, "n_samples": n_samples, "epochs": epochs,
+            "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels,
+            "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff,
             "loss": loss, "acc": acc
         }
 
@@ -1091,15 +1130,18 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 2000
+        num_seeds = 1000
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
         SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
         HIDDEN_DIM_GRID = [64]
         N_U_SETS_GRID = [10]
         M_ARTIFICIAL_CHANNELS_GRID = [100]
         LR_GRID = [0.003]
+        LR_DECAY_STEP_GRID = [30, 50, 75]
+        LR_DECAY_GAMMA_GRID = [0.1, 0.5, 0.8]
         BETA_COEFF_GRID = [0.1]
         GAMMA_COEFF_GRID = [0.05]
+        EPOCHS_GRID = [150]
         use_cache = False
         verbose = False
 
@@ -1116,23 +1158,27 @@ if __name__ == "__main__":
             for hidden_dim in HIDDEN_DIM_GRID:
                 for n_u_sets in N_U_SETS_GRID:
                     for m_artificial_channels in M_ARTIFICIAL_CHANNELS_GRID:
-                        for lr in LR_GRID:
-                            # Append ERM Task
-                            tasks.append({
-                                "scenario": "erm", "seed": seed, "hidden_dim": hidden_dim,
-                                "m_artificial_channels": m_artificial_channels, "lr": lr,
-                                "use_cache": use_cache, "verbose": verbose,
-                            })
-                            
-                            # Append Proposed Tasks
-                            for beta_coeff in BETA_COEFF_GRID:
-                                for gamma_coeff in GAMMA_COEFF_GRID:
-                                    tasks.append({
-                                        "scenario": "proposed", "seed": seed, "hidden_dim": hidden_dim,
-                                        "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels, 
-                                        "lr": lr, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff,
-                                        "use_cache": use_cache, "verbose": verbose,
-                                    })
+                        for epochs in EPOCHS_GRID:
+                            for lr in LR_GRID:
+                                for lr_decay_step in LR_DECAY_STEP_GRID:
+                                    for lr_decay_gamma in LR_DECAY_GAMMA_GRID:
+                                        # Append ERM Task
+                                        tasks.append({
+                                            "scenario": "erm", "seed": seed, "hidden_dim": hidden_dim, "batch_size": BATCH_SIZE, "moon_noise": MOONS_NOISE, "n_samples": N_SAMPLES, "epochs": epochs,
+                                            "m_artificial_channels": m_artificial_channels, "lr": lr,
+                                            "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma,
+                                            "use_cache": use_cache, "verbose": verbose,
+                                        })
+                                        
+                                        # Append Proposed Tasks
+                                        for beta_coeff in BETA_COEFF_GRID:
+                                            for gamma_coeff in GAMMA_COEFF_GRID:
+                                                tasks.append({
+                                                    "scenario": "proposed", "seed": seed, "hidden_dim": hidden_dim, "batch_size": BATCH_SIZE, "moon_noise": MOONS_NOISE, "n_samples": N_SAMPLES, "epochs": epochs,
+                                                    "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels, 
+                                                    "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff,
+                                                    "use_cache": use_cache, "verbose": verbose,
+                                                })
 
         print(f"Total tasks generated: {len(tasks)}")
 
@@ -1180,12 +1226,12 @@ if __name__ == "__main__":
 
         erm_baselines = {}
         for res in erm_results:
-            key = (res['seed'], res['hidden_dim'], res['m_artificial_channels'], res['lr'])
+            key = (res['seed'], res['hidden_dim'], res['batch_size'], res['moon_noise'], res['epochs'], res['n_samples'], res['m_artificial_channels'], res['lr'], res['lr_decay_step'], res['lr_decay_gamma'])
             erm_baselines[key] = res['acc']
 
         proposed_better_configs = []
         for prop in proposed_results:
-            key = (prop['seed'], prop['hidden_dim'], prop['m_artificial_channels'], prop['lr'])
+            key = (prop['seed'], prop['hidden_dim'], prop['batch_size'], prop['moon_noise'], prop['epochs'], prop['n_samples'], prop['m_artificial_channels'], prop['lr'], prop['lr_decay_step'], prop['lr_decay_gamma'])
             matching_erm_acc = erm_baselines.get(key, 0.0)
             
             if prop['acc'] > matching_erm_acc:
