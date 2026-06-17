@@ -992,7 +992,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     if scenario == 'erm':
         model = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
-            hidden_dim=hidden_dim, epochs=epochs, batch_size=batch_size, moon_noise=moon_noise, n_samples=n_samples,
+            hidden_dim=hidden_dim, epochs=epochs, batch_size=batch_size, moon_noise=moon_noise,
             m_artificial_channels=m_artificial_channels, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, seed=seed, use_cache=use_cache, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
@@ -1012,7 +1012,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         
         model = train_scenario(
             'proposed', train_loader, n_trains, mode='train', objective='heuristic',
-            hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, n_samples=n_samples, epochs=epochs,
+            hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs,
             n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
             lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             seed=seed, use_cache=use_cache, verbose=verbose
@@ -1033,7 +1033,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = False
+    RUN_SWEEP = True
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1131,7 +1131,7 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 1000
+        num_seeds = 1
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
         SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
         HIDDEN_DIM_GRID = [64]
@@ -1185,7 +1185,8 @@ if __name__ == "__main__":
 
         # EXECUTE IN PARALLEL
         # Determine safe number of workers (leave 1 core free for OS)
-        MAX_WORKERS = max(1, os.cpu_count() - 1)
+        # MAX_WORKERS = max(1, os.cpu_count() - 1)
+        MAX_WORKERS = 2
         # If running on a powerful server, you might cap this at 32 so you don't overwhelm I/O
         if MAX_WORKERS > 64: 
             MAX_WORKERS = 64
