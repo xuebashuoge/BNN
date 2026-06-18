@@ -53,7 +53,7 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 2
+SEED = 3
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -126,7 +126,7 @@ CH_PENALTY = get_channel_penalty(HIDDEN_DIM)
 # 3. DATA GENERATION
 # ==========================================
 # Personalized dataset path handling
-data_path = os.environ.get('DATASET', './data')
+data_path = os.environ.get('DATASET/two_moons', './data')
 os.makedirs(data_path, exist_ok=True)
 
 def set_seed(seed: int):
