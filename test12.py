@@ -86,8 +86,8 @@ def estimate_expected_channel_norm(hidden_dim, mu_m_te, mu_b_te, std_m_te, std_b
     Monte Carlo estimation of E[ || W' - (I, 0) || ]
     Where W' = (M, B). Therefore W' - (I, 0) = (M - I, B).
     """
-    M_diff = torch.randn(mc_samples, hidden_dim, hidden_dim, device=device) * std_m_te + mu_m_te - 1.0
-    B = torch.randn(mc_samples, hidden_dim, 1, device=device) * std_b_te + mu_b_te
+    M_diff = torch.randn(mc_samples, hidden_dim, hidden_dim, device='cpu').to(device) * std_m_te + mu_m_te - 1.0
+    B = torch.randn(mc_samples, hidden_dim, 1, device='cpu').to(device) * std_b_te + mu_b_te
     W_diff = torch.cat([M_diff, B], dim=2)
     
     is_mps = isinstance(device, torch.device) and device.type == "mps" or device == "mps"
