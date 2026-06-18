@@ -126,7 +126,8 @@ CH_PENALTY = get_channel_penalty(HIDDEN_DIM)
 # 3. DATA GENERATION
 # ==========================================
 # Personalized dataset path handling
-data_path = os.environ.get('DATASET/two_moons', './data')
+base_data_path = os.environ.get('DATASET', './data')
+data_path = os.path.join(base_data_path, 'two_moons')
 os.makedirs(data_path, exist_ok=True)
 
 def set_seed(seed: int):
