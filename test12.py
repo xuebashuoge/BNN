@@ -1136,13 +1136,14 @@ if __name__ == "__main__":
         # 2. Generate a list of 10 unique random seeds
         num_seeds = 1000
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
-        SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
+        # SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
+        SEEDS = [2010133918]
         HIDDEN_DIM_GRID = [64]
         N_U_SETS_GRID = [10]
         M_ARTIFICIAL_CHANNELS_GRID = [100]
         LR_GRID = [0.003]
-        LR_DECAY_STEP_GRID = [30, 50, 75]
-        LR_DECAY_GAMMA_GRID = [0.1, 0.5, 0.8]
+        LR_DECAY_STEP_GRID = [75]
+        LR_DECAY_GAMMA_GRID = [0.8]
         BETA_COEFF_GRID = [0.1]
         GAMMA_COEFF_GRID = [0.05]
         EPOCHS_GRID = [150]
