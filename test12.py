@@ -53,7 +53,7 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 5
+SEED = 6
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -258,7 +258,7 @@ class VectorizedBNNEnsemble(nn.Module):
 
     def sample_theta(self, num_samples=1):
         sigma = self.get_sigma()
-        eps = torch.randn(num_samples, self.K, self.D, device=device)
+        eps = torch.randn(num_samples, self.K, self.D, device='cpu').to(device)
         return self.mu.unsqueeze(0) + sigma.unsqueeze(0) * eps
 
     def forward(self, x, theta, mode='perfect'):
