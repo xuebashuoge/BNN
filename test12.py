@@ -227,8 +227,8 @@ class StochasticChannelLayer(nn.Module):
             m = self.u_m.to(x.device)[component_idx, idx]
             b = self.u_b.to(x.device)[component_idx, idx]
         elif mode == 'test':
-            m = torch.randn(self.K, B, self.hid_dim, device=x.device) * STD_M_TE + MU_M_TE
-            b = torch.randn(self.K, B, self.hid_dim, device=x.device) * STD_B_TE + MU_B_TE
+            m = torch.randn(self.K, B, self.hid_dim, device='cpu').to(x.device) * STD_M_TE + MU_M_TE
+            b = torch.randn(self.K, B, self.hid_dim, device='cpu').to(x.device) * STD_B_TE + MU_B_TE
         else:
             raise ValueError(f"Invalid mode '{mode}'")
 
