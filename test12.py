@@ -53,7 +53,7 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 2010133918
+SEED = 2
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -142,13 +142,13 @@ def set_seed(seed: int):
 def get_dataloaders(n_samples, batch_size=32, seed=0, noise=0.3):
     """Generates make_moons dataset and saves to DATASET path."""
     noise_tag = f"{noise:.4f}".replace(".", "p")
-    dataset_file = os.path.join(data_path, f"moons_data_n{n_samples}_noise_{noise_tag}.pt")
+    dataset_file = os.path.join(data_path, f"moons_data_n{n_samples}_noise_{noise_tag}_seed_{seed}.pt")
     
     if not os.path.exists(dataset_file):
         print(f"Generating data and saving to {dataset_file}...")
-        X, y = make_moons(n_samples=n_samples, noise=noise, random_state=42)
+        X, y = make_moons(n_samples=n_samples, noise=noise, random_state=seed)
 
-        visualize_and_save_dataset(X, y, filename=os.path.join(data_path, "moons_viz.png"), title="Original Moons Dataset")
+        visualize_and_save_dataset(X, y, filename=os.path.join(data_path, f"moons_viz_seed_{seed}.png"), title="Original Moons Dataset")
 
         X_tensor = torch.tensor(X, dtype=torch.float32)
         y_tensor = torch.tensor(y, dtype=torch.long)
