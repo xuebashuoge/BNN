@@ -53,7 +53,7 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 5
+SEED = 6
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -86,8 +86,8 @@ def estimate_expected_channel_norm(hidden_dim, mu_m_te, mu_b_te, std_m_te, std_b
     Monte Carlo estimation of E[ || W' - (I, 0) || ]
     Where W' = (M, B). Therefore W' - (I, 0) = (M - I, B).
     """
-    M_diff = torch.randn(mc_samples, hidden_dim, hidden_dim, device=device) * std_m_te + mu_m_te - 1.0
-    B = torch.randn(mc_samples, hidden_dim, 1, device=device) * std_b_te + mu_b_te
+    M_diff = torch.randn(mc_samples, hidden_dim, hidden_dim, device='cpu').to(device) * std_m_te + mu_m_te - 1.0
+    B = torch.randn(mc_samples, hidden_dim, 1, device='cpu').to(device) * std_b_te + mu_b_te
     W_diff = torch.cat([M_diff, B], dim=2)
     
     is_mps = isinstance(device, torch.device) and device.type == "mps" or device == "mps"
@@ -258,7 +258,7 @@ class VectorizedBNNEnsemble(nn.Module):
 
     def sample_theta(self, num_samples=1):
         sigma = self.get_sigma()
-        eps = torch.randn(num_samples, self.K, self.D, device=device)
+        eps = torch.randn(num_samples, self.K, self.D, device='cpu').to(device)
         return self.mu.unsqueeze(0) + sigma.unsqueeze(0) * eps
 
     def forward(self, x, theta, mode='perfect'):
