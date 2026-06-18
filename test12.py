@@ -42,8 +42,8 @@ MOONS_NOISE = 0.3      # make_moons noise level
 BATCH_SIZE = 64        # Reduced batch size for noisier gradients
 EPOCHS = 150           # Increased epochs to ensure ERM fully memorizes
 LR_BASE = 0.003         # Adjusted base learning rate
-LR_DECAY_STEP = 50     # StepLR decay period (epochs)
-LR_DECAY_GAMMA = 0.5   # StepLR decay factor
+LR_DECAY_STEP = 75     # StepLR decay period (epochs)
+LR_DECAY_GAMMA = 0.8   # StepLR decay factor
 PRIOR_LAMBDA = 1.0     # Variance of isotropic Gaussian prior
 EPSILON = 0.025         # PAC-Bayes confidence parameter
 SIGMA_SQ = 1.0         # Assumed sub-Gaussian parameter
@@ -53,7 +53,7 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 2030106617
+SEED = 2010133918
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -1133,13 +1133,14 @@ if __name__ == "__main__":
         # 2. Generate a list of 10 unique random seeds
         num_seeds = 1
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
-        SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
+        # SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
+        SEEDS = [2010133918]
         HIDDEN_DIM_GRID = [64]
         N_U_SETS_GRID = [10]
         M_ARTIFICIAL_CHANNELS_GRID = [100]
         LR_GRID = [0.003]
-        LR_DECAY_STEP_GRID = [30, 50, 75]
-        LR_DECAY_GAMMA_GRID = [0.1, 0.5, 0.8]
+        LR_DECAY_STEP_GRID = [75]
+        LR_DECAY_GAMMA_GRID = [0.8]
         BETA_COEFF_GRID = [0.1]
         GAMMA_COEFF_GRID = [0.05]
         EPOCHS_GRID = [150]
