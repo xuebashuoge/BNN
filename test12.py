@@ -42,8 +42,8 @@ MOONS_NOISE = 0.3      # make_moons noise level
 BATCH_SIZE = 64        # Reduced batch size for noisier gradients
 EPOCHS = 150           # Increased epochs to ensure ERM fully memorizes
 LR_BASE = 0.003         # Adjusted base learning rate
-LR_DECAY_STEP = 50     # StepLR decay period (epochs)
-LR_DECAY_GAMMA = 0.5   # StepLR decay factor
+LR_DECAY_STEP = 75     # StepLR decay period (epochs)
+LR_DECAY_GAMMA = 0.8   # StepLR decay factor
 PRIOR_LAMBDA = 1.0     # Variance of isotropic Gaussian prior
 EPSILON = 0.025         # PAC-Bayes confidence parameter
 SIGMA_SQ = 1.0         # Assumed sub-Gaussian parameter
@@ -53,7 +53,7 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 2030106617
+SEED = 2010133918
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -130,10 +130,13 @@ data_path = os.environ.get('DATASET', './data')
 os.makedirs(data_path, exist_ok=True)
 
 def set_seed(seed: int):
+    random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
+    if torch.backends.mps.is_available():
+        torch.manual_seed(seed)
 
 
 def get_dataloaders(n_samples, batch_size=32, seed=0, noise=0.3):
@@ -1033,7 +1036,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = True
+    RUN_SWEEP = False
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1131,7 +1134,7 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 1
+        num_seeds = 1000
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
         SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
         HIDDEN_DIM_GRID = [64]
@@ -1185,8 +1188,8 @@ if __name__ == "__main__":
 
         # EXECUTE IN PARALLEL
         # Determine safe number of workers (leave 1 core free for OS)
-        # MAX_WORKERS = max(1, os.cpu_count() - 1)
-        MAX_WORKERS = 2
+        MAX_WORKERS = max(1, os.cpu_count() - 1)
+        # MAX_WORKERS = 2
         # If running on a powerful server, you might cap this at 32 so you don't overwhelm I/O
         if MAX_WORKERS > 64: 
             MAX_WORKERS = 64
