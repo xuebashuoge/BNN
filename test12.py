@@ -53,7 +53,7 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 6
+SEED = 8
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
@@ -1037,7 +1037,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = False
+    RUN_SWEEP = True
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1135,18 +1135,18 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 1000
+        num_seeds = 2000
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
-        # SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
-        SEEDS = [2010133918]
+        SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
+        # SEEDS = [2010133918]
         HIDDEN_DIM_GRID = [64]
         N_U_SETS_GRID = [10]
         M_ARTIFICIAL_CHANNELS_GRID = [100]
-        LR_GRID = [0.003]
+        LR_GRID = [0.005]
         LR_DECAY_STEP_GRID = [75]
         LR_DECAY_GAMMA_GRID = [0.8]
         BETA_COEFF_GRID = [0.1]
-        GAMMA_COEFF_GRID = [0.05]
+        GAMMA_COEFF_GRID = [0.01]
         EPOCHS_GRID = [150]
         use_cache = False
         verbose = False
