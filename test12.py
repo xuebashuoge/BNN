@@ -57,10 +57,10 @@ LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
 # Channel Distributions (Inference/Test) - HARSH REALITY
-# ideal
-SEED = 3394626443
-MU_M_TE, STD_M_TE = 1.0, 0.01
-MU_B_TE, STD_B_TE = 0.0, 0.01   
+# # ideal
+# SEED = 3394626443
+# MU_M_TE, STD_M_TE = 1.0, 0.01
+# MU_B_TE, STD_B_TE = 0.0, 0.01   
 # # low SNR
 # SEED = 638212450
 # MU_M_TE, STD_M_TE = 1.0, 0.01
@@ -69,10 +69,10 @@ MU_B_TE, STD_B_TE = 0.0, 0.01
 # SEED = 3508521152
 # MU_M_TE, STD_M_TE = 0.5, 1.0
 # MU_B_TE, STD_B_TE = 0.0, 0.01  
-# # severe fading & low SNR
-# SEED = 616657849
-# MU_M_TE, STD_M_TE = 0.5, 1.0
-# MU_B_TE, STD_B_TE = 0.0, 1.0  
+# severe fading & low SNR
+SEED = 616657849
+MU_M_TE, STD_M_TE = 0.5, 1.0
+MU_B_TE, STD_B_TE = 0.0, 1.0  
 
 # Channel Distributions (Train) - DECEPTIVELY CLEAN
 # ERM will become overconfident and build fragile decision boundaries.
@@ -499,7 +499,7 @@ def config_hash(config):
     payload = json.dumps(config, sort_keys=True, separators=(",", ":"))
     return hashlib.sha1(payload.encode("utf-8")).hexdigest()[:10]
 
-def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
+def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, is_bnn=False):
     batch_size = BATCH_SIZE if batch_size is None else batch_size
     moon_noise = MOONS_NOISE if moon_noise is None else moon_noise
     epochs = EPOCHS if epochs is None else epochs
@@ -517,6 +517,7 @@ def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_sa
         "objective": "N/A" if scenario_name == 'erm' else objective,
         "n_samples": n_samples, "seed": seed,
         "batch_size": batch_size, "moon_noise": moon_noise,
+        "is_bnn": is_bnn,
         "training": {
             "epochs": epochs,
             "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma,
@@ -529,8 +530,8 @@ def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_sa
         }
     }
 
-def get_run_dir(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
-    param_cfg = build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff, hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels)
+def get_run_dir(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, is_bnn=False):
+    param_cfg = build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff, hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels, is_bnn=is_bnn)
     run_id = config_hash(param_cfg)
     label = scenario_label(scenario_name, mode, objective)
     run_dir = os.path.join(RESULTS_DIR, label, f"param_{run_id}")
@@ -623,6 +624,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
         model = DeterministicFC(IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
     else:
         model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
+    # model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = None
     if lr_decay_step and lr_decay_step > 0:
@@ -642,6 +644,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs,
             lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
+            is_bnn=model.is_bnn,
         )
     else:
         run_dir = run_dir or "temp_run"
@@ -713,6 +716,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             
             loss = ce_loss
             reg_val = 0.0
+            bound_val = 0.0
             channel_shift_eval = 0.0
             channel_overfit_eval = 0.0
             model_complexity_eval = 0.0
@@ -724,15 +728,20 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             channel_penalty_val = 0.0
 
             # calculate the exact derived bound for calculation
-            mixture_kl, channel_overfit_kl = compute_mixture_kl_and_channel_overfit(
-                model,
-                num_samples=mi_mc_samples,
-            )
+            if model.is_bnn:
+                mixture_kl, channel_overfit_kl = compute_mixture_kl_and_channel_overfit(
+                    model,
+                    num_samples=mi_mc_samples,
+                )
+            else:
+                mixture_kl = torch.tensor(0.0, device=ce_loss.device)
+                channel_overfit_kl = torch.tensor(0.0, device=ce_loss.device)
+
             mixture_kl = torch.clamp(mixture_kl, min=0)
             channel_overfit_kl = torch.clamp(channel_overfit_kl, min=0)
             channel_overfit_kl_val = channel_overfit_kl.item()
             mixture_kl_val = mixture_kl.item()
-            if mode == 'perfect':
+            if mode == 'perfect' and model.is_bnn:
                 # Lipschitz
                 if lipschitz_method_perfect == "grad":
                     grad_theta = torch.autograd.grad(
@@ -1134,6 +1143,7 @@ if __name__ == "__main__":
         print("\n" + "="*50)
         print("FINAL INFERENCE RESULTS (EVALUATED ON P_ch)")
         print("="*50)
+        print(f"Channel: mu_m_tr = {MU_M_TR:.2f}, std_m_tr = {STD_M_TR:.2f}, mu_b_m_tr = {MU_B_TR:.2f}, std_b_m_tr = {STD_B_TR:.2f}")
         # Print the aligned header
         print(f"{'Methods:':<35} {'Pop. Loss':>9} / {'Pop. Acc':>9} / {'Emp. Loss':>9} / {'Bound':>9}")
 
