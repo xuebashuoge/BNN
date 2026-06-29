@@ -41,7 +41,7 @@ OUT_DIM = 2
 MOONS_NOISE = 0.3      # make_moons noise level
 BATCH_SIZE = 64        # Reduced batch size for noisier gradients
 EPOCHS = 150           # Increased epochs to ensure ERM fully memorizes
-LR_BASE = 0.003         # Adjusted base learning rate
+LR_BASE = 0.005         # Adjusted base learning rate
 LR_DECAY_STEP = 75     # StepLR decay period (epochs)
 LR_DECAY_GAMMA = 0.8   # StepLR decay factor
 PRIOR_LAMBDA = 1.0     # Variance of isotropic Gaussian prior
@@ -53,15 +53,26 @@ BETA_COEFF = 0.1       # Weighting factor for the channel-overfitting term in th
 GAMMA_COEFF = 0.05     # Weighting factor for the standard PAC-Bayes term in the objective (optional ablation)
 M_ARTIFICIAL_CHANNELS = 100  # m: size of the fixed artificial channel set U
 MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting estimation
-SEED = 8
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
-
 # Channel Distributions (Inference/Test) - HARSH REALITY
-# ERM's fragile boundaries will fail here. Bayesian smoothing should win.
+# ideal
+SEED = 3394626443
 MU_M_TE, STD_M_TE = 1.0, 0.01
 MU_B_TE, STD_B_TE = 0.0, 0.01   
+# # low SNR
+# SEED = 638212450
+# MU_M_TE, STD_M_TE = 1.0, 0.01
+# MU_B_TE, STD_B_TE = 0.0, 1.0  
+# # severe fading
+# SEED = 3508521152
+# MU_M_TE, STD_M_TE = 0.5, 1.0
+# MU_B_TE, STD_B_TE = 0.0, 0.01  
+# # severe fading & low SNR
+# SEED = 616657849
+# MU_M_TE, STD_M_TE = 0.5, 1.0
+# MU_B_TE, STD_B_TE = 0.0, 1.0  
 
 # Channel Distributions (Train) - DECEPTIVELY CLEAN
 # ERM will become overconfident and build fragile decision boundaries.
@@ -640,7 +651,9 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     if use_cache and os.path.exists(weights_path):
         print(f"Loading existing weights: {weights_path}")
         model.load_state_dict(torch.load(weights_path, map_location=device))
-        return model
+        with open(os.path.join(run_dir, "history.json"), "r", encoding="utf-8") as f:
+            history = json.load(f).get("history", {})
+        return model, history
 
     complexity_term = np.log(np.sqrt(n_samples) / EPSILON)
 
@@ -676,7 +689,6 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
         epoch_component_expected_kl = 0.0
         epoch_k_hat = 0.0
         epoch_channel_penalty = 0.0
-        epoch_k_hat_channel_penalty = 0.0
 
         model.train()
         
@@ -710,7 +722,57 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             component_expected_kl_val = 0.0
             k_hat_val = 0.0
             channel_penalty_val = 0.0
-            k_hat_channel_penalty_val = 0.0
+
+            # calculate the exact derived bound for calculation
+            mixture_kl, channel_overfit_kl = compute_mixture_kl_and_channel_overfit(
+                model,
+                num_samples=mi_mc_samples,
+            )
+            mixture_kl = torch.clamp(mixture_kl, min=0)
+            channel_overfit_kl = torch.clamp(channel_overfit_kl, min=0)
+            channel_overfit_kl_val = channel_overfit_kl.item()
+            mixture_kl_val = mixture_kl.item()
+            if mode == 'perfect':
+                # Lipschitz
+                if lipschitz_method_perfect == "grad":
+                    grad_theta = torch.autograd.grad(
+                        ce_loss,
+                        theta,
+                        create_graph=True,
+                        retain_graph=True
+                    )[0]
+                    K_hat = torch.norm(grad_theta, p=2)
+                else:
+                    K_hat = model.compute_analytical_lipschitz(batch_x, theta, mode=mode)
+                k_hat_val = K_hat.item()
+
+                
+                channel_shift = K_hat * channel_penalty
+
+                model_complexity = torch.sqrt((2 * SIGMA_SQ / (n_samples - 1)) * (mixture_kl + complexity_term))
+
+                channel_shift_eval = channel_shift.item()
+                model_complexity_eval = model_complexity.item()
+                # the expected norm distance between channel matrix and identity matrix
+                channel_penalty_val = channel_penalty.item()
+
+                bound = channel_shift + model_complexity
+                bound_val = bound.item()
+
+            elif mode == 'train':
+                channel_shift = ce_loss.new_tensor(np.sqrt(2 * SIGMA_ART_SQ * kl_ch_total))
+
+                channel_overfit = torch.sqrt((2 * SIGMA_ART_SQ / m_artificial_channels) * channel_overfit_kl)
+
+                model_complexity = torch.sqrt((2 * SIGMA_SQ / (n_samples - 1)) * (mixture_kl + complexity_term))
+
+                channel_shift_eval = channel_shift.item()
+                channel_overfit_eval = channel_overfit.item()
+                model_complexity_eval = model_complexity.item()
+                kl_ch_total_val = kl_ch_total
+
+                bound = channel_shift + channel_overfit + model_complexity
+                bound_val = bound.item()
 
             if scenario_name == 'l2':
                 l2_penalty = torch.zeros(1, device=ce_loss.device)
@@ -735,31 +797,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             #     mixture_kl_val = kl_mix.item()
             elif scenario_name == 'proposed':
                 if mode == 'perfect':
-                    mixture_kl, _ = compute_mixture_kl_and_channel_overfit(model, num_samples=mi_mc_samples)
-                    mixture_kl = torch.clamp(mixture_kl, min=0)
-                    mixture_kl_val = mixture_kl.item()
-
-                    # Lipschitz
-                    if lipschitz_method_perfect == "grad":
-                        grad_theta = torch.autograd.grad(
-                            ce_loss,
-                            theta,
-                            create_graph=True,
-                            retain_graph=True
-                        )[0]
-                        K_hat = torch.norm(grad_theta, p=2)
-                    else:
-                        K_hat = model.compute_analytical_lipschitz(batch_x, theta, mode=mode)
-                    k_hat_val = K_hat.item()
-
-                    channel_penalty_val = channel_penalty.item()
-
-                    channel_shift = K_hat * channel_penalty
-                    model_complexity = torch.sqrt((2 * SIGMA_SQ / (n_samples - 1)) * (mixture_kl + complexity_term))
-                    reg = channel_shift + model_complexity
-                    channel_shift_eval = channel_shift.item()
-                    model_complexity_eval = model_complexity.item()
-                    k_hat_channel_penalty_val = channel_shift_eval
+                    reg = bound
                     reg_val = reg.item()
 
                     if objective == 'bound':
@@ -770,29 +808,14 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
                     component_expected_kl = compute_component_expected_kl(model)
                     component_expected_kl_val = component_expected_kl.item()
 
-                    mixture_kl, channel_overfit_kl = compute_mixture_kl_and_channel_overfit(
-                        model,
-                        num_samples=mi_mc_samples,
-                    )
-                    mixture_kl = torch.clamp(mixture_kl, min=0)
-                    channel_overfit_kl = torch.clamp(channel_overfit_kl, min=0)
-
-                    channel_shift = ce_loss.new_tensor(np.sqrt(2 * SIGMA_ART_SQ * kl_ch_total))
-                    channel_overfit = torch.sqrt((2 * SIGMA_ART_SQ / m_artificial_channels) * channel_overfit_kl)
-                    model_complexity = torch.sqrt((2 * SIGMA_SQ / (n_samples - 1)) * (mixture_kl + complexity_term))
-                    reg = channel_shift + channel_overfit + model_complexity
-                    channel_shift_eval = channel_shift.item()
-                    channel_overfit_eval = channel_overfit.item()
-                    model_complexity_eval = model_complexity.item()
-                    channel_overfit_kl_val = channel_overfit_kl.item()
-                    mixture_kl_val = mixture_kl.item()
-                    kl_ch_total_val = kl_ch_total
+                    
+                    reg = bound
+                    reg_val = reg.item()
                     
                     if objective == 'bound':
                         loss = ce_loss + reg
                     elif objective == 'heuristic':
                         loss = ce_loss + (alpha_coeff * channel_shift + beta_coeff * channel_overfit + gamma_coeff * model_complexity)
-                    reg_val = reg.item()
 
             if not torch.isfinite(loss):
                 print(f"Stopping early: non-finite loss at epoch {epoch + 1}.")
@@ -805,7 +828,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             
             epoch_loss += ce_loss.item()
             epoch_reg += reg_val # Log the scaled applied bound
-            epoch_bound_total += reg_val
+            epoch_bound_total += bound_val
             epoch_term1 += channel_shift_eval
             epoch_term2 += channel_overfit_eval
             epoch_term3 += model_complexity_eval
@@ -815,7 +838,6 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
             epoch_component_expected_kl += component_expected_kl_val
             epoch_k_hat += k_hat_val
             epoch_channel_penalty += channel_penalty_val
-            epoch_k_hat_channel_penalty += k_hat_channel_penalty_val
 
         train_loss, train_acc = evaluate_model(model, loader, mode=mode)
 
@@ -831,7 +853,6 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
         history['component_expected_kl'].append(epoch_component_expected_kl / len(loader))
         history['k_hat'].append(epoch_k_hat / len(loader))
         history['channel_penalty'].append(epoch_channel_penalty / len(loader))
-        history['k_hat_channel_penalty'].append(epoch_k_hat_channel_penalty / len(loader))
         history['applied_regularization'].append(epoch_reg / len(loader))
 
         if verbose:
@@ -895,7 +916,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     model.training_history = history
     model.converged = is_converged_history(history)
             
-    return model
+    return model, history
 
 # ==========================================
 # 7. EVALUATION ON INFERENCE CHANNEL (P_ch)
@@ -1037,7 +1058,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = True
+    RUN_SWEEP = False
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1051,7 +1072,7 @@ if __name__ == "__main__":
             noise=MOONS_NOISE,
         )
         # Scenario A: Standard ERM + perfect channel
-        model_erm_perfect = train_scenario('erm', train_loader, n_trains, mode='perfect', objective='bound', seed=SEED, use_cache=True, verbose=True)
+        model_erm_perfect, history_erm_perfect = train_scenario('erm', train_loader, n_trains, mode='perfect', objective='bound', seed=SEED, use_cache=True, verbose=True)
         loss_erm_perfect, acc_erm_perfect = evaluate_inference(
             model_erm_perfect,
             test_loader,
@@ -1061,7 +1082,7 @@ if __name__ == "__main__":
         )
 
         # Scenario B: Standard ERM + train channel (overfitting to P_art)
-        model_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', seed=SEED, use_cache=True, verbose=True)
+        model_erm, history_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', seed=SEED, use_cache=True, verbose=True)
         loss_erm, acc_erm = evaluate_inference(
             model_erm,
             test_loader,
@@ -1071,7 +1092,7 @@ if __name__ == "__main__":
         )
 
         # Scenario C: L2 Regularization + perfect channel
-        model_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2_perfect, history_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_l2_perfect, acc_l2_perfect = evaluate_inference(
             model_l2_perfect,
             test_loader,
@@ -1081,7 +1102,7 @@ if __name__ == "__main__":
         )
 
         # Scenario D: L2 Regularization + train channel
-        model_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2, history_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_l2, acc_l2 = evaluate_inference(
             model_l2,
             test_loader,
@@ -1091,7 +1112,7 @@ if __name__ == "__main__":
         )
 
         # Scenario E: Proposed Bound + perfect channel
-        model_prop_perfect = train_scenario('proposed', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_prop_perfect, history_prop_perfect = train_scenario('proposed', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_prop_perfect, acc_prop_perfect = evaluate_inference(
             model_prop_perfect,
             test_loader,
@@ -1101,7 +1122,7 @@ if __name__ == "__main__":
         )
 
         # Scenario F: Proposed Bound Regularization
-        model_prop = train_scenario('proposed', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_prop, history_prop = train_scenario('proposed', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_prop, acc_prop = evaluate_inference(
             model_prop,
             test_loader,
@@ -1113,12 +1134,16 @@ if __name__ == "__main__":
         print("\n" + "="*50)
         print("FINAL INFERENCE RESULTS (EVALUATED ON P_ch)")
         print("="*50)
-        print(f"Standard ERM + Perfect Channel Loss/Acc: {loss_erm_perfect:.4f} / {acc_erm_perfect*100:.2f}%")
-        print(f"Standard ERM Loss/Acc:                {loss_erm:.4f} / {acc_erm*100:.2f}%")
-        print(f"L2 Reg + Perfect Channel Loss/Acc:    {loss_l2_perfect:.4f} / {acc_l2_perfect*100:.2f}%")
-        print(f"L2 Reg + Train Channel Loss/Acc:      {loss_l2:.4f} / {acc_l2*100:.2f}%")
-        print(f"Proposed Bound + Perfect Loss/Acc:    {loss_prop_perfect:.4f} / {acc_prop_perfect*100:.2f}%")
-        print(f"Proposed Bound Reg Loss/Acc:          {loss_prop:.4f} / {acc_prop*100:.2f}%")
+        # Print the aligned header
+        print(f"{'Methods:':<35} {'Pop. Loss':>9} / {'Pop. Acc':>9} / {'Emp. Loss':>9} / {'Bound':>9}")
+
+        # Print the aligned rows
+        print(f"{'ERM + Perfect Channel Loss/Acc:':<35} {loss_erm_perfect:>9.4f} / {acc_erm_perfect:>9.4f} / {history_erm_perfect['train_loss'][-1]:>9.4f} / {history_erm_perfect['bound_total'][-1]:>9.4f}")
+        print(f"{'ERM Loss/Acc:':<35} {loss_erm:>9.4f} / {acc_erm:>9.4f} / {history_erm['train_loss'][-1]:>9.4f} / {history_erm['bound_total'][-1]:>9.4f}")
+        print(f"{'L2 Reg + Perfect Channel Loss/Acc:':<35} {loss_l2_perfect:>9.4f} / {acc_l2_perfect:>9.4f} / {history_l2_perfect['train_loss'][-1]:>9.4f} / {history_l2_perfect['bound_total'][-1]:>9.4f}")
+        print(f"{'L2 Reg + Train Channel Loss/Acc:':<35} {loss_l2:>9.4f} / {acc_l2:>9.4f} / {history_l2['train_loss'][-1]:>9.4f} / {history_l2['bound_total'][-1]:>9.4f}")
+        print(f"{'Proposed Bound + Perfect Loss/Acc:':<35} {loss_prop_perfect:>9.4f} / {acc_prop_perfect:>9.4f} / {history_prop_perfect['train_loss'][-1]:>9.4f} / {history_prop_perfect['bound_total'][-1]:>9.4f}")
+        print(f"{'Proposed Bound Reg Loss/Acc:':<35} {loss_prop:>9.4f} / {acc_prop:>9.4f} / {history_prop['train_loss'][-1]:>9.4f} / {history_prop['bound_total'][-1]:>9.4f}")
         print("="*50)
     else:
         # Ensure safe context for Linux multiprocessing with PyTorch
