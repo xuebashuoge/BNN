@@ -98,7 +98,7 @@ def estimate_expected_channel_norm(hidden_dim, p_outage_te, norm_type="frobenius
 
     # Edge case: 0% outage means M is deterministically the Identity matrix
     if p_out == 0.0:
-        return torch.tensor(0.0, dtype=torch.float64, device=device)
+        return torch.tensor(0.0, device=device)
 
     # ---------------------------------------------------------
     # SPECTRAL NORM: E[ ||M - I||_2 ] = 1 - (1 - p_outage)^n
@@ -106,7 +106,7 @@ def estimate_expected_channel_norm(hidden_dim, p_outage_te, norm_type="frobenius
     if norm_clean in ["spectral", "l2", "2"]:
         # Probability that a single shifted diagonal entry is 0 is (1 - p_out)
         prob_entry_is_zero = torch.tensor(
-            1.0 - p_out, dtype=torch.float64, device=device
+            1.0 - p_out, device=device
         )
 
         prob_all_zero = torch.pow(prob_entry_is_zero, n)
@@ -119,11 +119,11 @@ def estimate_expected_channel_norm(hidden_dim, p_outage_te, norm_type="frobenius
     # ---------------------------------------------------------
     elif norm_clean in ["frobenius", "frob"]:
         # We use float64 to prevent exp(log_prob) underflow at extreme tails
-        k_values = torch.arange(n + 1, dtype=torch.float64, device=device)
+        k_values = torch.arange(n + 1, device=device)
 
         binom = dist.Binomial(
             total_count=n,
-            probs=torch.tensor(p_out, dtype=torch.float64, device=device),
+            probs=torch.tensor(p_out, device=device),
         )
 
         # Compute PMF safely: exp( ln( P(X=k) ) )
@@ -246,7 +246,6 @@ class StochasticChannelLayer(nn.Module):
         B = x.shape[1]
         if mode == 'perfect':
             m = torch.ones_like(x, device=x.device)
-            b = torch.zeros_like(x, device=x.device)
         elif mode == 'train':
             idx = torch.randint(
                 self.num_artificial_channels,
@@ -257,12 +256,12 @@ class StochasticChannelLayer(nn.Module):
             component_idx = torch.arange(self.K, device=x.device).unsqueeze(1)
             m = self.u_m.to(x.device)[component_idx, idx]
         elif mode == 'test':
-           m = (torch.rand(self.K, B, self.hid_dim, device='cpu').to(x.device) >= P_OUTAGE_TE).float()
+            m = (torch.rand(self.K, B, self.hid_dim, device='cpu').to(x.device) >= P_OUTAGE_TE).float()
         else:
             raise ValueError(f"Invalid mode '{mode}'")
 
         self.last_m = m
-        return x * m + b
+        return x * m
 
 
 class VectorizedBNNEnsemble(nn.Module):
@@ -1072,7 +1071,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = True
+    RUN_SWEEP = False
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1170,18 +1169,18 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 2000
+        num_seeds = 10
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
         SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
         # SEEDS = [2010133918]
         HIDDEN_DIM_GRID = [64]
         N_U_SETS_GRID = [10]
         M_ARTIFICIAL_CHANNELS_GRID = [100]
-        LR_GRID = [0.005]
-        LR_DECAY_STEP_GRID = [75]
-        LR_DECAY_GAMMA_GRID = [0.8]
-        BETA_COEFF_GRID = [0.1]
-        GAMMA_COEFF_GRID = [0.01]
+        LR_GRID = [0.001, 0.003, 0.005, 0.007, 0.01]
+        LR_DECAY_STEP_GRID = [25, 50, 75]
+        LR_DECAY_GAMMA_GRID = [0.1, 0.5, 0.8]
+        BETA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01]
+        GAMMA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005]
         EPOCHS_GRID = [150]
         use_cache = False
         verbose = False
