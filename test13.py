@@ -6,6 +6,7 @@ import torch
 import random
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.distributions as dist
 from sklearn.datasets import make_moons
 from torch.utils.data import TensorDataset, DataLoader
 import matplotlib.pyplot as plt
@@ -19,7 +20,7 @@ import concurrent.futures
 # ==========================================
 # 0. OUTPUT PATHS
 # ==========================================
-RESULTS_DIR = os.path.join('results', 'test12_ideal')
+RESULTS_DIR = os.path.join('results', 'test13')
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # ==========================================
@@ -59,49 +60,84 @@ LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
 # Channel Distributions (Inference/Test) - HARSH REALITY
-# ERM's fragile boundaries will fail here. Bayesian smoothing should win.
-MU_M_TE, STD_M_TE = 1.0, 0.01
-MU_B_TE, STD_B_TE = 0.0, 0.01   
+P_OUTAGE_TE = 0.5
 
 # Channel Distributions (Train) - DECEPTIVELY CLEAN
 # ERM will become overconfident and build fragile decision boundaries.
-MU_M_TR, STD_M_TR = MU_M_TE, STD_M_TE  
-MU_B_TR, STD_B_TR = MU_B_TE, STD_B_TE  
+P_OUTAGE_TR = P_OUTAGE_TE  
 
-def kl_gaussian_1d(mu1, std1, mu2, std2):
-    """Closed form KL D(N_1 || N_2)"""
-    return np.log(std2/std1) + (std1**2 + (mu1 - mu2)**2) / (2 * std2**2) - 0.5
+def kl_bernoulli(p_te, p_tr, eps=1e-6):
+    """Closed form KL D(Bern(p_te) || Bern(p_tr)) where p is probability of outage."""
+    p_te_c = np.clip(p_te, eps, 1.0 - eps)
+    p_tr_c = np.clip(p_tr, eps, 1.0 - eps)
+    # P(outage) = p, P(intact) = 1-p
+    kl = p_te_c * np.log(p_te_c / p_tr_c) + (1 - p_te_c) * np.log((1 - p_te_c) / (1 - p_tr_c))
+    return kl
 
-# Closed form channel-shift KL D(P_ch || P_art)
 def channel_kl_total(hidden_dim):
-    kl_ch_m = hidden_dim * kl_gaussian_1d(MU_M_TE, STD_M_TE, MU_M_TR, STD_M_TR)
-    kl_ch_b = hidden_dim * kl_gaussian_1d(MU_B_TE, STD_B_TE, MU_B_TR, STD_B_TR)
-    return kl_ch_m + kl_ch_b
+    """Total channel shift KL across independent hidden dimensions."""
+    return hidden_dim * kl_bernoulli(P_OUTAGE_TE, P_OUTAGE_TR)
 
 KL_CH_TOTAL = channel_kl_total(HIDDEN_DIM)
 print(f"Default D(P_ch || P_art) = {KL_CH_TOTAL:.4f}")
 
-def estimate_expected_channel_norm(hidden_dim, mu_m_te, mu_b_te, std_m_te, std_b_te, norm_type='frobenius', mc_samples=1000, device='cpu'):
+def estimate_expected_channel_norm(hidden_dim, p_outage_te, norm_type="frobenius", device="cpu"):
+    """Calculates the exact theoretical expected norm E[||M - I||] of a Bernoulli
+
+    diagonal channel mask M, executed natively on the designated PyTorch device.
     """
-    Monte Carlo estimation of E[ || W' - (I, 0) || ]
-    Where W' = (M, B). Therefore W' - (I, 0) = (M - I, B).
-    """
-    M_diff = torch.randn(mc_samples, hidden_dim, hidden_dim, device='cpu').to(device) * std_m_te + mu_m_te - 1.0
-    B = torch.randn(mc_samples, hidden_dim, 1, device='cpu').to(device) * std_b_te + mu_b_te
-    W_diff = torch.cat([M_diff, B], dim=2)
-    
-    is_mps = isinstance(device, torch.device) and device.type == "mps" or device == "mps"
-    if norm_type == 'frobenius':
-        norms = torch.linalg.matrix_norm(W_diff, ord='fro')
-    elif norm_type == 'spectral':
-        if is_mps:
-            norms = torch.linalg.matrix_norm(W_diff.cpu(), ord=2).to(device)
-        else:
-            norms = torch.linalg.matrix_norm(W_diff, ord=2)
+    # 1. Input Validation
+    if not (0.0 <= p_outage_te <= 1.0):
+        raise ValueError(
+            f"p_outage_te must be a valid probability in [0, 1], got {p_outage_te}"
+        )
+
+    n = int(hidden_dim)
+    p_out = float(p_outage_te)
+    norm_clean = norm_type.strip().lower()
+
+    # Edge case: 0% outage means M is deterministically the Identity matrix
+    if p_out == 0.0:
+        return torch.tensor(0.0, dtype=torch.float64, device=device)
+
+    # ---------------------------------------------------------
+    # SPECTRAL NORM: E[ ||M - I||_2 ] = 1 - (1 - p_outage)^n
+    # ---------------------------------------------------------
+    if norm_clean in ["spectral", "l2", "2"]:
+        # Probability that a single shifted diagonal entry is 0 is (1 - p_out)
+        prob_entry_is_zero = torch.tensor(
+            1.0 - p_out, dtype=torch.float64, device=device
+        )
+
+        prob_all_zero = torch.pow(prob_entry_is_zero, n)
+        expected_spectral = 1.0 - prob_all_zero
+
+        return expected_spectral
+
+    # ---------------------------------------------------------
+    # FROBENIUS NORM: Sum_{k=0}^{n} [ sqrt(k) * P(Binomial(n, p_out) == k) ]
+    # ---------------------------------------------------------
+    elif norm_clean in ["frobenius", "frob"]:
+        # We use float64 to prevent exp(log_prob) underflow at extreme tails
+        k_values = torch.arange(n + 1, dtype=torch.float64, device=device)
+
+        binom = dist.Binomial(
+            total_count=n,
+            probs=torch.tensor(p_out, dtype=torch.float64, device=device),
+        )
+
+        # Compute PMF safely: exp( ln( P(X=k) ) )
+        log_probs = binom.log_prob(k_values)
+        pmf = torch.exp(log_probs)
+
+        expected_frob = torch.sum(torch.sqrt(k_values) * pmf)
+
+        return expected_frob
+
     else:
-        raise ValueError("norm_type must be 'frobenius' or 'spectral'")
-        
-    return norms.mean()
+        raise ValueError(
+            f"Unknown norm_type '{norm_type}'. Choose 'frobenius' or 'spectral'."
+        )
 
 CHANNEL_PENALTY_CACHE = {}
 
@@ -109,10 +145,7 @@ def get_channel_penalty(hidden_dim):
     if hidden_dim not in CHANNEL_PENALTY_CACHE:
         CHANNEL_PENALTY_CACHE[hidden_dim] = estimate_expected_channel_norm(
             hidden_dim,
-            MU_M_TE,
-            MU_B_TE,
-            STD_M_TE,
-            STD_B_TE,
+            P_OUTAGE_TE,
             norm_type='frobenius',
             device=device,
         )
@@ -205,10 +238,8 @@ class StochasticChannelLayer(nn.Module):
         self.num_artificial_channels = num_artificial_channels
         self.train_gen = torch.Generator(device='cpu')
         self.train_gen.manual_seed(1337)
-        u_m = torch.randn(K, num_artificial_channels, hid_dim, generator=self.train_gen) * STD_M_TR + MU_M_TR
-        u_b = torch.randn(K, num_artificial_channels, hid_dim, generator=self.train_gen) * STD_B_TR + MU_B_TR
+        u_m = (torch.rand(K, num_artificial_channels, hid_dim, generator=self.train_gen) >= P_OUTAGE_TR).float()
         self.register_buffer("u_m", u_m)
-        self.register_buffer("u_b", u_b)
         self.last_m = None
 
     def forward(self, x, mode='perfect'):
@@ -225,10 +256,8 @@ class StochasticChannelLayer(nn.Module):
             ).to(x.device)
             component_idx = torch.arange(self.K, device=x.device).unsqueeze(1)
             m = self.u_m.to(x.device)[component_idx, idx]
-            b = self.u_b.to(x.device)[component_idx, idx]
         elif mode == 'test':
-            m = torch.randn(self.K, B, self.hid_dim, device='cpu').to(x.device) * STD_M_TE + MU_M_TE
-            b = torch.randn(self.K, B, self.hid_dim, device='cpu').to(x.device) * STD_B_TE + MU_B_TE
+           m = (torch.rand(self.K, B, self.hid_dim, device='cpu').to(x.device) >= P_OUTAGE_TE).float()
         else:
             raise ValueError(f"Invalid mode '{mode}'")
 
@@ -488,9 +517,11 @@ def config_hash(config):
     payload = json.dumps(config, sort_keys=True, separators=(",", ":"))
     return hashlib.sha1(payload.encode("utf-8")).hexdigest()[:10]
 
-def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
+def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, p_outage_te=None, p_outage_tr=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
     batch_size = BATCH_SIZE if batch_size is None else batch_size
     moon_noise = MOONS_NOISE if moon_noise is None else moon_noise
+    p_outage_te = P_OUTAGE_TE if p_outage_te is None else p_outage_te
+    p_outage_tr = P_OUTAGE_TR if p_outage_tr is None else p_outage_tr
     epochs = EPOCHS if epochs is None else epochs
     lr = LR_BASE if lr is None else lr
     lr_decay_step = LR_DECAY_STEP if lr_decay_step is None else lr_decay_step
@@ -518,8 +549,8 @@ def build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_sa
         }
     }
 
-def get_run_dir(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
-    param_cfg = build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff, hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels)
+def get_run_dir(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=None, moon_noise=None, p_outage_te=None, p_outage_tr=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None):
+    param_cfg = build_param_config(scenario_name, mode, objective, n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, p_outage_te=p_outage_te, p_outage_tr=p_outage_tr, epochs=epochs, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff, hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels)
     run_id = config_hash(param_cfg)
     label = scenario_label(scenario_name, mode, objective)
     run_dir = os.path.join(RESULTS_DIR, label, f"param_{run_id}")
@@ -590,9 +621,11 @@ def save_training_history(
         json.dump(payload, f, indent=2)
     return payload
 
-def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='bound', batch_size=None, moon_noise=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, mi_mc_samples=None, seed=None, lipschitz_method_perfect=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, use_cache=True, run_dir=None, verbose=False):
+def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='bound', batch_size=None, moon_noise=None, p_outage_te=None, p_outage_tr=None, epochs=None, lr=None, lr_decay_step=None, lr_decay_gamma=None, alpha_coeff=None, beta_coeff=None, gamma_coeff=None, mi_mc_samples=None, seed=None, lipschitz_method_perfect=None, hidden_dim=None, n_u_sets=None, m_artificial_channels=None, use_cache=True, run_dir=None, verbose=False):
     batch_size = BATCH_SIZE if batch_size is None else batch_size
     moon_noise = MOONS_NOISE if moon_noise is None else moon_noise
+    p_outage_te = P_OUTAGE_TE if p_outage_te is None else p_outage_te
+    p_outage_tr = P_OUTAGE_TR if p_outage_tr is None else p_outage_tr
     epochs = EPOCHS if epochs is None else epochs
     lr = LR_BASE if lr is None else lr
     lr_decay_step = LR_DECAY_STEP if lr_decay_step is None else lr_decay_step
@@ -628,7 +661,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     if run_dir is None and use_cache:
         run_dir = get_run_dir(
             scenario_name, mode, objective,
-            n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs,
+            n_samples, seed, mi_mc_samples, lipschitz_method_perfect, batch_size=batch_size, moon_noise=moon_noise, p_outage_te=p_outage_te, p_outage_tr=p_outage_tr, epochs=epochs,
             lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=alpha_coeff, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             hidden_dim=hidden_dim, n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
         )
@@ -982,6 +1015,8 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     lr_decay_gamma = task_config['lr_decay_gamma']
     use_cache = task_config['use_cache']
     verbose = task_config['verbose']
+    p_outage_te = task_config.get('p_outage_te', P_OUTAGE_TE)
+    p_outage_tr = task_config.get('p_outage_tr', P_OUTAGE_TR)
 
     set_seed(seed)
     
@@ -996,7 +1031,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     if scenario == 'erm':
         model = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
-            hidden_dim=hidden_dim, epochs=epochs, batch_size=batch_size, moon_noise=moon_noise,
+            hidden_dim=hidden_dim, epochs=epochs, batch_size=batch_size, moon_noise=moon_noise, p_outage_te=p_outage_te, p_outage_tr=p_outage_tr,
             m_artificial_channels=m_artificial_channels, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, seed=seed, use_cache=use_cache, verbose=verbose
         )
         loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
@@ -1016,7 +1051,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         
         model = train_scenario(
             'proposed', train_loader, n_trains, mode='train', objective='heuristic',
-            hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs,
+            hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, p_outage_te=p_outage_te, p_outage_tr=p_outage_tr, epochs=epochs,
             n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
             lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=0.0, beta_coeff=beta_coeff, gamma_coeff=gamma_coeff,
             seed=seed, use_cache=use_cache, verbose=verbose
@@ -1026,7 +1061,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         
         return {
             "seed": seed, "scenario": "proposed", "objective": "heuristic", "mode": "train",
-            "hidden_dim": hidden_dim, "batch_size": batch_size, "moon_noise": moon_noise, "n_samples": n_samples, "epochs": epochs,
+            "hidden_dim": hidden_dim, "batch_size": batch_size, "moon_noise": moon_noise, "p_outage_te": p_outage_te, "p_outage_tr": p_outage_tr, "n_samples": n_samples, "epochs": epochs,
             "n_u_sets": n_u_sets, "m_artificial_channels": m_artificial_channels,
             "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma, "beta_coeff": beta_coeff, "gamma_coeff": gamma_coeff,
             "loss": loss, "acc": acc
