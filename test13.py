@@ -20,7 +20,7 @@ import concurrent.futures
 # ==========================================
 # 0. OUTPUT PATHS
 # ==========================================
-RESULTS_DIR = os.path.join('results', 'test13')
+RESULTS_DIR = os.path.join('results', 'test13_low')
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # ==========================================
@@ -60,7 +60,12 @@ LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
 # Channel Distributions (Inference/Test) - HARSH REALITY
+SEED = 2846182436
+P_OUTAGE_TE = 0.1
+SEED = 3248898619
 P_OUTAGE_TE = 0.5
+SEED = 1801177461
+P_OUTAGE_TE = 0.9
 
 # Channel Distributions (Train) - DECEPTIVELY CLEAN
 # ERM will become overconfident and build fragile decision boundaries.
@@ -672,7 +677,9 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     if use_cache and os.path.exists(weights_path):
         print(f"Loading existing weights: {weights_path}")
         model.load_state_dict(torch.load(weights_path, map_location=device))
-        return model
+        with open(os.path.join(run_dir, "history.json"), "r", encoding="utf-8") as f:
+            history = json.load(f).get("history", {})
+        return model, history
 
     complexity_term = np.log(np.sqrt(n_samples) / EPSILON)
 
@@ -927,7 +934,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     model.training_history = history
     model.converged = is_converged_history(history)
             
-    return model
+    return model, history
 
 # ==========================================
 # 7. EVALUATION ON INFERENCE CHANNEL (P_ch)
@@ -1028,7 +1035,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     )
 
     if scenario == 'erm':
-        model = train_scenario(
+        model, _ = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
             hidden_dim=hidden_dim, epochs=epochs, batch_size=batch_size, moon_noise=moon_noise, p_outage_te=p_outage_te, p_outage_tr=p_outage_tr,
             m_artificial_channels=m_artificial_channels, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, seed=seed, use_cache=use_cache, verbose=verbose
@@ -1048,7 +1055,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         gamma_coeff = task_config['gamma_coeff']
         n_u_sets = task_config['n_u_sets']
         
-        model = train_scenario(
+        model, _ = train_scenario(
             'proposed', train_loader, n_trains, mode='train', objective='heuristic',
             hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, p_outage_te=p_outage_te, p_outage_tr=p_outage_tr, epochs=epochs,
             n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,
@@ -1071,7 +1078,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = False
+    RUN_SWEEP = True
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1085,7 +1092,7 @@ if __name__ == "__main__":
             noise=MOONS_NOISE,
         )
         # Scenario A: Standard ERM + perfect channel
-        model_erm_perfect = train_scenario('erm', train_loader, n_trains, mode='perfect', objective='bound', seed=SEED, use_cache=True, verbose=True)
+        model_erm_perfect, history_erm_perfect = train_scenario('erm', train_loader, n_trains, mode='perfect', objective='bound', seed=SEED, use_cache=True, verbose=True)
         loss_erm_perfect, acc_erm_perfect = evaluate_inference(
             model_erm_perfect,
             test_loader,
@@ -1095,7 +1102,7 @@ if __name__ == "__main__":
         )
 
         # Scenario B: Standard ERM + train channel (overfitting to P_art)
-        model_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', seed=SEED, use_cache=True, verbose=True)
+        model_erm, history_erm = train_scenario('erm', train_loader, n_trains, mode='train', objective='bound', seed=SEED, use_cache=True, verbose=True)
         loss_erm, acc_erm = evaluate_inference(
             model_erm,
             test_loader,
@@ -1105,7 +1112,7 @@ if __name__ == "__main__":
         )
 
         # Scenario C: L2 Regularization + perfect channel
-        model_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2_perfect, history_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_l2_perfect, acc_l2_perfect = evaluate_inference(
             model_l2_perfect,
             test_loader,
@@ -1115,7 +1122,7 @@ if __name__ == "__main__":
         )
 
         # Scenario D: L2 Regularization + train channel
-        model_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2, history_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_l2, acc_l2 = evaluate_inference(
             model_l2,
             test_loader,
@@ -1125,7 +1132,7 @@ if __name__ == "__main__":
         )
 
         # Scenario E: Proposed Bound + perfect channel
-        model_prop_perfect = train_scenario('proposed', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_prop_perfect, history_prop_perfect = train_scenario('proposed', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_prop_perfect, acc_prop_perfect = evaluate_inference(
             model_prop_perfect,
             test_loader,
@@ -1135,7 +1142,7 @@ if __name__ == "__main__":
         )
 
         # Scenario F: Proposed Bound Regularization
-        model_prop = train_scenario('proposed', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_prop, history_prop = train_scenario('proposed', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
         loss_prop, acc_prop = evaluate_inference(
             model_prop,
             test_loader,
@@ -1147,12 +1154,17 @@ if __name__ == "__main__":
         print("\n" + "="*50)
         print("FINAL INFERENCE RESULTS (EVALUATED ON P_ch)")
         print("="*50)
-        print(f"Standard ERM + Perfect Channel Loss/Acc: {loss_erm_perfect:.4f} / {acc_erm_perfect*100:.2f}%")
-        print(f"Standard ERM Loss/Acc:                {loss_erm:.4f} / {acc_erm*100:.2f}%")
-        print(f"L2 Reg + Perfect Channel Loss/Acc:    {loss_l2_perfect:.4f} / {acc_l2_perfect*100:.2f}%")
-        print(f"L2 Reg + Train Channel Loss/Acc:      {loss_l2:.4f} / {acc_l2*100:.2f}%")
-        print(f"Proposed Bound + Perfect Loss/Acc:    {loss_prop_perfect:.4f} / {acc_prop_perfect*100:.2f}%")
-        print(f"Proposed Bound Reg Loss/Acc:          {loss_prop:.4f} / {acc_prop*100:.2f}%")
+        print(f"Channel: p_outage_tr = {P_OUTAGE_TR:.2f}, p_outage_te = {P_OUTAGE_TE:.2f}")
+        # Print the aligned header
+        print(f"{'Methods:':<35} {'Pop. Loss':>9} / {'Pop. Acc':>9} / {'Emp. Loss':>9} / {'Bound':>9}")
+
+        # Print the aligned rows
+        print(f"{'ERM + Perfect Channel Loss/Acc:':<35} {loss_erm_perfect:>9.4f} / {acc_erm_perfect:>9.4f} / {history_erm_perfect['train_loss'][-1]:>9.4f} / {history_erm_perfect['bound_total'][-1]:>9.4f}")
+        print(f"{'ERM Loss/Acc:':<35} {loss_erm:>9.4f} / {acc_erm:>9.4f} / {history_erm['train_loss'][-1]:>9.4f} / {history_erm['bound_total'][-1]:>9.4f}")
+        print(f"{'L2 Reg + Perfect Channel Loss/Acc:':<35} {loss_l2_perfect:>9.4f} / {acc_l2_perfect:>9.4f} / {history_l2_perfect['train_loss'][-1]:>9.4f} / {history_l2_perfect['bound_total'][-1]:>9.4f}")
+        print(f"{'L2 Reg + Train Channel Loss/Acc:':<35} {loss_l2:>9.4f} / {acc_l2:>9.4f} / {history_l2['train_loss'][-1]:>9.4f} / {history_l2['bound_total'][-1]:>9.4f}")
+        print(f"{'Proposed Bound + Perfect Loss/Acc:':<35} {loss_prop_perfect:>9.4f} / {acc_prop_perfect:>9.4f} / {history_prop_perfect['train_loss'][-1]:>9.4f} / {history_prop_perfect['bound_total'][-1]:>9.4f}")
+        print(f"{'Proposed Bound Reg Loss/Acc:':<35} {loss_prop:>9.4f} / {acc_prop:>9.4f} / {history_prop['train_loss'][-1]:>9.4f} / {history_prop['bound_total'][-1]:>9.4f}")
         print("="*50)
     else:
         # Ensure safe context for Linux multiprocessing with PyTorch
@@ -1169,18 +1181,18 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 10
+        num_seeds = 2000
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
         SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
         # SEEDS = [2010133918]
         HIDDEN_DIM_GRID = [64]
         N_U_SETS_GRID = [10]
         M_ARTIFICIAL_CHANNELS_GRID = [100]
-        LR_GRID = [0.001, 0.003, 0.005, 0.007, 0.01]
-        LR_DECAY_STEP_GRID = [25, 50, 75]
-        LR_DECAY_GAMMA_GRID = [0.1, 0.5, 0.8]
-        BETA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01]
-        GAMMA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005]
+        LR_GRID = [0.005]
+        LR_DECAY_STEP_GRID = [75]
+        LR_DECAY_GAMMA_GRID = [0.8]
+        BETA_COEFF_GRID = [0.1]
+        GAMMA_COEFF_GRID = [0.01]
         EPOCHS_GRID = [150]
         use_cache = False
         verbose = False

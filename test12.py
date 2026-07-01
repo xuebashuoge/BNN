@@ -1024,7 +1024,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
     )
 
     if scenario == 'erm':
-        model = train_scenario(
+        model, _ = train_scenario(
             'erm', train_loader, n_trains, mode='train', objective='bound', 
             hidden_dim=hidden_dim, epochs=epochs, batch_size=batch_size, moon_noise=moon_noise,
             m_artificial_channels=m_artificial_channels, lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, seed=seed, use_cache=use_cache, verbose=verbose
@@ -1044,7 +1044,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
         gamma_coeff = task_config['gamma_coeff']
         n_u_sets = task_config['n_u_sets']
         
-        model = train_scenario(
+        model, _ = train_scenario(
             'proposed', train_loader, n_trains, mode='train', objective='heuristic',
             hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs,
             n_u_sets=n_u_sets, m_artificial_channels=m_artificial_channels,

@@ -15,8 +15,8 @@
 #SBATCH --nodes=1                  # Run all processes on a single node
 #SBATCH --ntasks=1                 # Run a single task (the python script)
 #SBATCH --cpus-per-task=64         # Request 32 CPU cores for the multiprocessing pool
-#SBATCH --mem=1024G                  # Request 32 GB of total RAM
-#SBATCH --time=36:00:00            # Time limit (HH:MM:SS)
+#SBATCH --mem=128G                  # Request 32 GB of total RAM
+#SBATCH --time=6:00:00            # Time limit (HH:MM:SS)
 
 #=========================================================
 # Environment Setup & Execution
