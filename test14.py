@@ -17,7 +17,7 @@ import concurrent.futures
 # ==========================================
 # 0. OUTPUT PATHS
 # ==========================================
-RESULTS_DIR = os.path.join('results', 'test14')
+RESULTS_DIR = os.path.join('results', 'test14_seed42')
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # ==========================================
@@ -53,7 +53,7 @@ MI_MC_SAMPLES = 100       # MC samples for mixture KL / channel-overfitting esti
 SEED = 8
 LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
-SEED = 2846182436
+SEED = 42
 P_OUTAGE_TE = 0.5  # Fixed default test channel outage probability
 P_OUTAGE_TR = 0.5  # Default train channel outage probability (will be swept in main)
 
@@ -1008,9 +1008,10 @@ if __name__ == "__main__":
     )
 
     # Outage Probability sweep configuration
-    p_tr_sweep = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    EVAL_REPEATS = 10
-    INFERENCE_WEIGHT_SAMPLES = 50
+    # p_tr_sweep = [round(i * 0.01 + 0.2, 3) for i in range(61)]
+    p_tr_sweep = [round(i * 0.01, 3)+0.1 for i in range(81)]
+    EVAL_REPEATS = 200
+    INFERENCE_WEIGHT_SAMPLES = 100
 
     # Tracking metrics across the sweep
     sweep_results = []
@@ -1030,7 +1031,7 @@ if __name__ == "__main__":
         print(f"   Dynamic E[||M - I||] recalculated: {CH_PENALTY:.4f}")
 
         # 2. Setup run-specific output directory for each sweep configuration
-        run_dir = os.path.join(RESULTS_DIR, f"p_tr_{p_tr:.2f}")
+        run_dir = os.path.join(RESULTS_DIR, f"p_tr_{p_tr:.3f}")
         os.makedirs(run_dir, exist_ok=True)
 
         # 3. Train the Proposed Regularization model
@@ -1088,17 +1089,34 @@ if __name__ == "__main__":
     train_acc_values = [res["train_acc"] for res in sweep_results]
     test_acc_values = [res["test_acc"] for res in sweep_results]
 
+    # Find the maximum inference accuracy and its corresponding P_tr
+    max_test_acc = max(test_acc_values)
+    max_idx = test_acc_values.index(max_test_acc)
+    best_p_tr = p_tr_values[max_idx]
+
     plt.figure(figsize=(10, 6))
     plt.plot(p_tr_values, test_acc_values, marker='o', color='teal', label='Test Inference Acc (at P_te=0.5)', linewidth=2.5)
     plt.plot(p_tr_values, train_acc_values, marker='x', linestyle='--', color='salmon', label='Training Accuracy', linewidth=1.5)
     plt.axvline(x=P_OUTAGE_TE, color='navy', linestyle=':', label=f'Matched Channel (P_tr = P_te = {P_OUTAGE_TE})', linewidth=2)
+
+    # Mark the highest inference accuracy
+    plt.scatter([best_p_tr], [max_test_acc], color='gold', s=200, zorder=5, marker='*', edgecolors='black', label=f'Peak Acc ({max_test_acc*100:.2f}%)')
+    
+    # Adjust annotation text position based on where the point is to avoid going off screen
+    text_offset_x = 0.05 if best_p_tr < 0.8 else -0.15
+    text_offset_y = -0.05 if max_test_acc > 0.6 else 0.05
+    plt.annotate(f'Best: {max_test_acc*100:.2f}%\nat $P_{{tr}}={best_p_tr:.2f}$', 
+                 xy=(best_p_tr, max_test_acc), xytext=(best_p_tr + text_offset_x, max_test_acc + text_offset_y),
+                 arrowprops=dict(facecolor='black', shrink=0.05, width=1.5, headwidth=6),
+                 fontsize=10, fontweight='bold', bbox=dict(boxstyle="round,pad=0.3", fc="lightyellow", ec="black", alpha=0.9))
+
     
     plt.title('Inference Robustness Sweep (test14)', fontsize=14, fontweight='bold')
     plt.xlabel('Train Channel Outage Probability ($P_{tr}$)', fontsize=12)
     plt.ylabel('Model Accuracy', fontsize=12)
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.legend(loc='best', fontsize=11)
-    plt.ylim(0.5, 1.05)
+    plt.ylim(0.8, 0.95)
     plt.tight_layout()
 
     plot_path = os.path.join(RESULTS_DIR, "mismatch_robustness_curve.png")
@@ -1108,7 +1126,7 @@ if __name__ == "__main__":
 
     # Generate Terminal visual alignment table
     print("\n" + "="*80)
-    print("FINAL INFERENCE RESULTS METRIC MATRIX (test14)")
+    print("FINAL INFERENCE RESULTS METRIC MATRIX")
     print("="*80)
     print(f"{'Train Outage (P_tr)':<20} | {'Train Loss':>12} | {'Train Acc':>12} | {'Test Loss (P_te=0.5)':>20} | {'Test Acc (P_te=0.5)':>20}")
     print("-" * 100)

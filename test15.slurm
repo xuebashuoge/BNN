@@ -14,9 +14,9 @@
 # Resource Requests
 #SBATCH --nodes=1                  # Run all processes on a single node
 #SBATCH --ntasks=1                 # Run a single task (the python script)
-#SBATCH --cpus-per-task=1         # Request 32 CPU cores for the multiprocessing pool
-#SBATCH --mem=64G                  # Request 32 GB of total RAM
-#SBATCH --time=12:00:00            # Time limit (HH:MM:SS)
+#SBATCH --cpus-per-task=64         # Request 32 CPU cores for the multiprocessing pool
+#SBATCH --mem=1024G                  # Request 32 GB of total RAM
+#SBATCH --time=24:00:00            # Time limit (HH:MM:SS)
 
 #=========================================================
 # Environment Setup & Execution
@@ -31,7 +31,7 @@ conda activate torch28
 echo "Allocated CPUs: $SLURM_CPUS_PER_TASK"
 echo "Starting Python execution..."
 
-python test14.py
+python test15.py
 
 my-job-stats -a -n -s
 
