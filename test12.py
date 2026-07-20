@@ -1038,7 +1038,25 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
             "n_u_sets": None, "m_artificial_channels": m_artificial_channels,
             "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma, "loss": loss, "acc": acc
         }
+    elif scenario == 'l2':
+        gamma_coeff = task_config['gamma_coeff']
         
+        model, _ = train_scenario(
+            'l2', train_loader, n_trains, mode='train', objective='heuristic',
+            hidden_dim=hidden_dim, batch_size=batch_size, moon_noise=moon_noise, epochs=epochs,
+            m_artificial_channels=m_artificial_channels,
+            lr=lr, lr_decay_step=lr_decay_step, lr_decay_gamma=lr_decay_gamma, alpha_coeff=0.0, beta_coeff=0.0, gamma_coeff=gamma_coeff,
+            seed=seed, use_cache=use_cache, verbose=verbose
+        )
+        loss, acc = evaluate_inference(model, test_loader, seed=seed, repeats=repeats, weight_mc_samples=weight_mc_samples)
+        free_memory(model)
+        
+        return {
+            "seed": seed, "scenario": "l2", "objective": "heuristic", "mode": "train",
+            "beta_coeff": None, "gamma_coeff": gamma_coeff, "hidden_dim": hidden_dim, "batch_size": batch_size, "moon_noise": moon_noise, "n_samples": n_samples, "epochs": epochs,
+            "n_u_sets": None, "m_artificial_channels": m_artificial_channels,
+            "lr": lr, "lr_decay_step": lr_decay_step, "lr_decay_gamma": lr_decay_gamma, "loss": loss, "acc": acc
+        }
     elif scenario == 'proposed':
         beta_coeff = task_config['beta_coeff']
         gamma_coeff = task_config['gamma_coeff']
