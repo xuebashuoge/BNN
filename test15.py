@@ -692,6 +692,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
         'bound_term1': [],
         'bound_term2': [],
         'bound_term3': [],
+        'joint_complexity': [],
         'channel_overfit_kl': [],
         'kl_ch_total': [],
         'mixture_kl': [],
