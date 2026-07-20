@@ -692,6 +692,7 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
         'bound_term1': [],
         'bound_term2': [],
         'bound_term3': [],
+        'joint_complexity': [],
         'channel_overfit_kl': [],
         'kl_ch_total': [],
         'mixture_kl': [],
@@ -1096,7 +1097,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = True
+    RUN_SWEEP = False
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1254,8 +1255,8 @@ if __name__ == "__main__":
 
         # EXECUTE IN PARALLEL
         # Determine safe number of workers (leave 1 core free for OS)
-        MAX_WORKERS = max(1, os.cpu_count() - 1)
-        # MAX_WORKERS = 2
+        # MAX_WORKERS = max(1, os.cpu_count() - 1)
+        MAX_WORKERS = 2
         # If running on a powerful server, you might cap this at 32 so you don't overwhelm I/O
         if MAX_WORKERS > 64: 
             MAX_WORKERS = 64

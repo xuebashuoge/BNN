@@ -1233,8 +1233,8 @@ if __name__ == "__main__":
 
         # EXECUTE IN PARALLEL
         # Determine safe number of workers (leave 1 core free for OS)
-        MAX_WORKERS = max(1, os.cpu_count() - 1)
-        # MAX_WORKERS = 2
+        # MAX_WORKERS = max(1, os.cpu_count() - 1)
+        MAX_WORKERS = 2
         # If running on a powerful server, you might cap this at 32 so you don't overwhelm I/O
         if MAX_WORKERS > 64: 
             MAX_WORKERS = 64
