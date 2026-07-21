@@ -683,6 +683,31 @@ def plot_m_sweep_comparison(m_list, pop_accs, pop_losses, emp_losses, bound_tota
     print(f"Saved comparison plot to {filename}")
 
 
+def plot_m_bound_trajectories(m_histories, save_dir):
+    """Plots the PAC-Bayes bound trajectories over training epochs for different m_artificial_channels on a single image."""
+    plt.figure(figsize=(10, 6))
+    
+    colors = plt.cm.viridis(np.linspace(0.1, 0.9, len(m_histories)))
+
+    for idx, (m_val, history) in enumerate(m_histories.items()):
+        bound_series = history.get('bound_total', [])
+        if bound_series:
+            epochs = list(range(1, len(bound_series) + 1))
+            plt.plot(epochs, bound_series, label=f"m = {m_val}", color=colors[idx], linewidth=2.0)
+
+    plt.xlabel('Epoch', fontsize=12)
+    plt.ylabel('PAC-Bayes Bound', fontsize=12)
+    plt.title('PAC-Bayes Bound Dynamics Across Training Epochs for Different m', fontsize=13)
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.legend(title="Artificial Channels (m)", fontsize=10, title_fontsize=11, loc='upper right')
+    plt.tight_layout()
+
+    filename = os.path.join(save_dir, "m_bound_trajectories.png")
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Saved bound trajectory plot across m to {filename}")
+
+
 # ==========================================
 # MAIN EXECUTION
 # ==========================================
@@ -699,6 +724,7 @@ if __name__ == "__main__":
         )
 
         results = []
+        m_histories = {}
         print("\n" + "="*75)
         print(f"RUNNING M_ARTIFICIAL_CHANNELS SWEEP FOR PROPOSED METHOD (Seed: {SEED})")
         print("="*75)
@@ -726,6 +752,7 @@ if __name__ == "__main__":
             pop_accs.append(acc_prop)
             emp_losses.append(emp_loss)
             bound_totals.append(bound_tot)
+            m_histories[m_channels] = history_prop
 
             print(f"{m_channels:<12} {loss_prop:>10.4f} {acc_prop*100:>13.2f}% {emp_loss:>12.4f} {bound_tot:>14.4f}")
 
@@ -742,6 +769,9 @@ if __name__ == "__main__":
 
         # Plot single-run comparison graph
         plot_m_sweep_comparison(M_ARTIFICIAL_CHANNELS_LIST, pop_accs, pop_losses, emp_losses, bound_totals, RESULTS_DIR)
+
+        # Plot bound trajectory curves across epochs for different m on a single image
+        plot_m_bound_trajectories(m_histories, RESULTS_DIR)
 
         # Save single-run summary JSON
         summary_path = os.path.join(RESULTS_DIR, "m_sweep_single_run_summary.json")
