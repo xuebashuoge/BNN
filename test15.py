@@ -1200,18 +1200,18 @@ if __name__ == "__main__":
         random.seed(MASTER_SEED)
 
         # 2. Generate a list of 10 unique random seeds
-        num_seeds = 20
+        num_seeds = 2000
         # Seeds in Python/NumPy are typically unsigned 32-bit integers (0 to 2**32 - 1)
         SEEDS = [random.randint(0, 2**32 - 1) for _ in range(num_seeds)]
         # SEEDS = [2010133918]
         HIDDEN_DIM_GRID = [64]
         N_U_SETS_GRID = [10]
         M_ARTIFICIAL_CHANNELS_GRID = [100]
-        LR_GRID = [0.1, 0.01, 0.005, 0.001]
-        LR_DECAY_STEP_GRID = [25, 50, 75]
-        LR_DECAY_GAMMA_GRID = [0.2, 0.5, 0.8]
+        LR_GRID = [0.01]
+        LR_DECAY_STEP_GRID = [75]
+        LR_DECAY_GAMMA_GRID = [0.8]
         BETA_COEFF_GRID = [0.1]
-        GAMMA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005, 0.001]
+        GAMMA_COEFF_GRID = [0.001]
         EPOCHS_GRID = [150]
         use_cache = False
         verbose = False
