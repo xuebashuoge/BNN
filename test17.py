@@ -97,7 +97,7 @@ HIDDEN_DIM = 256
 IN_DIM = 28 * 28
 OUT_DIM = 10
 
-BATCH_SIZE = 128
+BATCH_SIZE = 256
 EPOCHS = 150
 LR_BASE = 0.001
 LR_DECAY_STEP = 75
@@ -1482,12 +1482,12 @@ def build_sweep_tasks(args: argparse.Namespace) -> list[dict]:
     hidden_dim_grid = [args.hidden_dim]
     n_u_sets_grid = [args.n_u_sets]
     m_artificial_channels_grid = [args.m_artificial_channels]
-    lr_grid = [args.lr]
+    lr_grid = [3e-4, 1e-3, 3e-3]
     lr_decay_step_grid = [args.lr_decay_step]
     lr_decay_gamma_grid = [args.lr_decay_gamma]
     epochs_grid = [args.epochs]
-    beta_coeff_grid = [BETA_COEFF]
-    proposed_gamma_grid = [0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001]
+    beta_coeff_grid = [0.5, 0.1, 0.05, 0.01]
+    proposed_gamma_grid = [1e-4, 1e-3, 5e-3, 1e-2, 5e-2, 1e-1, 5e-1, 1.0]
 
     tasks: list[dict] = []
     base_grid = itertools.product(
