@@ -57,10 +57,10 @@ LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
 # Channel Distributions (Inference/Test) - HARSH REALITY
-# # ideal
-# SEED = 3394626443
-# MU_M_TE, STD_M_TE = 1.0, 0.01
-# MU_B_TE, STD_B_TE = 0.0, 0.01   
+# ideal
+SEED = 3394626443
+MU_M_TE, STD_M_TE = 1.0, 0.01
+MU_B_TE, STD_B_TE = 0.0, 0.01   
 # # low SNR
 # SEED = 638212450
 # MU_M_TE, STD_M_TE = 1.0, 0.01
@@ -70,9 +70,9 @@ LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 # MU_M_TE, STD_M_TE = 0.5, 1.0
 # MU_B_TE, STD_B_TE = 0.0, 0.01  
 # severe fading & low SNR
-SEED = 616657849
-MU_M_TE, STD_M_TE = 0.5, 1.0
-MU_B_TE, STD_B_TE = 0.0, 1.0  
+# SEED = 616657849
+# MU_M_TE, STD_M_TE = 0.5, 1.0
+# MU_B_TE, STD_B_TE = 0.0, 1.0  
 
 # Channel Distributions (Train) - DECEPTIVELY CLEAN
 # ERM will become overconfident and build fragile decision boundaries.
@@ -1085,7 +1085,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = True
+    RUN_SWEEP = False
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
