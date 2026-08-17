@@ -69,7 +69,11 @@ MU_B_TE, STD_B_TE = 0.0, 0.01
 # SEED = 3508521152
 # MU_M_TE, STD_M_TE = 0.5, 1.0
 # MU_B_TE, STD_B_TE = 0.0, 0.01  
+<<<<<<< HEAD
 # severe fading & low SNR
+=======
+# # severe fading & low SNR
+>>>>>>> e1d2dc88447c628ad949140e22c794a10210b823
 # SEED = 616657849
 # MU_M_TE, STD_M_TE = 0.5, 1.0
 # MU_B_TE, STD_B_TE = 0.0, 1.0  

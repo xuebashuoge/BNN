@@ -5,13 +5,13 @@
 #=========================================================
 
 #SBATCH --job-name=mnist_erm_prop
-#SBATCH --output=test17_erm_prop_%j.out
-#SBATCH --error=test17_erm_prop_%j.err
+#SBATCH --output=logs/test17_erm_prop_%j.out
+#SBATCH --error=logs/test17_erm_prop_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=64G
-#SBATCH --time=24:00:00
+#SBATCH --cpus-per-task=64
+#SBATCH --mem=1024G
+#SBATCH --time=48:00:00
 
 set -euo pipefail
 
@@ -35,7 +35,7 @@ echo "Starting paired ERM/proposed training-channel sweeps on CPU..."
 
 python -u test17.py \
     --mode sweep \
-    --device cpu \
+    --num-seeds 20 \
     --max-workers "${SLURM_CPUS_PER_TASK}"
 
 if command -v my-job-stats >/dev/null 2>&1; then
