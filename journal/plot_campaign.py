@@ -126,6 +126,10 @@ def provenance_note(rows):
         return "Independent-seed confirmation; configurations selected by preceding validation search"
     if stages <= {"mechanism", "mismatch"}:
         return "Controlled experiment; all saved seeds shown; pointwise 95% seed t intervals"
+    if stages & {"refine", "full_refine"}:
+        return "Exploratory refinement after earlier results; all saved seeds retained; sources are not pooled"
+    if any(str(stage).startswith("fashion") for stage in stages):
+        return "Exploratory FashionMNIST comparison with added controls; all saved seeds retained"
     return "Exploratory screening; validation-selected configurations; test rankings remain exploratory"
 
 
@@ -139,7 +143,10 @@ def errorbar(ax, x, summary, scale=1., **kwargs):
 def performance_figures(rows, root_label, output, index):
     grouped = defaultdict(list)
     for row in rows:
-        if row.get("role", "comparison") == "comparison":
+        # Refinement/control stages use descriptive role names. They are still
+        # performance comparisons; only mechanism/mismatch/reference roles
+        # belong exclusively to the other figures.
+        if row.get("role", "comparison") not in {"mechanism", "mismatch", "reference"}:
             grouped[row["group"]].append(row)
     for group, runs in sorted(grouped.items()):
         methods = defaultdict(list)
@@ -172,7 +179,10 @@ def performance_figures(rows, root_label, output, index):
         axes[0].set_axisbelow(True)
         if baseline_label:
             reference = {row["seed"]: row["test_accuracy"] for row in methods[baseline_label]}
-            for position, label in enumerate(labels):
+            # Perfect-trained references remain in the left panel. Omitting
+            # them here keeps small matched-training differences legible.
+            paired_labels = [label for label in labels if "Perfect" not in label] or labels
+            for position, label in enumerate(paired_labels):
                 paired = [row["test_accuracy"] - reference[row["seed"]] for row in methods[label] if row["seed"] in reference]
                 summary = stats(paired)
                 if summary["n"]:
@@ -182,8 +192,8 @@ def performance_figures(rows, root_label, output, index):
                                     s=22, color=color(label), alpha=.35)
             axes[1].axhline(0, color="black", linewidth=.8)
             axes[1].set(ylabel="Paired accuracy difference (percentage points)",
-                        title=f"Difference from {baseline_label}")
-            axes[1].set_xticks(range(len(labels)), [label.replace("-", "\n", 1) for label in labels], rotation=35, ha="right")
+                        title=f"Matched models versus {baseline_label}")
+            axes[1].set_xticks(range(len(paired_labels)), [label.replace("-", "\n", 1) for label in paired_labels], rotation=35, ha="right")
             axes[1].grid(axis="y", alpha=.2)
         else:
             axes[1].text(.5, .5, "No evaluated baseline available", ha="center", transform=axes[1].transAxes)
@@ -192,6 +202,10 @@ def performance_figures(rows, root_label, output, index):
         fig.text(.5, -.025, provenance_note(runs) + "\nBars/dots: means; whiskers: pointwise 95% seed t intervals; no seed selection", ha="center", fontsize=9)
         fig.tight_layout(rect=(0, .03, 1, .95))
         save_figure(fig, output, f"{root_label}_{slug(group)}_accuracy", "Accuracy and paired comparisons", index)
+        index["figures"][-1].update(method_labels=labels,
+                                     evaluated_seed_counts={label: len(methods[label]) for label in labels},
+                                     source_task_ids=[row["task_id"] for row in runs],
+                                     stages=sorted({str(row.get("stage")) for row in runs}))
 
 
 def observed(row, component, metric="bounded_loss"):
@@ -368,12 +382,26 @@ def decomposition_figures(rows, root_label, output, index):
                 heights.append(statistics.fmean(values) if values else 0.)
             axes[0].bar(range(len(labels)), heights, bottom=bottom, color=shade, label=legend, width=.7)
             bottom += np.asarray(heights)
+        joint_overlay_available = False
         for position, label in enumerate(labels):
             gap = stats([observed(row, "observed_gap") for row in methods[label]])
             errorbar(axes[0], position, gap, fmt="D", color="black", markersize=4,
                      label="Observed gap" if position == 0 else None)
+            joint_bounds = []
+            for row in methods[label]:
+                report = row["_report"]
+                shift = report.get("channel_shift_diagnostic", {}).get("channel_shift_complexity")
+                joint = report.get("final_posterior_complexities", {}).get("joint_complexity")
+                if finite(shift) and finite(joint):
+                    joint_bounds.append(shift + joint)
+            if len(joint_bounds) == len(methods[label]):
+                joint_overlay_available = True
+                axes[0].plot(position, statistics.fmean(joint_bounds), marker="s", linestyle="none",
+                             markerfacecolor="none", markeredgecolor="#633b7a", markeredgewidth=1.4,
+                             markersize=6, label="Theorem 2 gap bound" if position == 0 else None)
         axes[0].axhline(1, color="gray", linestyle=":", linewidth=1., label="Maximum normalized loss")
-        axes[0].set(ylabel="Normalized bounded-loss units", title="Unweighted theoretical terms and observed gap")
+        axes[0].set(ylabel="Normalized bounded-loss units",
+                    title="Unweighted Theorem 1 terms\nat each frozen posterior")
         for position in sorted(set(unknown)):
             axes[0].annotate("†", (position, bottom[position]), xytext=(0, 4), textcoords="offset points", ha="center", fontsize=14)
         positive, negative = np.zeros(len(labels)), np.zeros(len(labels))
@@ -407,21 +435,28 @@ def decomposition_figures(rows, root_label, output, index):
             ax.set_axisbelow(True)
             ax.margins(y=.18)
         fig.suptitle(f"Frozen-posterior decomposition: {key[0].upper()}, n={key[2]}, m={key[3]}")
-        fig.legend(handles=[Patch(facecolor="#c49a55", label="Shift contribution"),
-                            Patch(facecolor="#5f94bf", label="Channel contribution"),
-                            Patch(facecolor="#88ad85", label="Data contribution"),
-                            Line2D([], [], color="black", marker="D", linestyle="none", markersize=5,
-                                   label="Observed total gap")],
-                   loc="upper center", bbox_to_anchor=(.5, .935), ncol=4, fontsize=9)
-        note = "Terms are unscaled by training coefficients; means over all saved seeds; Monte Carlo estimates, not automatic certificates"
+        handles = [Patch(facecolor="#c49a55", label="Shift contribution"),
+                   Patch(facecolor="#5f94bf", label="Channel contribution"),
+                   Patch(facecolor="#88ad85", label="Data contribution"),
+                   Line2D([], [], color="black", marker="D", linestyle="none", markersize=5,
+                          label="Observed total gap")]
+        if joint_overlay_available:
+            handles.append(Line2D([], [], color="#633b7a", marker="s", markerfacecolor="none",
+                                  linestyle="none", markersize=6, label="Theorem 2 gap bound"))
+        fig.legend(handles=handles,
+                   loc="upper center", bbox_to_anchor=(.5, .935), ncol=3, fontsize=9)
+        note = ("Bars: Theorem 1 terms; hollow squares: shift + Theorem 2 joint term at the same posterior; no training weights applied"
+                if joint_overlay_available else "Bars: unweighted Theorem 1 terms at each frozen posterior; joint bounds unavailable in saved reports")
+        note += "\nMeans over saved seeds; observed risks are Monte Carlo estimates, not automatic certificates"
         shift_methods = {(row.get("_report") or {}).get("channel_shift_diagnostic", {}).get("shift_method") for row in runs}
         if "exact_total_variation_feature_erasure" in shift_methods:
             note += "\nErasure-channel shift uses exact channel total variation"
         if unknown:
             note += "\n† A shift term is unavailable: displayed theoretical stack is incomplete"
         fig.text(.5, -.03, note, ha="center", fontsize=9)
-        fig.tight_layout(rect=(0, .04, 1, .87))
-        save_figure(fig, output, f"{root_label}_decomposition_{number}", "Unweighted theoretical and signed empirical decomposition", index)
+        fig.tight_layout(rect=(0, .04, 1, .83))
+        save_figure(fig, output, f"{root_label}_decomposition_{number}",
+                    "Unweighted Theorem 1 terms and Theorem 2 gap bounds at each posterior, with signed empirical decomposition", index)
 
 
 def main():
