@@ -5,7 +5,7 @@
 #=========================================================
 
 # Name of the job
-#SBATCH --job-name=bnn_sweep
+#SBATCH --job-name=bnn_sweep_l2
 
 # Output log files (%j will be replaced by the SLURM job ID)
 #SBATCH --output=logs/sweep_%j.out
