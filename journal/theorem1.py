@@ -155,6 +155,8 @@ class GaussianMLP(nn.Module):
                 generator: torch.Generator | None = None) -> torch.Tensor:
         w1, b1, w2, b2 = self.split(theta)
         hidden = F.relu(x.flatten(1) @ w1 + b1)
+        if not self.training:
+            self.last_feature_power = hidden.detach().square().mean().item()
         return bank.apply(hidden, source, channel, generator) @ w2 + b2
 
 

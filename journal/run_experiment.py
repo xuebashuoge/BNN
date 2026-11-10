@@ -226,17 +226,19 @@ def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
     replicates = []
     for _ in range(draws):
         theta = model.sample(weight_generator)
-        loss_sum, bounded_sum, correct, count = 0., 0., 0, 0
+        loss_sum, bounded_sum, power_sum, correct, count = 0., 0., 0., 0, 0
         for x, y in loader:
             x, y = x.to(config["device"]), y.to(config["device"])
             logits = model(x, theta, bank, source, config["deployment_channel"], channel_generator)
             losses = F.cross_entropy(logits, y, reduction="none")
             loss_sum += losses.sum().item()
             bounded_sum += bounded_losses_from_ce(losses, config).sum().item()
+            power_sum += model.last_feature_power * len(y)
             correct += (logits.argmax(-1) == y).sum().item()
             count += len(y)
         replicates.append(dict(cross_entropy=loss_sum / count,
-                               bounded_loss=bounded_sum / count, accuracy=correct / count))
+                               bounded_loss=bounded_sum / count, accuracy=correct / count,
+                               feature_power_per_coordinate=power_sum / count))
     result = {key: float(np.mean([rep[key] for rep in replicates])) for key in replicates[0]}
     result.update(draws=draws, examples=count, channel_source=source,
                   bounded_loss_definition=bounded_loss_description(config),

@@ -1,0 +1,15 @@
+{
+  "stage": "screen",
+  "tasks": 104,
+  "seeds": [
+    1001,
+    1002
+  ],
+  "groups": [
+    "mnist_analog",
+    "moons_analog",
+    "moons_outage"
+  ],
+  "selection": "validation mean across all seeds; test-based rankings are exploratory only",
+  "all_trial_outcomes_retained": true
+}
