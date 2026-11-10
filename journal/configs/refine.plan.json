@@ -1,0 +1,20 @@
+{
+  "stage": "refine",
+  "tasks": 100,
+  "seeds": [
+    1003,
+    1004
+  ],
+  "groups": [
+    "mnist_analog_m20",
+    "mnist_analog_m50",
+    "moons_outage_m20",
+    "moons_outage_m5",
+    "moons_outage_m50"
+  ],
+  "based_on": "Initial 104-trial screen; MNIST T1/PAC effectively tied, moons erasure below ERM",
+  "controls": "Fixed lr=.003; lower posterior noise for moons; common channel and bank settings within group",
+  "penalty_matching": "PAC/T1/T2 leading sqrt(KL) coefficients matched at each bank size",
+  "selection": "All outcomes retained; aggregate validation selects finalists; test/seed winners exploratory",
+  "perfect_training": "Existing screen/confirmation references retained; no redundant perfect retraining across m"
+}

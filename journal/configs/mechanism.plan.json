@@ -1,0 +1,23 @@
+{
+  "stage": "mechanism",
+  "tasks": 102,
+  "seeds": [
+    9001,
+    9002,
+    9003
+  ],
+  "groups": [
+    "moons_outage_n128_m100",
+    "moons_outage_n2048_m100",
+    "moons_outage_n512_m100",
+    "moons_outage_n512_m20",
+    "moons_outage_n512_m2000",
+    "moons_outage_n512_m5",
+    "moons_outage_n512_m500",
+    "moons_outage_perfect_n128",
+    "moons_outage_perfect_n2048",
+    "moons_outage_perfect_n512"
+  ],
+  "selection": "validation mean across all seeds; test-based rankings are exploratory only",
+  "all_trial_outcomes_retained": true
+}

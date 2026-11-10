@@ -25,6 +25,9 @@ export MKL_NUM_THREADS="$OMP_NUM_THREADS"
 export OPENBLAS_NUM_THREADS="$OMP_NUM_THREADS"
 export MPLCONFIGDIR="${TMPDIR:-/tmp}/tit-campaign-${SLURM_JOB_ID}"
 python -c 'import os; from journal.run_task import verify_submission_snapshot; verify_submission_snapshot(os.environ["CAMPAIGN_MANIFEST"])'
+if [[ -n "${CAMPAIGN_PREPARE_DATASETS:-}" ]]; then
+    python -u -m journal.prepare_data --datasets "$CAMPAIGN_PREPARE_DATASETS"
+fi
 if (( ${CAMPAIGN_WORKERS:-4} * ${CAMPAIGN_THREADS:-2} > SLURM_CPUS_PER_TASK )); then
     echo "Worker thread budget exceeds allocated CPUs" >&2
     exit 2
@@ -32,4 +35,4 @@ fi
 /usr/bin/time -v python -u -m journal.campaign \
     --manifest "$CAMPAIGN_MANIFEST" --workers "${CAMPAIGN_WORKERS:-4}" \
     --threads "${CAMPAIGN_THREADS:-2}" --output-root "$CAMPAIGN_OUTPUT" \
-    --evaluate-top "${CAMPAIGN_EVALUATE_TOP:-1}" --resume
+    --evaluate-top "${CAMPAIGN_EVALUATE_TOP:-1}" --eval-draws "${CAMPAIGN_EVAL_DRAWS:-5}" --resume

@@ -1,0 +1,19 @@
+{
+  "stage": "mismatch",
+  "tasks": 66,
+  "seeds": [
+    9001,
+    9002,
+    9003
+  ],
+  "groups": [
+    "moons_outage_ptr00",
+    "moons_outage_ptr10",
+    "moons_outage_ptr30",
+    "moons_outage_ptr50",
+    "moons_outage_ptr70",
+    "moons_outage_ptr90"
+  ],
+  "selection": "validation mean across all seeds; test-based rankings are exploratory only",
+  "all_trial_outcomes_retained": true
+}

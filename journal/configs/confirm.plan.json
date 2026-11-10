@@ -1,0 +1,14 @@
+{
+  "stage": "confirm",
+  "tasks": 27,
+  "seeds": [
+    9001,
+    9002,
+    9003
+  ],
+  "groups": [
+    "mnist_analog"
+  ],
+  "selection": "validation mean across all seeds; test-based rankings are exploratory only",
+  "all_trial_outcomes_retained": true
+}

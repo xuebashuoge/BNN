@@ -79,12 +79,22 @@ def validate_channel(config: Mapping) -> dict:
 
 
 def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int) -> dict:
-    """KL in deployment||training direction, for independent feature channels.
+    """Uniform shift bound for a loss in [0,1], independent feature channels.
 
-    The shift sqrt(KL/2) uses the normalized bounded loss's variance proxy
-    1/4.  Singular-support mismatch is unavailable here; a Lipschitz argument
-    would require its own justified channel metric and constant.
+    The bounded-loss inequality |E_P loss-E_Q loss| <= TV(P,Q) applies without
+    a channel Lipschitz assumption. For independent feature-erasure masks, the
+    exact TV is a sum over the number of erased coordinates; grouping the
+    2**width masks reduces it to width+1 binomial-probability differences.
+    Perfect transmission is the erasure law with probability zero.
+
+    Where KL(deployment||training) is finite, Pinsker gives sqrt(KL/2).
+    Unsupported or singular continuous pairs retain the universal bound one.
+    These bounded-loss consequences supplement, rather than instantiate, the
+    draft's Wasserstein theorem. They do not supply a channel Lipschitz K.
     """
+    if width <= 0 or int(width) != width:
+        raise ValueError("width must be a positive integer")
+    width = int(width)
     deployment, training = validate_channel(deployment), validate_channel(training)
 
     def normal_kl(mean_p, std_p, mean_q, std_q):
@@ -92,15 +102,9 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
             return 0. if std_p == std_q == 0 and mean_p == mean_q else math.inf
         return math.log(std_q / std_p) + (std_p**2 + (mean_p - mean_q)**2) / (2 * std_q**2) - .5
 
-    if deployment == training:
-        divergence = 0.
-    elif {deployment["kind"], training["kind"]} <= {"perfect", "gaussian"}:
-        perfect = {"kind": "gaussian", "gain_mean": 1., "gain_std": 0., "noise_std": 0.}
-        p = perfect if deployment["kind"] == "perfect" else deployment
-        q = perfect if training["kind"] == "perfect" else training
-        divergence = width * (normal_kl(p["gain_mean"], p["gain_std"], q["gain_mean"], q["gain_std"]) +
-                              normal_kl(0., p["noise_std"], 0., q["noise_std"]))
-    elif {deployment["kind"], training["kind"]} <= {"perfect", "outage"}:
+    erasure_pair = {deployment["kind"], training["kind"]} <= {"perfect", "outage"}
+    exact_tv = None
+    if erasure_pair:
         p = deployment.get("outage_prob", 0.)
         q = training.get("outage_prob", 0.)
         divergence = 0.
@@ -108,12 +112,54 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
             if prob_p:
                 divergence += math.inf if prob_q == 0 else prob_p * math.log(prob_p / prob_q)
         divergence *= width
+
+        def binomial_probability(k, probability):
+            # Explicit endpoints avoid 0*log(0); lgamma avoids huge binomial
+            # coefficients while exponential underflow safely gives zero mass.
+            if probability == 0.:
+                return float(k == 0)
+            if probability == 1.:
+                return float(k == width)
+            log_mass = (math.lgamma(width + 1) - math.lgamma(k + 1) -
+                        math.lgamma(width - k + 1) + k * math.log(probability) +
+                        (width - k) * math.log1p(-probability))
+            return math.exp(log_mass)
+
+        exact_tv = min(1., .5 * math.fsum(
+            abs(binomial_probability(k, p) - binomial_probability(k, q))
+            for k in range(width + 1)))
+    elif deployment == training:
+        divergence = 0.
+    elif {deployment["kind"], training["kind"]} <= {"perfect", "gaussian"}:
+        perfect = {"kind": "gaussian", "gain_mean": 1., "gain_std": 0., "noise_std": 0.}
+        p = perfect if deployment["kind"] == "perfect" else deployment
+        q = perfect if training["kind"] == "perfect" else training
+        divergence = width * (normal_kl(p["gain_mean"], p["gain_std"], q["gain_mean"], q["gain_std"]) +
+                              normal_kl(0., p["noise_std"], 0., q["noise_std"]))
     else:
         divergence = math.inf
     finite = math.isfinite(divergence)
+    pinsker = math.sqrt(max(divergence, 0.) / 2) if finite else None
+    if erasure_pair:
+        shift = min(1., exact_tv, pinsker if pinsker is not None else 1.)
+        method = "exact_total_variation_feature_erasure"
+        status = "exact feature-erasure total variation for bounded loss"
+        if not finite:
+            status += "; KL infinite because deployment is not absolutely continuous w.r.t. training"
+    elif finite:
+        shift = min(1., pinsker)
+        method = "bounded_loss_pinsker_kl"
+        status = "finite KL bounded-loss shift, capped at the universal bound one"
+    else:
+        shift = 1.
+        method = "universal_bounded_loss_shift"
+        status = "universal trivial bounded-loss shift; KL singular or channel-family pair unsupported; no Lipschitz claim"
     return dict(channel_kl_deployment_to_training=max(divergence, 0.) if finite else None,
-                channel_shift_complexity=math.sqrt(max(divergence, 0.) / 2) if finite else None,
-                status="finite KL for bounded loss" if finite else "KL unavailable: singular or unsupported channel supports",
+                channel_shift_complexity=shift,
+                channel_total_variation_exact=exact_tv,
+                channel_shift_pinsker_bound=pinsker,
+                shift_method=method, status=status,
+                theory_basis="Uniform [0,1] bounded-loss total-variation inequality; additional to the draft's Wasserstein formulation",
                 feature_coordinates=width)
 
 
