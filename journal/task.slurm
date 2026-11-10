@@ -6,8 +6,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=8G
-#SBATCH --time=01:30:00
+#SBATCH --mem=4G
+#SBATCH --time=00:20:00
 
 set -euo pipefail
 # Noninteractive bash does not inherit the user's .zshrc environment paths.
@@ -18,6 +18,8 @@ conda deactivate
 conda activate torch28
 : "${DATASET:?Set DATASET to the existing shared dataset root}"
 : "${JOURNAL_MANIFEST:?Submit with journal/submit.sh}"
+: "${JOURNAL_GIT_SHA:?Submitted Git revision is required}"
+: "${JOURNAL_MANIFEST_SHA256:?Submitted manifest fingerprint is required}"
 cd "${SLURM_SUBMIT_DIR}"
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK}"
 export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK}"

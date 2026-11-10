@@ -259,7 +259,7 @@ def plot_mnist(summaries, pairs, output):
             stat = row[method + "_population_accuracy"]
             half = (stat["ci95_high"] - stat["mean"]) * 100 if stat["ci95_high"] is not None else 0
             ax.bar(idx + offset, stat["mean"] * 100, width=0.31, color=color,
-                   yerr=half, capsize=3, label=method.capitalize() if idx == 0 else None)
+                   yerr=half, capsize=3, label=("ERM" if method == "erm" else "Proposed") if idx == 0 else None)
         stat = row["difference_population_accuracy"]
         points = [p["difference_population_accuracy"] * 100 for p in pairs
                   if p["source"] == row["source"] and p["config_id"] == row["config_id"]]

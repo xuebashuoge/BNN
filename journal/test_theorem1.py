@@ -12,11 +12,35 @@ from torch.nn import functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
 from journal.theorem1 import ChannelBank, GaussianMLP, gaussian_kl, theorem1_terms, joint_complexity
-from journal.run_experiment import DEFAULTS, evaluate, read_config
-from journal.run_task import read_manifest
+from journal.run_experiment import DEFAULTS, empirical_objective, evaluate, read_config, sample_moons_iid
+from journal.run_task import read_manifest, require_cpu_pilots
 
 
 class TheoremProtocolTests(unittest.TestCase):
+    def test_iid_moons_is_reproducible_and_unconstrained_by_class_counts(self):
+        x, y = sample_moons_iid(101, .3, 31)
+        x_again, y_again = sample_moons_iid(101, .3, 31)
+        self.assertEqual(x.shape, (101, 2))
+        self.assertEqual(y.shape, (101,))
+        self.assertTrue((x == x_again).all() and (y == y_again).all())
+        self.assertEqual(set(y.tolist()), {0, 1})
+        other_x, other_y = sample_moons_iid(101, .3, 32)
+        self.assertFalse((x == other_x).all())
+        self.assertFalse((y == other_y).all())
+
+    def test_bounded_training_loss_has_correct_units_and_gradient(self):
+        logits = torch.tensor([[2., -2.], [-10., 10.]], requires_grad=True)
+        targets = torch.tensor([0, 0])
+        raw = empirical_objective(logits, targets, {**DEFAULTS, "training_loss": "raw_ce"})
+        torch.testing.assert_close(raw, F.cross_entropy(logits, targets))
+        bounded = empirical_objective(logits, targets,
+                                      {**DEFAULTS, "training_loss": "bounded_ce", "clip_ce": 2.})
+        self.assertGreaterEqual(bounded.item(), 0.)
+        self.assertLessEqual(bounded.item(), 1.)
+        bounded.backward()
+        torch.testing.assert_close(logits.grad[1], torch.zeros(2))
+        self.assertGreater(logits.grad[0].abs().sum().item(), 0.)
+
     def test_kl_matches_distribution_reference_and_gradient(self):
         mu = torch.tensor([.2, -.4, .9], dtype=torch.float64, requires_grad=True)
         rho = torch.tensor([-.8, .3, 1.1], dtype=torch.float64, requires_grad=True)
@@ -96,6 +120,27 @@ class TheoremProtocolTests(unittest.TestCase):
             path.write_text(row + "\n" + row + "\n")
             with self.assertRaises(ValueError):
                 read_manifest(path)
+
+    def test_gpu_guard_rejects_incomplete_or_different_cpu_pilot(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = {**DEFAULTS, "dataset": "moons", "train_size": 800, "val_size": 200,
+                      "width": 64, "epochs": 2, "device": "cpu"}
+            item = {"task_id": "gpu_trial", "config": {**config, "device": "cuda", "epochs": 150}}
+            meta = {"config": config, "selected_epoch": 2}
+            (root / "metadata.json").write_text(json.dumps(meta))
+            (root / "weights.pt").write_bytes(b"synthetic existence check")
+            (root / "history.json").write_text(json.dumps([
+                {"epoch": 1, "validation": {"cross_entropy": .8}},
+                {"epoch": 2, "validation": {"cross_entropy": .7}}]))
+            with self.assertRaises(ValueError):
+                require_cpu_pilots([item], root)
+            meta.update(total_seconds=1.2, peak_rss_mb=600)
+            (root / "metadata.json").write_text(json.dumps(meta))
+            self.assertEqual(require_cpu_pilots([item], root)[0]["task_id"], "gpu_trial")
+            item["config"]["width"] = 256
+            with self.assertRaises(ValueError):
+                require_cpu_pilots([item], root)
 
 
 if __name__ == "__main__":

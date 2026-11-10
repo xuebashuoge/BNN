@@ -21,15 +21,21 @@ python -m journal.run_task --manifest "$manifest" --validate-only
 task_count=$(python -c 'import sys; from journal.run_task import read_manifest; print(len(read_manifest(sys.argv[1])))' "$manifest")
 mkdir -p logs/journal
 export JOURNAL_MANIFEST="$manifest"
+export JOURNAL_GIT_SHA="$(git rev-parse HEAD)"
+export JOURNAL_MANIFEST_SHA256="$(python -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest())' "$manifest")"
 export JOURNAL_DEVICE=cpu
 export JOURNAL_PILOT=0
 options=()
 [[ -z "$dry_run" ]] || options+=(--test-only)
+# Measured MNIST width-256 CPU pilot: ~2.3 s/epoch and ~0.6 GiB per worker.
+# Override for larger measured configurations, rather than requesting maxima.
+options+=(--cpus-per-task="${JOURNAL_CPUS:-2}" --mem="${JOURNAL_MEM:-4G}" \
+    --time="${JOURNAL_TIME:-00:20:00}")
 case "$profile" in
     pilot)
         [[ "$task_count" == 4 ]] || { echo "Pilot expects exactly four trials" >&2; exit 2; }
         export JOURNAL_PILOT=1
-        options+=(--job-name=tit_pilot --partition=interactive --time=00:20:00)
+        options+=(--job-name=tit_pilot --partition=interactive --time=00:20:00 --mem=8G)
         ;;
     cpu)
         options+=(--array="0-$((task_count - 1))%${JOURNAL_CONCURRENCY:-8}")
@@ -38,7 +44,8 @@ case "$profile" in
         # feit is allowed on feit-gpu-a100; public gpu-a100 does not allow feit.
         # Submit only after the same configuration has passed a CPU pilot.
         : "${JOURNAL_CPU_PILOT:?Set to the completed CPU pilot output directory}"
-        [[ -f "$JOURNAL_CPU_PILOT/metadata.json" ]] || { echo "CPU pilot metadata not found" >&2; exit 2; }
+        python -m journal.run_task --manifest "$manifest" --validate-only --cpu-pilot "$JOURNAL_CPU_PILOT"
+        export JOURNAL_CPU_PILOT
         export JOURNAL_DEVICE=cuda
         options+=(--job-name=tit_gpu --partition=feit-gpu-a100 --qos=feit --gres=gpu:1 \
             --array="0-$((task_count - 1))%${JOURNAL_CONCURRENCY:-2}")

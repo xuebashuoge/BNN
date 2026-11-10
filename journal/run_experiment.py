@@ -4,7 +4,9 @@ Train selects a checkpoint using a held-out validation split and never opens
 the official test set. Evaluate loads a saved checkpoint without a training
 fallback. All reported risk estimates use Gibbs posterior draws fixed across
 the complete evaluation loader. Bounded losses are diagnostics, not automatic
-population-risk certificates; raw CE training is a tunable surrogate.
+population-risk certificates. Raw CE training is a tunable surrogate; the
+optional bounded CE objective matches the bounded-loss theoretical empirical
+term. Coefficients of one recover the separated bound's trainable objective.
 """
 from __future__ import annotations
 
@@ -32,12 +34,12 @@ except ImportError:
                           theorem1_terms, validate_channel)
 
 
-DEFAULTS = dict(dataset="mnist", method="proposed", width=128, train_size=55000,
+DEFAULTS = dict(dataset="mnist", method="proposed", training_loss="raw_ce", width=128, train_size=55000,
                 val_size=5000, batch_size=256, epochs=30, lr=.001,
                 eta_channel=.01, eta_data=.1, prior_std=1., posterior_std=.01,
                 m=100, seed=0, data_seed=20261110, channel_seed=1, eval_seed=2,
                 eval_draws=10, val_draws=1, clip_ce=10., delta=.05, l2=1e-4,
-                device="cpu", threads=1, download=False, moon_noise=.3,
+                device="cpu", threads=1, download=False, moon_noise=.3, moons_sampler="iid",
                 train_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1},
                 deployment_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1})
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
@@ -61,6 +63,12 @@ def normalize_config(supplied: dict) -> dict:
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist"}:
         raise ValueError("Unknown method or dataset")
+    if config["training_loss"] not in {"raw_ce", "bounded_ce"}:
+        raise ValueError("training_loss must be raw_ce or bounded_ce")
+    if config["moons_sampler"] not in {"iid", "legacy_grid"}:
+        raise ValueError("moons_sampler must be iid or legacy_grid")
+    if config["moon_noise"] < 0:
+        raise ValueError("moon_noise must be nonnegative")
     for key in ("width", "batch_size", "epochs", "m", "threads", "eval_draws", "val_draws"):
         if config[key] <= 0:
             raise ValueError(f"{key} must be positive")
@@ -75,21 +83,43 @@ def normalize_config(supplied: dict) -> dict:
     return config
 
 
+def sample_moons_iid(n_samples: int, noise: float, seed: int):
+    """IID two-arc population: Bernoulli labels, uniform angle, Gaussian noise.
+
+    The second arc uses sklearn's conventional coordinates (1-cos(t),
+    0.5-sin(t)). Unlike make_moons, neither class counts nor angles are fixed.
+    """
+    if n_samples <= 0 or noise < 0:
+        raise ValueError("Require n_samples>0 and noise>=0")
+    rng = np.random.default_rng(seed)
+    labels = rng.integers(0, 2, size=n_samples, dtype=np.int64)
+    angle = rng.uniform(0., math.pi, size=n_samples)
+    x = np.where(labels == 0, np.cos(angle), 1. - np.cos(angle))
+    y = np.where(labels == 0, np.sin(angle), .5 - np.sin(angle))
+    coordinates = np.column_stack((x, y)) + rng.normal(0., noise, size=(n_samples, 2))
+    return coordinates.astype(np.float32), labels
+
+
 def load_data(config: dict, include_test: bool = False):
     """Return train/validation/(optional test), shape and reproducible split IDs."""
     if config["dataset"] == "moons":
-        from sklearn.datasets import make_moons
+        if config["moons_sampler"] == "iid":
+            sampler = lambda count, seed: sample_moons_iid(count, config["moon_noise"], seed)
+            sampler_description = "iid Bernoulli(1/2) label, Uniform[0,pi] angle, independent Gaussian coordinate noise"
+        else:
+            from sklearn.datasets import make_moons
+            sampler = lambda count, seed: make_moons(n_samples=count, noise=config["moon_noise"],
+                                                      random_state=seed % 2**32)
+            sampler_description = "legacy sklearn make_moons fixed class counts and grid angles; not iid population draws"
         count = config["train_size"] + config["val_size"]
-        x, y = make_moons(n_samples=count, noise=config["moon_noise"],
-                          random_state=config["data_seed"] % 2**32)
+        x, y = sampler(count, config["data_seed"])
         full = TensorDataset(torch.tensor(x, dtype=torch.float32), torch.tensor(y, dtype=torch.long))
         test = None
         if include_test:
-            x, y = make_moons(n_samples=10000, noise=config["moon_noise"],
-                              random_state=(config["data_seed"] + 1) % 2**32)
+            x, y = sampler(10000, config["data_seed"] + 1)
             test = TensorDataset(torch.tensor(x, dtype=torch.float32), torch.tensor(y, dtype=torch.long))
         input_dim, classes = 2, 2
-        transform_description = "float32 raw coordinates"
+        transform_description = "float32 raw coordinates; " + sampler_description
     else:
         from torchvision import datasets, transforms
         root = os.environ.get("DATASET")
@@ -151,6 +181,14 @@ def complexities(model, config: dict) -> dict:
     return {"kl": kl, **terms, "joint_complexity": joint_complexity(kl, **kwargs)}
 
 
+def empirical_objective(logits: torch.Tensor, targets: torch.Tensor, config: dict) -> torch.Tensor:
+    """Empirical loss optimized by training, distinct from raw CE reporting."""
+    losses = F.cross_entropy(logits, targets, reduction="none")
+    if config["training_loss"] == "bounded_ce":
+        return (losses.clamp(max=config["clip_ce"]) / config["clip_ce"]).mean()
+    return losses.mean()
+
+
 @torch.no_grad()
 def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
              source: str = "deployment") -> dict:
@@ -201,7 +239,9 @@ def provenance(config: dict, split: dict) -> dict:
                 git_sha=git_sha, git_dirty=git_dirty, torch_version=torch.__version__,
                 python_version=platform.python_version(), platform=platform.platform(),
                 prior="fixed N(0,prior_std^2 I), independent of all data and channel banks",
-                training_objective="raw cross entropy + tuned complexity surrogate",
+                training_objective=("raw cross entropy + tuned complexity surrogate"
+                                    if config["training_loss"] == "raw_ce" else
+                                    "normalized bounded empirical CE + configured regularization; proposed with eta_channel=eta_data=1 matches the separated bound's trainable objective"),
                 theoretical_loss="min(CE,clip_ce)/clip_ce in [0,1]; sigma_data^2=sigma_channel^2=1/4",
                 certificate_note="Complexity terms alone are not certificates. Risk estimates need MC/error control; perfect-to-noisy deployment needs a separately justified channel-shift term.")
 
@@ -232,13 +272,14 @@ def train(config: dict, output: Path):
     for epoch in range(config["epochs"]):
         epoch_start = time.perf_counter()
         model.train()
-        ce_sum, samples = 0., 0
+        ce_sum, empirical_sum, objective_sum, samples = 0., 0., 0., 0
         for x, y in train_loader:
             x, y = x.to(config["device"]), y.to(config["device"])
             optimizer.zero_grad(set_to_none=True)
             theta = model.sample()
             logits = model(x, theta, bank, "bank", generator=channel_generator)
             ce = F.cross_entropy(logits, y)
+            empirical = empirical_objective(logits, y, config)
             terms = complexities(model, config)
             penalty = ce.new_zeros(())
             if config["method"] == "l2":
@@ -249,18 +290,22 @@ def train(config: dict, output: Path):
                     penalty = penalty + config["eta_channel"] * terms["channel_complexity"]
             elif config["method"] == "joint":
                 penalty = config["eta_data"] * terms["joint_complexity"]
-            loss = ce + penalty
+            loss = empirical + penalty
             if not torch.isfinite(loss):
                 raise FloatingPointError(f"Nonfinite objective at epoch {epoch + 1}")
             loss.backward()
             optimizer.step()
             ce_sum += ce.item() * len(y)
+            empirical_sum += empirical.item() * len(y)
+            objective_sum += loss.item() * len(y)
             samples += len(y)
         validation = evaluate(model, bank, val_loader, config, config["val_draws"],
                               config["eval_seed"] + epoch * 1009)
         if not math.isfinite(validation["cross_entropy"]):
             raise FloatingPointError(f"Nonfinite validation loss at epoch {epoch + 1}")
         record = dict(epoch=epoch + 1, training_cross_entropy=ce_sum / samples,
+                      training_empirical_objective=empirical_sum / samples,
+                      training_total_objective=objective_sum / samples,
                       validation=validation, epoch_seconds=time.perf_counter() - epoch_start,
                       final_posterior_complexities={k: v.detach().item() for k, v in complexities(model, config).items()})
         history.append(record)
@@ -287,6 +332,10 @@ def train(config: dict, output: Path):
 def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Path, split_name: str):
     metadata = json.loads((checkpoint / "metadata.json").read_text())
     config = metadata["config"].copy()
+    # Preserve data generated by checkpoints predating the IID sampler. Existing
+    # pilot artifacts must not silently switch to a different population.
+    if config["dataset"] == "moons" and "moons_sampler" not in config:
+        config["moons_sampler"] = "legacy_grid"
     overrides = {} if overrides_path is None else json.loads(Path(overrides_path).read_text())
     allowed = {"deployment_channel", "eval_draws", "eval_seed", "device", "threads", "batch_size", "download"}
     if set(overrides) - allowed:

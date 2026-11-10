@@ -1,0 +1,210 @@
+{
+  "slurm_job_id": 34666753,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 47,
+  "cpus": 2,
+  "requested_memory": "8G",
+  "slurm_maxrss_kib": 684072,
+  "scope": "Two-epoch CPU protocol/resource pilots; no scientific accuracy conclusions",
+  "trials": [
+    {
+      "task": "pilot_mnist_proposed",
+      "config": {
+        "dataset": "mnist",
+        "method": "proposed",
+        "width": 256,
+        "train_size": 55000,
+        "val_size": 5000,
+        "batch_size": 256,
+        "epochs": 2,
+        "lr": 0.001,
+        "eta_channel": 0.01,
+        "eta_data": 0.1,
+        "prior_std": 1.0,
+        "posterior_std": 0.01,
+        "m": 100,
+        "seed": 1001,
+        "data_seed": 20261110,
+        "channel_seed": 2001,
+        "eval_seed": 3001,
+        "eval_draws": 3,
+        "val_draws": 1,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 0.0001,
+        "device": "cpu",
+        "threads": 2,
+        "download": false,
+        "moon_noise": 0.3,
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "git_sha": "1dcd8e7044cce9a7a630a8d25d77b61b683b5287",
+      "epoch_seconds": [
+        2.293554676696658,
+        2.291955745778978
+      ],
+      "training_seconds": 4.615035303868353,
+      "peak_rss_mib": 592.0
+    },
+    {
+      "task": "pilot_mnist_stochastic_erm",
+      "config": {
+        "dataset": "mnist",
+        "method": "stochastic_erm",
+        "width": 256,
+        "train_size": 55000,
+        "val_size": 5000,
+        "batch_size": 256,
+        "epochs": 2,
+        "lr": 0.001,
+        "eta_channel": 0.01,
+        "eta_data": 0.1,
+        "prior_std": 1.0,
+        "posterior_std": 0.01,
+        "m": 100,
+        "seed": 1001,
+        "data_seed": 20261110,
+        "channel_seed": 2001,
+        "eval_seed": 3001,
+        "eval_draws": 3,
+        "val_draws": 1,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 0.0001,
+        "device": "cpu",
+        "threads": 2,
+        "download": false,
+        "moon_noise": 0.3,
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "git_sha": "1dcd8e7044cce9a7a630a8d25d77b61b683b5287",
+      "epoch_seconds": [
+        2.186890580691397,
+        2.1813403451815248
+      ],
+      "training_seconds": 4.398311943747103,
+      "peak_rss_mib": 593.0
+    },
+    {
+      "task": "pilot_moons_proposed",
+      "config": {
+        "dataset": "moons",
+        "method": "proposed",
+        "width": 64,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 2,
+        "lr": 0.001,
+        "eta_channel": 0.01,
+        "eta_data": 0.1,
+        "prior_std": 1.0,
+        "posterior_std": 0.01,
+        "m": 100,
+        "seed": 1001,
+        "data_seed": 20261110,
+        "channel_seed": 2001,
+        "eval_seed": 3001,
+        "eval_draws": 3,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 0.0001,
+        "device": "cpu",
+        "threads": 2,
+        "download": false,
+        "moon_noise": 0.3,
+        "train_channel": {
+          "kind": "outage",
+          "outage_prob": 0.5
+        },
+        "deployment_channel": {
+          "kind": "outage",
+          "outage_prob": 0.5
+        }
+      },
+      "git_sha": "1dcd8e7044cce9a7a630a8d25d77b61b683b5287",
+      "epoch_seconds": [
+        0.012648845091462135,
+        0.010929550044238567
+      ],
+      "training_seconds": 0.04084926191717386,
+      "peak_rss_mib": 577.0
+    },
+    {
+      "task": "pilot_moons_stochastic_erm",
+      "config": {
+        "dataset": "moons",
+        "method": "stochastic_erm",
+        "width": 64,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 2,
+        "lr": 0.001,
+        "eta_channel": 0.01,
+        "eta_data": 0.1,
+        "prior_std": 1.0,
+        "posterior_std": 0.01,
+        "m": 100,
+        "seed": 1001,
+        "data_seed": 20261110,
+        "channel_seed": 2001,
+        "eval_seed": 3001,
+        "eval_draws": 3,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 0.0001,
+        "device": "cpu",
+        "threads": 2,
+        "download": false,
+        "moon_noise": 0.3,
+        "train_channel": {
+          "kind": "outage",
+          "outage_prob": 0.5
+        },
+        "deployment_channel": {
+          "kind": "outage",
+          "outage_prob": 0.5
+        }
+      },
+      "git_sha": "1dcd8e7044cce9a7a630a8d25d77b61b683b5287",
+      "epoch_seconds": [
+        0.05179055128246546,
+        0.008560823276638985
+      ],
+      "training_seconds": 0.07852094899863005,
+      "peak_rss_mib": 576.0
+    }
+  ],
+  "recommended_mlp_resources": {
+    "cpus": 2,
+    "memory": "4G",
+    "walltime": "00:20:00",
+    "applicability": "Measured MNIST width256, 55000 train/5000 validation, ~150 epochs; adjust for larger evaluation or models"
+  }
+}
