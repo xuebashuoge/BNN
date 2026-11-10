@@ -1,5 +1,11 @@
 # Journal simulation audit and experiment plan
 
+The current main journal comparison uses ERM and L2 against Proposed T1/T2,
+with the data-only PAC penalty retained as an optional ablation. The objective
+equivalence and the existing main results are in `MAIN_COMPARISONS.md`.
+Main figures use `plot_campaign.py --comparison main` (the default);
+`--comparison all` preserves the full diagnostic view.
+
 The journal story should connect finite reusable channel observations, channel generalization, deployment mismatch, and a complexity-controlled learner. Additional datasets help establish scope, but the first priority is aligning the implemented objective, evaluated predictor, and reported risks. The existing sweeps are useful pilot evidence; their saved bounds are not ready to serve as numerical certificates of the new Theorem 1.
 
 This audit uses the draft supplied on 10 November 2026 and repository revision `c918333`. Original scripts and results are preserved. New implementation is isolated in `journal/` on branch `TIT_gpt`.

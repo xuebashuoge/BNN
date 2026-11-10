@@ -1,7 +1,8 @@
 """Plot saved journal campaign JSON only; never train or run checkpoint inference.
 
 Each source campaign remains separate. Screening and test-based rankings are
-explicitly exploratory; all available seed outcomes appear in the figures.
+explicitly exploratory; all available seed outcomes for displayed methods
+appear in the figures. Main/all comparison selection never changes source data.
 """
 from __future__ import annotations
 
@@ -30,10 +31,12 @@ plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10,
                      "legend.frameon": False, "pdf.fonttype": 42,
                      "savefig.facecolor": "white"})
 COLORS = {"ERM": "#737373", "L2": "#b89256", "StochERM": "#80a6b8",
-          "PAC": "#32916e", "T1": "#2973b0", "T2": "#b55f98"}
+          "PAC": "#32916e", "Proposed": "#32916e", "T1": "#2973b0", "T2": "#b55f98"}
 METHOD_ORDER = {"ERM-RawCE-Matched": 0, "ERM-Perfect": 1, "ERM-Matched": 2,
                 "L2-Matched": 3, "StochERM-Matched": 4, "PAC-Perfect": 5,
                 "PAC-Matched": 6, "T1-Matched": 7, "T2-Matched": 8}
+MAIN_METHODS = frozenset({"ERM-Matched", "ERM-Perfect", "L2-Matched", "L2-Perfect",
+                          "PAC-Perfect", "T1-Matched", "T2-Matched"})
 
 
 def slug(value):
@@ -58,14 +61,27 @@ def stats(values):
 
 
 def color(label):
-    for prefix in ("StochERM", "T1", "T2", "PAC", "L2", "ERM"):
+    for prefix in ("StochERM", "T1", "T2", "Proposed", "PAC", "L2", "ERM"):
         if label.startswith(prefix):
             return COLORS[prefix]
     return "#737373"
 
 
 def method_order(label):
+    if label.startswith("Proposed-Perfect"):
+        return METHOD_ORDER["PAC-Perfect"], label
+    if label.startswith("L2-Perfect"):
+        return 2.5, label
     return METHOD_ORDER.get(label, 20), label
+
+
+def display_label(row, comparison):
+    """Alias the mathematical perfect-training specialization without mutation."""
+    if comparison == "main" and (row["method_label"] == "PAC-Perfect" or
+                                  (row["config"]["method"] == "pac_bayes" and
+                                   row["config"]["train_channel"]["kind"] == "perfect")):
+        return "Proposed-Perfect"
+    return row["method_label"]
 
 
 def load_json(path, default=None):
@@ -140,7 +156,7 @@ def errorbar(ax, x, summary, scale=1., **kwargs):
                     capsize=3, **kwargs)
 
 
-def performance_figures(rows, root_label, output, index):
+def performance_figures(rows, root_label, output, index, comparison="main"):
     grouped = defaultdict(list)
     for row in rows:
         # Refinement/control stages use descriptive role names. They are still
@@ -148,20 +164,26 @@ def performance_figures(rows, root_label, output, index):
         # belong exclusively to the other figures.
         if row.get("role", "comparison") not in {"mechanism", "mismatch", "reference"}:
             grouped[row["group"]].append(row)
-    for group, runs in sorted(grouped.items()):
+    for group, all_runs in sorted(grouped.items()):
+        runs = ([row for row in all_runs if row["method_label"] in MAIN_METHODS]
+                if comparison == "main" else all_runs)
+        if not runs:
+            continue
         methods = defaultdict(list)
         variants_by_label = defaultdict(set)
         for row in runs:
-            variants_by_label[row["method_label"]].add(row.get("variant_id", "unspecified"))
+            variants_by_label[display_label(row, comparison)].add(row.get("variant_id", "unspecified"))
         for row in runs:
-            label = row["method_label"]
+            label = display_label(row, comparison)
             if len(variants_by_label[label]) > 1:
                 label += " [" + row.get("variant_id", "unspecified")[:5] + "]"
             methods[label].append(row)
         labels = sorted(methods, key=method_order)
         if not labels:
             continue
-        baseline_labels = [label for label in labels if methods[label][0]["family"] == "baseline"]
+        baseline_labels = [label for label in labels if
+                           (methods[label][0]["method_label"].startswith(("ERM", "L2"))
+                            if comparison == "main" else methods[label][0]["family"] == "baseline")]
         baseline_label = max(baseline_labels, key=lambda label: statistics.fmean(row["test_accuracy"] for row in methods[label])) if baseline_labels else None
         fig, axes = plt.subplots(1, 2, figsize=(14.5, 5.6), gridspec_kw={"width_ratios": [1.3, 1.]})
         for position, label in enumerate(labels):
@@ -199,10 +221,17 @@ def performance_figures(rows, root_label, output, index):
             axes[1].text(.5, .5, "No evaluated baseline available", ha="center", transform=axes[1].transAxes)
         config = runs[0]["config"]
         fig.suptitle(f"{config['dataset'].upper()} — {group.replace('_', ' ')}", fontsize=14)
-        fig.text(.5, -.025, provenance_note(runs) + "\nBars/dots: means; whiskers: pointwise 95% seed t intervals; no seed selection", ha="center", fontsize=9)
+        footnote = provenance_note(runs) + "\nBars/dots: means; whiskers: pointwise 95% seed t intervals; no seed selection"
+        if comparison == "main":
+            footnote += "\nMain comparison: ERM/L2 versus Proposed; data-only PAC and stochastic-ERM controls are reported separately as ablations"
+        fig.text(.5, -.025, footnote, ha="center", fontsize=9)
         fig.tight_layout(rect=(0, .03, 1, .95))
         save_figure(fig, output, f"{root_label}_{slug(group)}_accuracy", "Accuracy and paired comparisons", index)
         index["figures"][-1].update(method_labels=labels,
+                                     original_method_labels=sorted({row["method_label"] for row in runs}),
+                                     comparison=comparison,
+                                     omitted_method_labels=sorted({row["method_label"] for row in all_runs} - {row["method_label"] for row in runs}),
+                                     missing_requested_methods=sorted(MAIN_METHODS - {row["method_label"] for row in all_runs}) if comparison == "main" else [],
                                      evaluated_seed_counts={label: len(methods[label]) for label in labels},
                                      source_task_ids=[row["task_id"] for row in runs],
                                      stages=sorted({str(row.get("stage")) for row in runs}))
@@ -236,7 +265,7 @@ def curve(ax, runs, parameter, value, label, linestyle="-", x_transform=None):
     return True
 
 
-def mechanism_figures(rows, root_label, output, index):
+def mechanism_figures(rows, root_label, output, index, comparison="main"):
     mechanism = [row for row in rows if row.get("role") == "mechanism"]
     references = [row for row in rows if row.get("role") == "reference"]
     if not mechanism:
@@ -292,12 +321,15 @@ def mechanism_figures(rows, root_label, output, index):
                 axes[1].text(.5, .5, "Full-risk reports unavailable", ha="center", transform=axes[1].transAxes)
             axes[0].legend(fontsize=8, ncol=2)
             fig.suptitle(f"{key[0].upper()}: varying {'m' if varying == 'm' else 'n'}, fixed {'n' if varying == 'm' else 'm'}={fixed_value}")
-            fig.text(.5, -.025, "Normalized bounded-loss gaps; all saved seeds; pointwise 95% seed t intervals\nPerfect training is reused across m and retrained for each n", ha="center", fontsize=9)
+            note = "Normalized bounded-loss gaps; all saved seeds; pointwise 95% seed t intervals\nPerfect training is reused across m and retrained for each n"
+            if comparison == "main":
+                note += "\nPAC and stochastic-ERM curves are retained here as diagnostic ablations"
+            fig.text(.5, -.025, note, ha="center", fontsize=9)
             fig.tight_layout(rect=(0, .03, 1, .94))
             save_figure(fig, output, f"{root_label}_mechanism_{varying}_{setting_index}", "Finite-channel/data generalization mechanism", index)
 
 
-def mismatch_figures(rows, root_label, output, index):
+def mismatch_figures(rows, root_label, output, index, comparison="main"):
     mismatch = [row for row in rows if row.get("role") == "mismatch"]
     if not mismatch:
         return
@@ -321,15 +353,21 @@ def mismatch_figures(rows, root_label, output, index):
         axes[1].set_ylabel("Deployment cross entropy")
         axes[0].legend(fontsize=9)
         fig.suptitle(f"Fixed deployment erasure probability {key[3]:g}: {key[0].upper()}")
-        fig.text(.5, -.025, "Dotted: matched distribution; p_train=0: perfect training; PAC at zero also represents Proposed Perfect\nAll saved seeds; pointwise 95% seed t intervals; no test-peak selection", ha="center", fontsize=9)
+        note = "Dotted: matched distribution; p_train=0: perfect training; PAC at zero also represents Proposed Perfect\nAll saved seeds; pointwise 95% seed t intervals; no test-peak selection"
+        if comparison == "main":
+            note += "\nPAC and stochastic-ERM curves are retained here as diagnostic ablations"
+        fig.text(.5, -.025, note, ha="center", fontsize=9)
         fig.tight_layout(rect=(0, .03, 1, .94))
         save_figure(fig, output, f"{root_label}_mismatch_{index_number}", "Fixed deployment / varying training channel", index)
 
 
-def decomposition_figures(rows, root_label, output, index):
+def decomposition_figures(rows, root_label, output, index, comparison="main"):
     eligible = [row for row in rows if (row.get("_report") or {}).get("signed_gap_decomposition_mc")
                 and row["config"].get("training_loss") != "raw_ce"
                 and row["config"]["method"] not in {"erm", "l2"}]
+    if comparison == "main":
+        eligible = [row for row in eligible if row["config"]["method"] in {"proposed", "joint"} or
+                    (row["config"]["method"] == "pac_bayes" and row["config"]["train_channel"]["kind"] == "perfect")]
     if not eligible:
         return
     # Compare methods on a representative shared n,m and include perfect models.
@@ -352,7 +390,7 @@ def decomposition_figures(rows, root_label, output, index):
         for row in runs:
             cfg = row["config"]
             train = cfg["train_channel"]
-            label = row["method_label"]
+            label = display_label(row, comparison)
             if row.get("role") == "mismatch":
                 label += f" p={train.get('outage_prob', 0):g}"
             methods[label].append(row)
@@ -457,15 +495,21 @@ def decomposition_figures(rows, root_label, output, index):
         fig.tight_layout(rect=(0, .04, 1, .83))
         save_figure(fig, output, f"{root_label}_decomposition_{number}",
                     "Unweighted Theorem 1 terms and Theorem 2 gap bounds at each posterior, with signed empirical decomposition", index)
+        index["figures"][-1].update(method_labels=labels, comparison=comparison,
+                                     original_method_labels=sorted({row["method_label"] for row in runs}))
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--roots", nargs="+", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--comparison", choices=["main", "all"], default="main",
+                        help="Main: ERM/L2 versus Proposed; all: retain PAC/stochastic controls in accuracy/decomposition figures")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    index = dict(figures=[], sources=[], warnings=[], policy="Saved JSON only; no training or checkpoint inference; sources never pooled")
+    index = dict(figures=[], sources=[], warnings=[], comparison=args.comparison,
+                 aliases={"PAC-Perfect": "Proposed-Perfect"} if args.comparison == "main" else {},
+                 policy="Saved JSON only; no training or checkpoint inference; sources never pooled; omitted methods remain in source data and --comparison all")
     used_names = set()
     for root in args.roots:
         root = root.resolve()
@@ -482,10 +526,10 @@ def main():
         if any(row.get("role") in {"mechanism", "mismatch", "reference"} for row in rows) and not any(
                 (row.get("_report") or {}).get("signed_gap_decomposition_mc") for row in rows):
             index["warnings"].append(f"Full-risk JSON reports unavailable in {root}; decomposition skipped")
-        performance_figures(rows, name, args.output, index)
-        mechanism_figures(rows, name, args.output, index)
-        mismatch_figures(rows, name, args.output, index)
-        decomposition_figures(rows, name, args.output, index)
+        performance_figures(rows, name, args.output, index, args.comparison)
+        mechanism_figures(rows, name, args.output, index, args.comparison)
+        mismatch_figures(rows, name, args.output, index, args.comparison)
+        decomposition_figures(rows, name, args.output, index, args.comparison)
     (args.output / "figure_index.json").write_text(json.dumps(index, indent=2) + "\n")
     print(json.dumps({"figures": len(index["figures"]), "warnings": index["warnings"],
                       "index": str((args.output / "figure_index.json").resolve())}, indent=2))

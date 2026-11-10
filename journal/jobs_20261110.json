@@ -15,6 +15,6 @@
     {"id": 34702009, "name": "full_refine", "state": "COMPLETED", "exit_code": "0:0", "elapsed_seconds": 1264, "dependency": "afterok:34700155", "new_trials": 18, "reused_trials": 27, "evaluations": 27, "code_revision": "69fa1d1", "cpus": 8, "memory": "8G", "walltime": "00:35:00", "output": "results/journal_campaign/full_refine"},
     {"id": 34704876, "name": "fashion_controls", "state": "COMPLETED", "exit_code": "0:0", "elapsed_seconds": 62, "dependency": "afterok:34702009", "new_trials": 12, "reused_trials": 44, "evaluations": 18, "code_revision": "69fa1d1", "cpus": 8, "memory": "8G", "walltime": "00:10:00", "output": "results/journal_campaign/fashion_controls"}
   ],
-  "accuracy_goal": {"verified_selected_cases": true, "uniform_mean_superiority_established": false, "report": "journal/CAMPAIGN_RESULTS.md"},
+  "accuracy_goal": {"verified_selected_cases": true, "uniform_mean_superiority_established": false, "original_comparison_scope": "All methods including the data-only PAC ablation", "main_journal_baselines": ["ERM", "L2"], "data_only_pac_role": "Optional ablation within the proposed regularizer family", "existing_main_comparisons_mean_lead": true, "main_report": "journal/MAIN_COMPARISONS.md", "full_report": "journal/CAMPAIGN_RESULTS.md"},
   "remaining": []
 }

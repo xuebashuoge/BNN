@@ -1,5 +1,10 @@
 # Journal simulation results
 
+For the main journal presentation, use ERM and L2 as the competing baselines
+and label the current data-only PAC comparison as an internal ablation. See
+`MAIN_COMPARISONS.md` and `results/journal_campaign/figures_main/`. This full
+report retains the original all-method analysis and its outcomes unchanged.
+
 The completed campaign contains 473 unique training trials searching for settings where a Theorem 1 or Theorem 2 learner has the highest wireless deployment test accuracy. Selected proposed models improve on the evaluated baselines, but broader comparisons include near ties with tuned sample-only PAC-Bayes and conditions where a baseline wins. Every trial is retained, and validation-based configuration selection, exploratory test/seed selection, and fresh posterior/channel Monte Carlo verification are distinguished. Results refer to split MLPs and finite reusable channel banks; they do not establish a universal accuracy ordering among learning algorithms.
 
 ## Completed screening and verification
