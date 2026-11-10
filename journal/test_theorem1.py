@@ -41,6 +41,20 @@ class TheoremProtocolTests(unittest.TestCase):
         torch.testing.assert_close(logits.grad[1], torch.zeros(2))
         self.assertGreater(logits.grad[0].abs().sum().item(), 0.)
 
+    def test_smooth_bounded_loss_retains_gradient_beyond_clip_threshold(self):
+        logits = torch.tensor([[3., -3.], [-4., 4.]], dtype=torch.float64, requires_grad=True)
+        targets = torch.tensor([0, 0])
+        config = {**DEFAULTS, "training_loss": "bounded_ce_smooth", "loss_epsilon": .01, "clip_ce": 2.}
+        value = empirical_objective(logits, targets, config)
+        probability = logits.softmax(dim=-1)[torch.arange(2), targets]
+        reference = -(torch.log(.01 + .99 * probability) / math.log(100)).mean()
+        torch.testing.assert_close(value, reference)
+        self.assertGreaterEqual(value.item(), 0.)
+        self.assertLessEqual(value.item(), 1.)
+        value.backward()
+        self.assertTrue(torch.isfinite(logits.grad).all())
+        self.assertGreater(logits.grad[1].abs().sum().item(), 0.)
+
     def test_kl_matches_distribution_reference_and_gradient(self):
         mu = torch.tensor([.2, -.4, .9], dtype=torch.float64, requires_grad=True)
         rho = torch.tensor([-.8, .3, 1.1], dtype=torch.float64, requires_grad=True)

@@ -34,7 +34,8 @@ except ImportError:
                           theorem1_terms, validate_channel)
 
 
-DEFAULTS = dict(dataset="mnist", method="proposed", training_loss="raw_ce", width=128, train_size=55000,
+DEFAULTS = dict(dataset="mnist", method="proposed", training_loss="raw_ce", loss_epsilon=.01,
+                selection_metric="cross_entropy", validation_seed_policy="fixed", width=128, train_size=55000,
                 val_size=5000, batch_size=256, epochs=30, lr=.001,
                 eta_channel=.01, eta_data=.1, prior_std=1., posterior_std=.01,
                 m=100, seed=0, data_seed=20261110, channel_seed=1, eval_seed=2,
@@ -63,8 +64,14 @@ def normalize_config(supplied: dict) -> dict:
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist"}:
         raise ValueError("Unknown method or dataset")
-    if config["training_loss"] not in {"raw_ce", "bounded_ce"}:
-        raise ValueError("training_loss must be raw_ce or bounded_ce")
+    if config["training_loss"] not in {"raw_ce", "bounded_ce", "bounded_ce_smooth"}:
+        raise ValueError("training_loss must be raw_ce, bounded_ce, or bounded_ce_smooth")
+    if not 0 < config["loss_epsilon"] < 1:
+        raise ValueError("loss_epsilon must lie strictly between zero and one")
+    if config["selection_metric"] not in {"cross_entropy", "accuracy"}:
+        raise ValueError("selection_metric must be cross_entropy or accuracy")
+    if config["validation_seed_policy"] not in {"fixed", "varying"}:
+        raise ValueError("validation_seed_policy must be fixed or varying")
     if config["moons_sampler"] not in {"iid", "legacy_grid"}:
         raise ValueError("moons_sampler must be iid or legacy_grid")
     if config["moon_noise"] < 0:
@@ -181,12 +188,32 @@ def complexities(model, config: dict) -> dict:
     return {"kl": kl, **terms, "joint_complexity": joint_complexity(kl, **kwargs)}
 
 
+def bounded_losses_from_ce(losses: torch.Tensor, config: dict) -> torch.Tensor:
+    """Per-example loss in [0,1], uniformly over data, channels and weights.
+
+    Smooth mode places a floor under the true-class probability before taking
+    its logarithm: -log(epsilon+(1-epsilon)*p_y)/(-log epsilon). It has no hard
+    clipping threshold. logaddexp avoids underflow in its numerical evaluation.
+    Raw-CE runs retain clipped CE as their separate theoretical diagnostic.
+    """
+    if config["training_loss"] == "bounded_ce_smooth":
+        epsilon = config["loss_epsilon"]
+        log_probability = torch.logaddexp(
+            torch.full_like(losses, math.log(epsilon)), math.log1p(-epsilon) - losses)
+        return (-log_probability / -math.log(epsilon)).clamp(min=0., max=1.)
+    return losses.clamp(max=config["clip_ce"]) / config["clip_ce"]
+
+
+def bounded_loss_description(config: dict) -> str:
+    if config["training_loss"] == "bounded_ce_smooth":
+        return f"-log(epsilon+(1-epsilon)*p_y)/(-log(epsilon)); epsilon={config['loss_epsilon']}"
+    return f"min(CE,{config['clip_ce']})/{config['clip_ce']}"
+
+
 def empirical_objective(logits: torch.Tensor, targets: torch.Tensor, config: dict) -> torch.Tensor:
     """Empirical loss optimized by training, distinct from raw CE reporting."""
     losses = F.cross_entropy(logits, targets, reduction="none")
-    if config["training_loss"] == "bounded_ce":
-        return (losses.clamp(max=config["clip_ce"]) / config["clip_ce"]).mean()
-    return losses.mean()
+    return losses.mean() if config["training_loss"] == "raw_ce" else bounded_losses_from_ce(losses, config).mean()
 
 
 @torch.no_grad()
@@ -205,14 +232,14 @@ def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
             logits = model(x, theta, bank, source, config["deployment_channel"], channel_generator)
             losses = F.cross_entropy(logits, y, reduction="none")
             loss_sum += losses.sum().item()
-            bounded_sum += losses.clamp(max=config["clip_ce"]).sum().item() / config["clip_ce"]
+            bounded_sum += bounded_losses_from_ce(losses, config).sum().item()
             correct += (logits.argmax(-1) == y).sum().item()
             count += len(y)
         replicates.append(dict(cross_entropy=loss_sum / count,
                                bounded_loss=bounded_sum / count, accuracy=correct / count))
     result = {key: float(np.mean([rep[key] for rep in replicates])) for key in replicates[0]}
     result.update(draws=draws, examples=count, channel_source=source,
-                  bounded_loss_definition=f"min(CE,{config['clip_ce']})/{config['clip_ce']}",
+                  bounded_loss_definition=bounded_loss_description(config),
                   posterior_rule="one weight draw fixed across entire loader per replicate",
                   replicate_statistics=replicates,
                   mc_note="Finite-data Gibbs Monte Carlo estimates, not population-risk certificates",
@@ -242,7 +269,11 @@ def provenance(config: dict, split: dict) -> dict:
                 training_objective=("raw cross entropy + tuned complexity surrogate"
                                     if config["training_loss"] == "raw_ce" else
                                     "normalized bounded empirical CE + configured regularization; proposed with eta_channel=eta_data=1 matches the separated bound's trainable objective"),
-                theoretical_loss="min(CE,clip_ce)/clip_ce in [0,1]; sigma_data^2=sigma_channel^2=1/4",
+                theoretical_loss=bounded_loss_description(config) + " in [0,1]; sigma_data^2=sigma_channel^2=1/4",
+                checkpoint_selection=("validation accuracy, with lower raw CE as tiebreak"
+                                      if config["selection_metric"] == "accuracy" else
+                                      "validation raw CE, with higher accuracy as tiebreak"),
+                validation_randomness=config["validation_seed_policy"] + " posterior/channel seed across epochs",
                 certificate_note="Complexity terms alone are not certificates. Risk estimates need MC/error control; perfect-to-noisy deployment needs a separately justified channel-shift term.")
 
 
@@ -267,7 +298,7 @@ def train(config: dict, output: Path):
                     training_channel_bank_hash=digest({"gain": bank.gain.cpu().tolist(),
                                                        "noise": bank.noise.cpu().tolist()}))
     save_json(output / "metadata.json", metadata)
-    best, history = float("inf"), []
+    best, history = (float("inf"), float("inf")), []
     start = time.perf_counter()
     for epoch in range(config["epochs"]):
         epoch_start = time.perf_counter()
@@ -299,8 +330,9 @@ def train(config: dict, output: Path):
             empirical_sum += empirical.item() * len(y)
             objective_sum += loss.item() * len(y)
             samples += len(y)
-        validation = evaluate(model, bank, val_loader, config, config["val_draws"],
-                              config["eval_seed"] + epoch * 1009)
+        validation_seed = (config["eval_seed"] if config["validation_seed_policy"] == "fixed" else
+                           config["eval_seed"] + epoch * 1009)
+        validation = evaluate(model, bank, val_loader, config, config["val_draws"], validation_seed)
         if not math.isfinite(validation["cross_entropy"]):
             raise FloatingPointError(f"Nonfinite validation loss at epoch {epoch + 1}")
         record = dict(epoch=epoch + 1, training_cross_entropy=ce_sum / samples,
@@ -309,13 +341,18 @@ def train(config: dict, output: Path):
                       validation=validation, epoch_seconds=time.perf_counter() - epoch_start,
                       final_posterior_complexities={k: v.detach().item() for k, v in complexities(model, config).items()})
         history.append(record)
-        if validation["cross_entropy"] < best:
-            best = validation["cross_entropy"]
+        selection_key = ((-validation["accuracy"], validation["cross_entropy"])
+                         if config["selection_metric"] == "accuracy" else
+                         (validation["cross_entropy"], -validation["accuracy"]))
+        if selection_key < best:
+            best = selection_key
             state = dict(model=model.state_dict(), bank=bank.state_dict())
             torch.save(state, output / "weights.pt.tmp")
             (output / "weights.pt.tmp").replace(output / "weights.pt")
             metadata["selected_epoch"] = epoch + 1
-            metadata["selected_validation_cross_entropy"] = best
+            metadata["selected_validation_cross_entropy"] = validation["cross_entropy"]
+            metadata["selected_validation_accuracy"] = validation["accuracy"]
+            metadata["selected_validation_bounded_loss"] = validation["bounded_loss"]
             save_json(output / "metadata.json", metadata)
         save_json(output / "history.json", history)
         print(json.dumps({"epoch": epoch + 1, "validation_ce": validation["cross_entropy"],
@@ -329,7 +366,10 @@ def train(config: dict, output: Path):
                       "seconds": metadata["total_seconds"], "peak_rss_mb": metadata["peak_rss_mb"]}), flush=True)
 
 
-def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Path, split_name: str):
+def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Path, split_name: str,
+                        risk_scope: str = "full"):
+    if risk_scope not in {"deployment", "full"}:
+        raise ValueError("risk_scope must be deployment or full")
     metadata = json.loads((checkpoint / "metadata.json").read_text())
     config = metadata["config"].copy()
     # Preserve data generated by checkpoints predating the IID sampler. Existing
@@ -355,6 +395,17 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
     selected = {"train": train_data, "validation": val_data, "test": test_data}[split_name]
     loader = make_loader(selected, config)
     result = evaluate(model, bank, loader, config, config["eval_draws"], config["eval_seed"])
+    report = dict(checkpoint=str(checkpoint.resolve()), split=split_name, risk_scope=risk_scope,
+                  evaluation_config=config, selected_epoch=metadata.get("selected_epoch"),
+                  heldout_gibbs_mc=result,
+                  channel_shift_diagnostic=channel_shift_diagnostic(config["deployment_channel"],
+                                                                   config["train_channel"], config["width"]),
+                  final_posterior_complexities={k: v.detach().item() for k, v in complexities(model, config).items()},
+                  certificate_note=metadata["certificate_note"])
+    if risk_scope == "deployment":
+        save_json(output / "evaluation.json", report)
+        print(json.dumps(report, indent=2), flush=True)
+        return report
     # Every quantity is evaluated at the same frozen posterior. Identical seeds
     # share posterior draws; fresh-channel comparisons on the same data also
     # share underlying standardized channel draws whenever channel kinds match.
@@ -373,19 +424,14 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
         signed[metric] = dict(channel_generalization=channel, data_generalization=data_gap,
                               channel_shift=shift, sum=channel + data_gap + shift,
                               observed_gap=result[metric] - empirical[metric])
-    report = dict(checkpoint=str(checkpoint.resolve()), split=split_name, evaluation_config=config,
-                  selected_epoch=metadata.get("selected_epoch"), empirical_gibbs_mc=empirical,
+    report.update(empirical_gibbs_mc=empirical,
                   same_training_data_fresh_training_channel_gibbs_mc=same_data_fresh_training,
                   heldout_fresh_training_channel_gibbs_mc=heldout_fresh_training,
-                  heldout_gibbs_mc=result,
                   signed_gap_decomposition_mc=signed,
-                  channel_shift_diagnostic=channel_shift_diagnostic(config["deployment_channel"],
-                                                                   config["train_channel"], config["width"]),
-                  bounded_gap_mc=result["bounded_loss"] - empirical["bounded_loss"],
-                  final_posterior_complexities={k: v.detach().item() for k, v in complexities(model, config).items()},
-                  certificate_note=metadata["certificate_note"])
+                  bounded_gap_mc=result["bounded_loss"] - empirical["bounded_loss"])
     save_json(output / "evaluation.json", report)
     print(json.dumps(report, indent=2), flush=True)
+    return report
 
 
 def main():
@@ -395,11 +441,13 @@ def main():
     parser.add_argument("--output", type=Path, default=Path("results/journal"))
     parser.add_argument("--checkpoint", type=Path)
     parser.add_argument("--split", choices=["train", "validation", "test"], default="test")
+    parser.add_argument("--risk-scope", choices=["deployment", "full"], default="full",
+                        help="deployment skips training-risk decomposition for inexpensive screening")
     args = parser.parse_args()
     if args.mode == "evaluate":
         if args.checkpoint is None:
             parser.error("--checkpoint is required for evaluate")
-        evaluate_checkpoint(args.checkpoint, args.config, args.output, args.split)
+        evaluate_checkpoint(args.checkpoint, args.config, args.output, args.split, args.risk_scope)
     else:
         config = read_config(args.config)
         if args.mode == "validate":
