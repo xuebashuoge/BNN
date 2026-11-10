@@ -1,0 +1,63 @@
+{
+  "stage": "full_refine",
+  "tasks": 45,
+  "reused_existing_trials": 27,
+  "new_trials": 18,
+  "seeds": [
+    9001,
+    9002,
+    9003
+  ],
+  "groups": [
+    "mnist_analog"
+  ],
+  "source_manifest": "journal/configs/confirm.jsonl",
+  "source_sha256": "87f56ab3c1f831b335d8b25f04ebf1a4147409f485e330b84befe052eb99d671",
+  "reuse_policy": "Original confirm entries unchanged; checkpoint links permit completed_trial cache reuse",
+  "reason": "Training size and optimizer steps increased from 10k/25 epochs to55k/100; strong transferred T1/T2 regularization underperformed on full-data validation",
+  "new_settings": {
+    "T1-Matched": [
+      {
+        "eta_channel": 0.001,
+        "eta_data": 0.01
+      },
+      {
+        "eta_channel": 0.003,
+        "eta_data": 0.03
+      }
+    ],
+    "T2-Matched": [
+      {
+        "eta_data": 0.0015
+      },
+      {
+        "eta_data": 0.004
+      }
+    ],
+    "PAC-Matched": [
+      {
+        "eta_data": 0.03
+      },
+      {
+        "eta_data": 0.1
+      }
+    ]
+  },
+  "fixed_settings": {
+    "train_size": 55000,
+    "val_size": 5000,
+    "width": 128,
+    "epochs": 100,
+    "lr": 0.003,
+    "posterior_std": 0.01,
+    "m": 100,
+    "channel": {
+      "kind": "gaussian",
+      "gain_mean": 0.5,
+      "gain_std": 1.0,
+      "noise_std": 1.0
+    }
+  },
+  "selection": "Aggregate validation across all three seeds selects each method; report all outcomes and label seed/test-based rankings exploratory",
+  "fairness": "PAC receives two additional coefficient settings alongside two additional T1 and T2 settings; same seeds/data/channels/training budget"
+}
