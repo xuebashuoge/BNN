@@ -59,7 +59,7 @@ LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
 
-# Channel Distributions (Inference/Test) - HARSH REALITY
+# # Channel Distributions (Inference/Test) - HARSH REALITY
 SEED = 2846182436
 P_OUTAGE_TE = 0.1
 # SEED = 3248898619
@@ -644,10 +644,11 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     seed = SEED if seed is None else seed
     set_seed(seed)
 
-    if scenario_name in {'erm', 'l2'}:
-        model = DeterministicFC(IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
-    else:
-        model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
+    # if scenario_name in {'erm', 'l2'}:
+    #     model = DeterministicFC(IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
+    # else:
+    #     model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
+    model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = None
     if lr_decay_step and lr_decay_step > 0:
@@ -1127,7 +1128,7 @@ if __name__ == "__main__":
         )
 
         # Scenario C: L2 Regularization + perfect channel
-        model_l2_perfect, history_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2_perfect, history_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, gamma_coeff=0.0001, use_cache=True, verbose=True)
         loss_l2_perfect, acc_l2_perfect = evaluate_inference(
             model_l2_perfect,
             test_loader,
@@ -1137,7 +1138,7 @@ if __name__ == "__main__":
         )
 
         # Scenario D: L2 Regularization + train channel
-        model_l2, history_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2, history_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, gamma_coeff=0.0001, use_cache=True, verbose=True)
         loss_l2, acc_l2 = evaluate_inference(
             model_l2,
             test_loader,

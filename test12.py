@@ -19,7 +19,7 @@ import concurrent.futures
 # ==========================================
 # 0. OUTPUT PATHS
 # ==========================================
-RESULTS_DIR = os.path.join('results', 'test12_l2')
+RESULTS_DIR = os.path.join('results', 'test12')
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # ==========================================
@@ -57,10 +57,10 @@ LIPSCHITZ_METHOD_PERFECT = "grad"  # "grad" or "analytical"
 
 
 # Channel Distributions (Inference/Test) - HARSH REALITY
-# ideal
-SEED = 3394626443
-MU_M_TE, STD_M_TE = 1.0, 0.01
-MU_B_TE, STD_B_TE = 0.0, 0.01   
+# # ideal
+# SEED = 3394626443
+# MU_M_TE, STD_M_TE = 1.0, 0.01
+# MU_B_TE, STD_B_TE = 0.0, 0.01   
 # # low SNR
 # SEED = 638212450
 # MU_M_TE, STD_M_TE = 1.0, 0.01
@@ -69,14 +69,10 @@ MU_B_TE, STD_B_TE = 0.0, 0.01
 # SEED = 3508521152
 # MU_M_TE, STD_M_TE = 0.5, 1.0
 # MU_B_TE, STD_B_TE = 0.0, 0.01  
-<<<<<<< HEAD
 # severe fading & low SNR
-=======
-# # severe fading & low SNR
->>>>>>> e1d2dc88447c628ad949140e22c794a10210b823
-# SEED = 616657849
-# MU_M_TE, STD_M_TE = 0.5, 1.0
-# MU_B_TE, STD_B_TE = 0.0, 1.0  
+SEED = 616657849
+MU_M_TE, STD_M_TE = 0.5, 1.0
+MU_B_TE, STD_B_TE = 0.0, 1.0  
 
 # Channel Distributions (Train) - DECEPTIVELY CLEAN
 # ERM will become overconfident and build fragile decision boundaries.
@@ -624,11 +620,11 @@ def train_scenario(scenario_name, loader, n_samples, mode='perfect', objective='
     seed = SEED if seed is None else seed
     set_seed(seed)
 
-    if scenario_name in {'erm', 'l2'}:
-        model = DeterministicFC(IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
-    else:
-        model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
-    # model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
+    # if scenario_name in {'erm', 'l2'}:
+    #     model = DeterministicFC(IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
+    # else:
+    #     model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
+    model = VectorizedBNNEnsemble(n_u_sets, IN_DIM, hidden_dim, OUT_DIM, m_artificial_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = None
     if lr_decay_step and lr_decay_step > 0:
@@ -1123,7 +1119,7 @@ if __name__ == "__main__":
         )
 
         # Scenario C: L2 Regularization + perfect channel
-        model_l2_perfect, history_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2_perfect, history_l2_perfect = train_scenario('l2', train_loader, n_trains, mode='perfect', objective='heuristic', gamma_coeff=0.0001, seed=SEED, use_cache=True, verbose=True)
         loss_l2_perfect, acc_l2_perfect = evaluate_inference(
             model_l2_perfect,
             test_loader,
@@ -1133,7 +1129,7 @@ if __name__ == "__main__":
         )
 
         # Scenario D: L2 Regularization + train channel
-        model_l2, history_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', seed=SEED, use_cache=True, verbose=True)
+        model_l2, history_l2 = train_scenario('l2', train_loader, n_trains, mode='train', objective='heuristic', gamma_coeff=0.0001, seed=SEED, use_cache=True, verbose=True)
         loss_l2, acc_l2 = evaluate_inference(
             model_l2,
             test_loader,
