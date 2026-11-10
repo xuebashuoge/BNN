@@ -1085,7 +1085,7 @@ def run_sweep_task(task_config, repeats=1, weight_mc_samples=1):
 # MAIN EXECUTION
 # ==========================================
 if __name__ == "__main__":
-    RUN_SWEEP = False
+    RUN_SWEEP = True
 
     EVAL_REPEATS = 10
     INFERENCE_WEIGHT_SAMPLES = 50
@@ -1199,7 +1199,7 @@ if __name__ == "__main__":
         LR_DECAY_STEP_GRID = [75]
         LR_DECAY_GAMMA_GRID = [0.8]
         BETA_COEFF_GRID = [0.1]
-        GAMMA_COEFF_GRID = [0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001]
+        GAMMA_COEFF_GRID = [0.0005, 0.0001, 0.00005, 0.00001]
         EPOCHS_GRID = [150]
         use_cache = False
         verbose = False

@@ -99,7 +99,7 @@ OUT_DIM = 10
 
 BATCH_SIZE = 256
 EPOCHS = 150
-LR_BASE = 0.001
+LR_BASE = 0.0003
 LR_DECAY_STEP = 75
 LR_DECAY_GAMMA = 0.8
 PRIOR_LAMBDA = 1.0
@@ -108,7 +108,7 @@ SIGMA_SQ = 1.0
 SIGMA_ART_SQ = 1.0
 ALPHA_COEFF = 0.0
 BETA_COEFF = 0.1
-GAMMA_COEFF = 0.05
+GAMMA_COEFF = 1.0
 L2_COEFF = 1e-4
 M_ARTIFICIAL_CHANNELS = 100
 POSTERIOR_INIT_STD = 0.01
@@ -121,15 +121,46 @@ LIPSCHITZ_METHOD_PERFECT = "grad"
 
 EVAL_REPEATS = 3
 INFERENCE_WEIGHT_SAMPLES = 5
-SEED = 616657849
 
-# Inference/test channel: severe fading and low SNR, unchanged from test12.
-MU_M_TE, STD_M_TE = 0.5, 1.0
-MU_B_TE, STD_B_TE = 0.0, 1.0
+# Inference/test channel scenarios. Uncomment one block for manual single runs.
+# ideal
+SEED = 3761481731
+MU_M_TE, STD_M_TE = 1.0, 0.01
+MU_B_TE, STD_B_TE = 0.0, 0.01
+# low SNR
+# SEED = 764525786
+# MU_M_TE, STD_M_TE = 1.0, 0.01
+# MU_B_TE, STD_B_TE = 0.0, 1.0
+# severe fading
+# SEED = 3449323161
+# MU_M_TE, STD_M_TE = 0.5, 1.0
+# MU_B_TE, STD_B_TE = 0.0, 0.01
+# severe fading & low SNR
+# SEED = 3219730679
+# MU_M_TE, STD_M_TE = 0.5, 1.0
+# MU_B_TE, STD_B_TE = 0.0, 1.0
 
 # Artificial/training channel, unchanged from test12.
-MU_M_TR, STD_M_TR = MU_M_TE, STD_M_TE
 MU_B_TR, STD_B_TR = MU_B_TE, STD_B_TE
+MU_M_TR, STD_M_TR = MU_M_TE, STD_M_TE
+SWEEP_SCENARIO_CONFIGS = {
+    "ideal": (3394626443, (1.0, 0.01), (0.0, 0.01), "results/test17_ideal"),
+    "low_SNR": (638212450, (1.0, 0.01), (0.0, 1.0), "results/test17_low_SNR"),
+    "severe_fading": (3508521152, (0.5, 1.0), (0.0, 0.01), "results/test17_severe_fading"),
+    "severe_fading_low_SNR": (616657849, (0.5, 1.0), (0.0, 1.0), "results/test17_severe_fading_low_SNR"),
+}
+
+def configure_sweep_scenario(name: str) -> int:
+    global RESULTS_DIR, SEED, MU_M_TE, STD_M_TE, MU_B_TE, STD_B_TE, MU_M_TR, STD_M_TR, MU_B_TR, STD_B_TR
+    seed, m_params, b_params, results_dir = SWEEP_SCENARIO_CONFIGS[name]
+    SEED = seed
+    MU_M_TE, STD_M_TE = m_params
+    MU_B_TE, STD_B_TE = b_params
+    MU_M_TR, STD_M_TR = MU_M_TE, STD_M_TE
+    MU_B_TR, STD_B_TR = MU_B_TE, STD_B_TE
+    RESULTS_DIR = results_dir
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    return seed
 
 
 def kl_gaussian_1d(mu1: float, std1: float, mu2: float, std2: float) -> float:
@@ -1424,6 +1455,15 @@ def run_sweep_task(
 ) -> dict:
     """Execute one sweep configuration in an isolated CPU worker."""
     configure_device(task_config["device"])
+    global MU_M_TE, STD_M_TE, MU_B_TE, STD_B_TE, MU_M_TR, STD_M_TR, MU_B_TR, STD_B_TR
+    MU_M_TE = task_config["mu_m_te"]
+    STD_M_TE = task_config["std_m_te"]
+    MU_B_TE = task_config["mu_b_te"]
+    STD_B_TE = task_config["std_b_te"]
+    MU_M_TR = task_config["mu_m_tr"]
+    STD_M_TR = task_config["std_m_tr"]
+    MU_B_TR = task_config["mu_b_tr"]
+    STD_B_TR = task_config["std_b_tr"]
     torch.set_num_threads(1)
     set_seed(task_config["seed"])
     train_loader, test_loader, n_train = get_dataloaders(
@@ -1482,12 +1522,12 @@ def build_sweep_tasks(args: argparse.Namespace) -> list[dict]:
     hidden_dim_grid = [args.hidden_dim]
     n_u_sets_grid = [args.n_u_sets]
     m_artificial_channels_grid = [args.m_artificial_channels]
-    lr_grid = [3e-4, 1e-3, 3e-3]
+    lr_grid = [3e-4]
     lr_decay_step_grid = [args.lr_decay_step]
     lr_decay_gamma_grid = [args.lr_decay_gamma]
     epochs_grid = [args.epochs]
-    beta_coeff_grid = [0.5, 0.1, 0.05, 0.01]
-    proposed_gamma_grid = [1e-4, 1e-3, 5e-3, 1e-2, 5e-2, 1e-1, 5e-1, 1.0]
+    beta_coeff_grid = [0.1]
+    proposed_gamma_grid = [1.0]
 
     tasks: list[dict] = []
     base_grid = itertools.product(
@@ -1529,6 +1569,14 @@ def build_sweep_tasks(args: argparse.Namespace) -> list[dict]:
             "device": str(DEVICE),
             "use_cache": args.sweep_cache,
             "verbose": False,
+                "mu_m_te": MU_M_TE,
+                "std_m_te": STD_M_TE,
+                "mu_b_te": MU_B_TE,
+                "std_b_te": STD_B_TE,
+                "mu_m_tr": MU_M_TR,
+                "std_m_tr": STD_M_TR,
+                "mu_b_tr": MU_B_TR,
+                "std_b_tr": STD_B_TR,
         }
         # Exactly one ERM baseline is generated for this shared configuration.
         tasks.append(
@@ -1904,7 +1952,8 @@ def build_argument_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--num-seeds", type=int, default=100)
-    parser.add_argument("--master-seed", type=int, default=42)
+    parser.add_argument("--master-seed", type=int, default=None)
+    parser.add_argument("--sweep-scenario", choices=tuple(SWEEP_SCENARIO_CONFIGS), default=None)
     parser.add_argument("--max-workers", type=int, default=None)
     parser.add_argument(
         "--dry-run",
@@ -1959,6 +2008,12 @@ def validate_args(args: argparse.Namespace) -> None:
 def main() -> None:
     parser = build_argument_parser()
     args = parser.parse_args()
+    if args.sweep_scenario is not None:
+        scenario_seed = configure_sweep_scenario(args.sweep_scenario)
+        if args.master_seed is None:
+            args.master_seed = scenario_seed
+    elif args.master_seed is None:
+        args.master_seed = SEED
     validate_args(args)
     configure_device(args.device)
     print(f"Using device: {DEVICE}")

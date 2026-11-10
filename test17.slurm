@@ -11,12 +11,13 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --mem=1024G
-#SBATCH --time=48:00:00
+#SBATCH --time=72:00:00
 
 set -euo pipefail
 
 module load Anaconda3/2024.02-1
 eval "$(conda shell.bash hook)"
+conda deactivate
 conda activate torch28
 
 if [[ -z "${DATASET:-}" ]]; then
@@ -35,8 +36,8 @@ echo "Starting paired ERM/proposed training-channel sweeps on CPU..."
 
 python -u test17.py \
     --mode sweep \
-    --num-seeds 20 \
-    --max-workers "${SLURM_CPUS_PER_TASK}"
+    --num-seeds 100 \
+    --max-workers "${SLURM_CPUS_PER_TASK}" --sweep-scenario "${SWEEP_SCENARIO}"
 
 if command -v my-job-stats >/dev/null 2>&1; then
     my-job-stats -a -n -s
