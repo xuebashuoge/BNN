@@ -1,0 +1,32 @@
+{
+  "stage": "fashion_controls",
+  "tasks": 56,
+  "reused_existing_trials": 44,
+  "new_trials": 12,
+  "new_PAC_trials": 8,
+  "new_StochERM_trials": 4,
+  "seeds": [
+    1001,
+    1002
+  ],
+  "groups": [
+    "fashion_analog"
+  ],
+  "source_manifest": "journal/configs/fashion_screen.jsonl",
+  "source_sha256": "491a009902546702332854065ef1d9be64580d61245994d2afc7be0d6f3f5877",
+  "reason": "Initial screen confounded learning rate and posterior-noise combinations; selected T1 used lr=.001/std=.01 absent from initial PAC and stochastic ERM controls",
+  "PAC_matching": "gamma=eta_data+eta_channel*sqrt((n-1)/(m-1)); each of four T1 configs gets a same-LR/std PAC control at both seeds",
+  "stochastic_ERM_missing_combinations": [
+    {
+      "lr": 0.001,
+      "posterior_std": 0.01
+    },
+    {
+      "lr": 0.003,
+      "posterior_std": 0.003
+    }
+  ],
+  "selection": "Rerank all original and new variants using aggregate validation; all outcomes retained",
+  "interpretation": "Accuracy changes may arise from optimizer/noise/regularization-strength selection; this control does not claim an intrinsic distinct regularization mechanism",
+  "reuse_policy": "Original44entries preserved unchanged for completed_trial cache reuse"
+}
