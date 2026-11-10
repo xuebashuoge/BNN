@@ -1,0 +1,63 @@
+% Manuscript-ready loss and channel-shift specialization for the journal.
+% Uses the draft's existing expectation and theorem notation.
+\subsection{A bounded loss satisfying the standing assumptions}
+Let $p_w(y\mid x,c)$ denote the softmax confidence assigned to the correct
+label under weights $w$ and channel realization $c$. For a fixed
+$\varepsilon_{\ell}\in(0,1)$, define the smooth bounded logarithmic loss
+\begin{equation}
+  \ell_{\varepsilon_{\ell}}(w,c,z)
+  = \frac{-\log\!\left[\varepsilon_{\ell}
+      +(1-\varepsilon_{\ell})p_w(y\mid x,c)\right]}
+    {\log(1/\varepsilon_{\ell})}.
+\end{equation}
+Since $p_w(y\mid x,c)\in[0,1]$, this loss lies in $[0,1]$ for every
+$w,c,z$. Hoeffding's lemma therefore gives, uniformly over the fixed
+arguments and for every $\lambda\in\mathbb R$,
+\begin{equation}
+  \mathbb E\exp\!\left\{\lambda\bigl(L-\mathbb EL\bigr)\right\}
+  \leq \exp(\lambda^2/8),
+\end{equation}
+where $L$ denotes the loss with either the data or the channel variable
+randomized as in the standing assumptions. Consequently, the variance
+proxies can be chosen as $\sigma^2=\sigma_{\rm tr}^2=1/4$ without
+restricting the support of the Gaussian weight posterior or the channel.
+For perfect training channels, the loss is deterministic with respect to
+the training channel, so the sharper choice $\sigma_{\rm tr}^2=0$ applies.
+
+We use the same bounded loss in the empirical training objective and the
+theoretical risk evaluation. Test classification accuracy and ordinary
+cross entropy are reported separately; a bound on this normalized loss is
+not reported as a numerical bound on unbounded cross entropy or on
+classification error. The parameter $\varepsilon_{\ell}=0.01$ is fixed
+before the reported campaign. Coefficients $\eta_1,\eta_2$ are tuned
+training parameters; reported theoretical penalties are unscaled.
+
+\subsection{A bounded-loss channel-shift specialization}
+For any measurable $g:\mathcal C\to[0,1]$ and channel laws $P,Q$,
+\begin{equation}
+  \left|\mathbb E_Pg(C)-\mathbb E_Qg(C)\right|
+  \leq \operatorname{TV}(P,Q).
+\end{equation}
+This follows by writing
+$g(c)=\int_0^1\mathbf1\{g(c)>t\}\,dt$ and applying the defining
+event-probability bound for total variation. Applying this inequality to
+the bounded loss and averaging over the posterior weights and data gives
+a uniform shift penalty independent of the learned posterior. It may
+replace the shift term in the risk decomposition; no channel-Lipschitz
+constant is needed for this bounded-loss specialization.
+
+For independent coordinate erasures with deployment probability $p$ and
+training probability $q$, grouping erasure masks by their number $k$ of
+erased coordinates yields
+\begin{equation}
+  \operatorname{TV}(P_p,P_q)
+  =\frac12\sum_{k=0}^{d}\binom dk
+  \left|p^k(1-p)^{d-k}-q^k(1-q)^{d-k}\right|.
+\end{equation}
+In particular, perfect training corresponds to $q=0$, giving
+$\operatorname{TV}(P_p,P_0)=1-(1-p)^d$. This remains finite when
+$D(P_p\Vert P_0)=\infty$. For perfect training and a nondegenerate
+continuous deployment law, total variation equals one, so the resulting
+shift guarantee is valid but trivial. When the channel KL is finite,
+Pinsker's inequality additionally permits the penalty
+$\min\{1,\sqrt{D(P_{\rm ch}\Vert P_{\rm tr})/2}\}$.
