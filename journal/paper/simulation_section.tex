@@ -32,6 +32,18 @@ normalization. The common image classifier has dimensions $784\to128\to10$.
 Its first affine layer and ReLU form the transmitter; its final affine
 layer forms the receiver, with transmission between the two.
 
+We additionally evaluate CIFAR-10~\cite{cifar10}, which contains ten classes
+of $32\times32$ RGB images. Its official training partition is split into
+45,000 training and 5,000 validation examples; the official test partition
+contains 10,000 examples. Pixels are mapped to $[-1,1]$ by the fixed transform
+$x/127.5-1$. The transmitter uses three $3\times3$ convolution/ReLU blocks
+with 16, 32 and 64 output channels, max pooling after the first two blocks,
+adaptive $4\times4$ pooling, and an affine/ReLU projection to 128 transmitted
+features. A ten-class affine receiver follows the channel. All methods
+share this 156,074-weight architecture, without batch normalization,
+dropout or augmentation. This extends both the dataset and transmitter
+architecture; it is not an isolated architecture ablation.
+
 For controlled experiments, we sample an i.i.d. noisy two-moons population:
 the binary label is Bernoulli with parameter $1/2$, the arc angle is uniform
 on $[0,\pi]$, and independent Gaussian coordinate noise has standard
@@ -53,6 +65,7 @@ Experiment & $n$ & Validation & Test & $d$ & $m$ & Epochs & Seeds \\
 \midrule
 MNIST, analog & 55,000 & 5,000 & 10,000 & 128 & 100 & 100 & 3 \\
 Fashion-MNIST, analog & 10,000 & 5,000 & 10,000 & 128 & 100 & 25 & 2 \\
+CIFAR-10, analog & 45,000 & 5,000 & 10,000 & 128 & 100 & 100 & 3 \\
 Two moons, finite bank & 512 & 512 & 10,000 & 8 & $5$--$2000$ & 150 & 3 \\
 Two moons, training-law mismatch & 800 & 200 & 10,000 & 16 & 100 & 150 & 3 \\
 \bottomrule
@@ -96,10 +109,11 @@ the sharper channel variance proxy is zero.
 The proposed learner uses one diagonal Gaussian posterior and the fixed,
 data-independent prior $Q_W=\mathcal N(0,I)$. Its weight means start from
 fan-in-scaled uniform initialization with zero biases; posterior standard
-deviations initialize at $0.003$ or $0.01$ according to the configuration.
+deviations initialize at $0.003$ or $0.01$ in the grayscale experiments,
+and at $0.001$ or $0.003$ in the CIFAR-10 search.
 We optimize with Adam and a constant learning rate, drawing one weight
-sample per minibatch. Image batches contain 256 examples; toy batches
-contain 128. The T1 objective uses the separate penalties in
+sample per minibatch. Grayscale-image batches contain 256 examples;
+CIFAR-10 and toy batches contain 128. The T1 objective uses the separate penalties in
 Theorem~\ref{thm:separate_bound_US}; T2 uses the joint penalty in
 Theorem~\ref{thm:joint_bound_US}. Unless a joint confidence allocation is
 specified below, the nominal failure budget is $0.05$, split equally
@@ -152,6 +166,31 @@ finite-channel penalty during perfect training therefore does not remove
 the deployment mismatch. These results concern the tested configurations;
 they do not assert optimality over all baseline hyperparameters.
 
+\subsubsection{CIFAR-10 with a convolutional transmitter}
+\input{\simroot/tables/cifar_comparison}
+Table~\ref{tab:sim_cifar} extends the comparison to the shared convolutional
+architecture. The 34-run preliminary screen selects one setting per method
+by aggregate validation accuracy. We then train these seven fixed settings
+for 100 epochs on 45,000 examples using three new initialization/channel-bank
+seeds; all three are retained. T1 achieves $55.03\%$ mean test accuracy,
+versus $53.67\%$ for L2 and $46.16\%$ for ERM, gains of $1.36$ and $8.87$
+percentage points. It exceeds both baselines in every reported seed and
+also has the lowest mean bounded risk, $0.3395$, compared with $0.3526$
+for L2 and $0.4205$ for ERM. T2 attains $53.26\%$, slightly below L2;
+the benefit therefore does not extend uniformly to both proposed variants.
+Mean transmitted feature power is $22.73$ per coordinate for T1, versus
+$12.59$ for L2 and $6.71$ for ERM. These remain fixed-channel-law
+comparisons with unconstrained feature power.
+
+Perfect-trained ERM, L2 and Proposed attain approximately $34\%$ under
+the same deployment law, reinforcing the training/deployment distinction.
+The full-data comparison uses a fixed 100-epoch budget; several selected
+checkpoints occur near its end, so these results do not establish fully
+converged or globally optimal baseline accuracy. The preliminary screen
+and search settings are recorded in the supplement. The high-dimensional
+CNN bound at $m=100$ is vacuous; the numerical certificate below is
+computed separately on the controlled small network.
+
 \subsection{Generalization From a Finite Channel Bank}
 \label{sec:sim_channel_bank}
 For a frozen posterior, we evaluate bounded risk on the reused bank,
@@ -166,7 +205,7 @@ This evaluates unseen channels without simultaneously changing the data.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.94\textwidth]{\simroot/assets/fig_channel_bank.pdf}
+\includegraphics[width=0.88\textwidth]{\simroot/assets/fig_channel_bank.pdf}
 \caption{Effect of the reusable channel-bank size under matched feature
 erasures: $p_{\rm tr}=p_{\rm ch}=0.5$, $n=512$, and $d=8$. Curves show
 means over three initialization/channel-bank seeds; shading shows one
@@ -192,7 +231,7 @@ fluctuations at larger $m$ are comparable to the finite-evaluation scale.
 \label{sec:sim_mismatch}
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.94\textwidth]{\simroot/assets/fig_training_mismatch.pdf}
+\includegraphics[width=0.88\textwidth]{\simroot/assets/fig_training_mismatch.pdf}
 \caption{Fixed deployment feature-erasure probability $p_{\rm ch}=0.5$
 and varying training probability, with $n=800$, $d=16$, and $m=100$.
 Perfect training is the point $p_{\rm tr}=0$; its data-only PAC objective
@@ -242,7 +281,7 @@ an estimated channel-Lipschitz constant.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.94\textwidth]{\simroot/assets/fig_bound_decomposition.pdf}
+\includegraphics[width=0.88\textwidth]{\simroot/assets/fig_bound_decomposition.pdf}
 \caption{Unweighted bound terms and signed observed gaps for perfect,
 matched, and mismatched training, at the same deployment law
 $p_{\rm ch}=0.5$, $n=800$, $d=16$, and $m=100$. Each column evaluates
@@ -273,10 +312,8 @@ $(n,m)$ settings and three bank seeds, we assign $0.04/(2\times21)$ to each theo
 event. The union of these events and the single fresh MC event has failure
 probability at most $0.05$.
 
-The resulting normalized population-risk bounds are $0.8760$ for T1 and
-$0.7178$ for T2, including the MC correction. Both are below the trivial
-maximum of one. The joint formulation tightens the bound at the same
-posterior; this comparison does not change the predictor or establish a
-classification-accuracy ordering. These numerical bounds apply to the
-normalized Gibbs loss in \eqref{equ:sim_bounded_loss}, not directly to
-unbounded cross entropy or classification error.
+The corrected population-risk upper bounds are $0.8760$ for T1 and
+$0.7178$ for T2, including MC error. Both are below one. The joint bound
+is tighter at the same posterior; it does not change the predictor or
+imply an accuracy ordering. These bounds concern the normalized Gibbs
+loss in \eqref{equ:sim_bounded_loss}, rather than classification error or unbounded CE.

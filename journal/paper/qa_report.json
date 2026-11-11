@@ -1,22 +1,31 @@
 {
-  "pages": 6,
+  "pages": 7,
   "main_pages": 4,
-  "supplementary_pages": 2,
+  "supplementary_pages": 3,
   "visual_pages_reviewed": [
     1,
     2,
     3,
     4,
     5,
-    6
+    6,
+    7
   ],
   "unresolved_reference_markers": 0,
   "undefined_references_or_citations": false,
   "overfull_boxes": false,
-  "main_tables": 3,
+  "main_tables": 4,
   "main_figures": 3,
-  "generated_table_csv_pairs": 7,
-  "figure_pdf_png_pairs": 5,
-  "pdf_sha256": "a23f0ed2f8a1165dcc8a3fd1e44410cdb2476b2f52853d5d2776c41b08c09203",
-  "training_or_checkpoint_inference_performed": false
+  "generated_table_csv_pairs": 9,
+  "figure_pdf_png_pairs": 6,
+  "pdf_sha256": "51eb12c92a59add0c89bba36ede46e39f8ff6229599edb89038a8732536c0afe",
+  "asset_generation_trains_or_runs_inference": false,
+  "cifar_source_files_hashed": 74,
+  "cifar_completed_comparison_training_trials": 55,
+  "cifar_completed_resource_probes": 21,
+  "cifar_full_data_checkpoints_verified": 21,
+  "cifar_tests_passed": 37,
+  "cifar_training_revision": "1d43877",
+  "cifar_all_full_seed_accuracy_goal_met_by": "T1",
+  "cifar_cancelled_partial_attempts_excluded": true
 }

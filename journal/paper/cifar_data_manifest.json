@@ -1,0 +1,1799 @@
+{
+  "schema_version": 1,
+  "generated_by": "journal/paper/generate_cifar_assets.py",
+  "stages": {
+    "screen": {
+      "campaign_root": "results/journal_cifar/screen",
+      "report_json": "results/journal_cifar/paper_assets/screen/cifar_results.json",
+      "report_sha256": "953b1fdf35748a79582254691610d392119c53312692fd5b8370ae4113558590",
+      "protocol": {
+        "dataset": "cifar10",
+        "architecture": "cnn",
+        "train_size": 10000,
+        "val_size": 5000,
+        "width": 128,
+        "m": 100,
+        "epochs": 30,
+        "batch_size": 128,
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "data_seed": 20261111,
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "clip_ce": 10.0,
+        "prior_std": 1.0,
+        "delta": 0.05,
+        "val_draws": 2,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "device": "cpu",
+        "cpu_flush_denormal": false,
+        "seeds": [
+          4101,
+          4102
+        ],
+        "test_examples": 10000,
+        "evaluation_draws": 10,
+        "sd_scope": "Initialization/channel-bank variation conditional on the fixed data split"
+      },
+      "methods": [
+        {
+          "method": "ERM-Matched",
+          "display": "ERM (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "erm",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 10000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 30,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 4101,
+            "data_seed": 20261111,
+            "channel_seed": 14101,
+            "eval_seed": 24101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 2,
+            "mean": 0.39380000000000004,
+            "sd": 0.0006222539674441953
+          },
+          "bounded_loss": {
+            "n": 2,
+            "mean": 0.3653610919106007,
+            "sd": 0.0026889923737003873
+          },
+          "cross_entropy": {
+            "n": 2,
+            "mean": 1.9453632137393955,
+            "sd": 0.037511186195595944
+          },
+          "observations": [
+            {
+              "seed": 4101,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4101",
+              "accuracy": 0.39424000000000003,
+              "bounded_loss": 0.36726249665260313,
+              "cross_entropy": 1.9718876278686526,
+              "feature_power_per_coordinate": 7.0137828369140625,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 29,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4101/history.json"
+            },
+            {
+              "seed": 4102,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4102",
+              "accuracy": 0.39336,
+              "bounded_loss": 0.3634596871685982,
+              "cross_entropy": 1.9188387996101384,
+              "feature_power_per_coordinate": 6.119650361633302,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 28,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4102/history.json"
+            }
+          ]
+        },
+        {
+          "method": "L2-Matched",
+          "display": "L2 (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "l2",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 10000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 30,
+            "lr": 0.003,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 4101,
+            "data_seed": 20261111,
+            "channel_seed": 14101,
+            "eval_seed": 24101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 2,
+            "mean": 0.400315,
+            "sd": 0.021941523420218573
+          },
+          "bounded_loss": {
+            "n": 2,
+            "mean": 0.4039307573783398,
+            "sd": 0.014589075217876795
+          },
+          "cross_entropy": {
+            "n": 2,
+            "mean": 2.4751529698848724,
+            "sd": 0.0893709794645276
+          },
+          "observations": [
+            {
+              "seed": 4101,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4101",
+              "accuracy": 0.3848,
+              "bounded_loss": 0.41424679139614107,
+              "cross_entropy": 2.5383477955055236,
+              "feature_power_per_coordinate": 4.586770964813232,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 29,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4101/history.json"
+            },
+            {
+              "seed": 4102,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4102",
+              "accuracy": 0.41583,
+              "bounded_loss": 0.3936147233605385,
+              "cross_entropy": 2.4119581442642213,
+              "feature_power_per_coordinate": 4.551347617340087,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 30,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4102/history.json"
+            }
+          ]
+        },
+        {
+          "method": "T1-Matched",
+          "display": "Proposed T1 (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "proposed",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 10000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 30,
+            "lr": 0.003,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.003,
+            "m": 100,
+            "seed": 4101,
+            "data_seed": 20261111,
+            "channel_seed": 14101,
+            "eval_seed": 24101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 2,
+            "mean": 0.442885,
+            "sd": 0.003174909447527555
+          },
+          "bounded_loss": {
+            "n": 2,
+            "mean": 0.37501461450934415,
+            "sd": 0.007565501374616579
+          },
+          "cross_entropy": {
+            "n": 2,
+            "mean": 2.2999960364723204,
+            "sd": 0.0897049852277037
+          },
+          "observations": [
+            {
+              "seed": 4101,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4101",
+              "accuracy": 0.44064000000000003,
+              "bounded_loss": 0.38036423183441165,
+              "cross_entropy": 2.363427039833069,
+              "feature_power_per_coordinate": 5.197439436721802,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 30,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4101/history.json"
+            },
+            {
+              "seed": 4102,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4102",
+              "accuracy": 0.44512999999999997,
+              "bounded_loss": 0.3696649971842766,
+              "cross_entropy": 2.2365650331115723,
+              "feature_power_per_coordinate": 5.020517877731323,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 29,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4102/history.json"
+            }
+          ]
+        },
+        {
+          "method": "T2-Matched",
+          "display": "Proposed T2 (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "joint",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 10000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 30,
+            "lr": 0.003,
+            "eta_channel": 0.0003,
+            "eta_data": 0.002,
+            "prior_std": 1.0,
+            "posterior_std": 0.003,
+            "m": 100,
+            "seed": 4101,
+            "data_seed": 20261111,
+            "channel_seed": 14101,
+            "eval_seed": 24101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 2,
+            "mean": 0.438585,
+            "sd": 0.007304413049657001
+          },
+          "bounded_loss": {
+            "n": 2,
+            "mean": 0.3741407549536228,
+            "sd": 5.3127557457201766e-05
+          },
+          "cross_entropy": {
+            "n": 2,
+            "mean": 2.249872283964157,
+            "sd": 0.06187854405536089
+          },
+          "observations": [
+            {
+              "seed": 4101,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4101",
+              "accuracy": 0.43342,
+              "bounded_loss": 0.3741783218097687,
+              "cross_entropy": 2.2061175458526607,
+              "feature_power_per_coordinate": 4.274544865608215,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 27,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4101/history.json"
+            },
+            {
+              "seed": 4102,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4102",
+              "accuracy": 0.44375,
+              "bounded_loss": 0.37410318809747695,
+              "cross_entropy": 2.293627022075653,
+              "feature_power_per_coordinate": 5.15016938911438,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 29,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4102/history.json"
+            }
+          ]
+        },
+        {
+          "method": "ERM-Perfect",
+          "display": "ERM (perfect)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "erm",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 10000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 30,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 4101,
+            "data_seed": 20261111,
+            "channel_seed": 14101,
+            "eval_seed": 24101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "perfect"
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 2,
+            "mean": 0.29405000000000003,
+            "sd": 0.003592102448427682
+          },
+          "bounded_loss": {
+            "n": 2,
+            "mean": 0.46381026306390766,
+            "sd": 0.010787861256426707
+          },
+          "cross_entropy": {
+            "n": 2,
+            "mean": 2.5448242652320863,
+            "sd": 0.10922040490012984
+          },
+          "observations": [
+            {
+              "seed": 4101,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4101",
+              "accuracy": 0.29659,
+              "bounded_loss": 0.4561820932149887,
+              "cross_entropy": 2.467593776283264,
+              "feature_power_per_coordinate": 3.309869896697998,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 17,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4101/history.json"
+            },
+            {
+              "seed": 4102,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4102",
+              "accuracy": 0.29151,
+              "bounded_loss": 0.4714384329128266,
+              "cross_entropy": 2.6220547541809083,
+              "feature_power_per_coordinate": 4.619777051544189,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 18,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4102/history.json"
+            }
+          ]
+        },
+        {
+          "method": "L2-Perfect",
+          "display": "L2 (perfect)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "l2",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 10000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 30,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 4101,
+            "data_seed": 20261111,
+            "channel_seed": 14101,
+            "eval_seed": 24101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "perfect"
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 2,
+            "mean": 0.29456499999999997,
+            "sd": 0.006257895013500963
+          },
+          "bounded_loss": {
+            "n": 2,
+            "mean": 0.4651794583511352,
+            "sd": 0.012729627673510435
+          },
+          "cross_entropy": {
+            "n": 2,
+            "mean": 2.580314250679016,
+            "sd": 0.17572691205983287
+          },
+          "observations": [
+            {
+              "seed": 4101,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4101",
+              "accuracy": 0.29899,
+              "bounded_loss": 0.4741806644010544,
+              "cross_entropy": 2.704571941833496,
+              "feature_power_per_coordinate": 4.573041298675537,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 19,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4101/history.json"
+            },
+            {
+              "seed": 4102,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4102",
+              "accuracy": 0.29013999999999995,
+              "bounded_loss": 0.45617825230121606,
+              "cross_entropy": 2.4560565595245363,
+              "feature_power_per_coordinate": 4.106059127807617,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 16,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4102/history.json"
+            }
+          ]
+        },
+        {
+          "method": "PAC-Perfect",
+          "display": "Proposed (perfect)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "pac_bayes",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 10000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 30,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 4101,
+            "data_seed": 20261111,
+            "channel_seed": 14101,
+            "eval_seed": 24101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "perfect"
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 2,
+            "mean": 0.304385,
+            "sd": 0.006286179284748453
+          },
+          "bounded_loss": {
+            "n": 2,
+            "mean": 0.44882460985422135,
+            "sd": 0.004146518611932864
+          },
+          "cross_entropy": {
+            "n": 2,
+            "mean": 2.4207432172775265,
+            "sd": 0.020664587902390178
+          },
+          "observations": [
+            {
+              "seed": 4101,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4101",
+              "accuracy": 0.30883000000000005,
+              "bounded_loss": 0.4458925784254074,
+              "cross_entropy": 2.406131147041321,
+              "feature_power_per_coordinate": 3.271020933837891,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 17,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4101/history.json"
+            },
+            {
+              "seed": 4102,
+              "task_id": "cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4102",
+              "accuracy": 0.29994,
+              "bounded_loss": 0.45175664128303533,
+              "cross_entropy": 2.4353552875137323,
+              "feature_power_per_coordinate": 4.004144648742676,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "c52a2fa5316a0b15d036d70991cb63320ea53009",
+              "selected_epoch": 16,
+              "history_source": "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4102/history.json"
+            }
+          ]
+        }
+      ]
+    },
+    "confirmation": {
+      "campaign_root": "results/journal_cifar/confirm_cpu",
+      "report_json": "results/journal_cifar/paper_assets/confirmation/cifar_results.json",
+      "report_sha256": "da5565c0704dde182932618737669b4a89d6cce1b26db9827a20ae21b2082ed5",
+      "protocol": {
+        "dataset": "cifar10",
+        "architecture": "cnn",
+        "train_size": 45000,
+        "val_size": 5000,
+        "width": 128,
+        "m": 100,
+        "epochs": 100,
+        "batch_size": 128,
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "data_seed": 20261111,
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "clip_ce": 10.0,
+        "prior_std": 1.0,
+        "delta": 0.05,
+        "val_draws": 2,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "device": "cpu",
+        "cpu_flush_denormal": true,
+        "seeds": [
+          5101,
+          5102,
+          5103
+        ],
+        "test_examples": 10000,
+        "evaluation_draws": 10,
+        "sd_scope": "Initialization/channel-bank variation conditional on the fixed data split"
+      },
+      "methods": [
+        {
+          "method": "ERM-Matched",
+          "display": "ERM (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "erm",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 5101,
+            "data_seed": 20261111,
+            "channel_seed": 15101,
+            "eval_seed": 25101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 3,
+            "mean": 0.46161666666666673,
+            "sd": 0.013318341988901366
+          },
+          "bounded_loss": {
+            "n": 3,
+            "mean": 0.42051019566377,
+            "sd": 0.01000233241642127
+          },
+          "cross_entropy": {
+            "n": 3,
+            "mean": 3.468897295916875,
+            "sd": 0.07752079923742133
+          },
+          "observations": [
+            {
+              "seed": 5101,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101",
+              "accuracy": 0.47047,
+              "bounded_loss": 0.412829088807106,
+              "cross_entropy": 3.381882032670975,
+              "feature_power_per_coordinate": 6.403996577453613,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 81,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101/history.json"
+            },
+            {
+              "seed": 5102,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102",
+              "accuracy": 0.46808000000000005,
+              "bounded_loss": 0.41688100332260136,
+              "cross_entropy": 3.494218881072998,
+              "feature_power_per_coordinate": 6.540335376739502,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 87,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102/history.json"
+            },
+            {
+              "seed": 5103,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103",
+              "accuracy": 0.44630000000000003,
+              "bounded_loss": 0.43182049486160273,
+              "cross_entropy": 3.5305909740066523,
+              "feature_power_per_coordinate": 7.1989899963378905,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 67,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103/history.json"
+            }
+          ]
+        },
+        {
+          "method": "L2-Matched",
+          "display": "L2 (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "l2",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.003,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 5101,
+            "data_seed": 20261111,
+            "channel_seed": 15101,
+            "eval_seed": 25101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 3,
+            "mean": 0.5367000000000001,
+            "sd": 0.007273953532983243
+          },
+          "bounded_loss": {
+            "n": 3,
+            "mean": 0.3526372136847178,
+            "sd": 0.005512144201297916
+          },
+          "cross_entropy": {
+            "n": 3,
+            "mean": 2.8780446778360997,
+            "sd": 0.04114013259572231
+          },
+          "observations": [
+            {
+              "seed": 5101,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101",
+              "accuracy": 0.5388999999999999,
+              "bounded_loss": 0.3504657034945488,
+              "cross_entropy": 2.8306915915966036,
+              "feature_power_per_coordinate": 14.171858938598632,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 99,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101/history.json"
+            },
+            {
+              "seed": 5102,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102",
+              "accuracy": 0.52858,
+              "bounded_loss": 0.3589043914914131,
+              "cross_entropy": 2.9050036632919314,
+              "feature_power_per_coordinate": 10.053493014526367,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 99,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102/history.json"
+            },
+            {
+              "seed": 5103,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103",
+              "accuracy": 0.54262,
+              "bounded_loss": 0.3485415460681915,
+              "cross_entropy": 2.8984387786197656,
+              "feature_power_per_coordinate": 13.53309489440918,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 100,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103/history.json"
+            }
+          ]
+        },
+        {
+          "method": "T1-Matched",
+          "display": "Proposed T1 (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "proposed",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.003,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.003,
+            "m": 100,
+            "seed": 5101,
+            "data_seed": 20261111,
+            "channel_seed": 15101,
+            "eval_seed": 25101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 3,
+            "mean": 0.5503,
+            "sd": 0.002945097621471959
+          },
+          "bounded_loss": {
+            "n": 3,
+            "mean": 0.3395456446782748,
+            "sd": 0.0019832588090288256
+          },
+          "cross_entropy": {
+            "n": 3,
+            "mean": 2.802254088904063,
+            "sd": 0.17597159845835308
+          },
+          "observations": [
+            {
+              "seed": 5101,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101",
+              "accuracy": 0.54866,
+              "bounded_loss": 0.338073344540596,
+              "cross_entropy": 2.7134681491470336,
+              "feature_power_per_coordinate": 21.45809512893677,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 99,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101/history.json"
+            },
+            {
+              "seed": 5102,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102",
+              "accuracy": 0.54854,
+              "bounded_loss": 0.3387627276873589,
+              "cross_entropy": 2.6883631488609314,
+              "feature_power_per_coordinate": 18.7448074621582,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 92,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102/history.json"
+            },
+            {
+              "seed": 5103,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103",
+              "accuracy": 0.5537,
+              "bounded_loss": 0.3418008618068695,
+              "cross_entropy": 3.0049309687042234,
+              "feature_power_per_coordinate": 27.975579163513185,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 93,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103/history.json"
+            }
+          ]
+        },
+        {
+          "method": "T2-Matched",
+          "display": "Proposed T2 (matched)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "joint",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.003,
+            "eta_channel": 0.0003,
+            "eta_data": 0.002,
+            "prior_std": 1.0,
+            "posterior_std": 0.003,
+            "m": 100,
+            "seed": 5101,
+            "data_seed": 20261111,
+            "channel_seed": 15101,
+            "eval_seed": 25101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 3,
+            "mean": 0.5326366666666668,
+            "sd": 0.0060370881502039946
+          },
+          "bounded_loss": {
+            "n": 3,
+            "mean": 0.35409196004390714,
+            "sd": 0.00232802144307033
+          },
+          "cross_entropy": {
+            "n": 3,
+            "mean": 2.8721296397686005,
+            "sd": 0.10297689797466159
+          },
+          "observations": [
+            {
+              "seed": 5101,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101",
+              "accuracy": 0.52651,
+              "bounded_loss": 0.35657369007110595,
+              "cross_entropy": 2.8237584433650973,
+              "feature_power_per_coordinate": 17.882396808471675,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 100,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101/history.json"
+            },
+            {
+              "seed": 5102,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102",
+              "accuracy": 0.5328200000000001,
+              "bounded_loss": 0.3519564186120033,
+              "cross_entropy": 2.802243924407959,
+              "feature_power_per_coordinate": 18.874512815246582,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 98,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102/history.json"
+            },
+            {
+              "seed": 5103,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103",
+              "accuracy": 0.5385800000000001,
+              "bounded_loss": 0.3537457714486122,
+              "cross_entropy": 2.9903865515327457,
+              "feature_power_per_coordinate": 21.441903505249023,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 90,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103/history.json"
+            }
+          ]
+        },
+        {
+          "method": "ERM-Perfect",
+          "display": "ERM (perfect)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "erm",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 5101,
+            "data_seed": 20261111,
+            "channel_seed": 15101,
+            "eval_seed": 25101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "perfect"
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 3,
+            "mean": 0.34441000000000005,
+            "sd": 0.009738054220428257
+          },
+          "bounded_loss": {
+            "n": 3,
+            "mean": 0.44380296967983246,
+            "sd": 0.008572202968120288
+          },
+          "cross_entropy": {
+            "n": 3,
+            "mean": 2.5436776687939964,
+            "sd": 0.07979795420531804
+          },
+          "observations": [
+            {
+              "seed": 5101,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101",
+              "accuracy": 0.33830000000000005,
+              "bounded_loss": 0.45275372116088863,
+              "cross_entropy": 2.635440882549286,
+              "feature_power_per_coordinate": 3.570671206665039,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 11,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101/history.json"
+            },
+            {
+              "seed": 5102,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102",
+              "accuracy": 0.35564000000000007,
+              "bounded_loss": 0.4356675803232193,
+              "cross_entropy": 2.490560873851776,
+              "feature_power_per_coordinate": 3.1167578292846683,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 10,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102/history.json"
+            },
+            {
+              "seed": 5103,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103",
+              "accuracy": 0.33929,
+              "bounded_loss": 0.4429876075553894,
+              "cross_entropy": 2.5050312499809264,
+              "feature_power_per_coordinate": 3.4799988525390626,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 9,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103/history.json"
+            }
+          ]
+        },
+        {
+          "method": "L2-Perfect",
+          "display": "L2 (perfect)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "l2",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 5101,
+            "data_seed": 20261111,
+            "channel_seed": 15101,
+            "eval_seed": 25101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "perfect"
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 3,
+            "mean": 0.34429000000000004,
+            "sd": 0.00916240688902214
+          },
+          "bounded_loss": {
+            "n": 3,
+            "mean": 0.4399900264501572,
+            "sd": 0.0029063651140672784
+          },
+          "cross_entropy": {
+            "n": 3,
+            "mean": 2.4968642401250203,
+            "sd": 0.06313363147451008
+          },
+          "observations": [
+            {
+              "seed": 5101,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101",
+              "accuracy": 0.33940000000000003,
+              "bounded_loss": 0.4372789849328996,
+              "cross_entropy": 2.42700748878479,
+              "feature_power_per_coordinate": 3.0911972675323485,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 9,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101/history.json"
+            },
+            {
+              "seed": 5102,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102",
+              "accuracy": 0.35486000000000006,
+              "bounded_loss": 0.4396324656009674,
+              "cross_entropy": 2.5498447941207885,
+              "feature_power_per_coordinate": 2.986143979263306,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 11,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102/history.json"
+            },
+            {
+              "seed": 5103,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103",
+              "accuracy": 0.33861,
+              "bounded_loss": 0.4430586288166046,
+              "cross_entropy": 2.5137404374694827,
+              "feature_power_per_coordinate": 3.2616649265289306,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 10,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103/history.json"
+            }
+          ]
+        },
+        {
+          "method": "PAC-Perfect",
+          "display": "Proposed (perfect)",
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn",
+            "method": "pac_bayes",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 5101,
+            "data_seed": 20261111,
+            "channel_seed": 15101,
+            "eval_seed": 25101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "perfect"
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "accuracy": {
+            "n": 3,
+            "mean": 0.34019666666666665,
+            "sd": 0.008872712850832784
+          },
+          "bounded_loss": {
+            "n": 3,
+            "mean": 0.45006177881876636,
+            "sd": 0.021404716904156393
+          },
+          "cross_entropy": {
+            "n": 3,
+            "mean": 2.6253850401433314,
+            "sd": 0.29375219006152486
+          },
+          "observations": [
+            {
+              "seed": 5101,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101",
+              "accuracy": 0.3349,
+              "bounded_loss": 0.47361738649845125,
+              "cross_entropy": 2.9396862976074223,
+              "feature_power_per_coordinate": 4.012380909194947,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 13,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101/history.json"
+            },
+            {
+              "seed": 5102,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102",
+              "accuracy": 0.35044,
+              "bounded_loss": 0.4447656349420548,
+              "cross_entropy": 2.578694308357239,
+              "feature_power_per_coordinate": 3.019799099502564,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 11,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102/history.json"
+            },
+            {
+              "seed": 5103,
+              "task_id": "cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103",
+              "accuracy": 0.33525,
+              "bounded_loss": 0.4318023150157929,
+              "cross_entropy": 2.3577745144653326,
+              "feature_power_per_coordinate": 3.3261660648345943,
+              "evaluation_draws": 10,
+              "examples": 10000,
+              "checkpoint_git_sha": "1d438774c64ba748e48cd87a7a747be4692fae19",
+              "selected_epoch": 7,
+              "history_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103/history.json"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "source_hashes": {
+    "results/journal_cifar/screen/summary.json": {
+      "sha256": "6982219a4dfcc526843b80449e87d59e7153fe2b874e8893ece071b14bb3607d",
+      "bytes": 61191
+    },
+    "results/journal_cifar/screen/test_results.json": {
+      "sha256": "15d63a351578fa6e5b8e9eef6d4bc791fee995b4cf875d7eeb4cebccb00dfed8",
+      "bytes": 29686
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4101/test_deployment/evaluation.json": {
+      "sha256": "697fd040981a70f26ceb0a6b8935a9016228e0ce78cee583ebe903920be60e36",
+      "bytes": 4554
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4101/history.json": {
+      "sha256": "a4d2fe8f134b29c37337e238e648958b955cf54216e42ba6cfd45c542f60e770",
+      "bytes": 39835
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4102/test_deployment/evaluation.json": {
+      "sha256": "026cb00ef07e4577cf34577f305fbdd9be0ebce13f332dadf0dd5e3c166b5c7a",
+      "bytes": 4528
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Matched_aef8d8dab7b4_s4102/history.json": {
+      "sha256": "c55df7071e8a075fb8ff68a76984f2b2baff8ef1eb3ecadbdcb5fc714a092402",
+      "bytes": 39797
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4101/test_deployment/evaluation.json": {
+      "sha256": "b17b53a90175d4773b06e359450ce300e24609f9f5722852d37d2cf1118e7fe5",
+      "bytes": 4527
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4101/history.json": {
+      "sha256": "5f2bb378d2279f7cba3d5d8709e6725ed08265bf60066440bbdaedc6f18a5c94",
+      "bytes": 39821
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4102/test_deployment/evaluation.json": {
+      "sha256": "b46b8338c4758caf166834417b8abb2a399894aec289ec9675f9054d53acc8c6",
+      "bytes": 4524
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Matched_82d967335828_s4102/history.json": {
+      "sha256": "48e311ea3e2e733bad5e32c932e60e9c5ed61434cbc21d5f788d406fd289ba06",
+      "bytes": 39755
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4101/test_deployment/evaluation.json": {
+      "sha256": "7efa88d34c56c6659b220adca87ca1e6a399f1173b91ee364753fdbbbd80f7f0",
+      "bytes": 4705
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4101/history.json": {
+      "sha256": "dca14d72894441a75a020cf2148ebd123200fff00a9c3638e6d2a567980dec2b",
+      "bytes": 44801
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4102/test_deployment/evaluation.json": {
+      "sha256": "8e775d907be48df5f5dc22d4364dbcff74b543a10e18b59fe81aa268047cf091",
+      "bytes": 4702
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T1_Matched_157043818612_s4102/history.json": {
+      "sha256": "09be1fe865719343a24b1c5028f98113ab801fd39c9a9d3ddbc684012f6736e5",
+      "bytes": 44796
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4101/test_deployment/evaluation.json": {
+      "sha256": "50b2555089d8dfea64855848694c89dcdcbc8073eccc7d4f8e853d2ce6f93c29",
+      "bytes": 4689
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4101/history.json": {
+      "sha256": "60c4d36d66d869efc67951af8fe1f006430e2181aefc5c21c336794c317c459d",
+      "bytes": 44827
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4102/test_deployment/evaluation.json": {
+      "sha256": "40bb7ef946ead4bd3bd098d9bd1ec0abe5e6cff0e0484205ecd0e621228ced61",
+      "bytes": 4698
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_T2_Matched_b5f14a72f3f9_s4102/history.json": {
+      "sha256": "218aaca2c6a2e5a63c8cc1dfd4d94e64256c3cf342364e3fb854eb6d19b51e59",
+      "bytes": 44803
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4101/test_deployment/evaluation.json": {
+      "sha256": "787c395f2ea83036d6f01f1ec01b2cde36a19d510cdf37e5f021b77caf2721f3",
+      "bytes": 4511
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4101/history.json": {
+      "sha256": "661999b33eeb287406bd1dce911a5ee1b95a39f45a0ee9e5cd6376fb5685ae5d",
+      "bytes": 39811
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4102/test_deployment/evaluation.json": {
+      "sha256": "3bb6baacf769ba349a1a2ecbbda9cd36f95b988a19663f34a3b6cc2a26b47669",
+      "bytes": 4506
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_ERM_Perfect_ef940529e673_s4102/history.json": {
+      "sha256": "4ee384d080e65339fc20401296b39b18353ee805eb0a38608c291a6554a4a355",
+      "bytes": 39856
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4101/test_deployment/evaluation.json": {
+      "sha256": "b1ceb5874380e24341c2d2df0e3f983bd03784f2220f0086e3ad740a9580c462",
+      "bytes": 4511
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4101/history.json": {
+      "sha256": "f4c4c07ff5b7759cce97b5300c0bd938886acc76b3c6ef13f3e3c83652563917",
+      "bytes": 39841
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4102/test_deployment/evaluation.json": {
+      "sha256": "2e8bc4cb80c24f725d3c404f0147166458626e3208201885df988e1fc41a0a54",
+      "bytes": 4517
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_L2_Perfect_5557ae0f8cb4_s4102/history.json": {
+      "sha256": "acfc35279ef1730e9e05fd4498c00199e552b16c5cbbea93b6f8d608652bf7f4",
+      "bytes": 39853
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4101/test_deployment/evaluation.json": {
+      "sha256": "f1b7804bc55b96b3c322b1f56424dc6fc49c5ace316768e0e88cd565ae7ef626",
+      "bytes": 4669
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4101/history.json": {
+      "sha256": "89cfb5dcd41722974ecac996cf52fc4917ee860e2f8a4052a7ac66c325741285",
+      "bytes": 44378
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4102/test_deployment/evaluation.json": {
+      "sha256": "80d0987297e555ac7de052450da84bc86d41bcb45b48956b8b832cba205f6b6f",
+      "bytes": 4649
+    },
+    "results/journal_cifar/screen/cifar_screen_cifar10_cnn_analog_severe_PAC_Perfect_6bf622dcc7a6_s4102/history.json": {
+      "sha256": "aaebe66c5e21661bb6e0953f3d8a7884f989c1e4eb2123ebef473002bcca65ba",
+      "bytes": 44385
+    },
+    "results/journal_cifar/confirm_cpu/summary.json": {
+      "sha256": "d69511da93857e975a4661fa05c78f1a61ca69f230983ca317a61c1a51026fcf",
+      "bytes": 43014
+    },
+    "results/journal_cifar/confirm_cpu/test_results.json": {
+      "sha256": "4e7b8322b258ea4b91fb200fe4c9140fa9ff6e73efbf50743c0089f780095514",
+      "bytes": 45563
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101/test_deployment/evaluation.json": {
+      "sha256": "f073aa6791a2bc496e38400206ee73675164f690d0a4cb36209a8c5159c3eb27",
+      "bytes": 4567
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101/history.json": {
+      "sha256": "c380edf2f2b376fbf465fb0bda65a8f2440f2d9148c8bd71273be0b089012dcc",
+      "bytes": 132804
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102/test_deployment/evaluation.json": {
+      "sha256": "12020ef1dc34caa18c5c28571a2d5b5b985177e31fbd244a52c15406f285e929",
+      "bytes": 4583
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102/history.json": {
+      "sha256": "484787b5d7d73eef65d6bd2bc4b9dadb555a24e01c9ecd0b192ef337d6f2d217",
+      "bytes": 132639
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103/test_deployment/evaluation.json": {
+      "sha256": "7a275db4924eddd6bb44abf1536504fa48eb033bcb437f1b61055c85b967d075",
+      "bytes": 4594
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103/history.json": {
+      "sha256": "442279817a5d65e9d1492a9a06351e55530dd3f5d4922bed72a11e18f2618fdf",
+      "bytes": 132804
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101/test_deployment/evaluation.json": {
+      "sha256": "15e6ee6e499d685070e16e6cdb3130ce79bfd930e02b09ea7d85ff2874559e90",
+      "bytes": 4593
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101/history.json": {
+      "sha256": "031cda034ef4f8ac3fb99daac287892ebdbac306038c8da875bdc3a347c50c46",
+      "bytes": 132676
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102/test_deployment/evaluation.json": {
+      "sha256": "5324d1bc7d14cc729d3be474a6e20da4d9f33ec6a7bab0e7a84614754311bcda",
+      "bytes": 4580
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102/history.json": {
+      "sha256": "dff6c7c52f88f156745757b155ff41ab85cb4669b6c9ef93d3e7a7facbd400c6",
+      "bytes": 132752
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103/test_deployment/evaluation.json": {
+      "sha256": "5a34b1b919e703e07129c697ccc440410fad97934bf936c237d7b64a50b3096d",
+      "bytes": 4568
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103/history.json": {
+      "sha256": "1dc9188b43925f0b5b84dad22b751433ac3d689e25db83200e90638da2622cae",
+      "bytes": 132740
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101/test_deployment/evaluation.json": {
+      "sha256": "7a1421118e09572158a2090487b08b70fc5bbbd0bf4ef5940e3f31958dae06d4",
+      "bytes": 4737
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101/history.json": {
+      "sha256": "a590c7558203a1042972cc729cc369e7d3d3d1ecdcfe0f77403dc11f907fe302",
+      "bytes": 149743
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102/test_deployment/evaluation.json": {
+      "sha256": "504c3a2c15f3f30a8851729579b682f382518a85431a4044b25931cb41fdcf66",
+      "bytes": 4734
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102/history.json": {
+      "sha256": "532aec1e0eb0a822541ac3e7a26e6db9668f6ad91cb38ddd7a3b0d7c04b0b17c",
+      "bytes": 149620
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103/test_deployment/evaluation.json": {
+      "sha256": "100cf71fe8e12814bc889efcb6248ec66e114c9d231d777700023a0d5f76a49e",
+      "bytes": 4737
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103/history.json": {
+      "sha256": "12a9d498fed5b775f1670c08783e82b9c0d88d788bb1df952d8b32138cf97f5a",
+      "bytes": 149632
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101/test_deployment/evaluation.json": {
+      "sha256": "ed6a0fd1a8f6db7c7a4f15bcf277f1a26f935f341643193dd8b399d648fb8cca",
+      "bytes": 4742
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101/history.json": {
+      "sha256": "395c3eb1e9139bd1b3d6111a73677144cf1a74a79f6afdb0a45214c1244b9428",
+      "bytes": 149754
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102/test_deployment/evaluation.json": {
+      "sha256": "2ac11b59e26624daf0cf843325b1e24966cbbbc4a4a33a0190e72ef2a9a369a6",
+      "bytes": 4750
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102/history.json": {
+      "sha256": "fe0ecc615f72e178238cf98a2009e509713582ff4dbf39235d16680aad3904bb",
+      "bytes": 149801
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103/test_deployment/evaluation.json": {
+      "sha256": "b53a3c52833da43b9d1a818968b2f0f7d79719d74d6ab1231a202ca9c0258338",
+      "bytes": 4746
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103/history.json": {
+      "sha256": "e412771154e5244a58413681a46e958326c6e41a561b2ed7def9719be74602bc",
+      "bytes": 149720
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101/test_deployment/evaluation.json": {
+      "sha256": "a0ec1069756a612287c0496aebc26d6dc5e89406914acdd8572f2dd61fc8f06f",
+      "bytes": 4571
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101/history.json": {
+      "sha256": "d63162ed09ce971efeecd5f549818ce1dc6ffac614ceadebf3856a4f546a4655",
+      "bytes": 132906
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102/test_deployment/evaluation.json": {
+      "sha256": "41e8ec09937406a8c6043664b5b51c4cd2c748ad4bd7c42abd8f8fca6230e1ad",
+      "bytes": 4561
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102/history.json": {
+      "sha256": "d8fec56eee27312410ad465c350827590b293b04d4d39b275bc4248afeed4e6a",
+      "bytes": 133000
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103/test_deployment/evaluation.json": {
+      "sha256": "5007cd9bba87df0f65bad09453b35333b3c79f0feb37633d7b2db107a90169ce",
+      "bytes": 4552
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103/history.json": {
+      "sha256": "9c8e7369e557bcee474a15690f32a6fc5d3eece534cc585b82d27ba66c99e0b0",
+      "bytes": 132889
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101/test_deployment/evaluation.json": {
+      "sha256": "58c02346e99c5095fdd28a1f3bc597c6a9de3daab75da4c38d334301b78d7ab8",
+      "bytes": 4564
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101/history.json": {
+      "sha256": "afdec4290e59d478196f15aaf4c54a818e93c3cb109955b9126c2094bede43bd",
+      "bytes": 132900
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102/test_deployment/evaluation.json": {
+      "sha256": "fb9f5b7c93eae61b718dfd2a96cdb2613f23254fc3c008ceb9b321258d928b33",
+      "bytes": 4568
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102/history.json": {
+      "sha256": "f74eef2b8c7fb53096fefb788cc94264528129083c1bfb2f00736a272b1bc47a",
+      "bytes": 132959
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103/test_deployment/evaluation.json": {
+      "sha256": "26c06f1aa25b802e1099761a7e550fe8c7698c5dc751a9b488b3dc39959b9955",
+      "bytes": 4554
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103/history.json": {
+      "sha256": "16bbbe6ae882f219b5b26df6dec05cd3f95f719b46517537ec035496822df0fb",
+      "bytes": 132913
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101/test_deployment/evaluation.json": {
+      "sha256": "68ca8d76d2f32a6ab31a93bd723b2bf57ccd8297e300f26ba9657d5a19528768",
+      "bytes": 4697
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101/history.json": {
+      "sha256": "2dfe71dd2d438ed2936f911cd2f1fde8c93ade75263b7b84dc0831c09da610b9",
+      "bytes": 148112
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102/test_deployment/evaluation.json": {
+      "sha256": "f797f7d254887bf58d73070df776192df819b87d8a735a88ee8f0ff47638048c",
+      "bytes": 4701
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102/history.json": {
+      "sha256": "57f2ebec98ea8dc5f3e54db018d5a06c1ca1e5c93abaa447a929d3af234a6e5c",
+      "bytes": 148135
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103/test_deployment/evaluation.json": {
+      "sha256": "2620126863cf7e590346a223cfeca088403018c2c54c9b91f6d0b331579bc7a8",
+      "bytes": 4697
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103/history.json": {
+      "sha256": "0e9c573cf54fcde7d4eaf9977682250d64c0747d26fff2df89b445a878a763a6",
+      "bytes": 148223
+    }
+  },
+  "publication_files": {
+    "journal/paper/tables/cifar_comparison.tex": {
+      "sha256": "4f1518f8f12be40e36c0cd46847b820afa3b513f794e93a9342784eb5ab2806c",
+      "bytes": 1149
+    },
+    "journal/paper/tables/cifar_comparison.csv": {
+      "sha256": "ac839b4482b3081d21971d8914613f241708be37ba215541fdf6c5baa81b85f7",
+      "bytes": 1242
+    },
+    "journal/paper/tables/appendix_cifar_screen.tex": {
+      "sha256": "015c6ec85020ba7e3165f8f68ddab1f1e8d13ce6529cf6ad985bfa1c2f42f615",
+      "bytes": 1153
+    },
+    "journal/paper/tables/appendix_cifar_screen.csv": {
+      "sha256": "207109bb07039ef02d9f03e8541dca8088cafa3e14d83fcd72118a12d5d6c88a",
+      "bytes": 1131
+    },
+    "journal/paper/assets/fig_cifar_validation.pdf": {
+      "sha256": "487ba93665df944c79b6261287f144e3683e7fef98cf34418eabdba870f81f0f",
+      "bytes": 32322
+    },
+    "journal/paper/assets/fig_cifar_validation.png": {
+      "sha256": "a49e160dffa5bb24e9ef76d4a2d0010ce4caa8f31b0ab40a3c9f0a4c48cb59ef",
+      "bytes": 161487
+    }
+  },
+  "selection": "Aggregate-validation-selected configurations; every selected seed retained",
+  "uncertainty": "Sample SD over initialization/channel-bank seeds conditional on fixed data; not MC draws",
+  "source_policy": "Screen and full-data stages stay separate; source paths are repo-relative; full histories stay at hashed inputs",
+  "computations": "Metadata validation/reporting/plotting only; no model weights, inference, training or job submission"
+}

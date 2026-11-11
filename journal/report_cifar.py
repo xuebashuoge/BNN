@@ -180,13 +180,13 @@ def compact_campaign(methods):
                                       for row in item["observations"]]} for item in methods]
 
 
-def tex_metric(item, key, percent=False):
+def tex_metric(item, key, percent=False, bold=False):
     scale, digits = (100, 2) if percent else (1, 4)
     metric = item[key]
     value = f"{metric['mean'] * scale:.{digits}f}"
     if metric["sd"] is not None:
         value += rf"\pm{metric['sd'] * scale:.{digits}f}"
-    return "$" + value + "$"
+    return "$" + (rf"\mathbf{{{value}}}" if bold else value) + "$"
 
 
 def main():
@@ -229,7 +229,7 @@ def main():
                r"conditional on the fixed data split, using ten fresh Gibbs/channel draws per checkpoint. "
                + "; ".join(descriptions) + ". "
                + r"Configurations use aggregate validation accuracy; checkpoints use validation accuracy. "
-               r"Perfect refers to the training forward channel only.")
+               r"Perfect refers to the training forward channel only. Bold marks the best mean within each metric.")
     tex = [r"\begin{table*}[t]", r"\centering\small",
            r"\caption{" + caption + "}",
            r"\label{tab:sim_cifar}",
@@ -239,14 +239,21 @@ def main():
     for index, method in enumerate(METHODS):
         cells = [LABELS[method]]
         for methods in stages.values():
-            cells += [tex_metric(methods[index], "accuracy", True), tex_metric(methods[index], "bounded_loss")]
+            cells += [tex_metric(methods[index], "accuracy", True,
+                                 methods[index]["accuracy"]["mean"] == max(item["accuracy"]["mean"] for item in methods)),
+                      tex_metric(methods[index], "bounded_loss", bold=
+                                 methods[index]["bounded_loss"]["mean"] == min(item["bounded_loss"]["mean"] for item in methods))]
         tex.append(" & ".join(cells) + r"\\")
     tex += [r"\bottomrule", r"\end{tabular}", r"\end{table*}"]
     save_text(args.output / "cifar_results.tex", "\n".join(tex) + "\n")
     import matplotlib
     matplotlib.use("Agg")
+    matplotlib.rcParams.update({"pdf.fonttype": 42, "ps.fonttype": 42,
+                                "font.size": 9, "axes.titlesize": 9,
+                                "axes.labelsize": 9, "xtick.labelsize": 8,
+                                "ytick.labelsize": 8})
     import matplotlib.pyplot as plt
-    fig, axes = plt.subplots(len(stages), 2, figsize=(10, 3.3 * len(stages)), squeeze=False)
+    fig, axes = plt.subplots(len(stages), 2, figsize=(7.2, 3.2 * len(stages)), squeeze=False)
     for index, (stage, methods) in enumerate(stages.items()):
         value = protocols[stage]
         for column, subset in enumerate((methods[:4], methods[4:])):
@@ -262,7 +269,7 @@ def main():
                                 [mean-deviation for mean, deviation in zip(means, deviations)],
                                 [mean+deviation for mean, deviation in zip(means, deviations)],
                                 color=COLORS[item["method"]], alpha=.10, linewidth=0)
-            context = (f"n={value['train_size']:,}; d={value['width']}; m={value['m']}; "
+            context = (f"n={value['train_size']:,}; d={value['width']}; m={value['m']}\n"
                        f"{value['epochs']} epochs; {len(value['seeds'])} seeds")
             ax.set(title=f"{stage}: {'matched' if column == 0 else 'perfect'} training\n{context}",
                    xlabel="Epoch", ylabel="Validation accuracy (%)")

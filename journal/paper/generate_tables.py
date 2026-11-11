@@ -255,7 +255,7 @@ def certificate():
             dict(component="Data complexity", t1=value["sample_complexity"], t2=None),
             dict(component="Joint complexity", t1=None, t2=value["joint_complexity"]),
             dict(component="Population-risk upper bound", t1=value["theorem_1"]["population_risk_upper_uncapped"], t2=value["theorem_2"]["population_risk_upper_uncapped"])]
-    lines = [r"\begin{table}[t]", r"\centering\footnotesize",
+    lines = [r"\begin{table}[!htbp]", r"\centering\footnotesize",
              r"\caption{Two population-risk bounds evaluated at the same frozen T1-trained posterior ($d=8$, $n=512$, $m=2000$). A fresh 100-draw empirical-risk estimate is shared by both bounds. The total failure budget is $0.05$: $0.04$ is split across both theorems and 21 declared setups, and $0.01$ controls Monte Carlo error. Values concern normalized bounded loss, not classification error.}",
              r"\label{tab:sim_certificate}", r"\begin{tabular}{lcc}", r"\toprule",
              r"Component & Theorem 1 & Theorem 2\\", r"\midrule"]

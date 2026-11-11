@@ -11,9 +11,17 @@ From `/Users/yangshuo/Git/BNN`:
 ```bash
 conda run -n torch28 python journal/paper/generate_tables.py
 conda run -n torch28 python -m journal.prepare_paper_figures
+# After BOTH CIFAR-10 screening and full-data confirmation are complete:
+conda run -n torch28 python journal/paper/generate_cifar_assets.py
 cd journal/paper
 latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build main.tex
 ```
+
+The CIFAR wrapper validates both saved stages before writing publication files.
+It generates the main `tables/cifar_comparison.tex` and supplementary
+`tables/appendix_cifar_screen.tex`, their CSVs, an optional confirmation-validation
+plot and `cifar_data_manifest.json` with repo-relative hashed source paths.
+It performs reporting only; an incomplete or missing confirmation is an error.
 
 The reviewed final preview is `output/pdf/journal_simulation_draft.pdf`. Disposable logs and rendered QA pages are under ignored `build/`. The preview's section counter and theorem-label bridges are only for standalone display; do not copy those bridges into the full manuscript.
 
@@ -36,8 +44,8 @@ Optional material inside the existing appendix structure:
 
 For the draft's manual bibliography, insert `bibliography_entries.tex` before `\end{thebibliography}`. Alternatively merge `references.bib` with the BibTeX database; do not duplicate citation keys.
 
-`optional_bound_figures.tex` contains a certificate stack duplicating Table III and is omitted from the compact preview. `theory_example_replacement.tex` supplies the corrected analytical comparison for the theory section; use it only when replacing the earlier example and its existing `fig:bound_comparison` label.
+`optional_bound_figures.tex` contains a certificate stack duplicating the numerical-certificate table and is omitted from the compact preview. `theory_example_replacement.tex` supplies the corrected analytical comparison for the theory section; use it only when replacing the earlier example and its existing `fig:bound_comparison` label.
 
 ## Result policy
 
-Main entries use all listed seeds and the common ten-draw evaluation. Five-draw screens and selected 100-draw cases remain separate. Normalized bounded risk is not raw CE or classification error. Perfect-training models still use deployment-channel validation. L2 Perfect is unavailable, the L2 search is not exhaustive, and feature power is unnormalized. These limitations are preserved rather than filled with invented results.
+Main entries use all listed seeds and the common ten-draw evaluation. Five-draw screens and selected 100-draw cases remain separate. Normalized bounded risk is not raw CE or classification error. Perfect-training models still use deployment-channel validation. L2 Perfect is available for CIFAR and absent from the older MNIST/FashionMNIST cohorts. The L2 search is not exhaustive, and feature power is unnormalized. These limitations are preserved rather than filled with invented results.

@@ -64,7 +64,7 @@ advantage across training seeds or undo selection effects. They are not
 used in the main mean-performance table.
 
 \subsection{Selected Optimization Settings}
-Learning rates in the image searches are $0.001$ and $0.003$, with
+Learning rates in the grayscale-image searches are $0.001$ and $0.003$, with
 posterior standard-deviation initializations $0.003$ and $0.01$. The
 initial L2 search uses coefficients $10^{-5}$ and $10^{-4}$ coupled to
 these two learning rates. The grid is therefore not a full factorial or
@@ -82,3 +82,32 @@ included in the explicit squared-weight L2 penalty. The complete
 conditional search configurations are retained in the accompanying
 reproducibility manifests.
 \input{\simroot/tables/selected_hyperparameters}
+
+\subsection{CIFAR-10 Screening and Optimization Settings}
+The preliminary CIFAR-10 screen uses 10,000 training examples, 5,000
+validation examples, 30 epochs, and two initialization/channel-bank seeds.
+Table~\ref{tab:app_cifar_screen} retains both seeds of every selected
+configuration and uses ten fresh deployment draws. T1 and T2 exceed ERM
+and L2 in both seeds, but ERM has lower bounded log loss. The accuracy and
+bounded-risk orderings therefore differ in this screen.
+\input{\simroot/tables/appendix_cifar_screen}
+
+The 34 training trials cover learning rates $0.001$ and $0.003$ for ERM;
+both learning rates crossed with L2 coefficients $10^{-6}$ and $10^{-5}$;
+and both learning rates crossed with the two proposed settings
+$(s_0,a)=(0.001,0.0003)$ and $(0.003,0.001)$, where $s_0$ is the initial
+posterior standard deviation. T1 uses $(\eta_1,\eta_2)=(a,10a)$ and T2
+uses joint coefficient $2a$. Each perfect-training reference has one
+screened configuration: learning rate $0.001$, L2 coefficient $10^{-6}$
+where applicable, and initial posterior standard deviation $0.001$ with
+data coefficient $0.01$ for Proposed Perfect. These references are not
+exhaustively optimized over perfect-training hyperparameters.
+
+The full-data extension freezes the seven validation-selected settings
+and uses seeds 5101--5103 with 45,000 training examples and 100 epochs.
+ERM retains learning rate $0.001$; matched L2, T1 and T2 retain $0.003$.
+Matched L2 selects $10^{-6}$; T1 selects $(0.001,0.01)$ and T2 selects
+joint coefficient $0.002$, both with $s_0=0.003$. The two stages share
+the validation prefix and a seeded data permutation, with the smaller
+training subset nested inside the larger one. They are separate
+data-size/optimization-budget stages on the same official test set.

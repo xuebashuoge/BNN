@@ -20,4 +20,24 @@ The short A100 benchmark **34838257** remained pending and was cancelled without
 
 Existing MNIST/FashionMNIST defaults remain MLPs. Architecture is part of the cache/resource signature, and the certificate sampler check is restricted to its unchanged IID-toy branch and shared splitting logic, so adding CIFAR does not silently invalidate or alter the previous toy experiment.
 
-The first full-data array, **34839745** at revision `afc400e`, was cancelled before walltime expiry after the three L2 Matched cases slowed from approximately 10 to 26--39 seconds per epoch. Twelve partial checkpoints/histories are retained; none is counted as a completed full-data trial. Running-job walltime extensions were denied by Slurm. The L2 seed-5101 checkpoint contained 10,993 nonzero float32 subnormal means (below 1.175e-38), consistent with very slow subnormal CPU arithmetic. The retry sets the explicit `cpu_flush_denormal=True` policy for every full-data method, before creating the CPU worker pool. The default remains False for old configurations. A new 20-epoch full-shape ERM/L2/T1 resource benchmark checks sustained timing before resubmission. This numerical implementation setting is recorded in each checkpoint and does not change the loss's uniform [0,1] range.
+The first full-data array, **34839745** at revision `afc400e`, was cancelled before walltime expiry after the three L2 Matched cases slowed from approximately 10 to 26--39 seconds per epoch. Twelve partial checkpoints/histories are retained; none is counted as a completed full-data trial. Running-job walltime extensions were denied by Slurm. The L2 seed-5101 checkpoint contained 10,993 nonzero float32 subnormal means (below 1.175e-38), consistent with very slow subnormal CPU arithmetic. The retry sets the explicit `cpu_flush_denormal=True` policy for every full-data method, before creating the CPU worker pool. The default remains False for old configurations. A new 20-epoch full-shape ERM/L2/T1 resource benchmark completed as **34841044** in 182 seconds: last-five means were 7.79/7.59/7.89 seconds, with no progressive L2 slowdown. This numerical implementation setting is recorded in each checkpoint and does not change the loss's uniform [0,1] range.
+
+## Completed full-data comparison
+
+Array **34841446** and replacement **34842754_0** completed all seven settings at seeds 5101--5103, 100 epochs, and 45,000/5,000 training/validation examples. The array throttle was raised from 12 to 21 when spare CPU capacity was available, permitting 42 CPUs at peak. Each task requested two CPUs, 3 GiB and 30 minutes; successful runs took 17:05--25:53 and peaked below 1.49 GiB. One abnormally slow L2 Perfect task on bm060 was cancelled and repeated unchanged on bm134. Its original partial checkpoint is archived separately; the completed replacement was copied into the comparison root with its bytes and provenance intact. `results/journal_cifar/checkpoint_staging.json` records this operation. The numerical/resource evidence is `cifar_numerics_resources.json`.
+
+Evaluation job **34844533** reused all 21 trained checkpoints without new optimization, completed all ten-draw deployment evaluations in 89 seconds, and peaked at about 4.9 GiB against an 8 GiB request. No training or evaluation failed in the completed comparison. No GPU or local dataset training was needed.
+
+| Method | Test accuracy, mean +/- sample SD (%) | Mean bounded risk |
+| --- | ---: | ---: |
+| ERM Matched | 46.1617 +/- 1.3318 | 0.420510 |
+| L2 Matched | 53.6700 +/- 0.7274 | 0.352637 |
+| **T1 Matched** | **55.0300 +/- 0.2945** | **0.339546** |
+| T2 Matched | 53.2637 +/- 0.6037 | 0.354092 |
+| ERM Perfect | 34.4410 +/- 0.9738 | 0.443803 |
+| L2 Perfect | 34.4290 +/- 0.9162 | 0.439990 |
+| Proposed Perfect | 34.0197 +/- 0.8873 | 0.450062 |
+
+T1 exceeds the strongest ERM/L2 baseline, L2, by 1.3600 percentage points in mean accuracy and by 0.976/1.996/1.108 points in the three individual seeds. T2 is slightly below L2 in mean accuracy. Thus the requested accuracy goal is achieved by T1 in every seed of this fixed-budget full-data comparison. This is not a claim of exhaustive baseline tuning or convergence: L2 selects epochs 99/99/100 and T1 selects 99/92/93. The 10k screen and 45k extension remain separate stages, with a shared validation prefix, nested training subsets, and the same official test partition.
+
+The main manuscript uses a separate CIFAR table and setup paragraph after the grayscale comparison. The screen is supplementary. `paper/generate_cifar_assets.py` regenerates both tables/CSVs, an optional full-data validation plot and a compact manifest of 74 hashed source files without training or inference.

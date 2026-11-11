@@ -1,0 +1,19 @@
+\begin{table}[!htbp]
+\centering\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{CIFAR-10 deployment performance under Gaussian fading and additive noise. Entries are mean $\pm$ sample standard deviation across initialization/channel-bank seeds conditional on the fixed data split, using ten fresh Gibbs/channel draws per checkpoint. Screen: $n=10,000$, 30 epochs, 2 paired seeds. Configurations use aggregate validation accuracy; checkpoints use validation accuracy. Perfect refers to the training forward channel only. Bold marks the best mean within each metric.}
+\label{tab:app_cifar_screen}
+\begin{tabular}{lcc}
+\toprule
+Method & \multicolumn{2}{c}{Screen}\\
+ & Accuracy (\%) & Bounded risk\\\midrule
+ERM (matched) & $39.38\pm0.06$ & $\mathbf{0.3654\pm0.0027}$\\
+L2 (matched) & $40.03\pm2.19$ & $0.4039\pm0.0146$\\
+Proposed T1 (matched) & $\mathbf{44.29\pm0.32}$ & $0.3750\pm0.0076$\\
+Proposed T2 (matched) & $43.86\pm0.73$ & $0.3741\pm0.0001$\\
+ERM (perfect) & $29.41\pm0.36$ & $0.4638\pm0.0108$\\
+L2 (perfect) & $29.46\pm0.63$ & $0.4652\pm0.0127$\\
+Proposed (perfect) & $30.44\pm0.63$ & $0.4488\pm0.0041$\\
+\bottomrule
+\end{tabular}
+\end{table}
