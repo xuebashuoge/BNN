@@ -14,6 +14,10 @@ FASHION_HTTPS_MIRRORS = (
     "https://raw.githubusercontent.com/zalandoresearch/fashion-mnist/master/data/fashion/",
     "https://github.com/zalandoresearch/fashion-mnist/raw/refs/heads/master/data/fashion/",
 )
+CIFAR10_HTTPS_URLS = (
+    "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz",
+    "https://cave.cs.toronto.edu/kriz/cifar-10-python.tar.gz",
+)
 
 
 def fashion_mirrors(installed_mirrors):
@@ -53,14 +57,44 @@ def prepare_fashion(root, timeout):
         socket.setdefaulttimeout(previous_timeout)
 
 
+def prepare_cifar10(root, timeout):
+    """Use official CIFAR archives with torchvision archive/batch MD5 checks."""
+    from torchvision.datasets import CIFAR10
+    original_url = CIFAR10.url
+    urls = list(dict.fromkeys([*CIFAR10_HTTPS_URLS, original_url]))
+    previous_timeout = socket.getdefaulttimeout()
+    failures = []
+    socket.setdefaulttimeout(timeout)
+    try:
+        for url in urls:
+            CIFAR10.url = url
+            try:
+                sizes = {}
+                for training in (True, False):
+                    data = CIFAR10(root=root, train=training, download=True)
+                    sizes["training" if training else "test"] = len(data)
+                checks = dict([*CIFAR10.train_list, *CIFAR10.test_list])
+                checks[CIFAR10.meta["filename"]] = CIFAR10.meta["md5"]
+                return sizes, {"download_url": url, "archive_md5": CIFAR10.tgz_md5,
+                               "resource_md5_checks": checks,
+                               "previous_url_failures": failures}
+            except (OSError, RuntimeError) as error:
+                failures.append({"url": url, "error": str(error)})
+                print(json.dumps({"dataset": "cifar10", "url_failed": failures[-1]}), flush=True)
+        raise RuntimeError("CIFAR-10 download failed on all official URLs: " + json.dumps(failures))
+    finally:
+        CIFAR10.url = original_url
+        socket.setdefaulttimeout(previous_timeout)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--datasets", required=True, help="Comma-separated mnist,fashionmnist")
+    parser.add_argument("--datasets", required=True, help="Comma-separated mnist,fashionmnist,cifar10")
     parser.add_argument("--timeout", type=float, default=60., help="Per-network-operation timeout in seconds")
     args = parser.parse_args()
     names = list(dict.fromkeys(name.strip() for name in args.datasets.split(",")))
-    if not names or set(names) - {"mnist", "fashionmnist"}:
-        parser.error("Supported public datasets: mnist,fashionmnist")
+    if not names or set(names) - {"mnist", "fashionmnist", "cifar10"}:
+        parser.error("Supported public datasets: mnist,fashionmnist,cifar10")
     if args.timeout <= 0:
         parser.error("timeout must be positive")
     root = os.environ.get("DATASET")
@@ -68,6 +102,10 @@ def main():
         raise RuntimeError("DATASET must point to the shared dataset directory")
     from torchvision import datasets
     for name in names:
+        if name == "cifar10":
+            sizes, provenance = prepare_cifar10(root, args.timeout)
+            print(json.dumps({"dataset": name, "root": root, "sizes": sizes, **provenance}), flush=True)
+            continue
         if name == "fashionmnist":
             sizes, provenance = prepare_fashion(root, args.timeout)
             print(json.dumps({"dataset": name, "root": root, "sizes": sizes, **provenance}), flush=True)

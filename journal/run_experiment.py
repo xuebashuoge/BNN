@@ -34,7 +34,7 @@ except ImportError:
                           theorem1_terms, validate_channel)
 
 
-DEFAULTS = dict(dataset="mnist", method="proposed", training_loss="raw_ce", loss_epsilon=.01,
+DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", training_loss="raw_ce", loss_epsilon=.01,
                 selection_metric="cross_entropy", validation_seed_policy="fixed", width=128, train_size=55000,
                 val_size=5000, batch_size=256, epochs=30, lr=.001,
                 eta_channel=.01, eta_data=.1, prior_std=1., posterior_std=.01,
@@ -62,8 +62,12 @@ def normalize_config(supplied: dict) -> dict:
     config = {**DEFAULTS, **supplied}
     config["train_channel"] = validate_channel(config["train_channel"])
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
-    if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist"}:
+    if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist", "cifar10"}:
         raise ValueError("Unknown method or dataset")
+    if config["architecture"] not in {"mlp", "cnn"}:
+        raise ValueError("architecture must be mlp or cnn")
+    if config["architecture"] == "cnn" and config["dataset"] != "cifar10":
+        raise ValueError("The compact CNN requires CIFAR-10 RGB inputs")
     if config["training_loss"] not in {"raw_ce", "bounded_ce", "bounded_ce_smooth"}:
         raise ValueError("training_loss must be raw_ce, bounded_ce, or bounded_ce_smooth")
     if not 0 < config["loss_epsilon"] < 1:
@@ -127,6 +131,27 @@ def load_data(config: dict, include_test: bool = False):
             test = TensorDataset(torch.tensor(x, dtype=torch.float32), torch.tensor(y, dtype=torch.long))
         input_dim, classes = 2, 2
         transform_description = "float32 raw coordinates; " + sampler_description
+    elif config["dataset"] == "cifar10":
+        from torchvision import datasets
+        root = os.environ.get("DATASET")
+        if not root:
+            raise RuntimeError("DATASET must point to the dataset directory")
+
+        def tensor_dataset(training):
+            raw = datasets.CIFAR10(root=root, train=training, download=config["download"])
+            # Fixed, data-independent normalization. Materialize contiguous
+            # tensors once instead of repeating PIL/ToTensor on every epoch.
+            # Full training storage is ~586 MiB; no random augmentation or
+            # additional training-distribution randomness is introduced.
+            images = torch.from_numpy(raw.data).permute(0, 3, 1, 2).to(
+                dtype=torch.float32, memory_format=torch.contiguous_format)
+            images.div_(127.5).sub_(1.)
+            return TensorDataset(images, torch.tensor(raw.targets, dtype=torch.long))
+
+        full = tensor_dataset(True)
+        test = tensor_dataset(False) if include_test else None
+        input_dim, classes = 3072, 10
+        transform_description = "CIFAR RGB uint8 -> contiguous float32 CHW, pixel/127.5-1; no fitted normalization or augmentation"
     else:
         from torchvision import datasets, transforms
         root = os.environ.get("DATASET")
@@ -161,8 +186,13 @@ def make_loader(data, config: dict, shuffle: bool = False):
 def make_models(config: dict, input_dim: int, classes: int):
     torch.manual_seed(config["seed"])
     stochastic = config["method"] not in {"erm", "l2"}
-    model = GaussianMLP(input_dim, config["width"], classes, stochastic,
-                        config["posterior_std"]).to(config["device"])
+    if config.get("architecture", "mlp") == "cnn":
+        from .cifar_models import GaussianSplitCNN
+        model = GaussianSplitCNN(config["width"], classes, stochastic,
+                                 config["posterior_std"]).to(config["device"])
+    else:
+        model = GaussianMLP(input_dim, config["width"], classes, stochastic,
+                            config["posterior_std"]).to(config["device"])
     bank = ChannelBank(config["width"], config["m"], config["train_channel"],
                        config["channel_seed"]).to(config["device"])
     return model, bank
@@ -176,6 +206,9 @@ def check_device(config: dict):
         raise RuntimeError("CUDA was requested but is unavailable on this host")
     if device.type == "cuda" and device.index is not None and device.index >= torch.cuda.device_count():
         raise RuntimeError(f"Requested CUDA device {device.index} is unavailable")
+    if device.type == "cuda":
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
 
 
 def complexities(model, config: dict) -> dict:
@@ -228,7 +261,7 @@ def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
         theta = model.sample(weight_generator)
         loss_sum, bounded_sum, power_sum, correct, count = 0., 0., 0., 0, 0
         for x, y in loader:
-            x, y = x.to(config["device"]), y.to(config["device"])
+            x, y = x.to(config["device"], non_blocking=True), y.to(config["device"], non_blocking=True)
             logits = model(x, theta, bank, source, config["deployment_channel"], channel_generator)
             losses = F.cross_entropy(logits, y, reduction="none")
             loss_sum += losses.sum().item()
@@ -267,6 +300,11 @@ def provenance(config: dict, split: dict) -> dict:
     return dict(config=config, config_hash=digest(config), split=split,
                 git_sha=git_sha, git_dirty=git_dirty, torch_version=torch.__version__,
                 python_version=platform.python_version(), platform=platform.platform(),
+                cuda_policy=(dict(cudnn_deterministic=torch.backends.cudnn.deterministic,
+                                  cudnn_benchmark=torch.backends.cudnn.benchmark,
+                                  cudnn_allow_tf32=torch.backends.cudnn.allow_tf32,
+                                  matmul_allow_tf32=torch.backends.cuda.matmul.allow_tf32)
+                             if config["device"].startswith("cuda") else None),
                 prior="fixed N(0,prior_std^2 I), independent of all data and channel banks",
                 training_objective=("raw cross entropy + tuned complexity surrogate"
                                     if config["training_loss"] == "raw_ce" else
@@ -307,7 +345,7 @@ def train(config: dict, output: Path):
         model.train()
         ce_sum, empirical_sum, objective_sum, samples = 0., 0., 0., 0
         for x, y in train_loader:
-            x, y = x.to(config["device"]), y.to(config["device"])
+            x, y = x.to(config["device"], non_blocking=True), y.to(config["device"], non_blocking=True)
             optimizer.zero_grad(set_to_none=True)
             theta = model.sample()
             logits = model(x, theta, bank, "bank", generator=channel_generator)
@@ -362,7 +400,9 @@ def train(config: dict, output: Path):
                           "epoch_seconds": record["epoch_seconds"]}), flush=True)
     metadata.update(total_seconds=time.perf_counter() - start, peak_rss_mb=peak_memory_mb(),
                     cuda_peak_allocated_mb=(torch.cuda.max_memory_allocated() / 1024**2
-                                            if config["device"].startswith("cuda") else None))
+                                            if config["device"].startswith("cuda") else None),
+                    cuda_peak_reserved_mb=(torch.cuda.max_memory_reserved() / 1024**2
+                                           if config["device"].startswith("cuda") else None))
     save_json(output / "metadata.json", metadata)
     print(json.dumps({"output": str(output), "selected_epoch": metadata["selected_epoch"],
                       "seconds": metadata["total_seconds"], "peak_rss_mb": metadata["peak_rss_mb"]}), flush=True)

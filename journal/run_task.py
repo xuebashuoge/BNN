@@ -11,7 +11,7 @@ import sys
 
 
 EVALUATION_OVERRIDES = {"deployment_channel", "eval_draws", "eval_seed", "device", "threads", "batch_size", "download"}
-PILOT_MATCH_FIELDS = ("dataset", "method", "width", "batch_size", "m", "train_channel",
+PILOT_MATCH_FIELDS = ("dataset", "architecture", "method", "width", "batch_size", "m", "train_channel",
                       "deployment_channel", "train_size", "val_size", "val_draws")
 
 

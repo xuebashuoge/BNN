@@ -60,7 +60,7 @@ def validate_entries(entries):
         config = normalize_config(entry["config"])
         if entry.get("mode", "train") != "train":
             raise ValueError("Campaign entries are explicit training trials")
-        fixed = {key: config[key] for key in ("dataset", "train_size", "val_size", "width", "m", "deployment_channel", "data_seed")}
+        fixed = {key: config[key] for key in ("dataset", "architecture", "train_size", "val_size", "width", "m", "deployment_channel", "data_seed")}
         key = entry["group"]
         if key in conditions and conditions[key] != fixed:
             raise ValueError(f"Comparison group {key} mixes deployment/data/model/bank conditions")
@@ -74,12 +74,13 @@ def validate_entries(entries):
 
 def completed_trial(path, expected_config):
     try:
+        from journal.run_experiment import normalize_config
         meta = json.loads((path / "metadata.json").read_text())
         history = json.loads((path / "history.json").read_text())
         complete = ((path / "weights.pt").is_file() and len(history) == expected_config["epochs"]
                     and history[-1]["epoch"] == expected_config["epochs"]
                     and math.isfinite(meta["total_seconds"]) and meta["total_seconds"] > 0
-                    and meta["config"] == expected_config)
+                    and normalize_config(meta["config"]) == normalize_config(expected_config))
         if not complete:
             return None
         selected = history[int(meta["selected_epoch"]) - 1]["validation"]
@@ -92,10 +93,10 @@ def completed_trial(path, expected_config):
         return None
 
 
-def train_trial(entry, output_root, threads, resume):
+def train_trial(entry, output_root, threads, resume, device="cpu"):
     from journal.run_experiment import normalize_config
     output = Path(output_root) / entry["task_id"]
-    config = normalize_config({**entry["config"], "device": "cpu", "threads": threads})
+    config = normalize_config({**entry["config"], "device": device, "threads": threads})
     base = dict(task_id=entry["task_id"], group=entry["group"], method_label=entry["method_label"],
                 family=entry["family"], variant_id=entry["variant_id"], stage=entry["stage"],
                 role=entry.get("role", "comparison"), seed=config["seed"], config=config,
@@ -155,7 +156,7 @@ def evaluate_trial(row, draws, full_risks, resume):
     checkpoint = Path(row["checkpoint"])
     output = checkpoint / ("test_full" if full_risks else "test_deployment")
     overrides = dict(eval_draws=draws, eval_seed=row["config"]["eval_seed"] + 1000003,
-                     device="cpu", threads=row["config"]["threads"])
+                     device=row["config"].get("device", "cpu"), threads=row["config"]["threads"])
     scope = "full" if full_risks else "deployment"
     try:
         report = json.loads((output / "evaluation.json").read_text()) if resume and (output / "evaluation.json").exists() else None
@@ -265,6 +266,8 @@ def main():
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--threads", type=int, default=2)
+    parser.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
+    parser.add_argument("--cpu-pilot", type=Path, help="Completed matching CPU pilot root, required for CUDA execution")
     parser.add_argument("--evaluate-top", type=int, default=1,
                         help="Validation-ranked variants per method; 0 skips all test evaluation")
     parser.add_argument("--eval-draws", type=int, default=5)
@@ -275,6 +278,8 @@ def main():
     args = parser.parse_args()
     if min(args.workers, args.threads, args.eval_draws) <= 0 or args.evaluate_top < 0:
         parser.error("workers/threads/draws must be positive and evaluate-top nonnegative")
+    if args.device == "cuda" and args.workers != 1:
+        parser.error("Use one sequential campaign worker per allocated GPU")
     entries = [json.loads(line) for line in args.manifest.read_text().splitlines() if line.strip()]
     validate_entries(entries)
     if args.validate_only:
@@ -304,16 +309,23 @@ def main():
     # The same submitted revision/manifest contract as individual array tasks.
     from journal.run_task import verify_submission_snapshot
     verify_submission_snapshot(args.manifest)
+    cpu_pilot_matches = []
+    if args.device == "cuda":
+        if args.cpu_pilot is None:
+            parser.error("CUDA execution requires --cpu-pilot with completed matching CPU trials")
+        from journal.run_task import require_cpu_pilots
+        cpu_pilot_matches = require_cpu_pilots(entries, args.cpu_pilot)
     args.output_root.mkdir(parents=True, exist_ok=True)
     start = time.perf_counter()
     snapshot = dict(manifest=str(args.manifest.resolve()), manifest_sha256=hashlib.sha256(args.manifest.read_bytes()).hexdigest(),
                     submitted_git_sha=os.environ.get("JOURNAL_GIT_SHA"), workers=args.workers, threads=args.threads,
-                    slurm_job_id=os.environ.get("SLURM_JOB_ID"), selection="aggregate validation accuracy; CE tiebreak",
+                    slurm_job_id=os.environ.get("SLURM_JOB_ID"), device=args.device,
+                    cpu_pilot_matches=cpu_pilot_matches, selection="aggregate validation accuracy; CE tiebreak",
                     all_outcomes_retained=True)
     save_json(args.output_root / "campaign_snapshot.json", snapshot)
     rows = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
-        futures = {executor.submit(train_trial, entry, args.output_root, args.threads, args.resume): entry for entry in entries}
+        futures = {executor.submit(train_trial, entry, args.output_root, args.threads, args.resume, args.device): entry for entry in entries}
         for future in concurrent.futures.as_completed(futures):
             row = future.result()
             rows.append(row)

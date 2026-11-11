@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import copy
 import hashlib
 import inspect
 import json
@@ -42,6 +43,26 @@ def bank_hash(bank) -> str:
     return digest({"gain": bank.gain.cpu().tolist(), "noise": bank.noise.cpu().tolist()})
 
 
+def sampler_source_signature(node) -> str:
+    """Fingerprint the IID-toy branch and shared split logic, not image loaders.
+
+    Certification is restricted to IID moons. Adding an unrelated image dataset
+    must not invalidate that saved sampler, while changes to the toy population
+    or the shared train/validation split must still fail verification.
+    """
+    node = copy.deepcopy(node)
+    if node.name == "load_data":
+        target = ast.dump(ast.parse('config["dataset"] == "moons"', mode="eval").body,
+                          include_attributes=False)
+        for statement in node.body:
+            if isinstance(statement, ast.If) and ast.dump(statement.test, include_attributes=False) == target:
+                statement.orelse = []
+                break
+        else:
+            raise ValueError("IID-toy loader branch is missing or structurally changed")
+    return ast.dump(node, include_attributes=False)
+
+
 def verify_sampler_source(saved_sha: str) -> dict:
     """Check the saved revision uses the same IID-data generation functions.
 
@@ -60,8 +81,8 @@ def verify_sampler_source(saved_sha: str) -> dict:
     for function in (sample_moons_iid, load_data):
         current = ast.parse(inspect.getsource(function)).body[0]
         matches[function.__name__] = (function.__name__ in previous and
-            ast.dump(previous[function.__name__], include_attributes=False) ==
-            ast.dump(current, include_attributes=False))
+            sampler_source_signature(previous[function.__name__]) ==
+            sampler_source_signature(current))
     if not all(matches.values()):
         raise ValueError(f"Data-generation source differs from checkpoint revision: {matches}")
     return matches
