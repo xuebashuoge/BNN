@@ -1,0 +1,20 @@
+\begin{table}[!ht]
+\centering\footnotesize
+\caption{Reduced-data MNIST under the same analog deployment law ($n=10{,}000$, $d=128$, 35 epochs). Entries use all two paired initialization/channel-bank seeds and ten fresh draws per checkpoint; settings were selected on validation data.}
+\label{tab:app_reduced_mnist}
+\begin{tabular}{llcc}
+\toprule
+Condition & Method & Accuracy (\%) & Bounded risk\\
+\midrule
+$m=20$ & ERM & $58.22\pm0.82$ & $0.3037\pm0.0179$\\
+$m=20$ & $\ell_2$ & $57.04\pm0.92$ & $0.3117\pm0.0151$\\
+$m=20$ & Proposed T1 & $\mathbf{59.89\pm0.20}$ & $\mathbf{0.2886\pm0.0095}$\\
+$m=20$ & Proposed T2 & $59.68\pm0.06$ & $0.2947\pm0.0079$\\
+\addlinespace
+$m=50$ & ERM & $66.04\pm0.56$ & $0.2427\pm0.0046$\\
+$m=50$ & $\ell_2$ & $64.37\pm0.21$ & $0.2522\pm0.0016$\\
+$m=50$ & Proposed T1 & $66.83\pm0.99$ & $0.2362\pm0.0104$\\
+$m=50$ & Proposed T2 & $\mathbf{66.96\pm1.16}$ & $\mathbf{0.2353\pm0.0116}$\\
+\bottomrule
+\end{tabular}
+\end{table}

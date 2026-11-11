@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Validation-selected settings for Table~\ref{tab:sim_accuracy_risk}. The active coefficients are the L2 weight $\lambda_2$, T1 channel/data weights $(\eta_1,\eta_2)$, T2 joint weight $\eta$, or the perfect-training data weight $\eta_2$. The initial posterior standard deviation is $s_0$; dashes denote deterministic models or no penalty. Posterior means use fan-in-scaled uniform initialization with zero biases, separately from $s_0$; the fixed prior has standard deviation one. These are selected configurations from conditional grids, not an exhaustive or full-factorial search.}
+\label{tab:app_hyperparameters}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llccc}
+\toprule
+Dataset & Training method & Learning rate & $s_0$ & Active coefficient(s)\\
+\midrule
+MNIST & ERM (perfect) & 0.003 & -- & --\\
+MNIST & ERM (matched) & 0.003 & -- & --\\
+MNIST & $\ell_2$ (matched) & 0.001 & -- & $\lambda_2=10^{-5}$\\
+MNIST & Proposed (perfect) & 0.003 & 0.01 & $\eta_2=0.06$\\
+MNIST & Proposed T1 (matched) & 0.003 & 0.01 & $(\eta_1,\eta_2)=(0.003,0.03)$\\
+MNIST & Proposed T2 (matched) & 0.003 & 0.01 & $\eta=0.0015$\\
+\addlinespace
+FashionMNIST & ERM (perfect) & 0.003 & -- & --\\
+FashionMNIST & ERM (matched) & 0.001 & -- & --\\
+FashionMNIST & $\ell_2$ (matched) & 0.001 & -- & $\lambda_2=10^{-5}$\\
+FashionMNIST & Proposed (perfect) & 0.003 & 0.01 & $\eta_2=0.06$\\
+FashionMNIST & Proposed T1 (matched) & 0.001 & 0.01 & $(\eta_1,\eta_2)=(0.003,0.03)$\\
+FashionMNIST & Proposed T2 (matched) & 0.001 & 0.01 & $\eta=0.006$\\
+\bottomrule
+\end{tabular}
+\end{table*}

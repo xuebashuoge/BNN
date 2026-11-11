@@ -1,0 +1,15 @@
+\begin{table}[!ht]
+\centering\footnotesize
+\caption{Initial reduced-data MNIST screen ($n=10{,}000$, $d=128$, $m=100$, 25 epochs). These entries use five inference draws and two seeds, and are kept separate from the ten-draw final comparisons.}
+\label{tab:app_screen_mnist}
+\begin{tabular}{llcc}
+\toprule
+Condition & Method & Accuracy (\%) & Bounded risk\\
+\midrule
+$m=100$ & ERM & $70.25\pm0.67$ & $0.2007\pm0.0054$\\
+$m=100$ & $\ell_2$ & $69.06\pm0.47$ & $\mathbf{0.1939\pm0.0047}$\\
+$m=100$ & Proposed T1 & $\mathbf{70.82\pm0.53}$ & $0.1971\pm0.0024$\\
+$m=100$ & Proposed T2 & $70.71\pm0.45$ & $0.1976\pm0.0016$\\
+\bottomrule
+\end{tabular}
+\end{table}

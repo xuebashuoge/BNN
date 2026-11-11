@@ -1,0 +1,84 @@
+\providecommand{\simroot}{.}
+\section{Supplementary Numerical Results}
+\label{app:simulation_results}
+
+\subsection{Additional Channel-Bank Comparisons}
+The reduced-data MNIST comparisons use 10,000 training examples, a hidden
+width of 128, and smaller analog-channel banks. They provide a sensitivity
+check rather than an independent test dataset: the official test set is
+the same as in the full-data comparison. Table~\ref{tab:app_reduced_mnist}
+reports all seeds of the corresponding ten-draw cohorts. A separate
+five-draw screening cohort is retained in
+Table~\ref{tab:app_screen_mnist}; its numbers are not pooled with the
+ten-draw evaluations.
+\input{\simroot/tables/appendix_reduced_mnist}
+\input{\simroot/tables/appendix_screen_mnist}
+
+The width-64 feature-erasure refinements in
+Table~\ref{tab:app_toy_erasure} use the same deployment probability $0.5$
+but different bank sizes. They show the performance attainable with a
+larger transmitted representation. The proposed variants do not improve
+on ERM at every bank size. This complements the main finite-channel
+mechanism, rather than establishing uniform superiority across channels.
+\input{\simroot/tables/appendix_toy_erasure}
+
+\subsection{Data Size and Optimization Budget}
+Table~\ref{tab:app_data_size} varies the number of training examples at
+$m=100$. Accuracy increases with data size in these runs, but the protocol
+also increases the number of minibatch updates because it fixes epochs,
+not updates. The training/validation realizations change with $n$, and the
+listed repetitions vary initialization and channel banks rather than
+resampling independent datasets. Moreover, the observed signed data gap
+is negative in these realizations. This experiment therefore describes
+the data-size performance trend; it does not independently verify the
+theoretical $n$-rate.
+\input{\simroot/tables/appendix_data_size}
+
+\subsection{Internal Objective Ablations and Selected Cases}
+The proposed objectives themselves belong to the PAC-Bayesian regularizer
+family. The data-only penalty is consequently an internal ablation. Both
+T1 terms depend on the same posterior KL; when that KL dominates the
+confidence logarithms, the separate penalties are approximately a scaled
+square-root KL penalty. T2 has a single square-root KL form with adjusted
+scaling and confidence. An unrestricted retuning of a data-only
+coefficient can therefore yield near-equivalent optimization. The
+distinct theoretical contribution is the treatment of finite channel
+observations and its resulting dependence on $n$ and $m$.
+
+In the full-data comparison, the validation-selected T1 and data-only
+configurations attain $76.6307\%$ and $76.6370\%$, respectively, a
+practical tie. Allowing test-based hyperparameter selection over the
+entire trained grid instead gives the data-only control $76.7513\%$.
+Completing the missing Fashion-MNIST learning-rate/noise controls reduces
+the corresponding 100-draw T1 advantage to only $0.0208$ percentage point.
+These findings limit claims of a fundamentally different regularizer.
+
+Selected favorable checkpoints remain useful as illustrative cases. For
+full-data MNIST at training seed 9001, a new 100-draw stream gives T1
+$75.9712\%$, exceeding the strongest of the three reevaluated data-only
+coefficients at $75.7801\%$. For the reduced-data $m=50$ case, seed 1003
+gives T2 $67.7729\%$ versus $67.4309\%$. These are explicitly
+test/seed-selected examples. Their Monte Carlo intervals condition on
+the fixed checkpoints and test data, and do not establish a population
+advantage across training seeds or undo selection effects. They are not
+used in the main mean-performance table.
+
+\subsection{Selected Optimization Settings}
+Learning rates in the image searches are $0.001$ and $0.003$, with
+posterior standard-deviation initializations $0.003$ and $0.01$. The
+initial L2 search uses coefficients $10^{-5}$ and $10^{-4}$ coupled to
+these two learning rates. The grid is therefore not a full factorial or
+exhaustive L2 optimization. The initial T1 coefficient pairs are
+$(\eta_1,\eta_2)=(a,10a)$ with
+$a\in\{0.0003,0.001,0.003,0.01\}$, and T2 uses joint coefficients $2a$.
+Learning rate and initial posterior noise are conditionally assigned,
+rather than searched as a full Cartesian product. Perfect-channel
+posterior training considers data coefficients $0.006$ and $0.06$.
+Full-data refinement adds T1 pairs $(0.001,0.01)$ and $(0.003,0.03)$,
+and T2 coefficients $0.0015$ and $0.004$, at learning rate $0.003$ and
+initial posterior standard deviation $0.01$. The exact selected values
+are listed in Table~\ref{tab:app_hyperparameters}. All weights and biases are
+included in the explicit squared-weight L2 penalty. The complete
+conditional search configurations are retained in the accompanying
+reproducibility manifests.
+\input{\simroot/tables/selected_hyperparameters}

@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Width-64 IID two-moons feature-erasure refinement ($n=800$, erasure probability $0.5$, 150 epochs). Entries use two seeds and ten inference draws. A matched L2 run is unavailable for this cohort and is not substituted from another experiment.}
+\label{tab:app_toy_erasure}
+\begin{tabular}{llcc}
+\toprule
+Condition & Method & Accuracy (\%) & Bounded risk\\
+\midrule
+$m=5$ & ERM & $\mathbf{85.40\pm0.11}$ & $\mathbf{0.0719\pm0.0008}$\\
+$m=5$ & Proposed T1 & $85.37\pm0.14$ & $0.0720\pm0.0008$\\
+$m=5$ & Proposed T2 & $85.37\pm0.14$ & $0.0720\pm0.0008$\\
+\addlinespace
+$m=20$ & ERM & $\mathbf{87.72\pm0.44}$ & $\mathbf{0.0623\pm0.0024}$\\
+$m=20$ & Proposed T1 & $86.18\pm1.48$ & $0.0684\pm0.0067$\\
+$m=20$ & Proposed T2 & $86.18\pm1.48$ & $0.0684\pm0.0067$\\
+\addlinespace
+$m=50$ & ERM & $88.78\pm0.02$ & $0.0576\pm0.0005$\\
+$m=50$ & Proposed T1 & $88.80\pm0.01$ & $0.0575\pm0.0006$\\
+$m=50$ & Proposed T2 & $\mathbf{88.80\pm0.01}$ & $\mathbf{0.0575\pm0.0006}$\\
+\bottomrule
+\end{tabular}
+\end{table*}

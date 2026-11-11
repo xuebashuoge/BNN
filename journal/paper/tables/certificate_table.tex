@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering\footnotesize
+\caption{Two population-risk bounds evaluated at the same frozen T1-trained posterior ($d=8$, $n=512$, $m=2000$). A fresh 100-draw empirical-risk estimate is shared by both bounds. The total failure budget is $0.05$: $0.04$ is split across both theorems and 21 declared setups, and $0.01$ controls Monte Carlo error. Values concern normalized bounded loss, not classification error.}
+\label{tab:sim_certificate}
+\begin{tabular}{lcc}
+\toprule
+Component & Theorem 1 & Theorem 2\\
+\midrule
+Empirical bounded risk estimate & 0.090943 & 0.090943\\
+Monte Carlo upper correction & 0.151743 & 0.151743\\
+Channel shift & 0.000000 & 0.000000\\
+Channel complexity & 0.212937 & --\\
+Data complexity & 0.420369 & --\\
+Joint complexity & -- & 0.475078\\
+\midrule
+Population-risk upper bound & 0.875991 & 0.717764\\
+\bottomrule
+\end{tabular}
+\end{table}

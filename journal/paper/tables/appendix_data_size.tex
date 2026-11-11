@@ -1,0 +1,14 @@
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Exploratory data-size slice for T1 on IID two moons ($d=8$, $m=100$). Accuracy is mean $\pm$ sample standard deviation over three initialization/channel-bank seeds. The same 150 epochs imply different optimizer-update counts. Negative observed data gaps and the changing optimization budget preclude interpreting this slice as a quantitative validation of the theoretical $n$-rate.}
+\label{tab:app_data_size}
+\begin{tabular}{rrrrrr}
+\toprule
+$n$ & Updates & Accuracy (\%) & Channel gap & Data gap & Data complexity\\
+\midrule
+128 & 150 & $71.58\pm2.18$ & -0.000306 & -0.000147 & 0.836164\\
+512 & 600 & $79.52\pm2.60$ & 0.000100 & -0.002194 & 0.414271\\
+2048 & 2400 & $83.18\pm0.60$ & 0.000768 & -0.006346 & 0.206496\\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,26 @@
+% Optional replacement for the analytical example in the theory section.
+% Keep this figure outside the Simulation section to avoid duplication.
+\providecommand{\simroot}{.}
+To compare the complexity structures at the same total coverage, fix
+$D=2$, $\sigma^2=\sigma_{\rm tr}^2=1/4$, and $\delta=0.05$.
+For the separate bound, equal budgets are
+$\epsilon_{\rm ch}=\epsilon_{\rm data}=1-\sqrt{1-\delta}$.
+The adaptive allocation has
+$\epsilon_{\rm data}/\epsilon_{\rm ch}=99$, with both allocations
+satisfying $(1-\epsilon_{\rm data})(1-\epsilon_{\rm ch})=1-\delta$.
+Figure~\ref{fig:bound_comparison} evaluates the resulting expressions
+with fixed $n=10$ and with $n=m$. In the asymmetric case, the joint
+complexity crosses the separate complexity at approximately $m=396$
+under equal allocation and $m=348$ under adaptive allocation. The
+separate bounds approach data-complexity floors of $0.6159$ and
+$0.5848$, respectively, whereas the joint logarithm keeps growing.
+When $n=m$, the joint formulation is tighter over the illustrated range.
+This comparison isolates the analytical bound structure and is not a
+learning-curve experiment.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{\simroot/assets/fig_bound_structure.pdf}
+\caption{Analytical complexity comparison with exact product-confidence
+budget allocation, $D=2$ and $\sigma^2=\sigma_{\rm tr}^2=1/4$.}
+\label{fig:bound_comparison}
+\end{figure}

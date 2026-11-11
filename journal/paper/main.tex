@@ -1,0 +1,29 @@
+\documentclass[journal,10pt]{IEEEtran}
+\usepackage{amsmath,amssymb,graphicx,booktabs,array,multirow}
+\usepackage{flafter}
+\usepackage[T1]{fontenc}
+\graphicspath{{assets/}}
+\newcommand{\E}{\mathbb E}
+\newcommand{\KL}{\mathrm{KL}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\simPM}{\ensuremath{\pm}}
+% Preview-only bridges to the two preceding theorems in the supplied draft.
+% The section fragment uses the original manuscript labels on integration.
+\makeatletter
+\@namedef{r@thm:separate_bound_US}{{1}{1}}
+\@namedef{r@thm:joint_bound_US}{{2}{1}}
+\makeatother
+\title{Simulation Section Draft}
+\author{}
+\begin{document}
+\maketitle
+\setcounter{section}{4}
+\input{simulation_section}
+\clearpage
+\appendices
+\input{supplementary_results}
+\begin{thebibliography}{9}
+\input{bibliography_entries}
+\end{thebibliography}
+\end{document}

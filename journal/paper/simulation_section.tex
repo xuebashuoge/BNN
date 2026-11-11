@@ -1,0 +1,282 @@
+% Drop-in replacement for the supplied draft's Simulation section.
+% Required packages: amsmath, amssymb, graphicx, booktabs, array, multirow.
+% Copy assets/ and tables/ alongside this fragment, or adjust graphicspath.
+\providecommand{\simroot}{.}
+\providecommand{\E}{\mathbb E}
+\providecommand{\TV}{\operatorname{TV}}
+\section{Numerical Results}
+\label{sec:simulation}
+
+We evaluate the framework through three complementary experiments. First,
+image-classification comparisons examine deployment accuracy and bounded
+risk under analog fading and additive noise. Second, controlled feature-erasure
+experiments isolate the effect of a finite training channel bank and the
+choice of training channel law. Finally, we evaluate the channel-shift,
+channel-complexity, and data-complexity contributions at frozen learned
+posteriors and compute a numerical population-risk bound. ERM and L2 are
+the main competing baselines. Supplementary results record additional
+internal ablations and sensitivity checks.
+
+\subsection{Experimental Setup}
+\label{sec:sim_setup}
+
+\subsubsection{Data and split networks}
+The image experiments use MNIST~\cite{mnist_dataset} and
+Fashion-MNIST~\cite{fashion_mnist}. Both contain ten classes of
+$28\times28$ grayscale images. For MNIST, we use 55,000 training and 5,000
+validation examples from the official training partition. For Fashion-MNIST,
+we use a subset of 10,000 training examples and a disjoint validation set of
+5,000 examples. Both use the official 10,000-example test partition. Pixel
+intensities are mapped to $[0,1]$, without augmentation or fitted
+normalization. The common image classifier has dimensions $784\to128\to10$.
+Its first affine layer and ReLU form the transmitter; its final affine
+layer forms the receiver, with transmission between the two.
+
+For controlled experiments, we sample an i.i.d. noisy two-moons population:
+the binary label is Bernoulli with parameter $1/2$, the arc angle is uniform
+on $[0,\pi]$, and independent Gaussian coordinate noise has standard
+deviation $0.3$. These experiments use $2\to d\to2$ split networks. The
+finite-channel study fixes $d=8$, $n=512$, a 512-example validation set, and
+an independent 10,000-example test set. The training-law study uses $d=16$,
+800 training examples, and 200 validation examples. Table~\ref{tab:sim_setup}
+summarizes the main settings.
+
+\begin{table*}[t]
+\centering
+\caption{Settings of the Main Experiments}
+\label{tab:sim_setup}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrrrl@{}}
+\toprule
+Experiment & $n$ & Validation & Test & $d$ & $m$ & Epochs & Seeds \\
+\midrule
+MNIST, analog & 55,000 & 5,000 & 10,000 & 128 & 100 & 100 & 3 \\
+Fashion-MNIST, analog & 10,000 & 5,000 & 10,000 & 128 & 100 & 25 & 2 \\
+Two moons, finite bank & 512 & 512 & 10,000 & 8 & $5$--$2000$ & 150 & 3 \\
+Two moons, training-law mismatch & 800 & 200 & 10,000 & 16 & 100 & 150 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsubsection{Channel laws and finite observations}
+For analog transmission, the recovered representation is
+$\widehat f=Hf+N$, where $H$ is diagonal with independent
+$H_{kk}\sim\mathcal N(\mu_m,\sigma_m^2)$ and
+$N_k\sim\mathcal N(0,\sigma_b^2)$. The image comparisons use
+$(\mu_m,\sigma_m,\sigma_b)=(0.5,1,1)$. These are fixed distortion-law
+parameters: feature power is not normalized, so the comparisons are not at
+a common physical SNR or transmit-power constraint. Neither CSI nor
+equalization is supplied to the receiver.
+
+For feature erasures, $\widehat f_k=B_kf_k$, where the coordinates
+$B_k\sim\mathrm{Bernoulli}(1-p)$ are independent. The receiver observes
+zero-filled features without a separate erasure-indicator input. This is
+an erasure abstraction for continuous features, rather than a complete
+bit-level digital transmission system. A channel-bank entry is one full
+gain/noise vector or one full erasure mask. The bank is sampled separately
+from the data and reused throughout training. Each training example in a
+minibatch receives an independent uniform bank index, giving an unbiased
+stochastic estimate of the empirical risk on $S\times U$.
+
+\subsubsection{Bounded loss and optimization}
+Let $p_w(y\mid x,c)$ be the confidence assigned to the correct class. With
+$\varepsilon_\ell=0.01$, we use the common smooth bounded logarithmic loss
+\begin{equation}
+\label{equ:sim_bounded_loss}
+\ell_{\varepsilon_\ell}(w,c,z)=
+\frac{-\log[\varepsilon_\ell+(1-\varepsilon_\ell)p_w(y\mid x,c)]}
+{\log(1/\varepsilon_\ell)}.
+\end{equation}
+It lies in $[0,1]$ uniformly over weights, channels, and data. Hence the
+standing sub-Gaussian assumptions hold with
+$\sigma^2=\sigma_{\rm tr}^2=1/4$ by Hoeffding's lemma. For perfect training,
+the sharper channel variance proxy is zero.
+
+The proposed learner uses one diagonal Gaussian posterior and the fixed,
+data-independent prior $Q_W=\mathcal N(0,I)$. Its weight means start from
+fan-in-scaled uniform initialization with zero biases; posterior standard
+deviations initialize at $0.003$ or $0.01$ according to the configuration.
+We optimize with Adam and a constant learning rate, drawing one weight
+sample per minibatch. Image batches contain 256 examples; toy batches
+contain 128. The T1 objective uses the separate penalties in
+Theorem~\ref{thm:separate_bound_US}; T2 uses the joint penalty in
+Theorem~\ref{thm:joint_bound_US}. Unless a joint confidence allocation is
+specified below, the nominal failure budget is $0.05$, split equally
+between T1's two terms. ERM and L2 use the same loss
+\eqref{equ:sim_bounded_loss}; L2 adds an explicit squared-weight penalty.
+
+\subsubsection{Selection and evaluation}
+The explored configurations are selected by mean validation accuracy over
+the listed initialization/channel-bank seeds, breaking ties by lower
+cross entropy. Checkpoint selection uses two fixed validation random-number
+streams across epochs; test evaluation uses fresh streams. These are
+exploratory numerical comparisons, and all listed seeds are retained in
+the main tables. The data split is fixed across these seeds. Thus the
+reported standard deviations measure initialization/channel-bank
+variation conditional on that split. Search ranges and selected settings
+are provided in the supplement.
+
+Test accuracy is the Gibbs-expected accuracy: a weight draw is held fixed
+for one complete test pass, with a fresh channel for each example, and
+the resulting accuracy is averaged over ten passes. ERM and L2 are
+deterministic, so only their channels vary. Bounded loss is evaluated
+using the same posterior convention; ordinary cross entropy is a separate
+metric. Perfect training means identity transmission in the training
+forward pass, followed by testing through the deployment channel. For
+Proposed Perfect, the objective retains only the data PAC-Bayes penalty.
+Checkpoint selection for these references uses deployment-channel
+validation; the perfect-training label refers to the training forward
+channel.
+
+\subsection{Deployment Performance Under Analog Fading}
+\label{sec:sim_performance}
+\input{\simroot/tables/accuracy_and_loss}
+
+Table~\ref{tab:sim_accuracy_risk} reports mean test accuracy and normalized
+bounded loss. On MNIST, T1 attains $76.63\%$, compared with $74.60\%$ for
+matched ERM and $70.12\%$ for matched L2, giving gains of $2.03$ and $6.52$
+percentage points. T2 reaches $76.43\%$ and slightly lowers the bounded
+loss relative to T1. On Fashion-MNIST, T1 and T2 attain $63.24\%$ and
+$63.21\%$, respectively, versus $61.57\%$ for ERM and $61.49\%$ for L2.
+Both proposed variants outperform these evaluated baselines in every
+reported seed of the two image comparisons. Their small differences in
+accuracy and bounded loss do not imply a universal ordering between T1
+and T2.
+
+The perfect-training references also expose the importance of training
+with channel observations. On MNIST, Proposed Perfect attains $57.94\%$
+under deployment, whereas matched T1 attains $76.63\%$; the corresponding
+Fashion-MNIST accuracies are $52.44\%$ and $63.24\%$. Removing the
+finite-channel penalty during perfect training therefore does not remove
+the deployment mismatch. These results concern the tested configurations;
+they do not assert optimality over all baseline hyperparameters.
+
+\subsection{Generalization From a Finite Channel Bank}
+\label{sec:sim_channel_bank}
+For a frozen posterior, we evaluate bounded risk on the reused bank,
+$\widehat R_{S,U}$, on the same data with fresh training-law channels,
+$\widehat R_{S,\mathrm{tr}}$, and on held-out data with fresh training-law
+channels, $\widehat R_{\mathrm{te},\mathrm{tr}}$. The signed channel gap is
+\begin{equation}
+\label{equ:sim_channel_gap}
+\widehat G_{\rm ch}=\widehat R_{S,\mathrm{tr}}-\widehat R_{S,U}.
+\end{equation}
+This evaluates unseen channels without simultaneously changing the data.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{\simroot/assets/fig_channel_bank.pdf}
+\caption{Effect of the reusable channel-bank size under matched feature
+erasures: $p_{\rm tr}=p_{\rm ch}=0.5$, $n=512$, and $d=8$. Curves show
+means over three initialization/channel-bank seeds; shading shows one
+sample standard deviation and points retain individual seeds. The data,
+number of optimizer updates, and deployment law are fixed across $m$.
+Perfect-trained references are reused across bank sizes. The right panel
+isolates the observed channel generalization gap in normalized-loss units.}
+\label{fig:sim_channel_bank}
+\end{figure*}
+
+Figure~\ref{fig:sim_channel_bank} varies
+$m\in\{5,20,100,500,2000\}$ while keeping the training budget at 600
+minibatch updates. For T1, the observed channel gap decreases from
+approximately $0.0103$ at $m=5$ to $0.0016$ at $m=20$, and is close to
+zero from $m=100$ onward. This illustrates the additional generalization
+effect induced by a finite channel bank even when the training and
+deployment distributions match. The proposed variants nearly overlap in
+this controlled example; the experiment supports the finite-channel
+mechanism rather than a strict ranking between their optimizers. Residual
+fluctuations at larger $m$ are comparable to the finite-evaluation scale.
+
+\subsection{Choice of the Training Channel Distribution}
+\label{sec:sim_mismatch}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{\simroot/assets/fig_training_mismatch.pdf}
+\caption{Fixed deployment feature-erasure probability $p_{\rm ch}=0.5$
+and varying training probability, with $n=800$, $d=16$, and $m=100$.
+Perfect training is the point $p_{\rm tr}=0$; its data-only PAC objective
+is common to the proposed perfect-channel specialization. Means and one
+sample standard deviation use all three listed seeds. The vertical line
+marks matched training.}
+\label{fig:sim_training_mismatch}
+\end{figure*}
+
+Figure~\ref{fig:sim_training_mismatch} fixes deployment and considers
+perfect training together with training erasure probabilities $0.1$,
+$0.3$, $0.5$, $0.7$, and $0.9$. T1 achieves mean accuracies
+of $83.13\%$, $84.42\%$, $84.90\%$, $84.84\%$, and $84.27\%$ at the
+five nonzero probabilities. The matched point also minimizes cross entropy
+in this experiment. Proposed Perfect achieves $81.87\%$, about three
+percentage points below matched T1. Thus a perfect training forward
+channel does not provide the best deployment accuracy in this setting.
+Mildly and severely mismatched training laws yield different results even
+though the deployment law remains unchanged. The theory guarantees that
+matching removes the shift penalty; it does not require matched training
+to maximize accuracy for every model and finite dataset.
+
+\subsection{Bound Decomposition and Numerical Risk Guarantees}
+\label{sec:sim_bounds}
+The held-out deployment estimate is denoted by
+$\widehat R_{\mathrm{te},\mathrm{ch}}$. We decompose its difference from
+the reused-bank empirical estimate into
+\begin{align}
+\widehat G_{\rm data}
+ &=\widehat R_{\mathrm{te},\mathrm{tr}}-\widehat R_{S,\mathrm{tr}},\nonumber\\
+\widehat G_{\rm shift}
+ &=\widehat R_{\mathrm{te},\mathrm{ch}}-\widehat R_{\mathrm{te},\mathrm{tr}},\nonumber\\
+\widehat R_{\mathrm{te},\mathrm{ch}}-\widehat R_{S,U}
+ &=\widehat G_{\rm ch}+\widehat G_{\rm data}+\widehat G_{\rm shift}.
+\label{equ:sim_signed_decomposition}
+\end{align}
+Every term uses the same frozen posterior and paired weight draws. These
+signed estimates are distinct from the nonnegative upper-bound terms.
+
+For the bounded loss, channel shift also satisfies
+$|\E_P g-\E_Q g|\leq\TV(P,Q)$ for $0\leq g\leq1$. For independent
+feature erasures, total variation is evaluated exactly by grouping masks
+by their number of erased coordinates. Perfect training therefore gives
+the finite shift penalty $1-(1-p_{\rm ch})^d$, despite infinite channel
+KL when $p_{\rm ch}>0$. This bounded-loss specialization does not require
+an estimated channel-Lipschitz constant.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{\simroot/assets/fig_bound_decomposition.pdf}
+\caption{Unweighted bound terms and signed observed gaps for perfect,
+matched, and mismatched training, at the same deployment law
+$p_{\rm ch}=0.5$, $n=800$, $d=16$, and $m=100$. Each column evaluates
+the frozen posterior learned under its stated training law. Stacked
+theoretical terms are those of T1; markers evaluate T2 at the same
+posterior. The per-run nominal failure budget is $0.05$. Shift uses the
+bounded-loss total-variation specialization. These illustrative gap
+estimates do not include the additional MC correction used in
+Table~\ref{tab:sim_certificate}.}
+\label{fig:sim_bound_decomposition}
+\end{figure*}
+
+Figure~\ref{fig:sim_bound_decomposition} separates the mechanisms. Perfect
+training has no channel complexity but retains deployment mismatch.
+Matched training removes the shift penalty while retaining finite-channel
+and data complexity. A stochastic mismatched training law generally
+retains all three terms. The signed measured gaps need not be positive.
+The displayed gap bounds exceed one and are vacuous on the normalized-loss
+scale; their purpose here is to distinguish the three contributions.
+
+\input{\simroot/tables/certificate_table}
+We additionally compute a corrected population-risk bound for a chosen
+T1-trained posterior with $n=512$, $m=2000$, and $d=8$, using the same
+posterior for both theorem evaluations. A fresh 100-draw empirical-risk
+estimate is upper-bounded by Hoeffding's inequality with failure budget
+$0.01$. To cover selection among the seven declared matched-erasure
+$(n,m)$ settings and three bank seeds, we assign $0.04/(2\times21)$ to each theorem/setup
+event. The union of these events and the single fresh MC event has failure
+probability at most $0.05$.
+
+The resulting normalized population-risk bounds are $0.8760$ for T1 and
+$0.7178$ for T2, including the MC correction. Both are below the trivial
+maximum of one. The joint formulation tightens the bound at the same
+posterior; this comparison does not change the predictor or establish a
+classification-accuracy ordering. These numerical bounds apply to the
+normalized Gibbs loss in \eqref{equ:sim_bounded_loss}, not directly to
+unbounded cross entropy or classification error.

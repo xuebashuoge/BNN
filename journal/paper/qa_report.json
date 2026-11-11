@@ -1,0 +1,22 @@
+{
+  "pages": 6,
+  "main_pages": 4,
+  "supplementary_pages": 2,
+  "visual_pages_reviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "unresolved_reference_markers": 0,
+  "undefined_references_or_citations": false,
+  "overfull_boxes": false,
+  "main_tables": 3,
+  "main_figures": 3,
+  "generated_table_csv_pairs": 7,
+  "figure_pdf_png_pairs": 5,
+  "pdf_sha256": "a23f0ed2f8a1165dcc8a3fd1e44410cdb2476b2f52853d5d2776c41b08c09203",
+  "training_or_checkpoint_inference_performed": false
+}

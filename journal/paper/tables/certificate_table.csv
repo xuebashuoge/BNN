@@ -1,0 +1,8 @@
+component,t1,t2
+Empirical bounded risk estimate,0.09094265934079886,0.09094265934079886
+Monte Carlo upper correction,0.15174271293851463,0.15174271293851463
+Channel shift,0.0,0.0
+Channel complexity,0.21293740324283644,
+Data complexity,0.4203686030533581,
+Joint complexity,,0.4750782274956068
+Population-risk upper bound,0.875991378575508,0.7177635997749203

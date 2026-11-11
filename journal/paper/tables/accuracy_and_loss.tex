@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering\footnotesize
+\caption{Deployment performance under matched Gaussian fading and additive noise. Accuracy is in percent; bounded risk uses the smooth loss in~\eqref{equ:sim_bounded_loss}. Entries are mean $\pm$ sample standard deviation over three initialization/channel-bank seeds for MNIST and two for FashionMNIST, with ten fresh Gibbs/channel draws per checkpoint. Perfect refers to training only; all models face the same deployment law. Bold identifies the best reported mean within each metric.}
+\label{tab:sim_accuracy_risk}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{MNIST ($n=55{,}000$, $m=100$)} & \multicolumn{2}{c}{FashionMNIST ($n=10{,}000$, $m=100$)}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Training method & Accuracy (\%) & Bounded risk & Accuracy (\%) & Bounded risk\\
+\midrule
+ERM (perfect) & $58.07\pm0.42$ & $0.2602\pm0.0030$ & $50.95\pm1.30$ & $0.3012\pm0.0134$\\
+ERM (matched) & $74.60\pm1.12$ & $0.1944\pm0.0098$ & $61.57\pm0.09$ & $0.2287\pm0.0001$\\
+$\ell_2$ (matched) & $70.12\pm1.21$ & $0.1950\pm0.0070$ & $61.49\pm0.42$ & $0.2295\pm0.0024$\\
+Proposed (perfect) & $57.94\pm0.60$ & $0.2601\pm0.0029$ & $52.44\pm0.29$ & $0.2881\pm0.0060$\\
+Proposed T1 (matched) & $\mathbf{76.63\pm0.44}$ & $0.1795\pm0.0034$ & $\mathbf{63.24\pm0.21}$ & $0.2188\pm0.0003$\\
+Proposed T2 (matched) & $76.43\pm0.76$ & $\mathbf{0.1792\pm0.0064}$ & $63.21\pm0.17$ & $\mathbf{0.2187\pm0.0004}$\\
+\bottomrule
+\end{tabular}
+\end{table*}

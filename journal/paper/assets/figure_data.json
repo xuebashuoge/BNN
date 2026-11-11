@@ -1,0 +1,1059 @@
+{
+  "figures": {
+    "channel_bank": {
+      "files": [
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_channel_bank.pdf",
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_channel_bank.png"
+      ],
+      "data": {
+        "n": 512,
+        "width": 8,
+        "deployment_erasure_probability": 0.5,
+        "m": [
+          5,
+          20,
+          100,
+          500,
+          2000
+        ],
+        "seed_summary": "mean and sample SD across all three saved seeds",
+        "methods": {
+          "Proposed T1": {
+            "accuracy": [
+              {
+                "mean": 0.7744366666666668,
+                "sd": 0.03575243255127309,
+                "n": 3,
+                "values": [
+                  0.81532,
+                  0.7589600000000001,
+                  0.7490300000000001
+                ]
+              },
+              {
+                "mean": 0.78045,
+                "sd": 0.03830783601301431,
+                "n": 3,
+                "values": [
+                  0.8230599999999999,
+                  0.7694300000000001,
+                  0.74886
+                ]
+              },
+              {
+                "mean": 0.79521,
+                "sd": 0.026039637094245394,
+                "n": 3,
+                "values": [
+                  0.8252700000000001,
+                  0.7807800000000001,
+                  0.7795799999999999
+                ]
+              },
+              {
+                "mean": 0.7925800000000001,
+                "sd": 0.028366044842381467,
+                "n": 3,
+                "values": [
+                  0.8251799999999999,
+                  0.77903,
+                  0.77353
+                ]
+              },
+              {
+                "mean": 0.7925733333333334,
+                "sd": 0.02784444169548625,
+                "n": 3,
+                "values": [
+                  0.82438,
+                  0.7807400000000001,
+                  0.7726
+                ]
+              }
+            ],
+            "channel_gap": [
+              {
+                "mean": 0.010313970533510053,
+                "sd": 0.003927232176949822,
+                "n": 3,
+                "values": [
+                  0.008918582275509845,
+                  0.007274978794157505,
+                  0.014748350530862805
+                ]
+              },
+              {
+                "mean": 0.0016054845104614829,
+                "sd": 0.0018666279755419183,
+                "n": 3,
+                "values": [
+                  0.00017436463385819834,
+                  0.0009252572432160294,
+                  0.003716831654310221
+                ]
+              },
+              {
+                "mean": 0.00010042842477559859,
+                "sd": 0.0012098281934828066,
+                "n": 3,
+                "values": [
+                  -0.0002983761951327324,
+                  -0.0008596520870924051,
+                  0.0014593135565519333
+                ]
+              },
+              {
+                "mean": -5.2378637095289636e-05,
+                "sd": 0.0014724863987232834,
+                "n": 3,
+                "values": [
+                  -0.0009160691872239085,
+                  -0.0008888965472578919,
+                  0.0016478298231959315
+                ]
+              },
+              {
+                "mean": 0.00032260883599519635,
+                "sd": 0.0001729383891953691,
+                "n": 3,
+                "values": [
+                  0.0001374317333102254,
+                  0.00035046897828579227,
+                  0.00047992579638957145
+                ]
+              }
+            ],
+            "task_ids": [
+              [
+                "mechanism_moons_outage_n512_m5_T1_Matched_b221a82ad4db_s9001",
+                "mechanism_moons_outage_n512_m5_T1_Matched_b221a82ad4db_s9002",
+                "mechanism_moons_outage_n512_m5_T1_Matched_b221a82ad4db_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m20_T1_Matched_bf686deaf635_s9001",
+                "mechanism_moons_outage_n512_m20_T1_Matched_bf686deaf635_s9002",
+                "mechanism_moons_outage_n512_m20_T1_Matched_bf686deaf635_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m100_T1_Matched_359ee7b0d79f_s9001",
+                "mechanism_moons_outage_n512_m100_T1_Matched_359ee7b0d79f_s9002",
+                "mechanism_moons_outage_n512_m100_T1_Matched_359ee7b0d79f_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m500_T1_Matched_93193a1f2399_s9001",
+                "mechanism_moons_outage_n512_m500_T1_Matched_93193a1f2399_s9002",
+                "mechanism_moons_outage_n512_m500_T1_Matched_93193a1f2399_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m2000_T1_Matched_1476c0cbfadc_s9001",
+                "mechanism_moons_outage_n512_m2000_T1_Matched_1476c0cbfadc_s9002",
+                "mechanism_moons_outage_n512_m2000_T1_Matched_1476c0cbfadc_s9003"
+              ]
+            ]
+          },
+          "Proposed T2": {
+            "accuracy": [
+              {
+                "mean": 0.7741766666666666,
+                "sd": 0.03637498774341144,
+                "n": 3,
+                "values": [
+                  0.8157099999999999,
+                  0.75883,
+                  0.7479899999999999
+                ]
+              },
+              {
+                "mean": 0.78092,
+                "sd": 0.03789854746556913,
+                "n": 3,
+                "values": [
+                  0.8227499999999999,
+                  0.77114,
+                  0.7488699999999999
+                ]
+              },
+              {
+                "mean": 0.7951033333333334,
+                "sd": 0.026052858448418453,
+                "n": 3,
+                "values": [
+                  0.8251799999999999,
+                  0.78061,
+                  0.7795200000000001
+                ]
+              },
+              {
+                "mean": 0.7925533333333332,
+                "sd": 0.02838480638181866,
+                "n": 3,
+                "values": [
+                  0.82517,
+                  0.77904,
+                  0.77345
+                ]
+              },
+              {
+                "mean": 0.7925633333333333,
+                "sd": 0.02785227878169637,
+                "n": 3,
+                "values": [
+                  0.82438,
+                  0.78072,
+                  0.77259
+                ]
+              }
+            ],
+            "channel_gap": [
+              {
+                "mean": 0.010517308240135512,
+                "sd": 0.0037629242244140845,
+                "n": 3,
+                "values": [
+                  0.009531927295029163,
+                  0.007345115765929222,
+                  0.01467488165944815
+                ]
+              },
+              {
+                "mean": 0.0018120517333348601,
+                "sd": 0.001785296333684995,
+                "n": 3,
+                "values": [
+                  0.0002298692241311101,
+                  0.0014586750417947825,
+                  0.003747610934078688
+                ]
+              },
+              {
+                "mean": 9.571307649214784e-05,
+                "sd": 0.0012117147831828639,
+                "n": 3,
+                "values": [
+                  -0.0003052126616239631,
+                  -0.0008647274225950241,
+                  0.0014570793136954308
+                ]
+              },
+              {
+                "mean": -5.226675420999064e-05,
+                "sd": 0.0014738669697525577,
+                "n": 3,
+                "values": [
+                  -0.0009171072393655832,
+                  -0.0008892251178622135,
+                  0.0016495320945978248
+                ]
+              },
+              {
+                "mean": 0.0003225345164537448,
+                "sd": 0.0001725544325666073,
+                "n": 3,
+                "values": [
+                  0.0001378053799271639,
+                  0.0003502354025840815,
+                  0.0004795627668499891
+                ]
+              }
+            ],
+            "task_ids": [
+              [
+                "mechanism_moons_outage_n512_m5_T2_Matched_70440976e8e1_s9001",
+                "mechanism_moons_outage_n512_m5_T2_Matched_70440976e8e1_s9002",
+                "mechanism_moons_outage_n512_m5_T2_Matched_70440976e8e1_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m20_T2_Matched_93343d2ebef4_s9001",
+                "mechanism_moons_outage_n512_m20_T2_Matched_93343d2ebef4_s9002",
+                "mechanism_moons_outage_n512_m20_T2_Matched_93343d2ebef4_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m100_T2_Matched_96d82682935d_s9001",
+                "mechanism_moons_outage_n512_m100_T2_Matched_96d82682935d_s9002",
+                "mechanism_moons_outage_n512_m100_T2_Matched_96d82682935d_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m500_T2_Matched_d14ea629d5f0_s9001",
+                "mechanism_moons_outage_n512_m500_T2_Matched_d14ea629d5f0_s9002",
+                "mechanism_moons_outage_n512_m500_T2_Matched_d14ea629d5f0_s9003"
+              ],
+              [
+                "mechanism_moons_outage_n512_m2000_T2_Matched_cfef767a9175_s9001",
+                "mechanism_moons_outage_n512_m2000_T2_Matched_cfef767a9175_s9002",
+                "mechanism_moons_outage_n512_m2000_T2_Matched_cfef767a9175_s9003"
+              ]
+            ]
+          },
+          "ERM, perfect training": {
+            "accuracy": {
+              "mean": 0.75818,
+              "sd": 0.03688517181741195,
+              "n": 3,
+              "values": [
+                0.79801,
+                0.75133,
+                0.7252
+              ]
+            },
+            "channel_gap": 0.0,
+            "task_ids": [
+              "mechanism_moons_outage_perfect_n512_ERM_Perfect_59e5f09f983e_s9001",
+              "mechanism_moons_outage_perfect_n512_ERM_Perfect_59e5f09f983e_s9002",
+              "mechanism_moons_outage_perfect_n512_ERM_Perfect_59e5f09f983e_s9003"
+            ]
+          },
+          "Proposed, perfect training": {
+            "accuracy": {
+              "mean": 0.7581199999999999,
+              "sd": 0.03740347176399543,
+              "n": 3,
+              "values": [
+                0.79776,
+                0.75315,
+                0.7234499999999999
+              ]
+            },
+            "channel_gap": 0.0,
+            "task_ids": [
+              "mechanism_moons_outage_perfect_n512_PAC_Perfect_886ce4f0737a_s9001",
+              "mechanism_moons_outage_perfect_n512_PAC_Perfect_886ce4f0737a_s9002",
+              "mechanism_moons_outage_perfect_n512_PAC_Perfect_886ce4f0737a_s9003"
+            ]
+          }
+        }
+      },
+      "caption_note": "Bands are sample SD across three initialization/channel-bank seeds, conditional on the fixed dataset. Perfect models are trained once per seed and reused across m. The observed gap uses normalized bounded loss."
+    },
+    "training_mismatch": {
+      "files": [
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_training_mismatch.pdf",
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_training_mismatch.png"
+      ],
+      "data": {
+        "n": 800,
+        "width": 16,
+        "m": 100,
+        "deployment_erasure_probability": 0.5,
+        "training_erasure_probability": [
+          0.0,
+          0.1,
+          0.3,
+          0.5,
+          0.7,
+          0.9
+        ],
+        "methods": {
+          "Proposed T1": {
+            "accuracy": [
+              {
+                "mean": 0.8186966666666665,
+                "sd": 0.010734357611582137,
+                "n": 3,
+                "values": [
+                  0.81297,
+                  0.81204,
+                  0.8310799999999998
+                ]
+              },
+              {
+                "mean": 0.83126,
+                "sd": 0.008578152481741009,
+                "n": 3,
+                "values": [
+                  0.8303900000000001,
+                  0.82315,
+                  0.84024
+                ]
+              },
+              {
+                "mean": 0.84418,
+                "sd": 0.0026034016209566615,
+                "n": 3,
+                "values": [
+                  0.84651,
+                  0.8413700000000001,
+                  0.84466
+                ]
+              },
+              {
+                "mean": 0.8490266666666667,
+                "sd": 0.0017518656721716443,
+                "n": 3,
+                "values": [
+                  0.85035,
+                  0.8496900000000001,
+                  0.84704
+                ]
+              },
+              {
+                "mean": 0.8483900000000001,
+                "sd": 0.001147911146387156,
+                "n": 3,
+                "values": [
+                  0.8492199999999999,
+                  0.8488700000000001,
+                  0.84708
+                ]
+              },
+              {
+                "mean": 0.8426566666666666,
+                "sd": 0.0035530597142932286,
+                "n": 3,
+                "values": [
+                  0.8421900000000001,
+                  0.8393599999999999,
+                  0.84642
+                ]
+              }
+            ],
+            "cross_entropy": [
+              {
+                "mean": 0.44622442375818894,
+                "sd": 0.023499390391658947,
+                "n": 3,
+                "values": [
+                  0.46739484683513643,
+                  0.4503389142179489,
+                  0.42093951022148135
+                ]
+              },
+              {
+                "mean": 0.415009300087293,
+                "sd": 0.015938517311212888,
+                "n": 3,
+                "values": [
+                  0.42248329911231997,
+                  0.4258373559474945,
+                  0.39670724520206446
+                ]
+              },
+              {
+                "mean": 0.37520017735481265,
+                "sd": 0.001981803666798167,
+                "n": 3,
+                "values": [
+                  0.3752668376207352,
+                  0.3771478098869324,
+                  0.3731858845567703
+                ]
+              },
+              {
+                "mean": 0.3601381990567843,
+                "sd": 0.003300891598765988,
+                "n": 3,
+                "values": [
+                  0.3597447788333893,
+                  0.35705164848089216,
+                  0.3636181698560715
+                ]
+              },
+              {
+                "mean": 0.3849214186501502,
+                "sd": 0.004297362332286158,
+                "n": 3,
+                "values": [
+                  0.385886448559761,
+                  0.38865421637296677,
+                  0.3802235910177231
+                ]
+              },
+              {
+                "mean": 0.5031434432800611,
+                "sd": 0.029058994370419266,
+                "n": 3,
+                "values": [
+                  0.5018042752933501,
+                  0.5328488693594933,
+                  0.4747771851873398
+                ]
+              }
+            ],
+            "task_ids": [
+              [
+                "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9001",
+                "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9002",
+                "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9001",
+                "mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9002",
+                "mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr30_T1_2a84e407d4b1_s9001",
+                "mismatch_moons_outage_ptr30_T1_2a84e407d4b1_s9002",
+                "mismatch_moons_outage_ptr30_T1_2a84e407d4b1_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr50_T1_ada9c506e639_s9001",
+                "mismatch_moons_outage_ptr50_T1_ada9c506e639_s9002",
+                "mismatch_moons_outage_ptr50_T1_ada9c506e639_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr70_T1_c2f24d78d44a_s9001",
+                "mismatch_moons_outage_ptr70_T1_c2f24d78d44a_s9002",
+                "mismatch_moons_outage_ptr70_T1_c2f24d78d44a_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr90_T1_102934a025ae_s9001",
+                "mismatch_moons_outage_ptr90_T1_102934a025ae_s9002",
+                "mismatch_moons_outage_ptr90_T1_102934a025ae_s9003"
+              ]
+            ]
+          },
+          "Proposed T2": {
+            "accuracy": [
+              {
+                "mean": 0.8186966666666665,
+                "sd": 0.010734357611582137,
+                "n": 3,
+                "values": [
+                  0.81297,
+                  0.81204,
+                  0.8310799999999998
+                ]
+              },
+              {
+                "mean": 0.8315,
+                "sd": 0.008833736468788208,
+                "n": 3,
+                "values": [
+                  0.83043,
+                  0.82325,
+                  0.8408199999999999
+                ]
+              },
+              {
+                "mean": 0.8441533333333333,
+                "sd": 0.0026536829752881195,
+                "n": 3,
+                "values": [
+                  0.8465300000000001,
+                  0.8412899999999999,
+                  0.8446400000000001
+                ]
+              },
+              {
+                "mean": 0.8488333333333333,
+                "sd": 0.0018827196640321246,
+                "n": 3,
+                "values": [
+                  0.85022,
+                  0.8495900000000001,
+                  0.84669
+                ]
+              },
+              {
+                "mean": 0.8484166666666667,
+                "sd": 0.0012329368732150341,
+                "n": 3,
+                "values": [
+                  0.84931,
+                  0.84893,
+                  0.84701
+                ]
+              },
+              {
+                "mean": 0.8422133333333334,
+                "sd": 0.003946103563432275,
+                "n": 3,
+                "values": [
+                  0.8419599999999999,
+                  0.8384,
+                  0.8462799999999999
+                ]
+              }
+            ],
+            "cross_entropy": [
+              {
+                "mean": 0.44622442375818894,
+                "sd": 0.023499390391658947,
+                "n": 3,
+                "values": [
+                  0.46739484683513643,
+                  0.4503389142179489,
+                  0.42093951022148135
+                ]
+              },
+              {
+                "mean": 0.40980148689587903,
+                "sd": 0.013314511446433887,
+                "n": 3,
+                "values": [
+                  0.4225407960128784,
+                  0.4108856043672561,
+                  0.3959780603075027
+                ]
+              },
+              {
+                "mean": 0.37542421766757966,
+                "sd": 0.002166034274996056,
+                "n": 3,
+                "values": [
+                  0.3754018323087692,
+                  0.37760135786533355,
+                  0.37326946282863616
+                ]
+              },
+              {
+                "mean": 0.36041267708857855,
+                "sd": 0.0034762159435358497,
+                "n": 3,
+                "values": [
+                  0.3598392790412903,
+                  0.35725881099939344,
+                  0.36413994122505183
+                ]
+              },
+              {
+                "mean": 0.38468285540978114,
+                "sd": 0.004180927820830504,
+                "n": 3,
+                "values": [
+                  0.3856388179564476,
+                  0.38830301507472986,
+                  0.3801067331981659
+                ]
+              },
+              {
+                "mean": 0.49928538197517397,
+                "sd": 0.02435715905420062,
+                "n": 3,
+                "values": [
+                  0.4982628361845016,
+                  0.5241377106666565,
+                  0.47545559907436374
+                ]
+              }
+            ],
+            "task_ids": [
+              [
+                "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9001",
+                "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9002",
+                "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr10_T2_23120cf9d31f_s9001",
+                "mismatch_moons_outage_ptr10_T2_23120cf9d31f_s9002",
+                "mismatch_moons_outage_ptr10_T2_23120cf9d31f_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr30_T2_1e342f6695d7_s9001",
+                "mismatch_moons_outage_ptr30_T2_1e342f6695d7_s9002",
+                "mismatch_moons_outage_ptr30_T2_1e342f6695d7_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr50_T2_6fc043e03aea_s9001",
+                "mismatch_moons_outage_ptr50_T2_6fc043e03aea_s9002",
+                "mismatch_moons_outage_ptr50_T2_6fc043e03aea_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr70_T2_560cbbf943b7_s9001",
+                "mismatch_moons_outage_ptr70_T2_560cbbf943b7_s9002",
+                "mismatch_moons_outage_ptr70_T2_560cbbf943b7_s9003"
+              ],
+              [
+                "mismatch_moons_outage_ptr90_T2_c4a7cd3bcd11_s9001",
+                "mismatch_moons_outage_ptr90_T2_c4a7cd3bcd11_s9002",
+                "mismatch_moons_outage_ptr90_T2_c4a7cd3bcd11_s9003"
+              ]
+            ]
+          }
+        }
+      },
+      "caption_note": "All six training laws are predeclared; no test-peak or seed selection. The p_tr=0 point is the shared perfect-channel special case of T1/T2. Bands show sample SD across three seeds. Feature erasure is not a bit-level digital BEC."
+    },
+    "bound_decomposition": {
+      "files": [
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_bound_decomposition.pdf",
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_bound_decomposition.png"
+      ],
+      "data": {
+        "n": 800,
+        "width": 16,
+        "m": 100,
+        "deployment_erasure_probability": 0.5,
+        "confidence_delta_per_run": 0.05,
+        "cases": {
+          "Perfect $p_{\\rm tr}=0$": {
+            "terms": {
+              "shift": {
+                "mean": 0.9999847412109378,
+                "sd": 0.0,
+                "n": 3,
+                "values": [
+                  0.9999847412109377,
+                  0.9999847412109377,
+                  0.9999847412109377
+                ]
+              },
+              "channel": {
+                "mean": 0.0,
+                "sd": 0.0,
+                "n": 3,
+                "values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "data": {
+                "mean": 0.46242637435595196,
+                "sd": 0.0010702368571900327,
+                "n": 3,
+                "values": [
+                  0.4636184573173523,
+                  0.4621124863624573,
+                  0.46154817938804626
+                ]
+              }
+            },
+            "observed": {
+              "channel_shift": {
+                "mean": 0.024001628504792833,
+                "sd": 0.0018782045750145792,
+                "n": 3,
+                "values": [
+                  0.023367535029649722,
+                  0.026114809013605106,
+                  0.022522541471123675
+                ]
+              },
+              "channel_generalization": {
+                "mean": 0.0,
+                "sd": 0.0,
+                "n": 3,
+                "values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "data_generalization": {
+                "mean": -0.0004958893400430625,
+                "sd": 0.00043673183331506733,
+                "n": 3,
+                "values": [
+                  -0.0009980803692340862,
+                  -0.00020494634270666612,
+                  -0.00028464130818843525
+                ]
+              },
+              "observed_gap": {
+                "mean": 0.02350573916474977,
+                "sd": 0.0020830708151823004,
+                "n": 3,
+                "values": [
+                  0.022369454660415636,
+                  0.02590986267089844,
+                  0.02223790016293524
+                ]
+              }
+            },
+            "joint": {
+              "mean": 1.4624111155668897,
+              "sd": 0.0010702368571900327,
+              "n": 3,
+              "values": [
+                1.46360319852829,
+                1.462097227573395,
+                1.461532920598984
+              ]
+            },
+            "task_ids": [
+              "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9001",
+              "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9002",
+              "mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9003"
+            ]
+          },
+          "Matched $p_{\\rm tr}=0.5$": {
+            "terms": {
+              "shift": {
+                "mean": 0.0,
+                "sd": 0.0,
+                "n": 3,
+                "values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "channel": {
+                "mean": 1.2922543287277222,
+                "sd": 0.010761467086271369,
+                "n": 3,
+                "values": [
+                  1.2846959829330444,
+                  1.2874916791915894,
+                  1.3045753240585327
+                ]
+              },
+              "data": {
+                "mean": 0.45558982094128925,
+                "sd": 0.003782153598345554,
+                "n": 3,
+                "values": [
+                  0.4529334306716919,
+                  0.45391595363616943,
+                  0.45992007851600647
+                ]
+              }
+            },
+            "observed": {
+              "channel_shift": {
+                "mean": 0.0,
+                "sd": 0.0,
+                "n": 3,
+                "values": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "channel_generalization": {
+                "mean": 0.00020142455895741837,
+                "sd": 0.0010609205173903041,
+                "n": 3,
+                "values": [
+                  -0.0009628325998783105,
+                  0.0004535057246685126,
+                  0.001113600552082053
+                ]
+              },
+              "data_generalization": {
+                "mean": -0.00035975825130939165,
+                "sd": 0.0005142072892770378,
+                "n": 3,
+                "values": [
+                  -3.566477537154944e-05,
+                  -9.095501482486723e-05,
+                  -0.0009526549637317583
+                ]
+              },
+              "observed_gap": {
+                "mean": -0.00015833369235197328,
+                "sd": 0.0007345525282772448,
+                "n": 3,
+                "values": [
+                  -0.00099849737524986,
+                  0.00036255070984364535,
+                  0.0001609455883502947
+                ]
+              }
+            },
+            "joint": {
+              "mean": 1.375452955563863,
+              "sd": 0.011363517833836035,
+              "n": 3,
+              "values": [
+                1.3674718141555786,
+                1.3704237937927246,
+                1.3884632587432861
+              ]
+            },
+            "task_ids": [
+              "mismatch_moons_outage_ptr50_T1_ada9c506e639_s9001",
+              "mismatch_moons_outage_ptr50_T1_ada9c506e639_s9002",
+              "mismatch_moons_outage_ptr50_T1_ada9c506e639_s9003"
+            ]
+          },
+          "Mismatched $p_{\\rm tr}=0.1$": {
+            "terms": {
+              "shift": {
+                "mean": 0.9445896296518083,
+                "sd": 0.0,
+                "n": 3,
+                "values": [
+                  0.9445896296518083,
+                  0.9445896296518083,
+                  0.9445896296518083
+                ]
+              },
+              "channel": {
+                "mean": 1.3051897287368774,
+                "sd": 0.004598823357874879,
+                "n": 3,
+                "values": [
+                  1.309574842453003,
+                  1.3055908679962158,
+                  1.3004034757614136
+                ]
+              },
+              "data": {
+                "mean": 0.46013598640759784,
+                "sd": 0.0016162993230898273,
+                "n": 3,
+                "values": [
+                  0.4616771638393402,
+                  0.4602769911289215,
+                  0.45845380425453186
+                ]
+              }
+            },
+            "observed": {
+              "channel_shift": {
+                "mean": 0.01848556734204292,
+                "sd": 0.0014808555764904616,
+                "n": 3,
+                "values": [
+                  0.018636057513356202,
+                  0.019885431665778164,
+                  0.016935212846994396
+                ]
+              },
+              "channel_generalization": {
+                "mean": 0.00020512449741363903,
+                "sd": 0.0006171772168832382,
+                "n": 3,
+                "values": [
+                  0.0005840170979499876,
+                  0.000538399934768688,
+                  -0.0005070435404777585
+                ]
+              },
+              "data_generalization": {
+                "mean": -0.0003831825729211184,
+                "sd": 0.0007113427985945013,
+                "n": 3,
+                "values": [
+                  -0.0009635876554250772,
+                  -0.0005963248759508072,
+                  0.0004103648126125292
+                ]
+              },
+              "observed_gap": {
+                "mean": 0.018307509266535443,
+                "sd": 0.0014951393801904368,
+                "n": 3,
+                "values": [
+                  0.018256486955881113,
+                  0.019827506724596045,
+                  0.016838534119129167
+                ]
+              }
+            },
+            "joint": {
+              "mean": 2.3337016650852593,
+              "sd": 0.0048563378373134335,
+              "n": 3,
+              "values": [
+                2.3383323102014297,
+                2.334125295163893,
+                2.3286473898904556
+              ]
+            },
+            "task_ids": [
+              "mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9001",
+              "mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9002",
+              "mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9003"
+            ]
+          }
+        }
+      },
+      "caption_note": "Identical width/data/bank/deployment setting; only the training law differs. Left bars are unweighted Theorem 1 terms, evaluated on each frozen posterior; square markers are the corresponding Theorem 2 gap bound. Right bars are signed finite-data/Monte Carlo estimates. These gap-bound diagnostics do not include the empirical-risk MC upper correction; values above 1 are vacuous. Perfect/mismatched shift uses the separate bounded-loss TV specialization."
+    },
+    "risk_certificate": {
+      "files": [
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_risk_certificate.pdf",
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_risk_certificate.png"
+      ],
+      "data": {
+        "n": 512,
+        "m": 2000,
+        "width": 8,
+        "empirical": 0.09094265934079886,
+        "mc_correction": 0.15174271293851463,
+        "shift": 0.0,
+        "channel_complexity": 0.21293740324283644,
+        "sample_complexity": 0.4203686030533581,
+        "joint_complexity": 0.4750782274956068,
+        "t1_population_bound": 0.875991378575508,
+        "t2_population_bound": 0.7177635997749203,
+        "confidence_allocation": {
+          "total_failure": 0.05,
+          "simultaneous_setups": 21,
+          "simultaneous_theorems": 2,
+          "posterior_failure_per_theorem_setup": 0.0009523809523809526,
+          "posterior_union_failure": 0.04000000000000001,
+          "monte_carlo_failure": 0.010000000000000002,
+          "empirical_mc_upper_radius": 0.15174271293851463
+        },
+        "source_checkpoint": "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m2000_T1_Matched_1476c0cbfadc_s9001"
+      },
+      "caption_note": "One declared selected posterior, not a seed average. Includes the fresh empirical MC upper correction. The 0.05 failure budget covers both theorem families over all 21 declared setups plus one fresh MC evaluation. These bounds concern normalized smooth loss, not accuracy or raw CE, and are conditional on the supplied theorem assumptions."
+    },
+    "bound_structure": {
+      "files": [
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_bound_structure.pdf",
+        "/Users/yangshuo/Git/BNN/journal/paper/assets/fig_bound_structure.png"
+      ],
+      "data": {
+        "type": "analytic_theorem_comparison_not_learning_results",
+        "kl": 2.0,
+        "delta": 0.05,
+        "sigma_sq": 0.25,
+        "sigma_channel_sq": 0.25,
+        "uniform_epsilon_channel": 0.02532056551910361,
+        "uniform_epsilon_data": 0.02532056551910361,
+        "adaptive_epsilon_channel": 0.0005002477453286394,
+        "adaptive_epsilon_data": 0.0495245267875353,
+        "adaptive_data_to_channel_budget_ratio": 99,
+        "joint_epsilon": 0.05,
+        "asymmetric_n": 10,
+        "asymmetric_uniform_crossing_m": 396.3085772360048,
+        "asymmetric_adaptive_crossing_m": 348.28920688457345,
+        "asymmetric_uniform_floor": 0.6158747569999248,
+        "asymmetric_adaptive_floor": 0.5848351993872669,
+        "m_range": [
+          10,
+          1000000000.0
+        ]
+      },
+      "caption_note": "Analytic theorem expressions at fixed KL, not simulation training outcomes. Both separate allocations satisfy (1-eps_channel)(1-eps_data)=1-delta, while the joint bound uses epsilon=delta. Dotted horizontal lines are the separate bounds' asymptotic data floors in the asymmetric panel."
+    }
+  },
+  "source_files_sha256": {
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/test_results.json": "68d8d0476c66d78d06bbc26becc64fb376381915a667d5717c0812d6c287738d",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m5_T1_Matched_b221a82ad4db_s9001/test_full/evaluation.json": "40231cbd195c8c0a619762e8048809e61829c30b303f081bf271bf256ac2dea5",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m5_T1_Matched_b221a82ad4db_s9002/test_full/evaluation.json": "472249c89a4690f67b242b2e9716c6a97ed5f64c069bd856097537ee525116a9",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m5_T1_Matched_b221a82ad4db_s9003/test_full/evaluation.json": "cbf392b504a50d3170ad90a5a9a87c44995d90632979f45c275ddaf296177715",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m20_T1_Matched_bf686deaf635_s9001/test_full/evaluation.json": "fb0c10b482de57942509745aa6c60121f07d825bace70aaf35b507651efeb667",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m20_T1_Matched_bf686deaf635_s9002/test_full/evaluation.json": "27f93a0bfb47fcd29cc296c9e199136f761b7cefe3cd38cd4f3e437a8e11d3f4",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m20_T1_Matched_bf686deaf635_s9003/test_full/evaluation.json": "e27defb35ec833d1997131e6ee998b35f66205881fd5703d90a26c459f28e40c",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m100_T1_Matched_359ee7b0d79f_s9001/test_full/evaluation.json": "1780d8cc0d1db14e353d803533d67f071c6e54e6f1c7b1bf1bbaa97b81d33d2f",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m100_T1_Matched_359ee7b0d79f_s9002/test_full/evaluation.json": "03c90fa98431594b63ad7cb11acc936ae588d58950c66f281d8c2df3479acd05",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m100_T1_Matched_359ee7b0d79f_s9003/test_full/evaluation.json": "f22c3bde7ef346c4b801bbbbea6741634fc55f37ab9e4c44ac6a0087fd927a47",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m500_T1_Matched_93193a1f2399_s9001/test_full/evaluation.json": "55bf511d0b85e6cd6a62bc93c0b995d5105b6c907aadaeca886c2c4d7468c8f7",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m500_T1_Matched_93193a1f2399_s9002/test_full/evaluation.json": "35aad24e21e07fc930e1051151ecf054e533e5ff98f93afb655a72a9b4d0cf66",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m500_T1_Matched_93193a1f2399_s9003/test_full/evaluation.json": "3d284a009afa5f546bea570ac96d07fb87796d24a88a9244db5d9ce705a3aaf5",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m2000_T1_Matched_1476c0cbfadc_s9001/test_full/evaluation.json": "eccf362c9e3fe67b6d952bff7274657f2c0a95340de7a14a4d12afdc5726a28a",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m2000_T1_Matched_1476c0cbfadc_s9002/test_full/evaluation.json": "5ed39fdaa73a805f29c324728038e9b7c523a9d819d61edcea87fe01534318d6",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m2000_T1_Matched_1476c0cbfadc_s9003/test_full/evaluation.json": "deb208881ffc75764417e9c0652999121681ac8adff4c31bc8347598471db8bb",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m5_T2_Matched_70440976e8e1_s9001/test_full/evaluation.json": "de4fd8e330e85b2d4362744a2d793498f52f8a4107bf00de45e85669ab4bbd92",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m5_T2_Matched_70440976e8e1_s9002/test_full/evaluation.json": "b77169b16431ed05f2a89a47a8df55134985a3a7177d3e395c89a84ee3d8608b",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m5_T2_Matched_70440976e8e1_s9003/test_full/evaluation.json": "38d28b45965f9b35c8a25ed676bc21954f88f8fc88be50b30ff80ef34be75525",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m20_T2_Matched_93343d2ebef4_s9001/test_full/evaluation.json": "dddc570f19a8865eaacaeee1633d5c9d162e00b8c86ed7f108ffc62676cbca57",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m20_T2_Matched_93343d2ebef4_s9002/test_full/evaluation.json": "7579898d41bd7562772551a4652dd992fad6c6eae6670f67c8dd72c5672fd40f",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m20_T2_Matched_93343d2ebef4_s9003/test_full/evaluation.json": "ce70559c947df02ffa10f33f3a6069da5f23c60af94ea3b5e9da3ed6540eab9b",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m100_T2_Matched_96d82682935d_s9001/test_full/evaluation.json": "da33bd16d79a0bf4e5271b3c0a0542cb09313024556d10459b06f340ccf5f651",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m100_T2_Matched_96d82682935d_s9002/test_full/evaluation.json": "9f9f750aa16b66e982299d644c3271a12739da759be6776b2fc48a9e3565959c",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m100_T2_Matched_96d82682935d_s9003/test_full/evaluation.json": "d0e2e8d9f37e2c21523091eac7f600e06991f9e06d0869cb08389e0c5d932514",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m500_T2_Matched_d14ea629d5f0_s9001/test_full/evaluation.json": "ae90002c79327b800247ef4edf0018e917fb1c6ac39249178e46ed00d05c21db",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m500_T2_Matched_d14ea629d5f0_s9002/test_full/evaluation.json": "6fa1bd263500d185db2488e38644073ffa4270856bd481eb4a6378e7dbe11178",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m500_T2_Matched_d14ea629d5f0_s9003/test_full/evaluation.json": "6304a9a80210502c86ad64dc00c2bf61066f544a6db682a401c499f42a6fa5e3",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m2000_T2_Matched_cfef767a9175_s9001/test_full/evaluation.json": "d21fb84c264b5c343c46fcf4f3de46c5b087735ac27e125a2252d22f039d1ff3",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m2000_T2_Matched_cfef767a9175_s9002/test_full/evaluation.json": "3b93d04553604a5b18a3fdf1e0f4de536203894ebfd28cc1a1cf022f8af9858f",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mechanism_moons_outage_n512_m2000_T2_Matched_cfef767a9175_s9003/test_full/evaluation.json": "2cd1159eb439536c81b1f76c749213e7e29ceb6bdb95f1fe69459d72382a63b8",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9001/test_full/evaluation.json": "8aa418599ba6dd514d639d751f6921ba418df77c68a3feb4fe82f99c0e0468f8",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9002/test_full/evaluation.json": "e4fe608237284b1ec02b90904f8e3b9fb9d3b040240165a178874006e3da62d0",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr00_PAC_e8ac07e8aab1_s9003/test_full/evaluation.json": "1698e34c62e9d688b8cc39ab9eb9e957489e52533aa55227c6a625010cd1b5b1",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr50_T1_ada9c506e639_s9001/test_full/evaluation.json": "ecdf3f8393a10e54962f40d0dcf42225bf4ac7744b7a9ae830f32de5f92043ff",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr50_T1_ada9c506e639_s9002/test_full/evaluation.json": "1040f889f6eea71d08aa8667bcd679d623a3625e4c822edda2c9c853ed0eb20f",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr50_T1_ada9c506e639_s9003/test_full/evaluation.json": "379dd67d3793e186450971a8a50df22df4f01134d2375e17b51d3f50b7e2cb81",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9001/test_full/evaluation.json": "db05b7b723f861226ed7091ab1140ddfc7e5d1f64dd46f7c1a4f5ac0bb17adc3",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9002/test_full/evaluation.json": "7bcaeaf49b562316ef5d17d460630485ad76a04c4c159af5c8b601ac0c222970",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/followup/mismatch_moons_outage_ptr10_T1_af90c845b7ca_s9003/test_full/evaluation.json": "afdc041353558f73db74ac0056bdaf973a5fdb6273e794eed964eb56543bf48f",
+    "/Users/yangshuo/Git/BNN/results/journal_campaign/certificate_m2000/certificate.json": "70505b9e331d3849cb970b752eb0ff93b430f74e0ae3b90125a7670760b6a1a5"
+  },
+  "policy": "Saved JSON only; no training, checkpoint inference, seed selection, or test-peak selection; source data unchanged"
+}
