@@ -10,4 +10,6 @@ The initial CPU allocation covers small two-epoch developer pilots and one-epoch
 
 The initial severe Gaussian gain/noise law matches the earlier image experiments, `(gain_mean,gain_std,noise_std)=(0.5,1,1)`. Moderate and near-ideal presets are available for sensitivity checks. Checkpoint selection uses validation accuracy with CE as tiebreak; main comparisons retain all seeds. Data-only PAC matched is not a main competitor; its perfect-training specialization is labelled Proposed Perfect.
 
+CPU job **34837394** completed all 18 resource probes successfully in 44 seconds. The single-worker peak RSS was approximately 1.21 GiB, and Slurm's batch peak was 4.60 GiB. Screen-size epochs took approximately 2.5--2.7 seconds; full-size epochs 7.7--8.8 seconds, including two validation draws. These pilots are resource/execution checks, not converged performance comparisons. The record is `cifar_cpu_resources.json`.
+
 Existing MNIST/FashionMNIST defaults remain MLPs. Architecture is part of the cache/resource signature, and the certificate sampler check is restricted to its unchanged IID-toy branch and shared splitting logic, so adding CIFAR does not silently invalidate or alter the previous toy experiment.
