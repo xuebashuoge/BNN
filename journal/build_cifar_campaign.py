@@ -103,15 +103,62 @@ def screen_entries(seeds, channel, architecture, width):
     return entries
 
 
+def validate_confirmation_summary(summary):
+    """Require a completed, paired seven-method screen before confirmation.
+
+    A campaign writes its first summary after training but before evaluation.
+    The final ``failed_evaluations`` field distinguishes that partial snapshot
+    from a completed screen (and remains present in analysis-only summaries).
+    """
+    total = summary.get("training_trials")
+    if (not isinstance(total, int) or isinstance(total, bool) or total < 1 or
+            summary.get("completed_trials") != total or
+            "failed_trials" not in summary or summary["failed_trials"]):
+        raise ValueError("Confirmation requires all screening training trials to complete without failures")
+    if "failed_evaluations" not in summary or summary["failed_evaluations"]:
+        raise ValueError("Confirmation requires the completed screen's failure-free final evaluation summary")
+    selected = [item for item in summary.get("selected_variants", [])
+                if item.get("rank", 1) == 1 and item.get("config", {}).get("dataset") == "cifar10"]
+    expected = {label: method for method, label in METHODS}
+    labels = [item.get("method_label") for item in selected]
+    if len(selected) != len(expected) or set(labels) != set(expected):
+        raise ValueError("Confirmation requires exactly one rank-1 CIFAR-10 variant for each of the seven method labels")
+    groups = [item.get("group") for item in selected]
+    if any(not isinstance(group, str) or not group for group in groups) or len(set(groups)) != 1:
+        raise ValueError("Confirmation requires one common screening comparison group")
+    shared_seeds = None
+    for item in selected:
+        label = item["method_label"]
+        config = item["config"]
+        seeds = item.get("seeds", [])
+        task_ids = item.get("task_ids", [])
+        if (item.get("complete_seed_set") is not True or len(seeds) < 2 or
+                any(not isinstance(seed, int) or isinstance(seed, bool) for seed in seeds) or
+                len(seeds) != len(set(seeds)) or len(task_ids) != len(seeds) or
+                len(task_ids) != len(set(task_ids))):
+            raise ValueError(f"Selected {label} needs a complete paired screening seed set and one task per seed")
+        if shared_seeds is None:
+            shared_seeds = set(seeds)
+        elif set(seeds) != shared_seeds:
+            raise ValueError("All selected CIFAR-10 methods must use the same paired screening seeds")
+        if config.get("method") != expected[label] or config.get("seed") not in shared_seeds:
+            raise ValueError(f"Selected {label} has inconsistent method or seed metadata")
+        if label.endswith("Perfect"):
+            if config.get("train_channel", {}).get("kind") != "perfect":
+                raise ValueError(f"Selected {label} does not have a perfect training channel")
+        elif config.get("train_channel") != config.get("deployment_channel"):
+            raise ValueError(f"Selected {label} does not have matched training/deployment channels")
+    if total < len(expected) * len(shared_seeds):
+        raise ValueError("Screening trial count is inconsistent with its selected paired method coverage")
+    return selected
+
+
 def confirm_entries(summary_path, seeds, epochs=100, width=None):
     summary = json.loads(Path(summary_path).read_text())
+    selected_variants = validate_confirmation_summary(summary)
     entries = []
-    for selected in summary["selected_variants"]:
-        if selected.get("rank", 1) != 1:
-            continue
+    for selected in selected_variants:
         config = dict(selected["config"])
-        if config.get("dataset") != "cifar10":
-            continue
         config.update(train_size=45000, val_size=5000, epochs=epochs,
                       eval_draws=10, val_draws=2, device="cpu")
         if width is not None:

@@ -2,7 +2,7 @@
 # Run from the committed TIT_gpt checkout on Spartan.
 set -euo pipefail
 if [[ $# -lt 3 || $# -gt 4 ]]; then
-    echo "Usage: bash journal/submit_cifar.sh pilot|cpu|gpu MANIFEST OUTPUT [--test-only]" >&2
+    echo "Usage: bash journal/submit_cifar.sh pilot|cpu|array|gpu MANIFEST OUTPUT [--test-only]" >&2
     exit 2
 fi
 profile="$1"
@@ -26,17 +26,29 @@ export JOURNAL_MANIFEST_SHA256="$(python -c 'import hashlib,sys; print(hashlib.s
 export CIFAR_DEVICE=cpu
 export CIFAR_WORKERS="${CIFAR_WORKERS:-4}"
 export CIFAR_THREADS="${CIFAR_THREADS:-2}"
-options=(--job-name="${CIFAR_JOB_NAME:-tit_cifar}" --mem="${CIFAR_MEM:-12G}" \
-    --cpus-per-task="${CIFAR_CPUS:-8}" --time="${CIFAR_TIME:-00:30:00}")
+options=(--job-name="${CIFAR_JOB_NAME:-tit_cifar}")
+task_script=journal/cifar_task.slurm
 [[ "${4:-}" != --test-only ]] || options+=(--test-only)
 case "$profile" in
     pilot)
-        options+=(--partition=interactive --time="${CIFAR_TIME:-00:15:00}")
+        options+=(--partition=interactive --time="${CIFAR_TIME:-00:15:00}" \
+            --cpus-per-task="${CIFAR_CPUS:-8}" --mem="${CIFAR_MEM:-12G}")
         export CIFAR_EVALUATE_TOP=0
         ;;
     cpu)
-        options+=(--partition="${CIFAR_CPU_PARTITION:-interactive}")
+        options+=(--partition="${CIFAR_CPU_PARTITION:-interactive}" \
+            --time="${CIFAR_TIME:-00:30:00}" --cpus-per-task="${CIFAR_CPUS:-8}" \
+            --mem="${CIFAR_MEM:-12G}")
         export CIFAR_EVALUATE_TOP="${CIFAR_EVALUATE_TOP:-1}"
+        ;;
+    array)
+        task_count=$(python -c 'import sys; from journal.run_task import read_manifest; print(len(read_manifest(sys.argv[1])))' "$manifest")
+        array_cap="${CIFAR_ARRAY_CONCURRENCY:-12}"
+        [[ "$array_cap" =~ ^[0-9]+$ ]] && (( array_cap > 0 )) || { echo "CIFAR_ARRAY_CONCURRENCY must be positive" >&2; exit 2; }
+        options+=(--partition="${CIFAR_CPU_PARTITION:-sapphire}" \
+            --time="${CIFAR_TIME:-00:25:00}" --cpus-per-task="${CIFAR_CPUS:-2}" \
+            --mem="${CIFAR_MEM:-3G}" --array="0-$((task_count-1))%${array_cap}")
+        task_script=journal/cifar_array.slurm
         ;;
     gpu)
         : "${JOURNAL_CPU_PILOT:?Set the completed matching CPU pilot root}"
@@ -47,8 +59,9 @@ case "$profile" in
         export CIFAR_THREADS="${CIFAR_GPU_THREADS:-4}"
         export CIFAR_EVALUATE_TOP="${CIFAR_EVALUATE_TOP:-1}"
         options+=(--partition=feit-gpu-a100 --qos=feit --gres=gpu:1 \
-            --cpus-per-task="${CIFAR_GPU_CPUS:-4}")
+            --cpus-per-task="${CIFAR_GPU_CPUS:-4}" \
+            --time="$CIFAR_TIME" --mem="$CIFAR_MEM")
         ;;
     *) echo "Unknown profile: $profile" >&2; exit 2 ;;
 esac
-sbatch "${options[@]}" journal/cifar_task.slurm
+sbatch "${options[@]}" "$task_script"

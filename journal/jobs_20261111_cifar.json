@@ -1,0 +1,57 @@
+{
+  "branch": "TIT_gpt",
+  "created_client_date": "2026-11-11",
+  "timezone": "Australia/Melbourne",
+  "state_snapshot_basis": "States reported by the parent after CPU screening; update from Slurm before final reporting",
+  "local_training": false,
+  "dataset": "CIFAR-10",
+  "architecture": "compact split CNN",
+  "jobs": [
+    {
+      "id": 34837394,
+      "name": "cifar_cpu_probes",
+      "state_at_snapshot": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed_seconds": 44,
+      "allocated_cpus": 8,
+      "requested_memory": "12G",
+      "slurm_peak_rss_kib": 4822068,
+      "code_revision": "006003e",
+      "trials": 18,
+      "scope": "Resource/execution pilot; not a scientific accuracy result"
+    },
+    {
+      "id": 34838257,
+      "name": "cifar_gpu_benchmark",
+      "state_at_snapshot": "CANCELLED",
+      "elapsed_seconds": 0,
+      "resources_allocated": false,
+      "requested_gpus": 1,
+      "requested_cpus": 4,
+      "requested_memory": "8G",
+      "walltime": "00:10:00",
+      "partition": "feit-gpu-a100",
+      "qos": "feit",
+      "code_revision": "c52a2fa",
+      "scope": "Three-epoch GPU timing/VRAM benchmark after successful CPU probes"
+    },
+    {
+      "id": 34838258,
+      "name": "cifar_cpu_screen",
+      "state_at_snapshot": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed_seconds": 893,
+      "slurm_peak_rss_kib": 5197308,
+      "allocated_cpus": 8,
+      "requested_memory": "8G",
+      "walltime": "00:20:00",
+      "trials": 34,
+      "completed_training_trials": 34,
+      "completed_evaluations": 14,
+      "training_or_evaluation_failures": 0,
+      "code_revision": "c52a2fa",
+      "scope": "Exploratory hyperparameter screen; 10,000 training/5,000 validation examples, 30 epochs"
+    }
+  ],
+  "next_stage": "Choose the seven validation-selected configurations only after a complete failure-free paired screen; benchmark backend before full 45,000/5,000 confirmation"
+}
