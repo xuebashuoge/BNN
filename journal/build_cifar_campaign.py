@@ -160,7 +160,8 @@ def confirm_entries(summary_path, seeds, epochs=100, width=None):
     for selected in selected_variants:
         config = dict(selected["config"])
         config.update(train_size=45000, val_size=5000, epochs=epochs,
-                      eval_draws=10, val_draws=2, device="cpu")
+                      eval_draws=10, val_draws=2, device="cpu",
+                      cpu_flush_denormal=True)
         if width is not None:
             config["width"] = width
         # The channel name is part of the explicit screening group.

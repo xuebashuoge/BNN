@@ -40,10 +40,11 @@ DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", training
                 eta_channel=.01, eta_data=.1, prior_std=1., posterior_std=.01,
                 m=100, seed=0, data_seed=20261110, channel_seed=1, eval_seed=2,
                 eval_draws=10, val_draws=1, clip_ce=10., delta=.05, l2=1e-4,
-                device="cpu", threads=1, download=False, moon_noise=.3, moons_sampler="iid",
+                device="cpu", threads=1, cpu_flush_denormal=False, download=False, moon_noise=.3, moons_sampler="iid",
                 train_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1},
                 deployment_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1})
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
+_CPU_FLUSH_DENORMAL_SUPPORTED: bool | None = None
 
 
 def digest(value) -> str:
@@ -60,6 +61,8 @@ def normalize_config(supplied: dict) -> dict:
     if unknown:
         raise ValueError(f"Unknown config fields: {sorted(unknown)}")
     config = {**DEFAULTS, **supplied}
+    if not isinstance(config["cpu_flush_denormal"], bool):
+        raise ValueError("cpu_flush_denormal must be a boolean")
     config["train_channel"] = validate_channel(config["train_channel"])
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist", "cifar10"}:
@@ -199,6 +202,7 @@ def make_models(config: dict, input_dim: int, classes: int):
 
 
 def check_device(config: dict):
+    global _CPU_FLUSH_DENORMAL_SUPPORTED
     device = torch.device(config["device"])
     if device.type not in {"cpu", "cuda"}:
         raise ValueError("Use device='cpu' or 'cuda' for reproducible posterior generators")
@@ -206,6 +210,14 @@ def check_device(config: dict):
         raise RuntimeError("CUDA was requested but is unavailable on this host")
     if device.type == "cuda" and device.index is not None and device.index >= torch.cuda.device_count():
         raise RuntimeError(f"Requested CUDA device {device.index} is unavailable")
+    if device.type == "cpu":
+        # Set before creating intra-op workers: floating-point control state can
+        # be thread-local. The opt-in avoids slow float32 subnormal arithmetic
+        # when deterministic L2 weights decay toward zero.
+        requested = config.get("cpu_flush_denormal", False)
+        _CPU_FLUSH_DENORMAL_SUPPORTED = bool(torch.set_flush_denormal(requested))
+        if requested and not _CPU_FLUSH_DENORMAL_SUPPORTED:
+            raise RuntimeError("cpu_flush_denormal=True is unsupported on this CPU")
     if device.type == "cuda":
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
@@ -300,6 +312,9 @@ def provenance(config: dict, split: dict) -> dict:
     return dict(config=config, config_hash=digest(config), split=split,
                 git_sha=git_sha, git_dirty=git_dirty, torch_version=torch.__version__,
                 python_version=platform.python_version(), platform=platform.platform(),
+                cpu_numerics=(dict(flush_denormal_requested=config.get("cpu_flush_denormal", False),
+                                   flush_denormal_supported=_CPU_FLUSH_DENORMAL_SUPPORTED)
+                              if torch.device(config["device"]).type == "cpu" else None),
                 cuda_policy=(dict(cudnn_deterministic=torch.backends.cudnn.deterministic,
                                   cudnn_benchmark=torch.backends.cudnn.benchmark,
                                   cudnn_allow_tf32=torch.backends.cudnn.allow_tf32,
@@ -495,8 +510,8 @@ def main():
         if args.mode == "validate":
             print(json.dumps(config, indent=2))
             return
-        torch.set_num_threads(config["threads"])
         check_device(config)
+        torch.set_num_threads(config["threads"])
         train(config, args.output)
 
 

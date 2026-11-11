@@ -2,7 +2,7 @@
   "branch": "TIT_gpt",
   "created_client_date": "2026-11-11",
   "timezone": "Australia/Melbourne",
-  "state_snapshot_basis": "States reported by the parent after CPU screening; update from Slurm before final reporting",
+  "state_snapshot_basis": "CPU screening states reported by the parent; cancelled full-array accounting and retained partial-history counts verified read-only from Slurm/files on 2026-11-11",
   "local_training": false,
   "dataset": "CIFAR-10",
   "architecture": "compact split CNN",
@@ -51,7 +51,36 @@
       "training_or_evaluation_failures": 0,
       "code_revision": "c52a2fa",
       "scope": "Exploratory hyperparameter screen; 10,000 training/5,000 validation examples, 30 epochs"
+    },
+    {
+      "id": 34839745,
+      "name": "cifar_confirm_cpu_array_initial",
+      "state_at_snapshot": "CANCELLED",
+      "code_revision": "afc400e",
+      "partition": "sapphire",
+      "array_tasks": 21,
+      "concurrency_limit": 12,
+      "requested_cpus_per_task": 2,
+      "requested_memory_per_task": "3G",
+      "walltime_per_task": "00:25:00",
+      "allocated_tasks": 12,
+      "never_allocated_tasks": 9,
+      "completed_training_trials": 0,
+      "completed_evaluations": 0,
+      "allocated_task_elapsed_seconds_range": [385, 442],
+      "longest_batch_step_elapsed_seconds": 443,
+      "slurm_peak_batch_rss_kib": 1556452,
+      "allocated_main_states": "12 CANCELLED by 18349",
+      "allocated_batch_states": "12 CANCELLED, exit code 0:15 (termination signal)",
+      "accounting_note": "sacct materialized 12 allocated main task records and one zero-allocation cancelled array-master record; the remaining nine of the 21 manifest entries never started. Completed extern steps are cleanup steps, not completed training trials.",
+      "retained_partial_histories": 12,
+      "retained_checkpoint_files": 12,
+      "retained_completed_epochs_range": [11, 43],
+      "output_root": "results/journal_cifar/confirm",
+      "cancellation_reason": "Cancelled before timeouts after progressively slower L2-Matched CPU epochs; Slurm denied attempts to extend the active tasks' walltime.",
+      "diagnosis_basis": "Parent-reported checkpoint inspection found 10,993 nonzero float32 subnormal posterior means in L2-Matched seed 5101 (absolute values below 1.175e-38, minimum about 6e-43), consistent with CPU denormal arithmetic slowdown. Observed L2 epoch times rose from about 10 seconds to 26-39 seconds within the first 12-15 epochs.",
+      "scope": "Cancelled partial full-data confirmation; resource diagnosis only, excluded from scientific confirmation summaries"
     }
   ],
-  "next_stage": "Choose the seven validation-selected configurations only after a complete failure-free paired screen; benchmark backend before full 45,000/5,000 confirmation"
+  "next_stage": "Benchmark a recorded CPU flush-denormal policy on L2 and T1, then size a fresh full-data confirmation request from measured steady epoch times; apply the same numerical policy to all methods and preserve the cancelled partial outputs"
 }
