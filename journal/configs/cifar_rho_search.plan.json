@@ -1,0 +1,28 @@
+{
+  "new_training_trials": 24,
+  "reused_training_trials": 8,
+  "aggregate_trials": 32,
+  "paired_search_seeds": [
+    7101,
+    7102
+  ],
+  "train_size": 45000,
+  "val_size": 5000,
+  "epochs": 100,
+  "architecture": "cnn_mid",
+  "methods": [
+    "ERM-Matched",
+    "L2-Matched",
+    "T1-Matched",
+    "T2-Matched"
+  ],
+  "selection": "mean validation accuracy; CE tiebreak",
+  "test_evaluation_during_search": false,
+  "prior_std": 1.0,
+  "loss_epsilon": 0.01,
+  "data_seed": 20261111,
+  "split_and_channel_bank_fixed_within_each_seed": true,
+  "fixed_scale_is_positive_gaussian_not_dirac": true,
+  "resource_pilots": 10,
+  "proposed_goal": "highest test accuracy checked only after frozen selection"
+}

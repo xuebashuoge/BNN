@@ -40,10 +40,11 @@ DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", training
                 eta_channel=.01, eta_data=.1, prior_std=1., posterior_std=.01,
                 m=100, seed=0, data_seed=20261110, channel_seed=1, eval_seed=2,
                 eval_draws=10, val_draws=1, clip_ce=10., delta=.05, l2=1e-4,
-                device="cpu", threads=1, cpu_flush_denormal=False, download=False, moon_noise=.3, moons_sampler="iid",
+                device="cpu", threads=1, cpu_flush_denormal=False, rho_lr_scale=1., download=False, moon_noise=.3, moons_sampler="iid",
                 train_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1},
                 deployment_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1})
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
+CNN_ARCHITECTURES = {"cnn", "cnn_mid", "cnn_mid_relu", "cnn_rxconv", "cnn_spatial3"}
 _CPU_FLUSH_DENORMAL_SUPPORTED: bool | None = None
 
 
@@ -63,15 +64,18 @@ def normalize_config(supplied: dict) -> dict:
     config = {**DEFAULTS, **supplied}
     if not isinstance(config["cpu_flush_denormal"], bool):
         raise ValueError("cpu_flush_denormal must be a boolean")
+    if (not isinstance(config["rho_lr_scale"], (int, float)) or isinstance(config["rho_lr_scale"], bool)
+            or not math.isfinite(config["rho_lr_scale"]) or config["rho_lr_scale"] < 0):
+        raise ValueError("rho_lr_scale must be a finite nonnegative number")
     config["train_channel"] = validate_channel(config["train_channel"])
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist", "cifar10"}:
         raise ValueError("Unknown method or dataset")
-    if config["architecture"] not in {"mlp", "cnn", "cnn_mid"}:
-        raise ValueError("architecture must be mlp, cnn or cnn_mid")
-    if config["architecture"] in {"cnn", "cnn_mid"} and config["dataset"] != "cifar10":
+    if config["architecture"] not in {"mlp", *CNN_ARCHITECTURES}:
+        raise ValueError("Unknown architecture")
+    if config["architecture"] in CNN_ARCHITECTURES and config["dataset"] != "cifar10":
         raise ValueError("The compact CNN requires CIFAR-10 RGB inputs")
-    if config["architecture"] == "cnn_mid" and (
+    if config["architecture"] in CNN_ARCHITECTURES - {"cnn"} and (
             not isinstance(config["width"], int) or isinstance(config["width"], bool)
             or config["width"] <= 0 or config["width"] % 16):
         raise ValueError("The middle CNN requires width to be a positive multiple of 16")
@@ -193,17 +197,35 @@ def make_loader(data, config: dict, shuffle: bool = False):
 def make_models(config: dict, input_dim: int, classes: int):
     torch.manual_seed(config["seed"])
     stochastic = config["method"] not in {"erm", "l2"}
-    if config.get("architecture", "mlp") in {"cnn", "cnn_mid"}:
+    if config.get("architecture", "mlp") in CNN_ARCHITECTURES:
         from .cifar_models import GaussianMiddleSplitCNN, GaussianSplitCNN
-        model_class = GaussianMiddleSplitCNN if config["architecture"] == "cnn_mid" else GaussianSplitCNN
+        if config["architecture"] in {"cnn", "cnn_mid"}:
+            model_class = GaussianMiddleSplitCNN if config["architecture"] == "cnn_mid" else GaussianSplitCNN
+        else:
+            from .cifar_search_models import CIFAR_SEARCH_MODELS
+            model_class = CIFAR_SEARCH_MODELS[config["architecture"]]
         model = model_class(config["width"], classes, stochastic,
                             config["posterior_std"]).to(config["device"])
     else:
         model = GaussianMLP(input_dim, config["width"], classes, stochastic,
                             config["posterior_std"]).to(config["device"])
+    if model.stochastic and config.get("rho_lr_scale", 1.) == 0:
+        # A fixed positive Gaussian scale remains stochastic and has finite KL.
+        model.rho.requires_grad_(False)
     bank = ChannelBank(config["width"], config["m"], config["train_channel"],
                        config["channel_seed"]).to(config["device"])
     return model, bank
+
+
+def make_optimizer(model, config):
+    """Separate mean/scale learning rates while preserving the legacy default."""
+    scale = config.get("rho_lr_scale", 1.)
+    if not model.stochastic or scale == 1.:
+        return torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=config["lr"])
+    groups = [dict(params=[model.mu], lr=config["lr"])]
+    if model.rho.requires_grad and scale > 0:
+        groups.append(dict(params=[model.rho], lr=config["lr"] * scale))
+    return torch.optim.Adam(groups, lr=config["lr"])
 
 
 def check_device(config: dict):
@@ -359,19 +381,23 @@ def train(config: dict, output: Path):
     train_data, val_data, _, input_dim, classes, split = load_data(config, include_test=False)
     train_loader, val_loader = make_loader(train_data, config, True), make_loader(val_data, config)
     model, bank = make_models(config, input_dim, classes)
-    optimizer = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=config["lr"])
+    optimizer = make_optimizer(model, config)
     channel_generator = torch.Generator().manual_seed(config["channel_seed"] + 109)
     metadata = provenance(config, split)
     metadata.update(input_dim=input_dim, classes=classes, parameter_count=model.d,
                     training_channel_bank_hash=digest({"gain": bank.gain.cpu().tolist(),
                                                        "noise": bank.noise.cpu().tolist()}))
-    if config["architecture"] == "cnn_mid":
+    if hasattr(model, "split_description"):
         metadata["network_split"] = dict(
             description=model.split_description,
             transmitted_shape=list(model.transmitted_shape),
             real_channel_uses=model.width,
             transmitter_parameter_count=model.transmitter_parameter_count,
             receiver_parameter_count=model.receiver_parameter_count)
+    metadata["posterior_scale_optimization"] = dict(
+        stochastic_predictor=model.stochastic, trainable=model.rho.requires_grad,
+        initial_standard_deviation=config["posterior_std"],
+        rho_learning_rate=(config["lr"] * config["rho_lr_scale"] if model.rho.requires_grad else 0.))
     save_json(output / "metadata.json", metadata)
     best, history = (float("inf"), float("inf")), []
     start = time.perf_counter()

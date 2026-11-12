@@ -2,7 +2,7 @@
 # Run from the committed TIT_gpt checkout on Spartan.
 set -euo pipefail
 if [[ $# -lt 3 || $# -gt 4 ]]; then
-    echo "Usage: bash journal/submit_cifar.sh pilot|cpu|array|gpu MANIFEST OUTPUT [--test-only]" >&2
+    echo "Usage: bash journal/submit_cifar.sh pilot|cpu|array|pool-array|gpu MANIFEST OUTPUT [--test-only]" >&2
     exit 2
 fi
 profile="$1"
@@ -50,6 +50,20 @@ case "$profile" in
             --time="${CIFAR_TIME:-00:25:00}" --cpus-per-task="${CIFAR_CPUS:-2}" \
             --mem="${CIFAR_MEM:-3G}" --array="0-$((task_count-1))%${array_cap}")
         task_script=journal/cifar_array.slurm
+        ;;
+    pool-array)
+        task_count=$(python -c 'import sys; from journal.run_task import read_manifest; print(len(read_manifest(sys.argv[1])))' "$manifest")
+        batch_count=$(((task_count + 3) / 4))
+        array_cap="${CIFAR_ARRAY_CONCURRENCY:-7}"
+        pool_cpus="${CIFAR_CPUS:-8}"
+        for count in "$array_cap" "$pool_cpus" "$CIFAR_WORKERS" "$CIFAR_THREADS"; do
+            [[ "$count" =~ ^[1-9][0-9]*$ ]] || { echo "CIFAR pool counts must be positive integers" >&2; exit 2; }
+        done
+        (( CIFAR_WORKERS * CIFAR_THREADS <= pool_cpus )) || { echo "CIFAR pool worker threads exceed requested CPUs" >&2; exit 2; }
+        options+=(--partition="${CIFAR_CPU_PARTITION:-sapphire}" \
+            --time="${CIFAR_TIME:-00:30:00}" --cpus-per-task="$pool_cpus" \
+            --mem="${CIFAR_MEM:-8G}" --array="0-$((batch_count-1))%${array_cap}")
+        task_script=journal/cifar_pool_array.slurm
         ;;
     gpu)
         : "${JOURNAL_CPU_PILOT:?Set the completed matching CPU pilot root}"
