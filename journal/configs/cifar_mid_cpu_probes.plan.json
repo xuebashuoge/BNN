@@ -1,0 +1,38 @@
+{
+  "stage": "cpu-probes",
+  "trials": 14,
+  "seeds": [
+    6100
+  ],
+  "dataset": "cifar10",
+  "architectures": [
+    "cnn_mid"
+  ],
+  "channel_presets": [
+    "severe"
+  ],
+  "groups": [
+    "cifar10_cnn_mid_analog_severe_confirm",
+    "cifar10_cnn_mid_analog_severe_screen"
+  ],
+  "data_sizes": [
+    [
+      10000,
+      5000
+    ],
+    [
+      45000,
+      5000
+    ]
+  ],
+  "checkpoint_selection": "validation accuracy; CE tiebreak; fixed validation CRN",
+  "hyperparameter_selection": "mean validation accuracy over every seed",
+  "pilot_is_scientific_result": false,
+  "gpu_requires_completed_matching_cpu_pilot": true,
+  "resource_note": "Measure CPU epoch time and peak RSS before choosing GPU/CPU walltime; no training was performed by this builder",
+  "main_baselines": [
+    "ERM",
+    "L2"
+  ],
+  "perfect_specialization": "PAC-Perfect is displayed as Proposed Perfect; no separate data-PAC matched competitor"
+}

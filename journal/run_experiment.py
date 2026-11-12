@@ -67,10 +67,14 @@ def normalize_config(supplied: dict) -> dict:
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist", "cifar10"}:
         raise ValueError("Unknown method or dataset")
-    if config["architecture"] not in {"mlp", "cnn"}:
-        raise ValueError("architecture must be mlp or cnn")
-    if config["architecture"] == "cnn" and config["dataset"] != "cifar10":
+    if config["architecture"] not in {"mlp", "cnn", "cnn_mid"}:
+        raise ValueError("architecture must be mlp, cnn or cnn_mid")
+    if config["architecture"] in {"cnn", "cnn_mid"} and config["dataset"] != "cifar10":
         raise ValueError("The compact CNN requires CIFAR-10 RGB inputs")
+    if config["architecture"] == "cnn_mid" and (
+            not isinstance(config["width"], int) or isinstance(config["width"], bool)
+            or config["width"] <= 0 or config["width"] % 16):
+        raise ValueError("The middle CNN requires width to be a positive multiple of 16")
     if config["training_loss"] not in {"raw_ce", "bounded_ce", "bounded_ce_smooth"}:
         raise ValueError("training_loss must be raw_ce, bounded_ce, or bounded_ce_smooth")
     if not 0 < config["loss_epsilon"] < 1:
@@ -189,10 +193,11 @@ def make_loader(data, config: dict, shuffle: bool = False):
 def make_models(config: dict, input_dim: int, classes: int):
     torch.manual_seed(config["seed"])
     stochastic = config["method"] not in {"erm", "l2"}
-    if config.get("architecture", "mlp") == "cnn":
-        from .cifar_models import GaussianSplitCNN
-        model = GaussianSplitCNN(config["width"], classes, stochastic,
-                                 config["posterior_std"]).to(config["device"])
+    if config.get("architecture", "mlp") in {"cnn", "cnn_mid"}:
+        from .cifar_models import GaussianMiddleSplitCNN, GaussianSplitCNN
+        model_class = GaussianMiddleSplitCNN if config["architecture"] == "cnn_mid" else GaussianSplitCNN
+        model = model_class(config["width"], classes, stochastic,
+                            config["posterior_std"]).to(config["device"])
     else:
         model = GaussianMLP(input_dim, config["width"], classes, stochastic,
                             config["posterior_std"]).to(config["device"])
@@ -352,6 +357,13 @@ def train(config: dict, output: Path):
     metadata.update(input_dim=input_dim, classes=classes, parameter_count=model.d,
                     training_channel_bank_hash=digest({"gain": bank.gain.cpu().tolist(),
                                                        "noise": bank.noise.cpu().tolist()}))
+    if config["architecture"] == "cnn_mid":
+        metadata["network_split"] = dict(
+            description=model.split_description,
+            transmitted_shape=list(model.transmitted_shape),
+            real_channel_uses=model.width,
+            transmitter_parameter_count=model.transmitter_parameter_count,
+            receiver_parameter_count=model.receiver_parameter_count)
     save_json(output / "metadata.json", metadata)
     best, history = (float("inf"), float("inf")), []
     start = time.perf_counter()

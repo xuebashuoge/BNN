@@ -27,6 +27,7 @@ export CIFAR_DEVICE=cpu
 export CIFAR_WORKERS="${CIFAR_WORKERS:-4}"
 export CIFAR_THREADS="${CIFAR_THREADS:-2}"
 options=(--job-name="${CIFAR_JOB_NAME:-tit_cifar}")
+[[ -z "${CIFAR_EXCLUDE_NODES:-}" ]] || options+=(--exclude="$CIFAR_EXCLUDE_NODES")
 task_script=journal/cifar_task.slurm
 [[ "${4:-}" != --test-only ]] || options+=(--test-only)
 case "$profile" in

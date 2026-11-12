@@ -27,10 +27,15 @@ METHODS = (
     ("l2", "L2-Perfect"),
     ("pac_bayes", "PAC-Perfect"),
 )
+MODEL_FAMILIES = {
+    "cnn": "compact split CNN",
+    "cnn_mid": "middle split CNN with receiver convolution",
+    "mlp": "split MLP",
+}
 
 
 def base_config(channel="severe", architecture="cnn", width=128):
-    return dict(dataset="cifar10", architecture=architecture, width=width,
+    config = dict(dataset="cifar10", architecture=architecture, width=width,
                 training_loss="bounded_ce_smooth", loss_epsilon=.01,
                 selection_metric="accuracy", validation_seed_policy="fixed",
                 train_size=10000, val_size=5000, epochs=30, batch_size=128,
@@ -40,13 +45,18 @@ def base_config(channel="severe", architecture="cnn", width=128):
                 train_channel=dict(CHANNELS[channel]),
                 deployment_channel=dict(CHANNELS[channel]),
                 device="cpu", threads=2, download=False)
+    if architecture == "cnn_mid":
+        config["cpu_flush_denormal"] = True
+    return config
 
 
-def make_cifar_entry(config, seed, channel, label, stage, role="comparison"):
+def make_cifar_entry(config, seed, channel, label, stage, role="comparison", group_suffix=None):
     group = f"cifar10_{config['architecture']}_analog_{channel}"
+    if group_suffix:
+        group += f"_{group_suffix}"
     entry = make_entry(config, seed, group, label, f"cifar_{stage}", role)
     entry["channel_preset"] = channel
-    entry["model_family"] = "compact split CNN" if config["architecture"] == "cnn" else "split MLP"
+    entry["model_family"] = MODEL_FAMILIES[config["architecture"]]
     return entry
 
 
@@ -69,6 +79,19 @@ def pilot_entries(seeds, channel, architecture, width, target=None):
                                      role="resource_pilot")
             entry["scientific_result"] = False
             entry["cpu_pilot_target"] = target or "development"
+            entries.append(entry)
+    return entries
+
+
+def cpu_probe_entries(seeds, channel, architecture, width):
+    """Cover every method/law at both screen and confirmation data sizes."""
+    entries = []
+    for target in ("screen", "confirm"):
+        for source in pilot_entries(seeds, channel, architecture, width, target):
+            entry = make_cifar_entry(source["config"], source["config"]["seed"],
+                                     channel, source["method_label"], f"cpu_probe_{target}",
+                                     role="resource_pilot", group_suffix=target)
+            entry.update(scientific_result=False, cpu_pilot_target=target)
             entries.append(entry)
     return entries
 
@@ -181,11 +204,11 @@ def confirm_entries(summary_path, seeds, epochs=100, width=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--stage", choices=["pilot", "shape-pilot", "screen", "confirm"], default="pilot")
+    parser.add_argument("--stage", choices=["pilot", "shape-pilot", "cpu-probes", "screen", "confirm"], default="pilot")
     parser.add_argument("--target-stage", choices=["screen", "confirm"], default="screen",
                         help="Which dataset sizes the one-epoch shape pilot represents")
     parser.add_argument("--channel", choices=CHANNELS, default="severe")
-    parser.add_argument("--architecture", choices=["cnn", "mlp"], default="cnn")
+    parser.add_argument("--architecture", choices=MODEL_FAMILIES, default="cnn")
     parser.add_argument("--width", type=int,
                         help="Feature width, default 128; confirmation preserves the selected width unless overridden")
     parser.add_argument("--seeds", help="Comma-separated distinct integer seeds")
@@ -194,20 +217,23 @@ def main():
     parser.add_argument("--output", type=Path,
                         help="Defaults to a stage-specific path under journal/configs")
     args = parser.parse_args()
-    defaults = [4101] if args.stage in {"pilot", "shape-pilot"} else ([4101, 4102] if args.stage == "screen" else [5101, 5102, 5103])
+    is_pilot = args.stage in {"pilot", "shape-pilot", "cpu-probes"}
+    if args.architecture == "cnn_mid":
+        defaults = [6100] if is_pilot else ([6101, 6102] if args.stage == "screen" else [7101, 7102, 7103])
+    else:
+        defaults = [4101] if is_pilot else ([4101, 4102] if args.stage == "screen" else [5101, 5102, 5103])
     seeds = [int(value) for value in args.seeds.split(",")] if args.seeds else defaults
     if not seeds or len(seeds) != len(set(seeds)) or (args.width is not None and args.width < 1):
         raise ValueError("Require distinct seeds and positive width")
     if args.epochs is not None and args.epochs < 1:
         raise ValueError("epochs must be positive")
     width = args.width or 128
-    if args.output is None:
-        suffix = f"shape_{args.target_stage}" if args.stage == "shape-pilot" else args.stage
-        args.output = Path("journal/configs") / f"cifar_{suffix}.jsonl"
     if args.stage == "pilot":
         entries = pilot_entries(seeds, args.channel, args.architecture, width)
     elif args.stage == "shape-pilot":
         entries = pilot_entries(seeds, args.channel, args.architecture, width, args.target_stage)
+    elif args.stage == "cpu-probes":
+        entries = cpu_probe_entries(seeds, args.channel, args.architecture, width)
     elif args.stage == "screen":
         entries = screen_entries(seeds, args.channel, args.architecture, width)
     else:
@@ -222,7 +248,12 @@ def main():
             config = {**entry["config"], "epochs": args.epochs}
             stage = entry["stage"].removeprefix("cifar_")
             entry.update(make_cifar_entry(config, config["seed"], args.channel,
-                                         old["method_label"], stage, old["role"]))
+                                         old["method_label"], stage, old["role"],
+                                         group_suffix=old["cpu_pilot_target"] if args.stage == "cpu-probes" else None))
+    if args.output is None:
+        suffix = f"shape_{args.target_stage}" if args.stage == "shape-pilot" else args.stage.replace("-", "_")
+        prefix = "cifar_mid" if {entry["config"]["architecture"] for entry in entries} == {"cnn_mid"} else "cifar"
+        args.output = Path("journal/configs") / f"{prefix}_{suffix}.jsonl"
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text("".join(json.dumps(entry, sort_keys=True) + "\n" for entry in entries))
     plan = dict(stage=args.stage, trials=len(entries), seeds=seeds,
@@ -232,7 +263,7 @@ def main():
                 data_sizes=sorted({(entry["config"]["train_size"], entry["config"]["val_size"]) for entry in entries}),
                 checkpoint_selection="validation accuracy; CE tiebreak; fixed validation CRN",
                 hyperparameter_selection="mean validation accuracy over every seed",
-                pilot_is_scientific_result=False if args.stage in {"pilot", "shape-pilot"} else None,
+                pilot_is_scientific_result=False if is_pilot else None,
                 gpu_requires_completed_matching_cpu_pilot=True,
                 resource_note="Measure CPU epoch time and peak RSS before choosing GPU/CPU walltime; no training was performed by this builder",
                 main_baselines=["ERM", "L2"],
