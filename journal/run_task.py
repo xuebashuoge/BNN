@@ -107,10 +107,24 @@ def read_manifest(path):
             raise ValueError("Evaluation requires an existing checkpoint directory")
         if item.get("split", "test") not in {"train", "validation", "test"}:
             raise ValueError("Evaluation split must be train, validation, or test")
+        if item.get("mode", "train") == "evaluate" and item.get("risk_scope", "full") not in {"deployment", "full"}:
+            raise ValueError("Evaluation risk_scope must be deployment or full")
         effective_config(item)
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate task_id in manifest")
     return entries
+
+
+def experiment_command(entry, config_path, output):
+    command = [sys.executable, "-m", "journal.run_experiment", "--mode", entry.get("mode", "train"),
+               "--config", str(config_path), "--output", str(output)]
+    if entry.get("mode") == "evaluate":
+        scope = entry.get("risk_scope", "full")
+        if scope not in {"deployment", "full"}:
+            raise ValueError("Evaluation risk_scope must be deployment or full")
+        command.extend(["--checkpoint", entry["checkpoint"], "--split", entry.get("split", "test"),
+                        "--risk-scope", scope])
+    return command
 
 
 def main():
@@ -164,10 +178,7 @@ def main():
         "cpu_affinity_before_training_child": (sorted(os.sched_getaffinity(0))
                                                 if hasattr(os, "sched_getaffinity") else None),
     }, indent=2) + "\n")
-    command = [sys.executable, "-m", "journal.run_experiment", "--mode", entry.get("mode", "train"),
-               "--config", str(config_path), "--output", str(output)]
-    if entry.get("mode") == "evaluate":
-        command.extend(["--checkpoint", entry["checkpoint"], "--split", entry.get("split", "test")])
+    command = experiment_command(entry, config_path, output)
     print(json.dumps({"index": index, "task_id": entry["task_id"], "command": command}), flush=True)
     subprocess.run(command, check=True)
 

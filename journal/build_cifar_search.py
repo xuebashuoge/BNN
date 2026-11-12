@@ -75,7 +75,7 @@ def resource_entries(original):
     return entries
 
 
-def confirmation_entries(summary, seeds):
+def confirmation_entries(summary, seeds, threads=1):
     if (summary.get("completed_trials") != summary.get("training_trials")
             or summary.get("failed_trials")):
         raise ValueError("Validation search must complete without failures")
@@ -88,10 +88,12 @@ def confirmation_entries(summary, seeds):
     for item in selected:
         config = dict(item["config"])
         config.update(epochs=100, train_size=45000, val_size=5000, eval_draws=10,
-                      val_draws=2, device="cpu", threads=2)
+                      val_draws=2, device="cpu", threads=threads)
         for seed in seeds:
             entry = make_entry(config, seed, item["group"], item["method_label"], "rho_confirm")
-            entry.update(selection_source="aggregate validation accuracy over seeds 7101 and 7102",
+            entry.update(selection_source=("aggregate fresh validation-only Monte Carlo accuracy over seeds 7101 and 7102"
+                                          if summary.get("validation_draws") else
+                                          "aggregate validation accuracy over seeds 7101 and 7102"),
                          selected_from_validation_variant=item["variant_id"])
             entries.append(entry)
     return entries
@@ -103,6 +105,8 @@ def main():
     parser.add_argument("--original", type=Path, default=CONFIGS / "cifar_mid_confirm.jsonl")
     parser.add_argument("--from-summary", type=Path)
     parser.add_argument("--seeds", default="8101,8102,8103")
+    parser.add_argument("--threads", type=int, default=1,
+                        help="Common execution thread count for every fresh confirmation method")
     args = parser.parse_args()
     if args.stage == "prepare":
         original = read_entries(args.original)
@@ -127,7 +131,9 @@ def main():
         seeds = [int(value) for value in args.seeds.split(",")]
         if len(seeds) != 3 or len(set(seeds)) != 3 or set(seeds) & set(SEEDS):
             raise ValueError("Require three distinct fresh confirmation seeds")
-        entries = confirmation_entries(json.loads(args.from_summary.read_text()), seeds)
+        if args.threads < 1:
+            raise ValueError("threads must be positive")
+        entries = confirmation_entries(json.loads(args.from_summary.read_text()), seeds, args.threads)
         path = CONFIGS / "cifar_rho_confirm.jsonl"
         write_entries(path, entries)
         print(json.dumps(dict(path=str(path), trials=len(entries), seeds=seeds)))
