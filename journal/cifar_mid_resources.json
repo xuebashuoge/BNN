@@ -1,0 +1,4831 @@
+{
+  "created_client_date": "2026-11-12",
+  "timezone": "Australia/Melbourne",
+  "dataset": "CIFAR-10",
+  "architecture": "cnn_mid",
+  "model_family": "middle split CNN with receiver convolution",
+  "scope": "CPU execution/resource evidence only; one-epoch pilot validation accuracies are not scientific performance results.",
+  "network_split": {
+    "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+    "transmitted_shape": [
+      8,
+      4,
+      4
+    ],
+    "real_channel_uses": 128,
+    "transmitter_parameter_count": 5352,
+    "receiver_parameter_count": 137162
+  },
+  "parameter_count": 142514,
+  "job_id": 34916583,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 47,
+  "partition": "interactive",
+  "node": "spartan-bm131",
+  "allocated_cpus": 8,
+  "requested_memory": "8G",
+  "walltime": "00:10:00",
+  "workers": 4,
+  "threads_per_worker": 2,
+  "slurm_peak_batch_rss_kib": 4820228,
+  "maximum_worker_peak_rss_mib": 1238.22265625,
+  "code_revision": "0930b9126a476f385483d5d75096bc37540273aa",
+  "manifest": "journal/configs/cifar_mid_cpu_probes.jsonl",
+  "manifest_sha256": "552cc03db84dc27b9d144faa0ed5ce233dc4c9b0898ee07355bf856b199d821a",
+  "output_root": "results/journal_cifar_mid/cpu_probes",
+  "completed_training_trials": 14,
+  "completed_evaluations": 0,
+  "failed_training_trials": [],
+  "failed_evaluations": [],
+  "cpu_flush_denormal_requested_and_supported_all": true,
+  "resource_collection_basis": "Read-only Slurm sacct, campaign snapshot, all 14 complete histories/metadata, and training_results.json on Spartan.",
+  "summary_by_training_size": {
+    "10000": {
+      "train_size": 10000,
+      "validation_size": 5000,
+      "methods": 7,
+      "epoch_seconds_range": [
+        2.175527071580291,
+        2.3446726240217686
+      ],
+      "maximum_worker_peak_rss_mib": 1238.22265625,
+      "method_times": [
+        {
+          "method_label": "ERM-Matched",
+          "epoch_seconds": 2.175527071580291,
+          "peak_rss_mib": 1236.9765625
+        },
+        {
+          "method_label": "ERM-Perfect",
+          "epoch_seconds": 2.178434669971466,
+          "peak_rss_mib": 1237.37890625
+        },
+        {
+          "method_label": "L2-Matched",
+          "epoch_seconds": 2.2408471684902906,
+          "peak_rss_mib": 1236.20703125
+        },
+        {
+          "method_label": "L2-Perfect",
+          "epoch_seconds": 2.191921630874276,
+          "peak_rss_mib": 1237.6640625
+        },
+        {
+          "method_label": "PAC-Perfect",
+          "epoch_seconds": 2.3446726240217686,
+          "peak_rss_mib": 1238.22265625
+        },
+        {
+          "method_label": "T1-Matched",
+          "epoch_seconds": 2.339370932430029,
+          "peak_rss_mib": 1235.69140625
+        },
+        {
+          "method_label": "T2-Matched",
+          "epoch_seconds": 2.317522494122386,
+          "peak_rss_mib": 1235.89453125
+        }
+      ]
+    },
+    "45000": {
+      "train_size": 45000,
+      "validation_size": 5000,
+      "methods": 7,
+      "epoch_seconds_range": [
+        6.611214505508542,
+        7.560682840645313
+      ],
+      "maximum_worker_peak_rss_mib": 1237.546875,
+      "method_times": [
+        {
+          "method_label": "ERM-Matched",
+          "epoch_seconds": 6.738418202847242,
+          "peak_rss_mib": 1237.3046875
+        },
+        {
+          "method_label": "ERM-Perfect",
+          "epoch_seconds": 6.611214505508542,
+          "peak_rss_mib": 1237.0859375
+        },
+        {
+          "method_label": "L2-Matched",
+          "epoch_seconds": 6.858751218765974,
+          "peak_rss_mib": 1236.97265625
+        },
+        {
+          "method_label": "L2-Perfect",
+          "epoch_seconds": 6.754651574417949,
+          "peak_rss_mib": 1237.50390625
+        },
+        {
+          "method_label": "PAC-Perfect",
+          "epoch_seconds": 7.156845951452851,
+          "peak_rss_mib": 1236.9609375
+        },
+        {
+          "method_label": "T1-Matched",
+          "epoch_seconds": 7.560682840645313,
+          "peak_rss_mib": 1237.49609375
+        },
+        {
+          "method_label": "T2-Matched",
+          "epoch_seconds": 7.533014612272382,
+          "peak_rss_mib": 1237.546875
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "task_id": "cifar_cpu_probe_screen_cifar10_cnn_mid_analog_severe_screen_ERM_Matched_fde6ccf4f8cc_s6100",
+      "method_label": "ERM-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_screen",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "erm",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 10000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        2.175527071580291
+      ],
+      "peak_rss_mib": 1236.9765625,
+      "training_seconds": 2.1910850927233696,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "39f68f243e905aa08ab9d41a751193befbbb9edd86e72207799746f9e8d956c9",
+      "metadata_sha256": "7b8cfe3c93909e5467e9624418631da4bff7e57ad723624ba72a4db9c3dcc7db"
+    },
+    {
+      "task_id": "cifar_cpu_probe_screen_cifar10_cnn_mid_analog_severe_screen_L2_Matched_a073b13b3eba_s6100",
+      "method_label": "L2-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_screen",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "l2",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 10000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        2.2408471684902906
+      ],
+      "peak_rss_mib": 1236.20703125,
+      "training_seconds": 2.253338374197483,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "f1182618410582b20c0c644fb37f9d593b9934e07ef8e4e5bf8b0dd32168a9a2",
+      "metadata_sha256": "8f3c9e27c4e0ddd519020e5ffad45e3a3a27f6f28c055b9122fa39ebaca3878d"
+    },
+    {
+      "task_id": "cifar_cpu_probe_screen_cifar10_cnn_mid_analog_severe_screen_T1_Matched_aa9fb48e72e7_s6100",
+      "method_label": "T1-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_screen",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "proposed",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 10000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        2.339370932430029
+      ],
+      "peak_rss_mib": 1235.69140625,
+      "training_seconds": 2.359067754819989,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "ceda0531370fc7a83e4358eaf761f32e849738eef97511fcf865a1158dd9887b",
+      "metadata_sha256": "fbabbc3f1edc8e56494eefa5308e6736cdf7e74a0833030a897847c63e22b3c7"
+    },
+    {
+      "task_id": "cifar_cpu_probe_screen_cifar10_cnn_mid_analog_severe_screen_T2_Matched_44188b3bfb3e_s6100",
+      "method_label": "T2-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_screen",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "joint",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 10000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        2.317522494122386
+      ],
+      "peak_rss_mib": 1235.89453125,
+      "training_seconds": 2.3421990517526865,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "714e16a229197674a8ed6df92a8e8f7f87584005a979addd7a9c86c7d798637b",
+      "metadata_sha256": "8aa6704cd55de5112c51aad2f9d71a5389305853da1df146bc338b5e4e700852"
+    },
+    {
+      "task_id": "cifar_cpu_probe_screen_cifar10_cnn_mid_analog_severe_screen_L2_Perfect_4432a972f8ef_s6100",
+      "method_label": "L2-Perfect",
+      "group": "cifar10_cnn_mid_analog_severe_screen",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "l2",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 10000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        2.191921630874276
+      ],
+      "peak_rss_mib": 1237.6640625,
+      "training_seconds": 2.2070640306919813,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "b71778a03173d381021a31571bb387c78a755c008fd01c1ba5b60c3c6279e1ef",
+      "metadata_sha256": "4a6051e52ecd1e731649d6a4c75ea21e9c5d5fccbe452188fe12517e4369ea3e"
+    },
+    {
+      "task_id": "cifar_cpu_probe_screen_cifar10_cnn_mid_analog_severe_screen_ERM_Perfect_324ca7617021_s6100",
+      "method_label": "ERM-Perfect",
+      "group": "cifar10_cnn_mid_analog_severe_screen",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "erm",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 10000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        2.178434669971466
+      ],
+      "peak_rss_mib": 1237.37890625,
+      "training_seconds": 2.194281781092286,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "eed0f823342a230e3a28246637027dcfccb543e2379f76c5726e9c7c2f9a2738",
+      "metadata_sha256": "cdd5f4d188a122d2c588ab0eaa14bc736c3c174f6b094efa1007351f94fc71ed"
+    },
+    {
+      "task_id": "cifar_cpu_probe_screen_cifar10_cnn_mid_analog_severe_screen_PAC_Perfect_dca4088852cb_s6100",
+      "method_label": "PAC-Perfect",
+      "group": "cifar10_cnn_mid_analog_severe_screen",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "pac_bayes",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 10000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        2.3446726240217686
+      ],
+      "peak_rss_mib": 1238.22265625,
+      "training_seconds": 2.3574963472783566,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "6b6ff723172267c1bf6688da763727effe077d05c77ef36a773092c90052da63",
+      "metadata_sha256": "336f791c3e6617815ab979a71417b96dec07eac3e08b8fd533aa705e3c3c6213"
+    },
+    {
+      "task_id": "cifar_cpu_probe_confirm_cifar10_cnn_mid_analog_severe_confirm_ERM_Matched_11cb89e458f4_s6100",
+      "method_label": "ERM-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_confirm",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "erm",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        6.738418202847242
+      ],
+      "peak_rss_mib": 1237.3046875,
+      "training_seconds": 6.752151105552912,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "e1fd9c2a421d85e913f422215c725e8564ded1201687e31798795589fc66e6da",
+      "metadata_sha256": "00c5a66592829eff9389e8ae145be2b0e967a183c6f6e72bc38e22285e7eabe0"
+    },
+    {
+      "task_id": "cifar_cpu_probe_confirm_cifar10_cnn_mid_analog_severe_confirm_L2_Matched_3a79167c82bf_s6100",
+      "method_label": "L2-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_confirm",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "l2",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        6.858751218765974
+      ],
+      "peak_rss_mib": 1236.97265625,
+      "training_seconds": 6.872295048087835,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "d9b113d38699a7b8bce1ca89b313c2efa73d6c8b2e4cd9d611b1c96d8a6cf357",
+      "metadata_sha256": "1cc5490c21e15aa3fe082cbfb7118c34a85d56eb9eaab5cd846bc12d51ce1a2a"
+    },
+    {
+      "task_id": "cifar_cpu_probe_confirm_cifar10_cnn_mid_analog_severe_confirm_T1_Matched_ca925d173d28_s6100",
+      "method_label": "T1-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_confirm",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "proposed",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        7.560682840645313
+      ],
+      "peak_rss_mib": 1237.49609375,
+      "training_seconds": 7.574187466874719,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "09dac8a5c907b73576fa53152d2108eec1e3cf0ac62d61a53f555ffe10ac1319",
+      "metadata_sha256": "81a0de3f6bdb04088f0e938840c0c3965c0298c834eeb24e1e1097bab0c0ad02"
+    },
+    {
+      "task_id": "cifar_cpu_probe_confirm_cifar10_cnn_mid_analog_severe_confirm_T2_Matched_654a6587d0ec_s6100",
+      "method_label": "T2-Matched",
+      "group": "cifar10_cnn_mid_analog_severe_confirm",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "joint",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        7.533014612272382
+      ],
+      "peak_rss_mib": 1237.546875,
+      "training_seconds": 7.546972198411822,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "cccc2dbcba46086550106a57b5b48dbc45cbb79e5fc303a391abe7d43f045428",
+      "metadata_sha256": "318074063e63ebe253315eac38170acd4881e3a3499667d2f0801c0d9cb07e2d"
+    },
+    {
+      "task_id": "cifar_cpu_probe_confirm_cifar10_cnn_mid_analog_severe_confirm_ERM_Perfect_99c15eccd6ab_s6100",
+      "method_label": "ERM-Perfect",
+      "group": "cifar10_cnn_mid_analog_severe_confirm",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "erm",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        6.611214505508542
+      ],
+      "peak_rss_mib": 1237.0859375,
+      "training_seconds": 6.624170243740082,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "e6fd2ee45891015b65fff0fd0b508d8af7758ce632f6e8b19c77569f87119be6",
+      "metadata_sha256": "3f84fbac20b3b6d08f447c127f01ca71271c690024498b7a5d7bc514653e490d"
+    },
+    {
+      "task_id": "cifar_cpu_probe_confirm_cifar10_cnn_mid_analog_severe_confirm_L2_Perfect_9213be2e0265_s6100",
+      "method_label": "L2-Perfect",
+      "group": "cifar10_cnn_mid_analog_severe_confirm",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "l2",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        6.754651574417949
+      ],
+      "peak_rss_mib": 1237.50390625,
+      "training_seconds": 6.768897643312812,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "3295df03004302237709c052ee9a2bb6fba116fd238b6896f4ef4784acdb85e2",
+      "metadata_sha256": "69053c0baae1b650dd4a192c11be26de6ec692cf03d7c9d72756093d5a445f64"
+    },
+    {
+      "task_id": "cifar_cpu_probe_confirm_cifar10_cnn_mid_analog_severe_confirm_PAC_Perfect_75142bc6b473_s6100",
+      "method_label": "PAC-Perfect",
+      "group": "cifar10_cnn_mid_analog_severe_confirm",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_mid",
+        "method": "pac_bayes",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 1,
+        "lr": 0.001,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 6100,
+        "data_seed": 20261111,
+        "channel_seed": 16100,
+        "eval_seed": 26100,
+        "eval_draws": 10,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "status": "complete",
+      "epoch_seconds": [
+        7.156845951452851
+      ],
+      "peak_rss_mib": 1236.9609375,
+      "training_seconds": 7.1708881594240665,
+      "network_split": {
+        "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+        "transmitted_shape": [
+          8,
+          4,
+          4
+        ],
+        "real_channel_uses": 128,
+        "transmitter_parameter_count": 5352,
+        "receiver_parameter_count": 137162
+      },
+      "cpu_numerics": {
+        "flush_denormal_requested": true,
+        "flush_denormal_supported": true
+      },
+      "git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+      "history_sha256": "f63c8d4a8db63375c0b9a6a1b3ffa9b8d9497c0abafce65165d5d8e595288126",
+      "metadata_sha256": "1d9ff6e83c7c749411bc7c8eb7143b55abd073a699b7ed2b8c8b4ff0c02d0347"
+    }
+  ],
+  "slurm_accounting": [
+    {
+      "JobID": "34916583",
+      "State": "COMPLETED",
+      "ElapsedRaw": "47",
+      "AllocCPUS": "8",
+      "ReqMem": "8G",
+      "MaxRSS": "",
+      "ExitCode": "0:0",
+      "NodeList": "spartan-bm131"
+    },
+    {
+      "JobID": "34916583.batch",
+      "State": "COMPLETED",
+      "ElapsedRaw": "47",
+      "AllocCPUS": "8",
+      "ReqMem": "",
+      "MaxRSS": "4820228K",
+      "ExitCode": "0:0",
+      "NodeList": "spartan-bm131"
+    },
+    {
+      "JobID": "34916583.extern",
+      "State": "COMPLETED",
+      "ElapsedRaw": "47",
+      "AllocCPUS": "8",
+      "ReqMem": "",
+      "MaxRSS": "",
+      "ExitCode": "0:0",
+      "NodeList": "spartan-bm131"
+    }
+  ],
+  "recommended_array_requests": {
+    "screen": {
+      "trials": 34,
+      "epochs_per_trial": 30,
+      "train_size": 10000,
+      "validation_size": 5000,
+      "cpus_per_array_task": 2,
+      "memory_per_array_task": "3G",
+      "walltime_per_array_task": "00:08:00",
+      "requested_seconds": 480,
+      "array_concurrency_initial": 12,
+      "maximum_measured_epoch_seconds": 2.3446726240217686,
+      "raw_interactive_epoch_projection_seconds": 70.34017872065306,
+      "sapphire_slowdown_allowance_factor": 1.5,
+      "historical_first_epoch_outlier_allowance_seconds": 256.97506838850677,
+      "extra_fixed_overhead_allowance_seconds": 30,
+      "projection_before_headroom_seconds": 392.48533646948636,
+      "headroom_factor": 1.2,
+      "projection_with_headroom_seconds": 470.9824037633836,
+      "submission_state": "RECOMMENDATION_ONLY_NOT_SUBMITTED_BY_THIS_AGENT"
+    },
+    "confirmation": {
+      "trials": 21,
+      "epochs_per_trial": 100,
+      "train_size": 45000,
+      "validation_size": 5000,
+      "cpus_per_array_task": 2,
+      "memory_per_array_task": "3G",
+      "walltime_per_array_task": "00:30:00",
+      "requested_seconds": 1800,
+      "array_concurrency_initial": 12,
+      "maximum_measured_epoch_seconds": 7.560682840645313,
+      "raw_interactive_epoch_projection_seconds": 756.0682840645313,
+      "sapphire_slowdown_allowance_factor": 1.5,
+      "historical_first_epoch_outlier_allowance_seconds": 256.97506838850677,
+      "extra_fixed_overhead_allowance_seconds": 30,
+      "projection_before_headroom_seconds": 1421.0774944853038,
+      "headroom_factor": 1.2,
+      "projection_with_headroom_seconds": 1705.2929933823646,
+      "submission_state": "RECOMMENDATION_ONLY_NOT_SUBMITTED_BY_THIS_AGENT"
+    }
+  },
+  "estimate_interpretation": {
+    "sapphire_factor_basis": "Earlier healthy CIFAR CPU cases were about 1.3-1.5 times slower on Sapphire than the interactive probe node; 1.5 is an allowance, not a middle-CNN Sapphire measurement.",
+    "historical_outlier_basis": "The earlier model had an approximately 257-second first epoch on a pathological node; this allowance makes short-job requests conservative. That node also stayed slow, so this allowance does not guarantee completion on a persistently pathological node.",
+    "pilot_limit": "One-epoch probes establish shapes, method execution and initial resources; they do not establish long-run timing, memory or accuracy. Monitor actual screen/full array histories and retain any resource-failure provenance.",
+    "memory_basis": "Largest probe worker RSS is about 1.21 GiB; the previous standalone array including launcher peaked around 1.49 GiB. A 3G task request leaves substantial headroom without repeating the pooled job memory request per task.",
+    "array_budget": "Initial concurrency 12 uses 24 CPUs. Raising the cap requires accounting for other active jobs and the available CPU budget; the per-task request remains two CPUs.",
+    "scientific_comparison": "The CPU flush-denormal policy is explicitly true for every method and training law in this architecture."
+  },
+  "screen_submission": {
+    "id": 34916640,
+    "name": "cifar_mid_screen",
+    "state_at_snapshot": "RUNNING",
+    "code_revision": "0930b9126a476f385483d5d75096bc37540273aa",
+    "manifest": "journal/configs/cifar_mid_screen.jsonl",
+    "manifest_sha256": "60a522bee9370256d9eb34db76f4556b151ad7d44b46e1d5a5b30493c2d15e65",
+    "output_root": "results/journal_cifar_mid/screen",
+    "partition": "sapphire",
+    "array_tasks": 34,
+    "concurrency_limit": 21,
+    "maximum_simultaneous_allocated_cpus": 42,
+    "requested_cpus_per_task": 2,
+    "requested_memory_per_task": "3G",
+    "walltime_per_task": "00:08:00",
+    "epochs_per_trial": 30,
+    "paired_seeds": [
+      6101,
+      6102
+    ],
+    "excluded_nodes": [
+      "spartan-bm060"
+    ],
+    "scheduler_exclusion_verified": true,
+    "exclusion_verification": "scontrol showed ExcNodeList=spartan-bm060 for all 34 job records and ArrayTaskThrottle=21.",
+    "cpu_flush_denormal": true,
+    "evaluation_in_array": false,
+    "first_timing_snapshot": {
+      "running_tasks": 20,
+      "pending_tasks": 14,
+      "maximum_running_elapsed_seconds": 50,
+      "histories_available": 9,
+      "completed_epoch_range": [
+        11,
+        12
+      ],
+      "last5_epoch_mean_seconds_range": [
+        2.8219230473041534,
+        3.096652463823557
+      ],
+      "walltime_risk_observed": false
+    }
+  },
+  "screen_array_outcome": {
+    "job_id": 34916640,
+    "completed_original_cases": 31,
+    "cancelled_original_cases": 3,
+    "completed_successful_elapsed_seconds_range": [
+      91,
+      268
+    ],
+    "completed_successful_peak_batch_rss_kib": 1460072,
+    "successful_exit_codes": "All31 completed main/batch steps exited0:0; cancelled cases are excluded from successful resource ranges.",
+    "cancelled_task_observations": [
+      {
+        "array_index": 7,
+        "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+        "state": "CANCELLED by 18349",
+        "elapsed_seconds": 448,
+        "allocated_cpus": 2,
+        "requested_memory": "3G",
+        "main_exit_code": "0:0",
+        "batch_exit_code": "0:15",
+        "node": "spartan-bm163",
+        "slurm_peak_batch_rss_kib": 1368824,
+        "completed_epochs": 5,
+        "epoch_seconds": [
+          86.4671183153987,
+          85.61170175299048,
+          85.46262089721859,
+          85.59389854036272,
+          86.82253444008529
+        ],
+        "cpu_flush_denormal": true,
+        "partial_output_directory": "results/journal_cifar_mid/partial_attempts/34916640_7/cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+        "partial_outputs_retained": true,
+        "partial_archive_required_before_completed_replacement": true,
+        "replacement_job_id": 34916885,
+        "partial_archive_verified": true
+      },
+      {
+        "array_index": 15,
+        "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+        "state": "CANCELLED by 18349",
+        "elapsed_seconds": 407,
+        "allocated_cpus": 2,
+        "requested_memory": "3G",
+        "main_exit_code": "0:0",
+        "batch_exit_code": "0:15",
+        "node": "spartan-bm167",
+        "slurm_peak_batch_rss_kib": 1449540,
+        "completed_epochs": 3,
+        "epoch_seconds": [
+          106.95495907031,
+          105.09681840986013,
+          105.90289607830346
+        ],
+        "cpu_flush_denormal": true,
+        "partial_output_directory": "results/journal_cifar_mid/partial_attempts/34916640_15/cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+        "partial_outputs_retained": true,
+        "partial_archive_required_before_completed_replacement": true,
+        "replacement_job_id": 34916885,
+        "partial_archive_verified": true
+      },
+      {
+        "array_index": 20,
+        "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+        "state": "CANCELLED by 18349",
+        "elapsed_seconds": 361,
+        "allocated_cpus": 2,
+        "requested_memory": "3G",
+        "main_exit_code": "0:0",
+        "batch_exit_code": "0:15",
+        "node": "spartan-bm164",
+        "slurm_peak_batch_rss_kib": 1349672,
+        "completed_epochs": 3,
+        "epoch_seconds": [
+          90.48894967697561,
+          94.59320243820548,
+          95.2426130194217
+        ],
+        "cpu_flush_denormal": true,
+        "partial_output_directory": "results/journal_cifar_mid/partial_attempts/34916640_20/cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+        "partial_outputs_retained": true,
+        "partial_archive_required_before_completed_replacement": true,
+        "replacement_job_id": 34916885,
+        "partial_archive_verified": true
+      }
+    ],
+    "replacement_plan": {
+      "manifest": "results/journal_cifar_mid/screen_retry.jsonl",
+      "manifest_sha256": "2f590efdeb27846f13ac2ca5db2831e073b3e5a0b009e122da60cb9cb9c2a75f",
+      "entries_identical_to_original": true,
+      "original_array_indices": [
+        7,
+        15,
+        20
+      ],
+      "task_ids": [
+        "cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+        "cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+        "cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101"
+      ],
+      "output_root": "results/journal_cifar_mid/screen_retry",
+      "partition": "interactive",
+      "allocated_cpus": 6,
+      "requested_memory": "6G",
+      "walltime": "00:08:00",
+      "workers": 3,
+      "threads_per_worker": 2,
+      "evaluate_top": 0,
+      "job_id": 34916885,
+      "reason": "Identical-case pooled CPU retry avoids the rare pathological two-CPU Sapphire allocations; no seed, hyperparameter or scientific selection changes.",
+      "staging_policy": "After all replacements complete30epochs, retain each cancelled partial separately and copy only complete identical-entry cases into the expected screen task directories; retain completed retry sources and hashes.",
+      "job_state": "COMPLETED",
+      "staging_status": "COMPLETED",
+      "staging_record": "results/journal_cifar_mid/screen_checkpoint_staging.json",
+      "staging_record_sha256": "6e4eaa2f73a3f8aebbc3fcf3d86f3bb9a47cc3a8f1dd20fffe63d4307821b6f3"
+    },
+    "scientific_selection_note": "Resource-driven cancellations only; each replacement preserves the full original manifest entry, seed and hyperparameters. The incomplete screen cannot supply final selections until all34 complete cases are assembled.",
+    "detailed_ledger": "journal/jobs_20261112_cifar_mid.json"
+  },
+  "screen_replacement_execution": {
+    "id": 34916885,
+    "name": "cifar_mid_screen_retry",
+    "state_at_snapshot": "COMPLETED",
+    "exit_code": "0:0",
+    "state_basis": "Read-only final sacct, campaign summary, all three histories and metadata confirm30epochs each without failures.",
+    "code_revision": "0930b9126a476f385483d5d75096bc37540273aa",
+    "partition": "interactive",
+    "node": "spartan-bm131",
+    "elapsed_seconds": 77,
+    "allocated_cpus": 6,
+    "requested_memory": "6G",
+    "walltime": "00:08:00",
+    "workers": 3,
+    "threads_per_worker": 2,
+    "slurm_peak_rss_kib": 3525652,
+    "trials": 3,
+    "epochs_per_trial": 30,
+    "completed_training_trials": 3,
+    "completed_evaluations": 0,
+    "training_or_evaluation_failures": 0,
+    "cpu_flush_denormal_requested_and_supported_all": true,
+    "manifest": "results/journal_cifar_mid/screen_retry.jsonl",
+    "manifest_sha256": "2f590efdeb27846f13ac2ca5db2831e073b3e5a0b009e122da60cb9cb9c2a75f",
+    "entries_identical_to_original": true,
+    "replaces_slurm_tasks": [
+      "34916640_7",
+      "34916640_15",
+      "34916640_20"
+    ],
+    "output_root": "results/journal_cifar_mid/screen_retry",
+    "cases": [
+      {
+        "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+        "original_array_index": 7,
+        "first_two_epoch_seconds": [
+          2.035204568877816,
+          2.0476404037326574
+        ],
+        "last_five_epoch_mean_seconds": 2.033399321511388,
+        "maximum_epoch_seconds": 2.07895496673882,
+        "training_seconds": 61.574213894084096,
+        "peak_rss_mib": 1236.9765625,
+        "completed_epochs": 30,
+        "status": "complete",
+        "cpu_flush_denormal_requested_and_supported": true
+      },
+      {
+        "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+        "original_array_index": 20,
+        "first_two_epoch_seconds": [
+          2.1908665541559458,
+          2.2605437245219946
+        ],
+        "last_five_epoch_mean_seconds": 2.1901309959590436,
+        "maximum_epoch_seconds": 2.3328857868909836,
+        "training_seconds": 67.77586744911969,
+        "peak_rss_mib": 1236.34375,
+        "completed_epochs": 30,
+        "status": "complete",
+        "cpu_flush_denormal_requested_and_supported": true
+      },
+      {
+        "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+        "original_array_index": 15,
+        "first_two_epoch_seconds": [
+          2.2562635969370604,
+          2.280127391219139
+        ],
+        "last_five_epoch_mean_seconds": 2.2784945465624333,
+        "maximum_epoch_seconds": 2.357158048078418,
+        "training_seconds": 69.57905250974,
+        "peak_rss_mib": 1236.97265625,
+        "completed_epochs": 30,
+        "status": "complete",
+        "cpu_flush_denormal_requested_and_supported": true
+      }
+    ],
+    "staging_status": "Completed replacements staged without checkpoint-byte changes; original partials archived and completed retry sources retained.",
+    "scope": "Resource-driven same-configuration replacement training only; no test evaluation or hyperparameter/seed changes.",
+    "staging_records": [
+      {
+        "path": "results/journal_cifar_mid/screen_checkpoint_staging.json",
+        "sha256": "6e4eaa2f73a3f8aebbc3fcf3d86f3bb9a47cc3a8f1dd20fffe63d4307821b6f3",
+        "record": [
+          {
+            "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "archived_partial": "results/journal_cifar_mid/partial_attempts/34916640_7/cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "completed_source": "results/journal_cifar_mid/screen_retry/cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "staged_checkpoint": "results/journal_cifar_mid/screen/cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "weights_sha256": "f18c9fd243ae6f489abeaffc1fc427740b1bd5395220361109f906cb6ab89e67",
+            "completed_job": "34916885",
+            "cancelled_job": "34916640_7",
+            "checkpoint_bytes_modified": false,
+            "completed_source_retained": true
+          },
+          {
+            "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "archived_partial": "results/journal_cifar_mid/partial_attempts/34916640_15/cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "completed_source": "results/journal_cifar_mid/screen_retry/cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "staged_checkpoint": "results/journal_cifar_mid/screen/cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "weights_sha256": "dfd44ca006776205c3d15ddd95b982d1c867ed0680bbcc22c309d02a63c4a8b3",
+            "completed_job": "34916885",
+            "cancelled_job": "34916640_15",
+            "checkpoint_bytes_modified": false,
+            "completed_source_retained": true
+          },
+          {
+            "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "archived_partial": "results/journal_cifar_mid/partial_attempts/34916640_20/cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "completed_source": "results/journal_cifar_mid/screen_retry/cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "staged_checkpoint": "results/journal_cifar_mid/screen/cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "weights_sha256": "3b19b392084262538fceb71ecb6e6598cb80754f2de65b42a6f5ab362e7bfdad",
+            "completed_job": "34916885",
+            "cancelled_job": "34916640_20",
+            "checkpoint_bytes_modified": false,
+            "completed_source_retained": true
+          }
+        ]
+      }
+    ]
+  },
+  "screen_successful_training_cases_available": 34,
+  "screen_evaluation_execution": {
+    "id": 34917035,
+    "name": "cifar_mid_screen_eval",
+    "state_at_snapshot": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 61,
+    "allocated_cpus": 8,
+    "requested_memory": "8G",
+    "walltime": "00:08:00",
+    "partition": "interactive",
+    "node": "spartan-bm130",
+    "workers": 4,
+    "threads_per_worker": 2,
+    "slurm_peak_rss_kib": 5130696,
+    "total_cpu": "04:37.526",
+    "code_revision": "0930b9126a476f385483d5d75096bc37540273aa",
+    "output_root": "results/journal_cifar_mid/screen",
+    "resumed_training_trials": 34,
+    "new_training_trials": 0,
+    "completed_evaluations": 14,
+    "training_or_evaluation_failures": 0,
+    "verification": {
+      "training_rows": 34,
+      "resumed_true": 34,
+      "training_statuses": [
+        "complete"
+      ],
+      "source_hashes": [
+        "0930b9126a476f385483d5d75096bc37540273aa"
+      ],
+      "test_rows": 14,
+      "training_trials": 34,
+      "completed_trials": 34,
+      "failed_trials": [],
+      "failed_evaluations": [],
+      "snapshot": {
+        "manifest": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_screen.jsonl",
+        "manifest_sha256": "60a522bee9370256d9eb34db76f4556b151ad7d44b46e1d5a5b30493c2d15e65",
+        "submitted_git_sha": "0930b9126a476f385483d5d75096bc37540273aa",
+        "workers": 4,
+        "threads": 2,
+        "slurm_job_id": "34917035",
+        "device": "cpu",
+        "cpu_pilot_matches": [],
+        "selection": "aggregate validation accuracy; CE tiebreak",
+        "all_outcomes_retained": true
+      }
+    },
+    "checkpoint_staging_records": [
+      {
+        "path": "results/journal_cifar_mid/screen_checkpoint_staging.json",
+        "sha256": "6e4eaa2f73a3f8aebbc3fcf3d86f3bb9a47cc3a8f1dd20fffe63d4307821b6f3",
+        "record": [
+          {
+            "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "archived_partial": "results/journal_cifar_mid/partial_attempts/34916640_7/cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "completed_source": "results/journal_cifar_mid/screen_retry/cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "staged_checkpoint": "results/journal_cifar_mid/screen/cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+            "weights_sha256": "f18c9fd243ae6f489abeaffc1fc427740b1bd5395220361109f906cb6ab89e67",
+            "completed_job": "34916885",
+            "cancelled_job": "34916640_7",
+            "checkpoint_bytes_modified": false,
+            "completed_source_retained": true
+          },
+          {
+            "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "archived_partial": "results/journal_cifar_mid/partial_attempts/34916640_15/cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "completed_source": "results/journal_cifar_mid/screen_retry/cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "staged_checkpoint": "results/journal_cifar_mid/screen/cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+            "weights_sha256": "dfd44ca006776205c3d15ddd95b982d1c867ed0680bbcc22c309d02a63c4a8b3",
+            "completed_job": "34916885",
+            "cancelled_job": "34916640_15",
+            "checkpoint_bytes_modified": false,
+            "completed_source_retained": true
+          },
+          {
+            "task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "archived_partial": "results/journal_cifar_mid/partial_attempts/34916640_20/cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "completed_source": "results/journal_cifar_mid/screen_retry/cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "staged_checkpoint": "results/journal_cifar_mid/screen/cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+            "weights_sha256": "3b19b392084262538fceb71ecb6e6598cb80754f2de65b42a6f5ab362e7bfdad",
+            "completed_job": "34916885",
+            "cancelled_job": "34916640_20",
+            "checkpoint_bytes_modified": false,
+            "completed_source_retained": true
+          }
+        ]
+      }
+    ],
+    "scope": "Aggregate all34 complete paired screen cases and infer the14 validation-selected cases; no new optimization."
+  },
+  "binding_probe_execution": {
+    "id": 34917133,
+    "name": "cifar_mid_bind",
+    "state_at_snapshot": "COMPLETED",
+    "exit_code": "0:0",
+    "code_revision": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+    "partition": "sapphire",
+    "array_tasks": 3,
+    "concurrency_limit": 3,
+    "requested_cpus_per_task": 2,
+    "requested_memory_per_task": "3G",
+    "walltime_per_task": "00:06:00",
+    "completed_training_trials": 3,
+    "epochs_per_trial": 2,
+    "completed_evaluations": 0,
+    "scientific_result": false,
+    "elapsed_seconds_range": [
+      17,
+      18
+    ],
+    "slurm_peak_run_step_rss_kib": 1397780,
+    "resource_accounting_step": ".0 is the srun training step; .batch is only the small launch shell.",
+    "manifest": "journal/configs/cifar_mid_binding_probes.jsonl",
+    "manifest_sha256": "4cd92a40da9111d3d5a727fc6ae64b35fd17204bc9ffb4f74e7f2ad91ab02ddc",
+    "output_root": "results/journal_cifar_mid/binding_probes",
+    "launch_policy": {
+      "srun_cpu_bind": "verbose,cores",
+      "OMP_PROC_BIND": "false",
+      "cleared_environment": [
+        "OMP_PLACES",
+        "GOMP_CPU_AFFINITY",
+        "KMP_AFFINITY"
+      ]
+    },
+    "affinity_masks_verified_before_import_child_and_training": true,
+    "cases": [
+      {
+        "task_id": "cifar_binding_probe_cifar10_cnn_mid_analog_severe_binding_probe_ERM_Matched_47ebd868fcf1_s6102",
+        "entry": {
+          "channel_preset": "severe",
+          "config": {
+            "architecture": "cnn_mid",
+            "batch_size": 128,
+            "channel_seed": 16102,
+            "cpu_flush_denormal": true,
+            "data_seed": 20261111,
+            "dataset": "cifar10",
+            "deployment_channel": {
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "kind": "gaussian",
+              "noise_std": 1.0
+            },
+            "device": "cpu",
+            "download": false,
+            "epochs": 2,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "eval_draws": 10,
+            "eval_seed": 26102,
+            "l2": 1e-06,
+            "loss_epsilon": 0.01,
+            "lr": 0.003,
+            "m": 100,
+            "method": "erm",
+            "posterior_std": 0.001,
+            "prior_std": 1.0,
+            "seed": 6102,
+            "selection_metric": "accuracy",
+            "threads": 2,
+            "train_channel": {
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "kind": "gaussian",
+              "noise_std": 1.0
+            },
+            "train_size": 10000,
+            "training_loss": "bounded_ce_smooth",
+            "val_draws": 2,
+            "val_size": 5000,
+            "validation_seed_policy": "fixed",
+            "width": 128
+          },
+          "configuration_change_from_screen": {
+            "epochs": {
+              "probe": 2,
+              "screen": 30
+            }
+          },
+          "cpu_pilot_target": "cpu_binding",
+          "family": "baseline",
+          "group": "cifar10_cnn_mid_analog_severe_binding_probe",
+          "method_label": "ERM-Matched",
+          "mode": "train",
+          "model_family": "middle split CNN with receiver convolution",
+          "resource_hypothesis": "CPU binding/placement hypothesis only; not a proven root cause of the earlier slow allocations.",
+          "role": "resource_pilot",
+          "scientific_result": false,
+          "source_screen_array_index": 7,
+          "source_screen_task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_ERM_Matched_547cd4f3e36c_s6102",
+          "stage": "cifar_binding_probe",
+          "task_id": "cifar_binding_probe_cifar10_cnn_mid_analog_severe_binding_probe_ERM_Matched_47ebd868fcf1_s6102",
+          "variant_id": "47ebd868fcf1"
+        },
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_mid",
+          "method": "erm",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 10000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 2,
+          "lr": 0.003,
+          "eta_channel": 0.0003,
+          "eta_data": 0.003,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 100,
+          "seed": 6102,
+          "data_seed": 20261111,
+          "channel_seed": 16102,
+          "eval_seed": 26102,
+          "eval_draws": 10,
+          "val_draws": 2,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          },
+          "deployment_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          }
+        },
+        "submission_snapshot": {
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "manifest_sha256": "4cd92a40da9111d3d5a727fc6ae64b35fd17204bc9ffb4f74e7f2ad91ab02ddc",
+          "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_binding_probes.jsonl",
+          "slurm_job_id": "34917134",
+          "array_task_id": "0",
+          "cpu_pilot_matches": [],
+          "cpu_affinity_before_numerical_import": [
+            27,
+            47
+          ],
+          "cpu_affinity_before_training_child": [
+            27,
+            47
+          ]
+        },
+        "cpu_threading": {
+          "allowed_cpus": [
+            27,
+            47
+          ],
+          "torch_intraop_threads": 2,
+          "environment": {
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "false",
+            "OMP_PLACES": null,
+            "GOMP_CPU_AFFINITY": null,
+            "KMP_AFFINITY": null,
+            "MKL_NUM_THREADS": "2",
+            "OPENBLAS_NUM_THREADS": "2",
+            "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000000800008000000",
+            "SLURM_CPU_BIND_LIST": "0x00000000000000000000800008000000"
+          }
+        },
+        "cpu_numerics": {
+          "flush_denormal_requested": true,
+          "flush_denormal_supported": true
+        },
+        "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+        "network_split": {
+          "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+          "transmitted_shape": [
+            8,
+            4,
+            4
+          ],
+          "real_channel_uses": 128,
+          "transmitter_parameter_count": 5352,
+          "receiver_parameter_count": 137162
+        },
+        "epoch_seconds": [
+          2.8118802811950445,
+          2.7977291960269213
+        ],
+        "training_seconds": 5.639002975076437,
+        "peak_rss_mib": 1236.61328125,
+        "history_sha256": "743f0756b3b294751d0efe1e14aacae0ab545db0c3b0d270838efbd089aebd0c",
+        "metadata_sha256": "99509bcf37e5b5d2b3becdf5e624551399111f4c77460a35ee1425137b5c2943",
+        "slurm_task_resources": {
+          "array_index": 0,
+          "node": "spartan-bm162",
+          "elapsed_seconds": 17,
+          "run_step_elapsed_seconds": 14,
+          "run_step_total_cpu": "00:17.771",
+          "run_step_peak_rss_kib": 1356860,
+          "batch_step_peak_rss_kib": 14712,
+          "main_and_run_step_exit_code": "0:0"
+        }
+      },
+      {
+        "task_id": "cifar_binding_probe_cifar10_cnn_mid_analog_severe_binding_probe_T1_Matched_f28f4f83dcce_s6101",
+        "entry": {
+          "channel_preset": "severe",
+          "config": {
+            "architecture": "cnn_mid",
+            "batch_size": 128,
+            "channel_seed": 16101,
+            "cpu_flush_denormal": true,
+            "data_seed": 20261111,
+            "dataset": "cifar10",
+            "deployment_channel": {
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "kind": "gaussian",
+              "noise_std": 1.0
+            },
+            "device": "cpu",
+            "download": false,
+            "epochs": 2,
+            "eta_channel": 0.0003,
+            "eta_data": 0.0029999999999999996,
+            "eval_draws": 10,
+            "eval_seed": 26101,
+            "l2": 1e-06,
+            "loss_epsilon": 0.01,
+            "lr": 0.003,
+            "m": 100,
+            "method": "proposed",
+            "posterior_std": 0.001,
+            "prior_std": 1.0,
+            "seed": 6101,
+            "selection_metric": "accuracy",
+            "threads": 2,
+            "train_channel": {
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "kind": "gaussian",
+              "noise_std": 1.0
+            },
+            "train_size": 10000,
+            "training_loss": "bounded_ce_smooth",
+            "val_draws": 2,
+            "val_size": 5000,
+            "validation_seed_policy": "fixed",
+            "width": 128
+          },
+          "configuration_change_from_screen": {
+            "epochs": {
+              "probe": 2,
+              "screen": 30
+            }
+          },
+          "cpu_pilot_target": "cpu_binding",
+          "family": "proposed",
+          "group": "cifar10_cnn_mid_analog_severe_binding_probe",
+          "method_label": "T1-Matched",
+          "mode": "train",
+          "model_family": "middle split CNN with receiver convolution",
+          "resource_hypothesis": "CPU binding/placement hypothesis only; not a proven root cause of the earlier slow allocations.",
+          "role": "resource_pilot",
+          "scientific_result": false,
+          "source_screen_array_index": 20,
+          "source_screen_task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T1_Matched_439d1f36b559_s6101",
+          "stage": "cifar_binding_probe",
+          "task_id": "cifar_binding_probe_cifar10_cnn_mid_analog_severe_binding_probe_T1_Matched_f28f4f83dcce_s6101",
+          "variant_id": "f28f4f83dcce"
+        },
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_mid",
+          "method": "proposed",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 10000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 2,
+          "lr": 0.003,
+          "eta_channel": 0.0003,
+          "eta_data": 0.0029999999999999996,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 100,
+          "seed": 6101,
+          "data_seed": 20261111,
+          "channel_seed": 16101,
+          "eval_seed": 26101,
+          "eval_draws": 10,
+          "val_draws": 2,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          },
+          "deployment_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          }
+        },
+        "submission_snapshot": {
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "manifest_sha256": "4cd92a40da9111d3d5a727fc6ae64b35fd17204bc9ffb4f74e7f2ad91ab02ddc",
+          "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_binding_probes.jsonl",
+          "slurm_job_id": "34917133",
+          "array_task_id": "2",
+          "cpu_pilot_matches": [],
+          "cpu_affinity_before_numerical_import": [
+            107,
+            111
+          ],
+          "cpu_affinity_before_training_child": [
+            107,
+            111
+          ]
+        },
+        "cpu_threading": {
+          "allowed_cpus": [
+            107,
+            111
+          ],
+          "torch_intraop_threads": 2,
+          "environment": {
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "false",
+            "OMP_PLACES": null,
+            "GOMP_CPU_AFFINITY": null,
+            "KMP_AFFINITY": null,
+            "MKL_NUM_THREADS": "2",
+            "OPENBLAS_NUM_THREADS": "2",
+            "SLURM_CPU_BIND": "verbose,mask_cpu:0x00008800000000000000000000000000",
+            "SLURM_CPU_BIND_LIST": "0x00008800000000000000000000000000"
+          }
+        },
+        "cpu_numerics": {
+          "flush_denormal_requested": true,
+          "flush_denormal_supported": true
+        },
+        "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+        "network_split": {
+          "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+          "transmitted_shape": [
+            8,
+            4,
+            4
+          ],
+          "real_channel_uses": 128,
+          "transmitter_parameter_count": 5352,
+          "receiver_parameter_count": 137162
+        },
+        "epoch_seconds": [
+          3.0931486673653126,
+          3.117787117138505
+        ],
+        "training_seconds": 6.244637545198202,
+        "peak_rss_mib": 1237.45703125,
+        "history_sha256": "a3b9ef2c660175ec2246f4682dc173786fb6eb3af76e12225465c3886c3161ca",
+        "metadata_sha256": "150a04f05e307072ba948ade4d61fd3e50c10adc72800b5bb1c538ab69ccfb6d",
+        "slurm_task_resources": {
+          "array_index": 2,
+          "node": "spartan-bm163",
+          "elapsed_seconds": 17,
+          "run_step_elapsed_seconds": 14,
+          "run_step_total_cpu": "00:18.176",
+          "run_step_peak_rss_kib": 1397780,
+          "batch_step_peak_rss_kib": 14780,
+          "main_and_run_step_exit_code": "0:0"
+        }
+      },
+      {
+        "task_id": "cifar_binding_probe_cifar10_cnn_mid_analog_severe_binding_probe_T2_Matched_61f3117558d2_s6102",
+        "entry": {
+          "channel_preset": "severe",
+          "config": {
+            "architecture": "cnn_mid",
+            "batch_size": 128,
+            "channel_seed": 16102,
+            "cpu_flush_denormal": true,
+            "data_seed": 20261111,
+            "dataset": "cifar10",
+            "deployment_channel": {
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "kind": "gaussian",
+              "noise_std": 1.0
+            },
+            "device": "cpu",
+            "download": false,
+            "epochs": 2,
+            "eta_channel": 0.0003,
+            "eta_data": 0.0006,
+            "eval_draws": 10,
+            "eval_seed": 26102,
+            "l2": 1e-06,
+            "loss_epsilon": 0.01,
+            "lr": 0.001,
+            "m": 100,
+            "method": "joint",
+            "posterior_std": 0.001,
+            "prior_std": 1.0,
+            "seed": 6102,
+            "selection_metric": "accuracy",
+            "threads": 2,
+            "train_channel": {
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "kind": "gaussian",
+              "noise_std": 1.0
+            },
+            "train_size": 10000,
+            "training_loss": "bounded_ce_smooth",
+            "val_draws": 2,
+            "val_size": 5000,
+            "validation_seed_policy": "fixed",
+            "width": 128
+          },
+          "configuration_change_from_screen": {
+            "epochs": {
+              "probe": 2,
+              "screen": 30
+            }
+          },
+          "cpu_pilot_target": "cpu_binding",
+          "family": "proposed",
+          "group": "cifar10_cnn_mid_analog_severe_binding_probe",
+          "method_label": "T2-Matched",
+          "mode": "train",
+          "model_family": "middle split CNN with receiver convolution",
+          "resource_hypothesis": "CPU binding/placement hypothesis only; not a proven root cause of the earlier slow allocations.",
+          "role": "resource_pilot",
+          "scientific_result": false,
+          "source_screen_array_index": 15,
+          "source_screen_task_id": "cifar_screen_cifar10_cnn_mid_analog_severe_T2_Matched_df9e76ff9c49_s6102",
+          "stage": "cifar_binding_probe",
+          "task_id": "cifar_binding_probe_cifar10_cnn_mid_analog_severe_binding_probe_T2_Matched_61f3117558d2_s6102",
+          "variant_id": "61f3117558d2"
+        },
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_mid",
+          "method": "joint",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 10000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 2,
+          "lr": 0.001,
+          "eta_channel": 0.0003,
+          "eta_data": 0.0006,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 100,
+          "seed": 6102,
+          "data_seed": 20261111,
+          "channel_seed": 16102,
+          "eval_seed": 26102,
+          "eval_draws": 10,
+          "val_draws": 2,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          },
+          "deployment_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          }
+        },
+        "submission_snapshot": {
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "manifest_sha256": "4cd92a40da9111d3d5a727fc6ae64b35fd17204bc9ffb4f74e7f2ad91ab02ddc",
+          "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_binding_probes.jsonl",
+          "slurm_job_id": "34917135",
+          "array_task_id": "1",
+          "cpu_pilot_matches": [],
+          "cpu_affinity_before_numerical_import": [
+            67,
+            83
+          ],
+          "cpu_affinity_before_training_child": [
+            67,
+            83
+          ]
+        },
+        "cpu_threading": {
+          "allowed_cpus": [
+            67,
+            83
+          ],
+          "torch_intraop_threads": 2,
+          "environment": {
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "false",
+            "OMP_PLACES": null,
+            "GOMP_CPU_AFFINITY": null,
+            "KMP_AFFINITY": null,
+            "MKL_NUM_THREADS": "2",
+            "OPENBLAS_NUM_THREADS": "2",
+            "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000800080000000000000000",
+            "SLURM_CPU_BIND_LIST": "0x00000000000800080000000000000000"
+          }
+        },
+        "cpu_numerics": {
+          "flush_denormal_requested": true,
+          "flush_denormal_supported": true
+        },
+        "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+        "network_split": {
+          "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+          "transmitted_shape": [
+            8,
+            4,
+            4
+          ],
+          "real_channel_uses": 128,
+          "transmitter_parameter_count": 5352,
+          "receiver_parameter_count": 137162
+        },
+        "epoch_seconds": [
+          3.044806469231844,
+          3.0513243954628706
+        ],
+        "training_seconds": 6.135568747296929,
+        "peak_rss_mib": 1236.8203125,
+        "history_sha256": "c2a0b0714e566a7beaefda73b3eee4730877fcfe1e67fd15d5533176ebebe551",
+        "metadata_sha256": "954db9094e7610d8bbb0a07c1abc392d6a9b0b91eeaebac1b812eb835650f629",
+        "slurm_task_resources": {
+          "array_index": 1,
+          "node": "spartan-bm162",
+          "elapsed_seconds": 18,
+          "run_step_elapsed_seconds": 15,
+          "run_step_total_cpu": "00:18.715",
+          "run_step_peak_rss_kib": 1356816,
+          "batch_step_peak_rss_kib": 14904,
+          "main_and_run_step_exit_code": "0:0"
+        }
+      }
+    ],
+    "slurm_accounting": [
+      {
+        "JobID": "34917133_0",
+        "State": "COMPLETED",
+        "ElapsedRaw": "17",
+        "TotalCPU": "00:18.325",
+        "AllocCPUS": "2",
+        "ReqMem": "3G",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_0.batch",
+        "State": "COMPLETED",
+        "ElapsedRaw": "17",
+        "TotalCPU": "00:00.553",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "14712K",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_0.extern",
+        "State": "COMPLETED",
+        "ElapsedRaw": "17",
+        "TotalCPU": "00:00:00",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_0.0",
+        "State": "COMPLETED",
+        "ElapsedRaw": "14",
+        "TotalCPU": "00:17.771",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "1356860K",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_1",
+        "State": "COMPLETED",
+        "ElapsedRaw": "18",
+        "TotalCPU": "00:19.272",
+        "AllocCPUS": "2",
+        "ReqMem": "3G",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_1.batch",
+        "State": "COMPLETED",
+        "ElapsedRaw": "18",
+        "TotalCPU": "00:00.556",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "14904K",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_1.extern",
+        "State": "COMPLETED",
+        "ElapsedRaw": "18",
+        "TotalCPU": "00:00:00",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_1.0",
+        "State": "COMPLETED",
+        "ElapsedRaw": "15",
+        "TotalCPU": "00:18.715",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "1356816K",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm162"
+      },
+      {
+        "JobID": "34917133_2",
+        "State": "COMPLETED",
+        "ElapsedRaw": "17",
+        "TotalCPU": "00:18.646",
+        "AllocCPUS": "2",
+        "ReqMem": "3G",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm163"
+      },
+      {
+        "JobID": "34917133_2.batch",
+        "State": "COMPLETED",
+        "ElapsedRaw": "17",
+        "TotalCPU": "00:00.469",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "14780K",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm163"
+      },
+      {
+        "JobID": "34917133_2.extern",
+        "State": "COMPLETED",
+        "ElapsedRaw": "17",
+        "TotalCPU": "00:00:00",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm163"
+      },
+      {
+        "JobID": "34917133_2.0",
+        "State": "COMPLETED",
+        "ElapsedRaw": "14",
+        "TotalCPU": "00:18.176",
+        "AllocCPUS": "2",
+        "ReqMem": "",
+        "MaxRSS": "1397780K",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm163"
+      }
+    ],
+    "interpretation": "All three short probes had stable ordinary epoch timing under explicit core binding. This supports monitored use of the launch policy, but it is not a controlled proof that inherited affinity caused the earlier slow allocations."
+  },
+  "full_confirmation_submission": {
+    "id": 34917254,
+    "name": "cifar_mid_confirm",
+    "state_at_snapshot": "FINISHED_WITH_THREE_CANCELLED_TASKS",
+    "state_basis": "Read-only final Slurm/.0step accounting:18 successful full100-epoch cases and3 deliberately cancelled outliers replaced by pooled job34923037.",
+    "code_revision": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+    "partition": "sapphire",
+    "array_tasks": 21,
+    "concurrency_limit": 21,
+    "maximum_simultaneous_allocated_cpus": 42,
+    "requested_cpus_per_task": 2,
+    "requested_memory_per_task": "3G",
+    "walltime_per_task": "00:30:00",
+    "epochs_per_trial": 100,
+    "train_size": 45000,
+    "validation_size": 5000,
+    "paired_seeds": [
+      7101,
+      7102,
+      7103
+    ],
+    "manifest": "journal/configs/cifar_mid_confirm.jsonl",
+    "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+    "output_root": "results/journal_cifar_mid/confirm",
+    "excluded_nodes": [
+      "spartan-bm060"
+    ],
+    "scheduler_exclusion_verified": true,
+    "cpu_flush_denormal_requested_and_supported_all": true,
+    "launch_policy": {
+      "srun_cpu_bind": "verbose,cores",
+      "OMP_PROC_BIND": "false"
+    },
+    "evaluation_in_array": false,
+    "affinity_masks_consistent_all": true,
+    "early_progress_snapshot": {
+      "cases": [
+        {
+          "index": 0,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_ERM_Matched_f21a286fe20b_s7101",
+          "method_label": "ERM-Matched",
+          "seed": 7101,
+          "state": "RUNNING",
+          "node": "spartan-bm179",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 35,
+          "first_epoch_seconds": 8.802210157737136,
+          "last_five_epoch_mean_excluding_first": 8.525989845395088,
+          "maximum_epoch_seconds": 8.960568521171808,
+          "projected_wall_seconds": 873.1893399506807,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917255",
+            "array_task_id": "0",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              28,
+              68
+            ],
+            "cpu_affinity_before_training_child": [
+              28,
+              68
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              28,
+              68
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000100000000010000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000100000000010000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 1,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_ERM_Matched_f21a286fe20b_s7102",
+          "method_label": "ERM-Matched",
+          "seed": 7102,
+          "state": "RUNNING",
+          "node": "spartan-bm179",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 34,
+          "first_epoch_seconds": 9.135644357651472,
+          "last_five_epoch_mean_excluding_first": 8.927185267210007,
+          "maximum_epoch_seconds": 9.341661226004362,
+          "projected_wall_seconds": 908.1942276358604,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917256",
+            "array_task_id": "1",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              3,
+              7
+            ],
+            "cpu_affinity_before_training_child": [
+              3,
+              7
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              3,
+              7
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000000000000000088",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000000000000000000088"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 2,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_ERM_Matched_f21a286fe20b_s7103",
+          "method_label": "ERM-Matched",
+          "seed": 7103,
+          "state": "RUNNING",
+          "node": "spartan-bm179",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 34,
+          "first_epoch_seconds": 9.07400780171156,
+          "last_five_epoch_mean_excluding_first": 8.913263451308012,
+          "maximum_epoch_seconds": 9.301390685141087,
+          "projected_wall_seconds": 907.2753877863288,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917257",
+            "array_task_id": "2",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              15,
+              35
+            ],
+            "cpu_affinity_before_training_child": [
+              15,
+              35
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              15,
+              35
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000000000800008000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000000000000800008000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 3,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_ERM_Perfect_c848b6d0e6ad_s7101",
+          "method_label": "ERM-Perfect",
+          "seed": 7101,
+          "state": "RUNNING",
+          "node": "spartan-bm179",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 32,
+          "first_epoch_seconds": 9.494151992723346,
+          "last_five_epoch_mean_excluding_first": 9.595035864785313,
+          "maximum_epoch_seconds": 9.65370712056756,
+          "projected_wall_seconds": 971.4624388054012,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917258",
+            "array_task_id": "3",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              39,
+              43
+            ],
+            "cpu_affinity_before_training_child": [
+              39,
+              43
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              39,
+              43
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000000088000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000000000088000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 4,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_ERM_Perfect_c848b6d0e6ad_s7102",
+          "method_label": "ERM-Perfect",
+          "seed": 7102,
+          "state": "RUNNING",
+          "node": "spartan-bm162",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 29,
+          "first_epoch_seconds": 10.261700453236699,
+          "last_five_epoch_mean_excluding_first": 10.375258335098625,
+          "maximum_epoch_seconds": 10.516423443332314,
+          "projected_wall_seconds": 1055.6433417920025,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917259",
+            "array_task_id": "4",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              27,
+              47
+            ],
+            "cpu_affinity_before_training_child": [
+              27,
+              47
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              27,
+              47
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000000800008000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000000000800008000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 5,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_ERM_Perfect_c848b6d0e6ad_s7103",
+          "method_label": "ERM-Perfect",
+          "seed": 7103,
+          "state": "RUNNING",
+          "node": "spartan-bm162",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 29,
+          "first_epoch_seconds": 9.98687077127397,
+          "last_five_epoch_mean_excluding_first": 10.330735791102052,
+          "maximum_epoch_seconds": 10.691115487366915,
+          "projected_wall_seconds": 1052.4822411682458,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917260",
+            "array_task_id": "5",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              67,
+              83
+            ],
+            "cpu_affinity_before_training_child": [
+              67,
+              83
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              67,
+              83
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000800080000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000800080000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 6,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7101",
+          "method_label": "L2-Matched",
+          "seed": 7101,
+          "state": "RUNNING",
+          "node": "spartan-bm163",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 34,
+          "first_epoch_seconds": 9.111554779112339,
+          "last_five_epoch_mean_excluding_first": 8.88471804894507,
+          "maximum_epoch_seconds": 9.227007202804089,
+          "projected_wall_seconds": 905.3913912303746,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917261",
+            "array_task_id": "6",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              98,
+              110
+            ],
+            "cpu_affinity_before_training_child": [
+              98,
+              110
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              98,
+              110
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00004004000000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00004004000000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 7,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7102",
+          "method_label": "L2-Matched",
+          "seed": 7102,
+          "state": "RUNNING",
+          "node": "spartan-bm163",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 34,
+          "first_epoch_seconds": 9.274722281843424,
+          "last_five_epoch_mean_excluding_first": 8.64638589322567,
+          "maximum_epoch_seconds": 9.276178443804383,
+          "projected_wall_seconds": 889.6614689528942,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917262",
+            "array_task_id": "7",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              103,
+              107
+            ],
+            "cpu_affinity_before_training_child": [
+              103,
+              107
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              103,
+              107
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000880000000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000880000000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 8,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+          "method_label": "L2-Matched",
+          "seed": 7103,
+          "state": "RUNNING",
+          "node": "spartan-bm163",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 0,
+          "first_epoch_seconds": null,
+          "last_five_epoch_mean_excluding_first": null,
+          "maximum_epoch_seconds": null,
+          "projected_wall_seconds": null,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917263",
+            "array_task_id": "8",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              77,
+              111
+            ],
+            "cpu_affinity_before_training_child": [
+              77,
+              111
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              77,
+              111
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00008000000020000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00008000000020000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 9,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7101",
+          "method_label": "L2-Perfect",
+          "seed": 7101,
+          "state": "RUNNING",
+          "node": "spartan-bm164",
+          "elapsed_seconds": 319.0,
+          "completed_epochs": 33,
+          "first_epoch_seconds": 9.785419780761003,
+          "last_five_epoch_mean_excluding_first": 8.413215362653137,
+          "maximum_epoch_seconds": 9.785419780761003,
+          "projected_wall_seconds": 882.6854292977602,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917264",
+            "array_task_id": "9",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              21,
+              25
+            ],
+            "cpu_affinity_before_training_child": [
+              21,
+              25
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              21,
+              25
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000000000002200000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000000000000002200000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 10,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+          "method_label": "L2-Perfect",
+          "seed": 7102,
+          "state": "RUNNING",
+          "node": "spartan-bm162",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 2,
+          "first_epoch_seconds": 209.19796065799892,
+          "last_five_epoch_mean_excluding_first": 12.926408031955361,
+          "maximum_epoch_seconds": 209.19796065799892,
+          "projected_wall_seconds": 1544.7879871316254,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917265",
+            "array_task_id": "10",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              18,
+              111
+            ],
+            "cpu_affinity_before_training_child": [
+              18,
+              111
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              18,
+              111
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00008000000000000000000000040000",
+              "SLURM_CPU_BIND_LIST": "0x00008000000000000000000000040000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 11,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7103",
+          "method_label": "L2-Perfect",
+          "seed": 7103,
+          "state": "RUNNING",
+          "node": "spartan-bm164",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 29,
+          "first_epoch_seconds": 9.599840359762311,
+          "last_five_epoch_mean_excluding_first": 8.754681374132634,
+          "maximum_epoch_seconds": 9.794842764735222,
+          "projected_wall_seconds": 899.582377563417,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917266",
+            "array_task_id": "11",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              29,
+              33
+            ],
+            "cpu_affinity_before_training_child": [
+              29,
+              33
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              29,
+              33
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000000000220000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000000000000220000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 12,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_PAC_Perfect_4bb31e087118_s7101",
+          "method_label": "PAC-Perfect",
+          "seed": 7101,
+          "state": "RUNNING",
+          "node": "spartan-bm164",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 27,
+          "first_epoch_seconds": 10.353354735299945,
+          "last_five_epoch_mean_excluding_first": 9.220304775983095,
+          "maximum_epoch_seconds": 10.446804462000728,
+          "projected_wall_seconds": 951.082248646766,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917267",
+            "array_task_id": "12",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              85,
+              121
+            ],
+            "cpu_affinity_before_training_child": [
+              85,
+              121
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              85,
+              121
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x02000000002000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x02000000002000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 13,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_PAC_Perfect_4bb31e087118_s7102",
+          "method_label": "PAC-Perfect",
+          "seed": 7102,
+          "state": "RUNNING",
+          "node": "spartan-bm164",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 24,
+          "first_epoch_seconds": 12.397006971761584,
+          "last_five_epoch_mean_excluding_first": 10.89941422007978,
+          "maximum_epoch_seconds": 12.397006971761584,
+          "projected_wall_seconds": 1106.3554807260634,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917268",
+            "array_task_id": "13",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              19,
+              86
+            ],
+            "cpu_affinity_before_training_child": [
+              19,
+              86
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              19,
+              86
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000004000000000000000080000",
+              "SLURM_CPU_BIND_LIST": "0x00000000004000000000000000080000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 14,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_PAC_Perfect_4bb31e087118_s7103",
+          "method_label": "PAC-Perfect",
+          "seed": 7103,
+          "state": "RUNNING",
+          "node": "spartan-bm166",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 24,
+          "first_epoch_seconds": 11.149120688438416,
+          "last_five_epoch_mean_excluding_first": 10.778910818323492,
+          "maximum_epoch_seconds": 12.136498630046844,
+          "projected_wall_seconds": 1097.1972221925853,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917269",
+            "array_task_id": "14",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              68,
+              72
+            ],
+            "cpu_affinity_before_training_child": [
+              68,
+              72
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              68,
+              72
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000001100000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000001100000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 15,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T1_Matched_cb98402d2ec0_s7101",
+          "method_label": "T1-Matched",
+          "seed": 7101,
+          "state": "RUNNING",
+          "node": "spartan-bm166",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 25,
+          "first_epoch_seconds": 10.921046109870076,
+          "last_five_epoch_mean_excluding_first": 10.279922773689032,
+          "maximum_epoch_seconds": 12.022114638239145,
+          "projected_wall_seconds": 1048.9942080266774,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917270",
+            "array_task_id": "15",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              84,
+              88
+            ],
+            "cpu_affinity_before_training_child": [
+              84,
+              88
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              84,
+              88
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000011000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000011000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 16,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T1_Matched_cb98402d2ec0_s7102",
+          "method_label": "T1-Matched",
+          "seed": 7102,
+          "state": "RUNNING",
+          "node": "spartan-bm166",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 25,
+          "first_epoch_seconds": 11.014537883922458,
+          "last_five_epoch_mean_excluding_first": 10.273808283731341,
+          "maximum_epoch_seconds": 12.064554262906313,
+          "projected_wall_seconds": 1048.5356212798506,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917271",
+            "array_task_id": "16",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              92,
+              104
+            ],
+            "cpu_affinity_before_training_child": [
+              92,
+              104
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              92,
+              104
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000100100000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000100100000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 17,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T1_Matched_cb98402d2ec0_s7103",
+          "method_label": "T1-Matched",
+          "seed": 7103,
+          "state": "RUNNING",
+          "node": "spartan-bm167",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 29,
+          "first_epoch_seconds": 9.479607604444027,
+          "last_five_epoch_mean_excluding_first": 8.90297870747745,
+          "maximum_epoch_seconds": 9.506731811910868,
+          "projected_wall_seconds": 910.111488230899,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917272",
+            "array_task_id": "17",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              111,
+              123
+            ],
+            "cpu_affinity_before_training_child": [
+              111,
+              123
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              111,
+              123
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x08008000000000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x08008000000000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 18,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+          "method_label": "T2-Matched",
+          "seed": 7101,
+          "state": "RUNNING",
+          "node": "spartan-bm167",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 0,
+          "first_epoch_seconds": null,
+          "last_five_epoch_mean_excluding_first": null,
+          "maximum_epoch_seconds": null,
+          "projected_wall_seconds": null,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917273",
+            "array_task_id": "18",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              117,
+              127
+            ],
+            "cpu_affinity_before_training_child": [
+              117,
+              127
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              117,
+              127
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x80200000000000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x80200000000000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 19,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7102",
+          "method_label": "T2-Matched",
+          "seed": 7102,
+          "state": "RUNNING",
+          "node": "spartan-bm170",
+          "elapsed_seconds": 278.0,
+          "completed_epochs": 25,
+          "first_epoch_seconds": 11.763598630204797,
+          "last_five_epoch_mean_excluding_first": 10.379790924862027,
+          "maximum_epoch_seconds": 11.763598630204797,
+          "projected_wall_seconds": 1056.484319364652,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917274",
+            "array_task_id": "19",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              88,
+              96
+            ],
+            "cpu_affinity_before_training_child": [
+              88,
+              96
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              88,
+              96
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000001010000000000000000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000001010000000000000000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        },
+        {
+          "index": 20,
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7103",
+          "method_label": "T2-Matched",
+          "seed": 7103,
+          "state": "RUNNING",
+          "node": "spartan-bm179",
+          "elapsed_seconds": 237.0,
+          "completed_epochs": 23,
+          "first_epoch_seconds": 9.633301995694637,
+          "last_five_epoch_mean_excluding_first": 9.627132725715636,
+          "maximum_epoch_seconds": 10.441476996988058,
+          "projected_wall_seconds": 978.289219880104,
+          "affinity_masks_consistent": true,
+          "submission_snapshot": {
+            "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+            "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+            "manifest_path": "/home/yangshuo/Git/bnn/journal/configs/cifar_mid_confirm.jsonl",
+            "slurm_job_id": "34917254",
+            "array_task_id": "20",
+            "cpu_pilot_matches": [],
+            "cpu_affinity_before_numerical_import": [
+              36,
+              52
+            ],
+            "cpu_affinity_before_training_child": [
+              36,
+              52
+            ]
+          },
+          "cpu_threading": {
+            "allowed_cpus": [
+              36,
+              52
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": "verbose,mask_cpu:0x00000000000000000010001000000000",
+              "SLURM_CPU_BIND_LIST": "0x00000000000000000010001000000000"
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          }
+        }
+      ],
+      "severe_first_epoch_outliers": [
+        8,
+        18
+      ],
+      "isolated_slow_first_epoch_under_watch": [
+        10
+      ],
+      "interpretation": "Matching process CPU masks did not eliminate all slow allocations. Cases8/18 had no complete epoch at319/278seconds; case10 took209.2seconds then12.93seconds. Do not assume binding alone fixed the underlying issue."
+    },
+    "live_run_step_resource_observation": {
+      "source": "Separate read-only sstat snapshot after the progress snapshot; sacct running TotalCPU/RSS were still provisional.",
+      "maximum_run_step_rss_kib": 1533372,
+      "lower_observed_cpu_utilization_cases": {
+        "8": {
+          "raw_step_id": "34917263.0",
+          "observed_cpu_time": "00:06:03"
+        },
+        "10": {
+          "raw_step_id": "34917265.0",
+          "observed_cpu_time": "00:05:41"
+        },
+        "18": {
+          "raw_step_id": "34917273.0",
+          "observed_cpu_time": "00:05:23"
+        }
+      },
+      "interpretation": "Outlier CPU times were approximately one CPU per wallsecond, while healthy peers used approximately two; memory was comfortably below3G. This is diagnostic observation, not proof of cause."
+    },
+    "scope": "Fresh-seed full-data confirmation; final test inference follows only after all21 complete100epochs.",
+    "outlier_follow_up_snapshot": {
+      "observations": [
+        {
+          "index": 8,
+          "elapsed_seconds": 503,
+          "completed_epochs": 1,
+          "epoch_seconds": [
+            340.2450642287731
+          ]
+        },
+        {
+          "index": 10,
+          "elapsed_seconds": 462,
+          "completed_epochs": 2,
+          "epoch_seconds": [
+            209.19796065799892,
+            12.926408031955361
+          ]
+        },
+        {
+          "index": 18,
+          "elapsed_seconds": 462,
+          "completed_epochs": 1,
+          "epoch_seconds": [
+            426.061556186527
+          ]
+        }
+      ],
+      "interpretation": "All three resource outliers still showed severe stalls. Index10 did not sustain its single fast second epoch; its third epoch had already stalled for roughly200seconds. Do not infer recovery or a reliable30min projection from the isolated fast epoch."
+    },
+    "cancelled_tasks": [
+      {
+        "array_index": 8,
+        "slurm_task_id": "34917254_8",
+        "state": "CANCELLED by 18349",
+        "elapsed_seconds": 581,
+        "run_step_elapsed_seconds": 580,
+        "run_step_total_cpu": "09:32.027",
+        "run_step_peak_rss_kib": 1348416,
+        "main_exit_code": "0:0",
+        "run_step_exit_code": "0:15",
+        "node": "spartan-bm163",
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "completed_partial_epochs": 1,
+        "partial_epoch_seconds": [
+          340.2450642287731
+        ],
+        "partial_output_directory": "results/journal_cifar_mid/partial_attempts/34917254_8/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "partial_outputs_retained": true,
+        "archive_required_before_staging_complete_replacement": true,
+        "replacement_job_id": 34923037,
+        "reason": "Resource outlier with sustained extreme stalls despite matching recorded CPU masks; scientific configurations and seeds unchanged.",
+        "partial_archive_verified": true
+      },
+      {
+        "array_index": 10,
+        "slurm_task_id": "34917254_10",
+        "state": "CANCELLED by 18349",
+        "elapsed_seconds": 540,
+        "run_step_elapsed_seconds": 539,
+        "run_step_total_cpu": "09:09.027",
+        "run_step_peak_rss_kib": 1347984,
+        "main_exit_code": "0:0",
+        "run_step_exit_code": "0:15",
+        "node": "spartan-bm162",
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "completed_partial_epochs": 3,
+        "partial_epoch_seconds": [
+          209.19796065799892,
+          12.926408031955361,
+          302.385601926595
+        ],
+        "partial_output_directory": "results/journal_cifar_mid/partial_attempts/34917254_10/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "partial_outputs_retained": true,
+        "archive_required_before_staging_complete_replacement": true,
+        "replacement_job_id": 34923037,
+        "reason": "Resource outlier with sustained extreme stalls despite matching recorded CPU masks; scientific configurations and seeds unchanged.",
+        "partial_archive_verified": true
+      },
+      {
+        "array_index": 18,
+        "slurm_task_id": "34917254_18",
+        "state": "CANCELLED by 18349",
+        "elapsed_seconds": 540,
+        "run_step_elapsed_seconds": 539,
+        "run_step_total_cpu": "08:51.027",
+        "run_step_peak_rss_kib": 1348692,
+        "main_exit_code": "0:0",
+        "run_step_exit_code": "0:15",
+        "node": "spartan-bm167",
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "completed_partial_epochs": 1,
+        "partial_epoch_seconds": [
+          426.061556186527
+        ],
+        "partial_output_directory": "results/journal_cifar_mid/partial_attempts/34917254_18/cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "partial_outputs_retained": true,
+        "archive_required_before_staging_complete_replacement": true,
+        "replacement_job_id": 34923037,
+        "reason": "Resource outlier with sustained extreme stalls despite matching recorded CPU masks; scientific configurations and seeds unchanged.",
+        "partial_archive_verified": true
+      }
+    ],
+    "replacement_job_id": 34923037,
+    "replacement_staging_record": "results/journal_cifar_mid/confirm_checkpoint_staging.json",
+    "replacement_staging_record_sha256": "49b4dfd6d0526a48d795fb6199dd147931db547d780da6f9c8d48a8a2e187df5"
+  },
+  "full_confirmation_replacement_execution": {
+    "id": 34923037,
+    "name": "cifar_mid_confirm_retry",
+    "state_at_snapshot": "COMPLETED",
+    "state_basis": "Read-only final sacct, completed campaign summary and all three100-epoch histories; identical-entry replacements complete without failures.",
+    "code_revision": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+    "partition": "interactive",
+    "node": "spartan-bm130",
+    "allocated_cpus": 6,
+    "requested_memory": "6G",
+    "walltime": "00:30:00",
+    "workers": 3,
+    "threads_per_worker": 2,
+    "trials": 3,
+    "epochs_per_trial": 100,
+    "train_size": 45000,
+    "validation_size": 5000,
+    "manifest": "results/journal_cifar_mid/confirm_retry.jsonl",
+    "manifest_sha256": "c6aa7f474771eb11966dddf284327de25e0b330b28aff3affc1df23efeae0619",
+    "output_root": "results/journal_cifar_mid/confirm_retry",
+    "entries_identical_to_original": true,
+    "original_array_indices": [
+      8,
+      10,
+      18
+    ],
+    "cpu_flush_denormal_requested_and_supported_all": true,
+    "evaluate_top": 0,
+    "evaluation_in_job": false,
+    "early_progress_snapshot": {
+      "elapsed_seconds": 153,
+      "cases": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+          "epochs": 22,
+          "epoch_seconds": [
+            7.405648189596832,
+            7.815409214235842,
+            8.437107158824801,
+            6.6408065520226955,
+            6.534768223762512,
+            6.494989473372698,
+            6.510285797528923,
+            6.477216303348541,
+            6.273617086932063,
+            6.241202624514699,
+            6.293628158979118,
+            6.314669022336602,
+            6.2301323767751455,
+            6.20905018504709,
+            6.2587885316461325,
+            6.243257776834071,
+            6.207829600200057,
+            6.326104117557406,
+            6.251848886720836,
+            6.266222877427936,
+            6.271203497424722,
+            6.256512522697449
+          ],
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn_mid",
+            "method": "l2",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.003,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 7103,
+            "data_seed": 20261111,
+            "channel_seed": 17103,
+            "eval_seed": 27103,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_threading": {
+            "allowed_cpus": [
+              87,
+              91,
+              95,
+              102,
+              106,
+              110
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": null,
+              "SLURM_CPU_BIND_LIST": null
+            }
+          },
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          },
+          "first_two_epoch_seconds": [
+            7.405648189596832,
+            7.815409214235842
+          ],
+          "last_five_epoch_mean_seconds": 6.27437838036567,
+          "early_projected_wall_seconds": 642.4015136685223
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+          "epochs": 18,
+          "epoch_seconds": [
+            9.906846726313233,
+            9.026897978968918,
+            8.154131127521396,
+            7.861503244377673,
+            7.644147681072354,
+            7.4589428240433335,
+            7.50211236346513,
+            7.445895096287131,
+            7.456779674626887,
+            7.465679073706269,
+            7.550872730091214,
+            7.415623637847602,
+            7.450559030286968,
+            7.419548138976097,
+            7.463880870491266,
+            7.4775752210989594,
+            7.502732549794018,
+            7.47314050514251
+          ],
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn_mid",
+            "method": "l2",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.001,
+            "eta_channel": 0.0003,
+            "eta_data": 0.003,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 100,
+            "seed": 7102,
+            "data_seed": 20261111,
+            "channel_seed": 17102,
+            "eval_seed": 27102,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "perfect"
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_threading": {
+            "allowed_cpus": [
+              87,
+              91,
+              95,
+              102,
+              106,
+              110
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": null,
+              "SLURM_CPU_BIND_LIST": null
+            }
+          },
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          },
+          "first_two_epoch_seconds": [
+            9.906846726313233,
+            9.026897978968918
+          ],
+          "last_five_epoch_mean_seconds": 7.46737545710057,
+          "early_projected_wall_seconds": 765.3247874822467
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+          "epochs": 20,
+          "epoch_seconds": [
+            7.831752362661064,
+            7.636934568174183,
+            6.981313026510179,
+            7.008699234575033,
+            6.998332045972347,
+            7.032024648971856,
+            6.999300151132047,
+            7.0989331202581525,
+            7.084899540990591,
+            6.99884042982012,
+            6.978081159293652,
+            6.978440149687231,
+            6.933824867941439,
+            6.981897826306522,
+            6.9505618223920465,
+            6.953411851078272,
+            6.920109244994819,
+            6.94576914422214,
+            6.945153066888452,
+            6.944847249425948
+          ],
+          "config": {
+            "dataset": "cifar10",
+            "architecture": "cnn_mid",
+            "method": "joint",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 100,
+            "lr": 0.003,
+            "eta_channel": 0.0003,
+            "eta_data": 0.002,
+            "prior_std": 1.0,
+            "posterior_std": 0.003,
+            "m": 100,
+            "seed": 7101,
+            "data_seed": 20261111,
+            "channel_seed": 17101,
+            "eval_seed": 27101,
+            "eval_draws": 10,
+            "val_draws": 2,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            },
+            "deployment_channel": {
+              "kind": "gaussian",
+              "gain_mean": 0.5,
+              "gain_std": 1.0,
+              "noise_std": 1.0
+            }
+          },
+          "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+          "cpu_threading": {
+            "allowed_cpus": [
+              87,
+              91,
+              95,
+              102,
+              106,
+              110
+            ],
+            "torch_intraop_threads": 2,
+            "environment": {
+              "OMP_NUM_THREADS": "2",
+              "OMP_PROC_BIND": "false",
+              "OMP_PLACES": null,
+              "GOMP_CPU_AFFINITY": null,
+              "KMP_AFFINITY": null,
+              "MKL_NUM_THREADS": "2",
+              "OPENBLAS_NUM_THREADS": "2",
+              "SLURM_CPU_BIND": null,
+              "SLURM_CPU_BIND_LIST": null
+            }
+          },
+          "cpu_numerics": {
+            "flush_denormal_requested": true,
+            "flush_denormal_supported": true
+          },
+          "first_two_epoch_seconds": [
+            7.831752362661064,
+            7.636934568174183
+          ],
+          "last_five_epoch_mean_seconds": 6.941858111321926,
+          "early_projected_wall_seconds": 708.3486489057541
+        }
+      ]
+    },
+    "staging_policy": "After all three cases finish100epochs, archive original cancelled partials, stage complete identical-entry copies without changing checkpoint bytes, retain completed retry sources and record hashes.",
+    "root_cause_scope": "The cause of the pathological public-allocation slowdown remains uncertain; consistent masks and explicit binding did not remove it. The pooled retry is a resource workaround, not a change to the learning method.",
+    "exit_code": "0:0",
+    "elapsed_seconds": 751,
+    "total_cpu": "01:08:31",
+    "slurm_peak_rss_kib": 3733308,
+    "completed_training_trials": 3,
+    "completed_evaluations": 0,
+    "training_or_evaluation_failures": 0,
+    "completed_cases": [
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_mid",
+          "method": "l2",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 100,
+          "lr": 0.003,
+          "eta_channel": 0.0003,
+          "eta_data": 0.003,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 100,
+          "seed": 7103,
+          "data_seed": 20261111,
+          "channel_seed": 17103,
+          "eval_seed": 27103,
+          "eval_draws": 10,
+          "val_draws": 2,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          },
+          "deployment_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          }
+        },
+        "epochs": 100,
+        "epoch_seconds": [
+          7.405648189596832,
+          7.815409214235842,
+          8.437107158824801,
+          6.6408065520226955,
+          6.534768223762512,
+          6.494989473372698,
+          6.510285797528923,
+          6.477216303348541,
+          6.273617086932063,
+          6.241202624514699,
+          6.293628158979118,
+          6.314669022336602,
+          6.2301323767751455,
+          6.20905018504709,
+          6.2587885316461325,
+          6.243257776834071,
+          6.207829600200057,
+          6.326104117557406,
+          6.251848886720836,
+          6.266222877427936,
+          6.271203497424722,
+          6.256512522697449,
+          6.219907645136118,
+          6.1790003245696425,
+          6.186459216289222,
+          6.243194032460451,
+          6.220195795409381,
+          6.183628947474062,
+          6.470584052614868,
+          6.209274139255285,
+          6.158974300138652,
+          6.163411761634052,
+          6.168843267485499,
+          6.172979186289012,
+          6.190145418047905,
+          6.206541676074266,
+          6.207488243468106,
+          6.188938249833882,
+          6.172425183467567,
+          6.227832540869713,
+          6.227275078184903,
+          6.215296633541584,
+          6.201008187606931,
+          6.2128925155848265,
+          6.1431397050619125,
+          6.130178410559893,
+          6.167359745129943,
+          6.256566436029971,
+          6.363417062908411,
+          6.179780582897365,
+          6.149273934774101,
+          6.187140760943294,
+          6.110710729844868,
+          6.127914771437645,
+          6.124127919785678,
+          6.185003964230418,
+          6.181671411730349,
+          6.122309354133904,
+          6.149690090678632,
+          6.139910466969013,
+          6.247780338861048,
+          6.278027807362378,
+          6.229597536846995,
+          6.168122380971909,
+          6.14730641618371,
+          6.128575854934752,
+          6.15137068554759,
+          6.179705089889467,
+          6.266659863293171,
+          6.240668338723481,
+          6.230489642359316,
+          6.170013468712568,
+          6.142067680135369,
+          6.1458631390705705,
+          6.126647372730076,
+          6.139993974938989,
+          6.128231564536691,
+          6.186048483476043,
+          6.176921739242971,
+          6.364937081001699,
+          6.272328318096697,
+          6.229572116397321,
+          6.237368092872202,
+          6.196452707052231,
+          6.169775426387787,
+          6.164028340950608,
+          6.24142584297806,
+          6.321411796845496,
+          6.160087808035314,
+          6.17292913980782,
+          6.157567856833339,
+          6.244439665228128,
+          6.302434124983847,
+          6.162661082111299,
+          6.140260615386069,
+          6.09702605009079,
+          6.156692492775619,
+          6.256094065494835,
+          6.207452025264502,
+          6.170846768654883
+        ],
+        "status": "complete",
+        "training_seconds": 627.9905514158309,
+        "peak_worker_rss_mib": 1234.234375,
+        "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+        "cpu_numerics": {
+          "flush_denormal_requested": true,
+          "flush_denormal_supported": true
+        },
+        "cpu_threading": {
+          "allowed_cpus": [
+            87,
+            91,
+            95,
+            102,
+            106,
+            110
+          ],
+          "torch_intraop_threads": 2,
+          "environment": {
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "false",
+            "OMP_PLACES": null,
+            "GOMP_CPU_AFFINITY": null,
+            "KMP_AFFINITY": null,
+            "MKL_NUM_THREADS": "2",
+            "OPENBLAS_NUM_THREADS": "2",
+            "SLURM_CPU_BIND": null,
+            "SLURM_CPU_BIND_LIST": null
+          }
+        },
+        "network_split": {
+          "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+          "transmitted_shape": [
+            8,
+            4,
+            4
+          ],
+          "real_channel_uses": 128,
+          "transmitter_parameter_count": 5352,
+          "receiver_parameter_count": 137162
+        },
+        "weights_sha256": "e2ae727ecdb58b23183f4aa5f307b8237db10eb2cb2788392c7723edd4e311c0",
+        "history_sha256": "fed9c53a53cb766624a2b31a9fd8571e8bf5738b3c09c7bfcbb190551a425f90",
+        "last_five_epoch_mean_seconds": 6.177622280456125
+      },
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_mid",
+          "method": "joint",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 100,
+          "lr": 0.003,
+          "eta_channel": 0.0003,
+          "eta_data": 0.002,
+          "prior_std": 1.0,
+          "posterior_std": 0.003,
+          "m": 100,
+          "seed": 7101,
+          "data_seed": 20261111,
+          "channel_seed": 17101,
+          "eval_seed": 27101,
+          "eval_draws": 10,
+          "val_draws": 2,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          },
+          "deployment_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          }
+        },
+        "epochs": 100,
+        "epoch_seconds": [
+          7.831752362661064,
+          7.636934568174183,
+          6.981313026510179,
+          7.008699234575033,
+          6.998332045972347,
+          7.032024648971856,
+          6.999300151132047,
+          7.0989331202581525,
+          7.084899540990591,
+          6.99884042982012,
+          6.978081159293652,
+          6.978440149687231,
+          6.933824867941439,
+          6.981897826306522,
+          6.9505618223920465,
+          6.953411851078272,
+          6.920109244994819,
+          6.94576914422214,
+          6.945153066888452,
+          6.944847249425948,
+          6.929883263073862,
+          6.896321680396795,
+          6.900697972625494,
+          6.911098378710449,
+          6.9117815578356385,
+          6.912586053833365,
+          6.866933606564999,
+          6.900836339220405,
+          6.906063485890627,
+          6.912982573732734,
+          6.946761371567845,
+          6.910980460233986,
+          6.972845181822777,
+          6.932883797213435,
+          6.871867294423282,
+          6.853253953158855,
+          6.937514913268387,
+          6.965893971733749,
+          6.985861328430474,
+          6.956078479066491,
+          6.847057579085231,
+          6.847915805876255,
+          6.883904617279768,
+          6.920959849841893,
+          6.878927876241505,
+          6.850237002596259,
+          6.843374526128173,
+          6.8257292388007045,
+          6.8380348943173885,
+          6.858135869726539,
+          6.866640950553119,
+          6.895943229086697,
+          6.856424597091973,
+          6.8260549530386925,
+          6.8378555197268724,
+          6.9309954876080155,
+          6.918961554765701,
+          6.8260773895308375,
+          6.832526531070471,
+          6.855078833177686,
+          6.841927531175315,
+          6.884862353093922,
+          6.965208846144378,
+          6.960904745385051,
+          6.876114365644753,
+          6.827189985662699,
+          6.842272427864373,
+          6.826157019473612,
+          6.819060444831848,
+          6.843593108467758,
+          6.825355056673288,
+          6.824937611818314,
+          6.937980582006276,
+          6.98700525611639,
+          6.8566973535344005,
+          6.859910282306373,
+          6.815740103833377,
+          6.783807030878961,
+          6.9301384668797255,
+          6.878377312794328,
+          6.7438191985711455,
+          6.717762749642134,
+          6.753137119114399,
+          6.875218479894102,
+          6.870013099163771,
+          6.851332224905491,
+          6.8337287828326225,
+          6.809471662156284,
+          6.821799539960921,
+          6.7999021438881755,
+          6.739247242920101,
+          6.760356040671468,
+          6.764214308932424,
+          6.800244921818376,
+          6.899472983554006,
+          6.907876566983759,
+          6.826654313132167,
+          6.778225881978869,
+          6.790208942256868,
+          6.804397848434746
+        ],
+        "status": "complete",
+        "training_seconds": 691.2527027493343,
+        "peak_worker_rss_mib": 1234.328125,
+        "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+        "cpu_numerics": {
+          "flush_denormal_requested": true,
+          "flush_denormal_supported": true
+        },
+        "cpu_threading": {
+          "allowed_cpus": [
+            87,
+            91,
+            95,
+            102,
+            106,
+            110
+          ],
+          "torch_intraop_threads": 2,
+          "environment": {
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "false",
+            "OMP_PLACES": null,
+            "GOMP_CPU_AFFINITY": null,
+            "KMP_AFFINITY": null,
+            "MKL_NUM_THREADS": "2",
+            "OPENBLAS_NUM_THREADS": "2",
+            "SLURM_CPU_BIND": null,
+            "SLURM_CPU_BIND_LIST": null
+          }
+        },
+        "network_split": {
+          "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+          "transmitted_shape": [
+            8,
+            4,
+            4
+          ],
+          "real_channel_uses": 128,
+          "transmitter_parameter_count": 5352,
+          "receiver_parameter_count": 137162
+        },
+        "weights_sha256": "7aa5f4cd7df9e6af36a3f5bbc7eea7207352de984f13dde99848a5a27c0e1f6e",
+        "history_sha256": "76964a51acca65095b1a1abc39fe8b7601063d8c4958c3a2fa496ea4cbe6c3af",
+        "last_five_epoch_mean_seconds": 6.821472710557282
+      },
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_mid",
+          "method": "l2",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 100,
+          "lr": 0.001,
+          "eta_channel": 0.0003,
+          "eta_data": 0.003,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 100,
+          "seed": 7102,
+          "data_seed": 20261111,
+          "channel_seed": 17102,
+          "eval_seed": 27102,
+          "eval_draws": 10,
+          "val_draws": 2,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "perfect"
+          },
+          "deployment_channel": {
+            "kind": "gaussian",
+            "gain_mean": 0.5,
+            "gain_std": 1.0,
+            "noise_std": 1.0
+          }
+        },
+        "epochs": 100,
+        "epoch_seconds": [
+          9.906846726313233,
+          9.026897978968918,
+          8.154131127521396,
+          7.861503244377673,
+          7.644147681072354,
+          7.4589428240433335,
+          7.50211236346513,
+          7.445895096287131,
+          7.456779674626887,
+          7.465679073706269,
+          7.550872730091214,
+          7.415623637847602,
+          7.450559030286968,
+          7.419548138976097,
+          7.463880870491266,
+          7.4775752210989594,
+          7.502732549794018,
+          7.47314050514251,
+          7.491317952051759,
+          7.478527979925275,
+          7.454151635989547,
+          7.491406084038317,
+          7.426525708287954,
+          7.484710467979312,
+          7.564129007048905,
+          7.428513744845986,
+          7.427518840879202,
+          7.460258638486266,
+          7.438183723017573,
+          7.43508561886847,
+          7.476110518909991,
+          7.417722355574369,
+          7.410881746560335,
+          7.504859894514084,
+          7.508691621944308,
+          7.534817763604224,
+          7.474462489597499,
+          7.392154958099127,
+          7.424713809974492,
+          7.4790732068941,
+          7.578795397654176,
+          7.447502835653722,
+          7.388050167821348,
+          7.389687081798911,
+          7.370663865469396,
+          7.353163004852831,
+          7.458129374310374,
+          7.4386327704414725,
+          7.419258592650294,
+          7.397098990157247,
+          7.469523377716541,
+          7.5931432619690895,
+          7.44488013535738,
+          7.376108271069825,
+          7.411932728253305,
+          7.416330048814416,
+          7.4401724729686975,
+          7.597969673573971,
+          7.5599529389292,
+          7.451358451507986,
+          7.380832369439304,
+          7.3975358456373215,
+          7.378977212123573,
+          7.362339019775391,
+          7.419448350556195,
+          7.402247758582234,
+          7.61235914286226,
+          7.554365129210055,
+          7.444390533491969,
+          7.491019612178206,
+          7.378715201281011,
+          7.342837685719132,
+          7.534335651434958,
+          7.466313758864999,
+          7.306767386384308,
+          7.310863104648888,
+          7.422012866474688,
+          7.534844189882278,
+          7.425785833969712,
+          7.385244943201542,
+          7.381438040174544,
+          7.4589047292247415,
+          7.3904412519186735,
+          7.262466153129935,
+          7.190715162083507,
+          7.172731913626194,
+          7.241246099583805,
+          7.272316740825772,
+          7.159821012988687,
+          7.179662915877998,
+          7.241370722651482,
+          7.143304145894945,
+          6.871863253414631,
+          6.7027202835306525,
+          6.756718243472278,
+          6.67448706086725,
+          6.651522374711931,
+          6.589068299159408,
+          6.7257400546222925,
+          6.38800504617393
+        ],
+        "status": "complete",
+        "training_seconds": 742.4601444741711,
+        "peak_worker_rss_mib": 1234.953125,
+        "git_sha": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+        "cpu_numerics": {
+          "flush_denormal_requested": true,
+          "flush_denormal_supported": true
+        },
+        "cpu_threading": {
+          "allowed_cpus": [
+            87,
+            91,
+            95,
+            102,
+            106,
+            110
+          ],
+          "torch_intraop_threads": 2,
+          "environment": {
+            "OMP_NUM_THREADS": "2",
+            "OMP_PROC_BIND": "false",
+            "OMP_PLACES": null,
+            "GOMP_CPU_AFFINITY": null,
+            "KMP_AFFINITY": null,
+            "MKL_NUM_THREADS": "2",
+            "OPENBLAS_NUM_THREADS": "2",
+            "SLURM_CPU_BIND": null,
+            "SLURM_CPU_BIND_LIST": null
+          }
+        },
+        "network_split": {
+          "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; AdaptiveAvgPool4x4; linear Conv32->8(1x1); flatten (8, 4, 4) to 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+          "transmitted_shape": [
+            8,
+            4,
+            4
+          ],
+          "real_channel_uses": 128,
+          "transmitter_parameter_count": 5352,
+          "receiver_parameter_count": 137162
+        },
+        "weights_sha256": "6a736bc342143d8845e0296b94ced87eb4d525c0061eed4248dbaaa5def7ac75",
+        "history_sha256": "8c6cff8d2e8c853dbb329c3a74a658bb23dad636f132c78268310943188bc4d0",
+        "last_five_epoch_mean_seconds": 6.605764567106962
+      }
+    ],
+    "terminal_slurm_accounting": [
+      {
+        "JobID": "34923037",
+        "State": "COMPLETED",
+        "ElapsedRaw": "751",
+        "TotalCPU": "01:08:31",
+        "AllocCPUS": "6",
+        "ReqMem": "6G",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm130"
+      },
+      {
+        "JobID": "34923037.batch",
+        "State": "COMPLETED",
+        "ElapsedRaw": "751",
+        "TotalCPU": "01:08:31",
+        "AllocCPUS": "6",
+        "ReqMem": "",
+        "MaxRSS": "3733308K",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm130"
+      },
+      {
+        "JobID": "34923037.extern",
+        "State": "COMPLETED",
+        "ElapsedRaw": "751",
+        "TotalCPU": "00:00:00",
+        "AllocCPUS": "6",
+        "ReqMem": "",
+        "MaxRSS": "",
+        "ExitCode": "0:0",
+        "NodeList": "spartan-bm130"
+      }
+    ],
+    "staging_status": "COMPLETED: all three complete100-epoch sources staged without byte changes; original partials archived and completed sources retained.",
+    "checkpoint_staging_record": "results/journal_cifar_mid/confirm_checkpoint_staging.json",
+    "checkpoint_staging_record_sha256": "49b4dfd6d0526a48d795fb6199dd147931db547d780da6f9c8d48a8a2e187df5",
+    "checkpoint_staging_records": [
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "archived_partial": "results/journal_cifar_mid/partial_attempts/34917254_8/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "completed_source": "results/journal_cifar_mid/confirm_retry/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "staged_checkpoint": "results/journal_cifar_mid/confirm/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "weights_sha256": "e2ae727ecdb58b23183f4aa5f307b8237db10eb2cb2788392c7723edd4e311c0",
+        "completed_job": "34923037",
+        "cancelled_job": "34917254_8",
+        "checkpoint_bytes_modified": false,
+        "completed_source_retained": true
+      },
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "archived_partial": "results/journal_cifar_mid/partial_attempts/34917254_10/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "completed_source": "results/journal_cifar_mid/confirm_retry/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "staged_checkpoint": "results/journal_cifar_mid/confirm/cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "weights_sha256": "6a736bc342143d8845e0296b94ced87eb4d525c0061eed4248dbaaa5def7ac75",
+        "completed_job": "34923037",
+        "cancelled_job": "34917254_10",
+        "checkpoint_bytes_modified": false,
+        "completed_source_retained": true
+      },
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "archived_partial": "results/journal_cifar_mid/partial_attempts/34917254_18/cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "completed_source": "results/journal_cifar_mid/confirm_retry/cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "staged_checkpoint": "results/journal_cifar_mid/confirm/cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "weights_sha256": "7aa5f4cd7df9e6af36a3f5bbc7eea7207352de984f13dde99848a5a27c0e1f6e",
+        "completed_job": "34923037",
+        "cancelled_job": "34917254_18",
+        "checkpoint_bytes_modified": false,
+        "completed_source_retained": true
+      }
+    ],
+    "checkpoint_staging_verification": [
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Matched_d04904c40d2e_s7103",
+        "archived_partial_exists": true,
+        "completed_source_exists": true,
+        "staged_exists": true,
+        "source_weights_sha256": "e2ae727ecdb58b23183f4aa5f307b8237db10eb2cb2788392c7723edd4e311c0",
+        "staged_weights_sha256": "e2ae727ecdb58b23183f4aa5f307b8237db10eb2cb2788392c7723edd4e311c0",
+        "staged_epochs": 100
+      },
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_L2_Perfect_fe76034fea9d_s7102",
+        "archived_partial_exists": true,
+        "completed_source_exists": true,
+        "staged_exists": true,
+        "source_weights_sha256": "6a736bc342143d8845e0296b94ced87eb4d525c0061eed4248dbaaa5def7ac75",
+        "staged_weights_sha256": "6a736bc342143d8845e0296b94ced87eb4d525c0061eed4248dbaaa5def7ac75",
+        "staged_epochs": 100
+      },
+      {
+        "task_id": "cifar_confirm_cifar10_cnn_mid_analog_severe_T2_Matched_8bb6a60e9dad_s7101",
+        "archived_partial_exists": true,
+        "completed_source_exists": true,
+        "staged_exists": true,
+        "source_weights_sha256": "7aa5f4cd7df9e6af36a3f5bbc7eea7207352de984f13dde99848a5a27c0e1f6e",
+        "staged_weights_sha256": "7aa5f4cd7df9e6af36a3f5bbc7eea7207352de984f13dde99848a5a27c0e1f6e",
+        "staged_epochs": 100
+      }
+    ]
+  },
+  "full_confirmation_original_array_outcome": {
+    "job_id": 34917254,
+    "completed_cases": 18,
+    "cancelled_cases": 3,
+    "successful_elapsed_seconds_range": [
+      878,
+      1111
+    ],
+    "successful_run_step_peak_rss_kib": 1533372,
+    "successful_main_and_run_step_exit_codes": "All18 completed cases exited0:0 in main and.0training steps.",
+    "scope": "Successful ranges exclude the3 cancelled attempts; all scientific cases must be assembled with the3 complete identical-entry replacements before evaluation."
+  },
+  "complete_full_confirmation_training_cases_available": 21,
+  "full_confirmation_training_completion_summary": {
+    "original_array_job_id": 34917254,
+    "original_successful_cases": 18,
+    "pooled_replacement_job_id": 34923037,
+    "replacement_successful_cases": 3,
+    "epochs_each": 100,
+    "completed_scientific_training_cases": 21,
+    "source_revision": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+    "successful_original_array_wall_seconds_range": [
+      878,
+      1111
+    ],
+    "successful_original_array_peak_run_step_rss_kib": 1533372,
+    "pooled_replacement_wall_seconds": 751,
+    "pooled_replacement_peak_batch_rss_kib": 3733308,
+    "scope": "All21 scientific cases finished100epochs; cancelled attempts excluded from successful resource ranges. Test evaluation/staging are subsequent phases.",
+    "root_cause_scope": "Explicit matching2CPU masks did not eliminate pathological public allocation behavior. The successful pooled retry is a resource workaround; the underlying cause remains uncertain."
+  },
+  "full_confirmation_final_evaluation": {
+    "id": 34933117,
+    "name": "cifar_mid_final_eval",
+    "state_at_snapshot": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 83,
+    "total_cpu": "06:24.379",
+    "allocated_cpus": 8,
+    "requested_memory": "8G",
+    "walltime": "00:10:00",
+    "partition": "interactive",
+    "node": "spartan-bm130",
+    "workers": 4,
+    "threads_per_worker": 2,
+    "slurm_peak_rss_kib": 4767580,
+    "code_revision": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+    "manifest": "journal/configs/cifar_mid_confirm.jsonl",
+    "manifest_sha256": "e61fcd72dad81884085ffd1083a9d8d6712cee7bd0a43169bfb7db3cc6b75e9f",
+    "output_root": "results/journal_cifar_mid/confirm",
+    "resume": true,
+    "evaluate_top": 1,
+    "eval_draws": 10,
+    "resumed_training_trials": 21,
+    "new_training_trials": 0,
+    "completed_evaluations": 21,
+    "training_or_evaluation_failures": 0,
+    "verification": {
+      "training_rows": 21,
+      "resumed_true": 21,
+      "training_statuses": [
+        "complete"
+      ],
+      "test_rows": 21,
+      "test_statuses": [
+        "complete"
+      ],
+      "all_test_configs_eval_draws": 10,
+      "summary_completed_trials": 21,
+      "failed_trials": [],
+      "failed_evaluations": []
+    },
+    "checkpoint_staging_record": "results/journal_cifar_mid/confirm_checkpoint_staging.json",
+    "checkpoint_staging_record_sha256": "49b4dfd6d0526a48d795fb6199dd147931db547d780da6f9c8d48a8a2e187df5",
+    "verification_basis": "Read-only final Slurm accounting and campaign files; all21 training rows explicitly resumed=True, all21 test evaluations complete; source/staged hashes and archived partial/source existence independently checked.",
+    "scope": "Final checkpoint-only inference and aggregation of21 full-data cases; zero new optimization."
+  },
+  "assembled_full_confirmation_checkpoints": {
+    "count": 21,
+    "epochs_each": 100,
+    "source_revision": "43f3e62a30a81f0b0485674fa51de0b2f6078f74",
+    "source_training_jobs": {
+      "34917254": 18,
+      "34923037": 3
+    },
+    "cpu_flush_denormal_requested_and_supported_all": true,
+    "transmitted_shape": [
+      8,
+      4,
+      4
+    ],
+    "real_channel_uses": 128,
+    "transmitter_parameter_count": 5352,
+    "receiver_parameter_count": 137162,
+    "staging_record": "results/journal_cifar_mid/confirm_checkpoint_staging.json",
+    "staging_record_sha256": "49b4dfd6d0526a48d795fb6199dd147931db547d780da6f9c8d48a8a2e187df5",
+    "replacement_checkpoint_hashes_verified": true,
+    "archived_partials_and_completed_sources_retained": true,
+    "final_evaluation_job_id": 34933117,
+    "completed_evaluations": 21,
+    "new_optimization_in_final_evaluation": 0
+  }
+}
