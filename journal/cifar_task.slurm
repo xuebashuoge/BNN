@@ -21,6 +21,9 @@ conda activate torch28
 : "${JOURNAL_GIT_SHA:?Submitted Git revision required}"
 : "${JOURNAL_MANIFEST_SHA256:?Submitted manifest hash required}"
 cd "${SLURM_SUBMIT_DIR}"
+# Leave placement across the pooled allocation available to each child.
+unset OMP_PLACES GOMP_CPU_AFFINITY KMP_AFFINITY
+export OMP_PROC_BIND=false
 export OMP_NUM_THREADS="${CIFAR_THREADS:-2}"
 export MKL_NUM_THREADS="$OMP_NUM_THREADS"
 export OPENBLAS_NUM_THREADS="$OMP_NUM_THREADS"

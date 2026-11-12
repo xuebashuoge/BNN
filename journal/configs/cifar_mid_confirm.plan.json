@@ -1,0 +1,35 @@
+{
+  "stage": "confirm",
+  "trials": 21,
+  "seeds": [
+    7101,
+    7102,
+    7103
+  ],
+  "dataset": "cifar10",
+  "architectures": [
+    "cnn_mid"
+  ],
+  "channel_presets": [
+    "severe"
+  ],
+  "groups": [
+    "cifar10_cnn_mid_analog_severe"
+  ],
+  "data_sizes": [
+    [
+      45000,
+      5000
+    ]
+  ],
+  "checkpoint_selection": "validation accuracy; CE tiebreak; fixed validation CRN",
+  "hyperparameter_selection": "mean validation accuracy over every seed",
+  "pilot_is_scientific_result": null,
+  "gpu_requires_completed_matching_cpu_pilot": true,
+  "resource_note": "Measure CPU epoch time and peak RSS before choosing GPU/CPU walltime; no training was performed by this builder",
+  "main_baselines": [
+    "ERM",
+    "L2"
+  ],
+  "perfect_specialization": "PAC-Perfect is displayed as Proposed Perfect; no separate data-PAC matched competitor"
+}

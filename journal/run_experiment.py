@@ -320,6 +320,14 @@ def provenance(config: dict, split: dict) -> dict:
                 cpu_numerics=(dict(flush_denormal_requested=config.get("cpu_flush_denormal", False),
                                    flush_denormal_supported=_CPU_FLUSH_DENORMAL_SUPPORTED)
                               if torch.device(config["device"]).type == "cpu" else None),
+                cpu_threading=(dict(
+                    allowed_cpus=sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else None,
+                    torch_intraop_threads=torch.get_num_threads(),
+                    environment={key: os.environ.get(key) for key in (
+                        "OMP_NUM_THREADS", "OMP_PROC_BIND", "OMP_PLACES", "GOMP_CPU_AFFINITY",
+                        "KMP_AFFINITY", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                        "SLURM_CPU_BIND", "SLURM_CPU_BIND_LIST")})
+                    if torch.device(config["device"]).type == "cpu" else None),
                 cuda_policy=(dict(cudnn_deterministic=torch.backends.cudnn.deterministic,
                                   cudnn_benchmark=torch.backends.cudnn.benchmark,
                                   cudnn_allow_tf32=torch.backends.cudnn.allow_tf32,

@@ -114,6 +114,8 @@ def read_manifest(path):
 
 
 def main():
+    affinity_before_numerical_import = (sorted(os.sched_getaffinity(0))
+                                        if hasattr(os, "sched_getaffinity") else None)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--index", type=int)
@@ -158,6 +160,9 @@ def main():
         "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
         "array_task_id": os.environ.get("SLURM_ARRAY_TASK_ID"),
         "cpu_pilot_matches": pilot_matches,
+        "cpu_affinity_before_numerical_import": affinity_before_numerical_import,
+        "cpu_affinity_before_training_child": (sorted(os.sched_getaffinity(0))
+                                                if hasattr(os, "sched_getaffinity") else None),
     }, indent=2) + "\n")
     command = [sys.executable, "-m", "journal.run_experiment", "--mode", entry.get("mode", "train"),
                "--config", str(config_path), "--output", str(output)]
