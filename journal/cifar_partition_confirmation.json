@@ -1,0 +1,802 @@
+{
+  "schema_version": 1,
+  "root": "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm",
+  "training_trials": 12,
+  "completed_trials": 12,
+  "failed_trials": [],
+  "failed_evaluations": [],
+  "methods": [
+    {
+      "method": "ERM-Matched",
+      "family": "baseline",
+      "variant_id": "31b1da70811c",
+      "active_hyperparameters": {
+        "learning_rate": 0.003
+      },
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 8101,
+        "data_seed": 20261111,
+        "channel_seed": 18101,
+        "eval_seed": 28101,
+        "eval_draws": 100,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 1,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 1.0,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "observations": [
+        {
+          "seed": 8101,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8101",
+          "selected_epoch": 23,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.518767,
+          "bounded_loss": 0.2817823375535011,
+          "cross_entropy": 1.4466451344785691,
+          "feature_power_per_coordinate": 5.571340970611573
+        },
+        {
+          "seed": 8102,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8102",
+          "selected_epoch": 25,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.5365610000000001,
+          "bounded_loss": 0.2747327383019924,
+          "cross_entropy": 1.4315777144117356,
+          "feature_power_per_coordinate": 6.539457373046875
+        },
+        {
+          "seed": 8103,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8103",
+          "selected_epoch": 25,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.45255,
+          "bounded_loss": 0.3329405926742554,
+          "cross_entropy": 1.7793333935756683,
+          "feature_power_per_coordinate": 6.637275315856933
+        }
+      ],
+      "accuracy": {
+        "n": 3,
+        "mean": 0.502626,
+        "sd": 0.04427031670318162
+      },
+      "bounded_loss": {
+        "n": 3,
+        "mean": 0.2964852228432497,
+        "sd": 0.03176743150678493
+      },
+      "cross_entropy": {
+        "n": 3,
+        "mean": 1.5525187474886577,
+        "sd": 0.19657166516705687
+      },
+      "feature_power_per_coordinate": {
+        "n": 3,
+        "mean": 6.249357886505127,
+        "sd": 0.5892132815562233
+      }
+    },
+    {
+      "method": "L2-Matched",
+      "family": "baseline",
+      "variant_id": "86e953903e5b",
+      "active_hyperparameters": {
+        "learning_rate": 0.003,
+        "l2_coefficient": 1e-06
+      },
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0003,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 8101,
+        "data_seed": 20261111,
+        "channel_seed": 18101,
+        "eval_seed": 28101,
+        "eval_draws": 100,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 1,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 1.0,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "observations": [
+        {
+          "seed": 8101,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8101",
+          "selected_epoch": 24,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.433801,
+          "bounded_loss": 0.34083387108421326,
+          "cross_entropy": 1.8015009756145477,
+          "feature_power_per_coordinate": 4.614266258239746
+        },
+        {
+          "seed": 8102,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8102",
+          "selected_epoch": 23,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.545722,
+          "bounded_loss": 0.26808281960988045,
+          "cross_entropy": 1.3826570719242097,
+          "feature_power_per_coordinate": 7.203767268371582
+        },
+        {
+          "seed": 8103,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8103",
+          "selected_epoch": 21,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.499651,
+          "bounded_loss": 0.29471576921868325,
+          "cross_entropy": 1.5286301568174363,
+          "feature_power_per_coordinate": 5.483081384277344
+        }
+      ],
+      "accuracy": {
+        "n": 3,
+        "mean": 0.493058,
+        "sd": 0.05625102929724933
+      },
+      "bounded_loss": {
+        "n": 3,
+        "mean": 0.30121081997092564,
+        "sd": 0.036807854268632784
+      },
+      "cross_entropy": {
+        "n": 3,
+        "mean": 1.5709294014520647,
+        "sd": 0.21260167799698895
+      },
+      "feature_power_per_coordinate": {
+        "n": 3,
+        "mean": 5.767038303629557,
+        "sd": 1.3178970063720645
+      }
+    },
+    {
+      "method": "T1-Matched",
+      "family": "proposed",
+      "variant_id": "bbb668fbc242",
+      "active_hyperparameters": {
+        "learning_rate": 0.003,
+        "initial_posterior_std": 0.003,
+        "rho_lr_scale": 0.1,
+        "rho_learning_rate": 0.00030000000000000003,
+        "posterior_scale_policy": "learned diagonal Gaussian",
+        "channel_coefficient": 0.001,
+        "data_coefficient": 0.01
+      },
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 100,
+        "seed": 8101,
+        "data_seed": 20261111,
+        "channel_seed": 18101,
+        "eval_seed": 28101,
+        "eval_draws": 100,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 1,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "observations": [
+        {
+          "seed": 8101,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8101",
+          "selected_epoch": 25,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.501908,
+          "bounded_loss": 0.29857934669446945,
+          "cross_entropy": 1.5612631041936873,
+          "feature_power_per_coordinate": 5.522269227455139
+        },
+        {
+          "seed": 8102,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8102",
+          "selected_epoch": 25,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.542825,
+          "bounded_loss": 0.27103030250430105,
+          "cross_entropy": 1.407226536330223,
+          "feature_power_per_coordinate": 7.028085331924439
+        },
+        {
+          "seed": 8103,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8103",
+          "selected_epoch": 24,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.517681,
+          "bounded_loss": 0.2834603858988285,
+          "cross_entropy": 1.4669298123979566,
+          "feature_power_per_coordinate": 5.81825566923523
+        }
+      ],
+      "accuracy": {
+        "n": 3,
+        "mean": 0.5208046666666667,
+        "sd": 0.02063657414236513
+      },
+      "bounded_loss": {
+        "n": 3,
+        "mean": 0.28435667836586637,
+        "sd": 0.013796375034327475
+      },
+      "cross_entropy": {
+        "n": 3,
+        "mean": 1.4784731509739555,
+        "sd": 0.07766435835632084
+      },
+      "feature_power_per_coordinate": {
+        "n": 3,
+        "mean": 6.1228700762049355,
+        "sd": 0.7977863046078842
+      }
+    },
+    {
+      "method": "T2-Matched",
+      "family": "proposed",
+      "variant_id": "3ef19c617952",
+      "active_hyperparameters": {
+        "learning_rate": 0.003,
+        "initial_posterior_std": 0.003,
+        "rho_lr_scale": 0.1,
+        "rho_learning_rate": 0.00030000000000000003,
+        "posterior_scale_policy": "learned diagonal Gaussian",
+        "joint_coefficient": 0.002
+      },
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "joint",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0003,
+        "eta_data": 0.002,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 100,
+        "seed": 8101,
+        "data_seed": 20261111,
+        "channel_seed": 18101,
+        "eval_seed": 28101,
+        "eval_draws": 100,
+        "val_draws": 2,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 1,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        },
+        "deployment_channel": {
+          "kind": "gaussian",
+          "gain_mean": 0.5,
+          "gain_std": 1.0,
+          "noise_std": 1.0
+        }
+      },
+      "observations": [
+        {
+          "seed": 8101,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8101",
+          "selected_epoch": 23,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.444625,
+          "bounded_loss": 0.3315742138500214,
+          "cross_entropy": 1.7528749122457503,
+          "feature_power_per_coordinate": 6.407115522071837
+        },
+        {
+          "seed": 8102,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8102",
+          "selected_epoch": 22,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.5410470000000001,
+          "bounded_loss": 0.2704758344988823,
+          "cross_entropy": 1.3909222320127486,
+          "feature_power_per_coordinate": 5.926695972839355
+        },
+        {
+          "seed": 8103,
+          "task_id": "partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8103",
+          "selected_epoch": 25,
+          "checkpoint_git_sha": "2f535dc10452dd020b7655743525deaf2fa7853b",
+          "evaluation_draws": 100,
+          "examples": 10000,
+          "accuracy": 0.465123,
+          "bounded_loss": 0.3198811548526287,
+          "cross_entropy": 1.7039469320068361,
+          "feature_power_per_coordinate": 6.423053404800416
+        }
+      ],
+      "accuracy": {
+        "n": 3,
+        "mean": 0.48359833333333335,
+        "sd": 0.05079669258262133
+      },
+      "bounded_loss": {
+        "n": 3,
+        "mean": 0.30731040106717744,
+        "sd": 0.03243101721939588
+      },
+      "cross_entropy": {
+        "n": 3,
+        "mean": 1.615914692088445,
+        "sd": 0.19637895032500374
+      },
+      "feature_power_per_coordinate": {
+        "n": 3,
+        "mean": 6.25228829990387,
+        "sd": 0.2820838113202026
+      }
+    }
+  ],
+  "protocol": {
+    "dataset": "cifar10",
+    "architecture": "cnn_spatial3",
+    "train_size": 45000,
+    "val_size": 5000,
+    "epochs": 25,
+    "batch_size": 128,
+    "width": 128,
+    "m": 100,
+    "data_seed": 20261111,
+    "deployment_channel": {
+      "kind": "gaussian",
+      "gain_mean": 0.5,
+      "gain_std": 1.0,
+      "noise_std": 1.0
+    },
+    "training_loss": "bounded_ce_smooth",
+    "loss_epsilon": 0.01,
+    "clip_ce": 10.0,
+    "prior_std": 1.0,
+    "delta": 0.05,
+    "selection_metric": "accuracy",
+    "validation_seed_policy": "fixed",
+    "val_draws": 2,
+    "device": "cpu",
+    "threads": 1,
+    "cpu_flush_denormal": true,
+    "seeds": [
+      8101,
+      8102,
+      8103
+    ],
+    "test_examples": 10000,
+    "test_draws": 100,
+    "parameter_count": 161266,
+    "network_split": {
+      "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; Conv32->64(3x3,pad1)/ReLU; AdaptiveAvgPool4x4; Conv64->8(1x1)/ReLU; spatial projection; 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+      "transmitted_shape": [
+        8,
+        4,
+        4
+      ],
+      "real_channel_uses": 128,
+      "transmitter_parameter_count": 24104,
+      "receiver_parameter_count": 137162
+    },
+    "split": {
+      "train_indices_hash": "135eec6d5b43ea4a8007f6e4d1a4ba5d7bf2b0d0f2b75d66df7b8b7e6e4e52dc",
+      "validation_indices_hash": "fd64a99b4701bf830e5ed57093de0dc5401165ff7eb23123bdeebb08fd4c8d42",
+      "data_seed": 20261111,
+      "transform": "CIFAR RGB uint8 -> contiguous float32 CHW, pixel/127.5-1; no fitted normalization or augmentation",
+      "train_size": 45000,
+      "validation_size": 5000,
+      "test_policy": "official test never loaded during training; independent moons test"
+    },
+    "training_code_revision": "2f535dc10452dd020b7655743525deaf2fa7853b"
+  },
+  "frozen_primary_from_validation": "T2-Matched",
+  "frozen_primary_comparison": {
+    "method": "T2-Matched",
+    "baseline_fixed_by_three_seed_mean": "ERM-Matched",
+    "mean_accuracy_margin_pp": -1.9027666666666665,
+    "goal_met": false,
+    "per_seed_margins": [
+      {
+        "seed": 8101,
+        "margin_vs_best_baseline_by_mean_pp": -7.414199999999998,
+        "strongest_baseline_at_this_seed": "ERM-Matched",
+        "margin_vs_strongest_baseline_at_seed_pp": -7.414199999999998,
+        "strictly_beats_both_baselines": false
+      },
+      {
+        "seed": 8102,
+        "margin_vs_best_baseline_by_mean_pp": 0.448599999999999,
+        "strongest_baseline_at_this_seed": "L2-Matched",
+        "margin_vs_strongest_baseline_at_seed_pp": -0.4674999999999985,
+        "strictly_beats_both_baselines": false
+      },
+      {
+        "seed": 8103,
+        "margin_vs_best_baseline_by_mean_pp": 1.2573,
+        "strongest_baseline_at_this_seed": "L2-Matched",
+        "margin_vs_strongest_baseline_at_seed_pp": -3.4528000000000003,
+        "strictly_beats_both_baselines": false
+      }
+    ],
+    "all_seeds_strictly_beat_both_baselines": false
+  },
+  "observed_best_proposed_by_test_mean": "T1-Matched",
+  "observed_best_baseline_by_test_mean": "ERM-Matched",
+  "fixed_algorithm_comparisons": {
+    "T1-Matched": {
+      "method": "T1-Matched",
+      "baseline_fixed_by_three_seed_mean": "ERM-Matched",
+      "mean_accuracy_margin_pp": 1.8178666666666676,
+      "goal_met": true,
+      "per_seed_margins": [
+        {
+          "seed": 8101,
+          "margin_vs_best_baseline_by_mean_pp": -1.6858999999999957,
+          "strongest_baseline_at_this_seed": "ERM-Matched",
+          "margin_vs_strongest_baseline_at_seed_pp": -1.6858999999999957,
+          "strictly_beats_both_baselines": false
+        },
+        {
+          "seed": 8102,
+          "margin_vs_best_baseline_by_mean_pp": 0.6263999999999936,
+          "strongest_baseline_at_this_seed": "L2-Matched",
+          "margin_vs_strongest_baseline_at_seed_pp": -0.28970000000000384,
+          "strictly_beats_both_baselines": false
+        },
+        {
+          "seed": 8103,
+          "margin_vs_best_baseline_by_mean_pp": 6.513099999999994,
+          "strongest_baseline_at_this_seed": "L2-Matched",
+          "margin_vs_strongest_baseline_at_seed_pp": 1.8029999999999935,
+          "strictly_beats_both_baselines": true
+        }
+      ],
+      "all_seeds_strictly_beat_both_baselines": false
+    },
+    "T2-Matched": {
+      "method": "T2-Matched",
+      "baseline_fixed_by_three_seed_mean": "ERM-Matched",
+      "mean_accuracy_margin_pp": -1.9027666666666665,
+      "goal_met": false,
+      "per_seed_margins": [
+        {
+          "seed": 8101,
+          "margin_vs_best_baseline_by_mean_pp": -7.414199999999998,
+          "strongest_baseline_at_this_seed": "ERM-Matched",
+          "margin_vs_strongest_baseline_at_seed_pp": -7.414199999999998,
+          "strictly_beats_both_baselines": false
+        },
+        {
+          "seed": 8102,
+          "margin_vs_best_baseline_by_mean_pp": 0.448599999999999,
+          "strongest_baseline_at_this_seed": "L2-Matched",
+          "margin_vs_strongest_baseline_at_seed_pp": -0.4674999999999985,
+          "strictly_beats_both_baselines": false
+        },
+        {
+          "seed": 8103,
+          "margin_vs_best_baseline_by_mean_pp": 1.2573,
+          "strongest_baseline_at_this_seed": "L2-Matched",
+          "margin_vs_strongest_baseline_at_seed_pp": -3.4528000000000003,
+          "strictly_beats_both_baselines": false
+        }
+      ],
+      "all_seeds_strictly_beat_both_baselines": false
+    }
+  },
+  "goal_met": true,
+  "goal_definition": "One fixed proposed algorithm's three-seed mean accuracy strictly exceeds both ERM/L2 means; no per-seed objective switching",
+  "strict_tolerance": 1e-12,
+  "selection_uses_test": false,
+  "hyperconfigs_locked": true,
+  "dataset_reused_from_prior_study": true,
+  "uncertainty": "Sample SD over three initialization/channel-bank seeds conditional on a reused fixed data split; MC draws are not training replications",
+  "interpretation": "The test-mean winner is descriptive; it does not replace the validation-prespecified T2 primary. All four methods and every declared seed are retained.",
+  "validation_freeze": {
+    "path": "/Users/yangshuo/Git/BNN/journal/cifar_partition_selection.json",
+    "selection_rule": "Among groups with proposed-minus-best-baseline validation accuracy >=0.005, maximize absolute proposed validation accuracy; CE then group name break ties",
+    "interpretation": "Single-seed validation-only architecture discovery; all unfavorable variants/groups retained; frozen fresh-seed confirmation required"
+  },
+  "certificate_note": "These are finite-test Gibbs estimates of accuracy and bounded risk, not population-risk or accuracy certificates",
+  "source_hashes": {
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/summary.json": {
+      "sha256": "63704d6d99d1a778e93731f50060a3e64daa9ca52fb9ce09a6928477b3c1f13a",
+      "bytes": 29561
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/test_results.json": {
+      "sha256": "215b1f61704eceadfcaeaac9241dc58ffe1e3d570ddc7e935f5ffe4db4864fbc",
+      "bytes": 28365
+    },
+    "/Users/yangshuo/Git/BNN/journal/cifar_partition_selection.json": {
+      "sha256": "f8b252f4bfc8a34da0e08b44cf888e2b5c4ff8ff6142395fe2361a7b6cb5064d",
+      "bytes": 228007
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8101/test_deployment/evaluation.json": {
+      "sha256": "296299f4f601e80535bae99f73d7bb20c0efca402cca3d5ceaeba169112f426f",
+      "bytes": 21922
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8101/metadata.json": {
+      "sha256": "d37342b3fa4d9ad4410e3f856e93b5f903a0a86c47909ea3b2e00e97f935ee3a",
+      "bytes": 4440
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8101/history.json": {
+      "sha256": "881704829ce047de79aedd6b1d2721816da384bd3da7f9302fbbea5fdc9d2a26",
+      "bytes": 33205
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8102/test_deployment/evaluation.json": {
+      "sha256": "bf72da23aed24775ed506e51cc367e4b6263de985005e7e5db5045722970281e",
+      "bytes": 21932
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8102/metadata.json": {
+      "sha256": "49f8ae478ff00a8a5675c8b9cd0ae7adaa916c4bb092dc0ebf9910918e66bfdd",
+      "bytes": 4423
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8102/history.json": {
+      "sha256": "fb75570d34e59e272bb9c55ff33b11f3eab3ba6041edcc8aa08a2435e872e921",
+      "bytes": 33101
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8103/test_deployment/evaluation.json": {
+      "sha256": "e0dd069c13defa06b4b93fad7cd1e81af7b1969eb871501ec05a4f43bd1b3962",
+      "bytes": 21937
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8103/metadata.json": {
+      "sha256": "415fafac7468182f9c7a2f146fa26c309ba5e5d0d3f420ff89f9b1468162a88f",
+      "bytes": 4426
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_ERM_Matched_31b1da70811c_s8103/history.json": {
+      "sha256": "812843131726d6f1e3d0fe5e6edee727789df930a061f3adb69bee04713f1a0e",
+      "bytes": 33222
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8101/test_deployment/evaluation.json": {
+      "sha256": "0de7d0ac30f458e25b29ebc55a9baa3c19c2175e3a7b7dc7ca5af633738ac67c",
+      "bytes": 21935
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8101/metadata.json": {
+      "sha256": "517a8110edd74f186d888738b62872c8c677ef24f1817016b154b375b3cb3e7a",
+      "bytes": 4426
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8101/history.json": {
+      "sha256": "aea718e6c309dff5ecb6bbd9bf522e25862d988060ba95e0927f87b4b095de37",
+      "bytes": 33209
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8102/test_deployment/evaluation.json": {
+      "sha256": "807905ff21bc3afe5997ae4801b5d49d8fac0614e0efa360916f642080827eec",
+      "bytes": 21932
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8102/metadata.json": {
+      "sha256": "e0f72770a29c0a198942f313629cb4de623e0ee6444beb3e2d8adaad899078e4",
+      "bytes": 4425
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8102/history.json": {
+      "sha256": "d8e780603eef3ceb512a29f6cf3cdc800aac171ecc35d18302bdfa9ed7a01033",
+      "bytes": 33180
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8103/test_deployment/evaluation.json": {
+      "sha256": "4fde42ef6a435ccada61363bec574c38f72dfb51d17a3df6c63de3910f3bcb13",
+      "bytes": 21917
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8103/metadata.json": {
+      "sha256": "df017834f9043f7619cd8cb7eff7ae90062e03d8f09b70fd1e427fda079bfddb",
+      "bytes": 4425
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_L2_Matched_86e953903e5b_s8103/history.json": {
+      "sha256": "71f07543dacdc0ef387f8d903863204c46c61f602c0f3a455bdc82e1080c6f4f",
+      "bytes": 33159
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8101/test_deployment/evaluation.json": {
+      "sha256": "0e70038c9f3d1dba06ef080ecb87b188295b0c49e93c4d9ee44066a4116aaad2",
+      "bytes": 22097
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8101/metadata.json": {
+      "sha256": "02ed6a7e2565bc3a8c90188ff53935ae6f45b03b66303956e94194c0c21222f8",
+      "bytes": 4447
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8101/history.json": {
+      "sha256": "da7aafaada919f53327b9f5afad5fc606f84853ef3ce784bb42a056bd8195926",
+      "bytes": 37330
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8102/test_deployment/evaluation.json": {
+      "sha256": "1e7adf1be086762fc716042abc5183ef4dd9c25186f35a08b68e8d1a45a53550",
+      "bytes": 22106
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8102/metadata.json": {
+      "sha256": "b1e598f846c84cb5fcd9f00273da340009313dc13dc478a51e43551e8af75703",
+      "bytes": 4442
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8102/history.json": {
+      "sha256": "535656dbcf44723c2778ce748a90893204b2882b60a52b2e16f65112832a1666",
+      "bytes": 37371
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8103/test_deployment/evaluation.json": {
+      "sha256": "f2f8c40a89dc79ea40b4016d71f417b21ecaff1f0d01a17acc51554780b6dc4c",
+      "bytes": 22088
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8103/metadata.json": {
+      "sha256": "f124465b8f69bb8d4007c1550dde97e94d045cc1a96f6b0c088d9dfdd5a8187a",
+      "bytes": 4458
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T1_Matched_bbb668fbc242_s8103/history.json": {
+      "sha256": "60ff4c1d909dceaf6d41b01f5be635c95653a82098ba08d554512a43d8b765a6",
+      "bytes": 37351
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8101/test_deployment/evaluation.json": {
+      "sha256": "c2d780a3a2853e98c3b1ec128cdbc43b27ac79896c1279510e188edebecd60a1",
+      "bytes": 22103
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8101/metadata.json": {
+      "sha256": "70d2686b647e07140b3aedf53713aaad2413fee4cb90bf1d12d8362214ac3511",
+      "bytes": 4456
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8101/history.json": {
+      "sha256": "732589db8752cb6671eafd5216affb3a8f222c4612d84f423f87e118bbdbbc0d",
+      "bytes": 37374
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8102/test_deployment/evaluation.json": {
+      "sha256": "ef68988f810b6555470fb6adc52d648a50d7e028897dc88b335ef00c0f3fe2f6",
+      "bytes": 22091
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8102/metadata.json": {
+      "sha256": "d224fe01081f1f53fb419b5cd12383ddf22f5505a768be1a5922240238b0315f",
+      "bytes": 4439
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8102/history.json": {
+      "sha256": "c6373086eab75653762d9e832df3435da3b1a484fd4699bcfe6cabc4cca458e3",
+      "bytes": 37346
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8103/test_deployment/evaluation.json": {
+      "sha256": "cc9b4e504220a861fe9e10185b55840e9dd415bd577d0466e594d6d69fa8d111",
+      "bytes": 22081
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8103/metadata.json": {
+      "sha256": "8c05760416e1656b3d38b167131d3af703ab491b5b4b9506e221c72d16f6356c",
+      "bytes": 4441
+    },
+    "/Users/yangshuo/Git/BNN/results/journal_cifar_search/partition_confirm/partition_confirm_cifar10_cnn_spatial3_analog_severe_partition25_T2_Matched_3ef19c617952_s8103/history.json": {
+      "sha256": "25f2e76bc2f2e224b669f65f4da72dd15e4d583575eb1d8997c439c1a4f3b7e0",
+      "bytes": 37348
+    }
+  }
+}

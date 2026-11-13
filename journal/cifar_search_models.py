@@ -1,6 +1,6 @@
 """Additional split-CNN candidates for explicit CIFAR architecture searches.
 
-Both variants transmit ``width`` features and retain a convolutional receiver.
+These variants transmit ``width`` features and retain a convolutional receiver.
 They share one flat diagonal-Gaussian posterior over all weights and biases,
 with the same sampling/channel interface as the existing CIFAR models. No
 normalization, dropout or batch-dependent state is introduced.

@@ -1,0 +1,148 @@
+{
+  "status": "completed exploratory configuration search; fixed T1 has highest three-seed test mean within the frozen matched comparison",
+  "branch": "TIT_gpt",
+  "algorithm": "T1-Matched",
+  "architecture": "cnn_spatial3",
+  "training_code_revision": "2f535dc10452dd020b7655743525deaf2fa7853b",
+  "validation_prespecified_primary": "T2-Matched",
+  "primary_goal_met": false,
+  "observed_test_mean_winner": "T1-Matched",
+  "objective": "mean smooth bounded cross-entropy + eta_channel * theorem1_channel_complexity + eta_data * theorem1_sample_complexity",
+  "active_hyperparameters": {
+    "learning_rate": 0.003,
+    "initial_posterior_std": 0.003,
+    "rho_lr_scale": 0.1,
+    "rho_learning_rate": 0.00030000000000000003,
+    "posterior_scale_policy": "learned diagonal Gaussian",
+    "channel_coefficient": 0.001,
+    "data_coefficient": 0.01
+  },
+  "training_config_template": {
+    "dataset": "cifar10",
+    "architecture": "cnn_spatial3",
+    "method": "proposed",
+    "training_loss": "bounded_ce_smooth",
+    "loss_epsilon": 0.01,
+    "selection_metric": "accuracy",
+    "validation_seed_policy": "fixed",
+    "width": 128,
+    "train_size": 45000,
+    "val_size": 5000,
+    "batch_size": 128,
+    "epochs": 25,
+    "lr": 0.003,
+    "eta_channel": 0.001,
+    "eta_data": 0.01,
+    "prior_std": 1.0,
+    "posterior_std": 0.003,
+    "m": 100,
+    "data_seed": 20261111,
+    "eval_draws": 100,
+    "val_draws": 2,
+    "clip_ce": 10.0,
+    "delta": 0.05,
+    "l2": 1e-06,
+    "device": "cpu",
+    "threads": 1,
+    "cpu_flush_denormal": true,
+    "rho_lr_scale": 0.1,
+    "download": false,
+    "moon_noise": 0.3,
+    "moons_sampler": "iid",
+    "train_channel": {
+      "kind": "gaussian",
+      "gain_mean": 0.5,
+      "gain_std": 1.0,
+      "noise_std": 1.0
+    },
+    "deployment_channel": {
+      "kind": "gaussian",
+      "gain_mean": 0.5,
+      "gain_std": 1.0,
+      "noise_std": 1.0
+    }
+  },
+  "replication": {
+    "seeds": [
+      8101,
+      8102,
+      8103
+    ],
+    "channel_seed_rule": "seed + 10000",
+    "eval_seed_rule": "seed + 20000",
+    "test_eval_seed_offset": 1000003,
+    "test_draws": 100,
+    "test_examples": 10000,
+    "checkpoint_selection": "maximum two-draw validation accuracy within 25 epochs, tie broken by smaller validation cross-entropy"
+  },
+  "network_split": {
+    "description": "Tx: Conv3->16(3x3,pad1)/ReLU/MaxPool2; Conv16->32(3x3,pad1)/ReLU/MaxPool2; Conv32->64(3x3,pad1)/ReLU; AdaptiveAvgPool4x4; Conv64->8(1x1)/ReLU; spatial projection; 128 channel symbols. Rx: reshape (8, 4, 4); Conv8->64(3x3,pad1)/ReLU; flatten1024; Affine1024->128/ReLU; Affine128->10.",
+    "transmitted_shape": [
+      8,
+      4,
+      4
+    ],
+    "real_channel_uses": 128,
+    "transmitter_parameter_count": 24104,
+    "receiver_parameter_count": 137162
+  },
+  "parameter_count": 161266,
+  "bounded_loss": {
+    "formula": "-log(epsilon+(1-epsilon)*p_y)/(-log(epsilon))",
+    "epsilon": 0.01,
+    "range": [
+      0,
+      1
+    ],
+    "uniform_subgaussian_variance_proxy": 0.25
+  },
+  "test_accuracy_percent": 52.080466666666666,
+  "test_accuracy_sample_sd_pp": 2.063657414236513,
+  "comparison": {
+    "method": "T1-Matched",
+    "baseline_fixed_by_three_seed_mean": "ERM-Matched",
+    "mean_accuracy_margin_pp": 1.8178666666666676,
+    "goal_met": true,
+    "per_seed_margins": [
+      {
+        "seed": 8101,
+        "margin_vs_best_baseline_by_mean_pp": -1.6858999999999957,
+        "strongest_baseline_at_this_seed": "ERM-Matched",
+        "margin_vs_strongest_baseline_at_seed_pp": -1.6858999999999957,
+        "strictly_beats_both_baselines": false
+      },
+      {
+        "seed": 8102,
+        "margin_vs_best_baseline_by_mean_pp": 0.6263999999999936,
+        "strongest_baseline_at_this_seed": "L2-Matched",
+        "margin_vs_strongest_baseline_at_seed_pp": -0.28970000000000384,
+        "strictly_beats_both_baselines": false
+      },
+      {
+        "seed": 8103,
+        "margin_vs_best_baseline_by_mean_pp": 6.513099999999994,
+        "strongest_baseline_at_this_seed": "L2-Matched",
+        "margin_vs_strongest_baseline_at_seed_pp": 1.8029999999999935,
+        "strictly_beats_both_baselines": true
+      }
+    ],
+    "all_seeds_strictly_beat_both_baselines": false
+  },
+  "result_files": {
+    "all_methods_csv": "journal/cifar_partition_confirmation.csv",
+    "all_methods_json": "journal/cifar_partition_confirmation.json",
+    "frozen_validation_selection": "journal/cifar_partition_selection.json",
+    "frozen_12_case_manifest": "journal/configs/cifar_partition_confirm.jsonl"
+  },
+  "selection_rule": "Among groups with proposed-minus-best-baseline validation accuracy >=0.005, maximize absolute proposed validation accuracy; CE then group name break ties",
+  "limitations": [
+    "The reported winner is descriptive. T2 was the validation-prespecified primary and did not beat the baselines on the fresh-seed test mean.",
+    "Three seeds describe initialization and channel-bank variation on one reused fixed data split; they do not establish a statistically reliable population improvement.",
+    "T1 did not beat both baselines in every seed. No seeds were omitted and no per-seed objective switching was used.",
+    "The search selected a favorable architecture for within-architecture algorithm comparison; this is not the largest absolute accuracy across every architecture tried.",
+    "The change adds a transmitter convolution and a nonnegative spatial bottleneck as well as changing posterior-scale optimization. It is not a controlled relocation of the split point alone.",
+    "All methods use the same 128 real channel symbols and the same channel law, but transmit feature powers are unconstrained and differ. This is not an equal-power communication benchmark.",
+    "Finite-test accuracy and bounded-risk estimates do not establish tightness of the generalization bound.",
+    "The comparison fixes a 25-epoch training budget; T1 selected checkpoints at epochs25/25/24, so this is not a demonstration of converged baseline optimality."
+  ]
+}
