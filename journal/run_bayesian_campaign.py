@@ -136,6 +136,9 @@ def pipeline(output, workers, threads, confirm_draws=20, sweep_draws=10):
     manifest_root = output / "manifests"
     manifest_root.mkdir(exist_ok=True)
     git_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    expected_git_sha = os.environ.get("JOURNAL_GIT_SHA")
+    if expected_git_sha and expected_git_sha != git_sha:
+        raise ValueError("Checkout revision changed after submission")
     if subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"], text=True).strip():
         raise ValueError("Run from a clean committed checkout; use a separate checkout for experiment execution")
     status_path = output / "pipeline_status.json"

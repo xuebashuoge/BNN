@@ -19,6 +19,7 @@ conda deactivate
 conda activate torch28
 : "${DATASET:?Set the shared dataset root}"
 : "${BAYESIAN_OUTPUT:?Set a fresh results directory}"
+: "${JOURNAL_GIT_SHA:?Export the committed Git revision before submitting}"
 unset OMP_PLACES GOMP_CPU_AFFINITY KMP_AFFINITY
 export OMP_PROC_BIND=false
 export OMP_NUM_THREADS="${BAYESIAN_THREADS:-2}"

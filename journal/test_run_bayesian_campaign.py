@@ -152,6 +152,13 @@ class PipelineOrchestrationTests(unittest.TestCase):
         self.fail_stage = None
         self.incomplete_evaluation = None
 
+    def test_changed_submitted_revision_stops_before_any_stage(self):
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.dict("os.environ", {"JOURNAL_GIT_SHA": "another_revision"}):
+            with self.assertRaisesRegex(ValueError, "revision changed"):
+                self.run_mock_pipeline(directory)
+            self.assertEqual(self.commands, [])
+
     def test_stages_order_validation_only_screen_then_frozen_full_risk_evaluation(self):
         with tempfile.TemporaryDirectory() as directory:
             state = self.run_mock_pipeline(directory)

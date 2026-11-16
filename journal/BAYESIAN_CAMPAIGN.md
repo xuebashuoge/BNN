@@ -39,6 +39,8 @@ python -u -m journal.run_bayesian_campaign \
 
 The pilot records per-worker RSS. The coordinator checks a pool projection of `2 GiB + 1.25 * workers * maximum_worker_RSS` against `SLURM_MEM_PER_NODE` before screening. The historical 1.2–1.5 GiB process envelope projects approximately 50–62 GiB at 32 workers, so the 64 GiB request is plausible but must pass the new pilot. Per-task RSS can miss simultaneous shared coordinator/child peaks; retain Slurm accounting for the actual allocation.
 
+For the Slurm wrapper, create `logs/journal`, export `BAYESIAN_OUTPUT` and `JOURNAL_GIT_SHA=$(git rev-parse HEAD)`, then submit `sbatch journal/bayesian_campaign.slurm`. The coordinator refuses a checkout revision that differs from the submitted SHA.
+
 The workflow is prepared for execution. Results remain pending until the output's `pipeline_status.json` records completion. Read that file and the stage logs for live execution status; this document does not establish that a production run has completed. `accuracy_outcome.json` reports all eight fixed main means, with one matched proposed candidate held fixed across the confirmation seeds. Failed trials or a losing/tied comparison remain recorded. Pilot and screen do not evaluate the test partition.
 
 A direct campaign process trains screening without opening test data with:
