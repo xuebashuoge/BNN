@@ -22,7 +22,8 @@ import subprocess
 import torch
 
 from .run_experiment import (digest, evaluate, load_data, make_loader,
-                             make_models, normalize_config, sample_moons_iid, save_json)
+                             make_models, normalize_config, sample_moons_iid, save_json,
+                             uses_gaussian_predictor)
 from .theorem1 import channel_shift_diagnostic, gaussian_kl, joint_complexity, theorem1_terms
 
 
@@ -101,7 +102,7 @@ def certify(checkpoint: Path, output: Path, draws: int, delta: float,
         raise ValueError("This certificate's declared mechanism candidate family has width eight")
     if config["training_loss"] != "bounded_ce_smooth":
         raise ValueError("This certificate requires the campaign's smooth bounded loss")
-    if config["method"] in {"erm", "l2"}:
+    if not uses_gaussian_predictor(config):
         raise ValueError("A deterministic Dirac predictor has no finite KL to the Gaussian prior")
     sampler_matches = verify_sampler_source(metadata["git_sha"])
     torch.set_num_threads(threads)

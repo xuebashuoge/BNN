@@ -34,7 +34,7 @@ except ImportError:
                           theorem1_terms, validate_channel)
 
 
-DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", training_loss="raw_ce", loss_epsilon=.01,
+DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", predictor="legacy", training_loss="raw_ce", loss_epsilon=.01,
                 selection_metric="cross_entropy", validation_seed_policy="fixed", width=128, train_size=55000,
                 val_size=5000, batch_size=256, epochs=30, lr=.001,
                 eta_channel=.01, eta_data=.1, prior_std=1., posterior_std=.01,
@@ -50,6 +50,11 @@ _CPU_FLUSH_DENORMAL_SUPPORTED: bool | None = None
 
 def digest(value) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+
+
+def file_fingerprint(path: Path) -> dict:
+    raw = path.read_bytes()
+    return dict(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw))
 
 
 def read_config(path: str | None) -> dict:
@@ -71,6 +76,8 @@ def normalize_config(supplied: dict) -> dict:
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist", "cifar10"}:
         raise ValueError("Unknown method or dataset")
+    if not isinstance(config["predictor"], str) or config["predictor"] not in {"legacy", "gaussian"}:
+        raise ValueError("predictor must be legacy or gaussian")
     if config["architecture"] not in {"mlp", *CNN_ARCHITECTURES}:
         raise ValueError("Unknown architecture")
     if config["architecture"] in CNN_ARCHITECTURES and config["dataset"] != "cifar10":
@@ -194,9 +201,19 @@ def make_loader(data, config: dict, shuffle: bool = False):
                       num_workers=0, pin_memory=config["device"].startswith("cuda"))
 
 
+def uses_gaussian_predictor(config: dict) -> bool:
+    """Explicit Gaussian baselines without changing saved deterministic runs.
+
+    Legacy ERM/L2 checkpoints retain their Dirac predictor. Every algorithm in
+    an all-Bayesian campaign sets predictor='gaussian'; the algorithm then
+    determines only its regularization, not the predictor family.
+    """
+    return config.get("predictor", "legacy") == "gaussian" or config["method"] not in {"erm", "l2"}
+
+
 def make_models(config: dict, input_dim: int, classes: int):
     torch.manual_seed(config["seed"])
-    stochastic = config["method"] not in {"erm", "l2"}
+    stochastic = uses_gaussian_predictor(config)
     if config.get("architecture", "mlp") in CNN_ARCHITECTURES:
         from .cifar_models import GaussianMiddleSplitCNN, GaussianSplitCNN
         if config["architecture"] in {"cnn", "cnn_mid"}:
@@ -288,6 +305,34 @@ def empirical_objective(logits: torch.Tensor, targets: torch.Tensor, config: dic
     return losses.mean() if config["training_loss"] == "raw_ce" else bounded_losses_from_ce(losses, config).mean()
 
 
+def training_penalty(model, config: dict, terms: dict | None = None) -> torch.Tensor:
+    """Algorithm-specific penalty for the configured common predictor family.
+
+    Gaussian L2 regularizes E_q ||W||^2 exactly, including posterior variance.
+    Its deterministic specialization is the historical ||mu||^2 objective.
+    ERM optimizes the expected empirical loss with no regularization penalty.
+    Bound evaluation remains unweighted and applies to any Gaussian method.
+    """
+    method = config["method"]
+    if method == "l2":
+        second_moment = model.mu.square().sum()
+        if model.stochastic:
+            second_moment = second_moment + F.softplus(model.rho).square().sum()
+        return config["l2"] * second_moment
+    if method in {"erm", "stochastic_erm"}:
+        return model.mu.new_zeros(())
+    if terms is None:
+        terms = complexities(model, config)
+    if method in {"proposed", "pac_bayes"}:
+        penalty = config["eta_data"] * terms["sample_complexity"]
+        if method == "proposed":
+            penalty = penalty + config["eta_channel"] * terms["channel_complexity"]
+        return penalty
+    if method == "joint":
+        return config["eta_data"] * terms["joint_complexity"]
+    raise ValueError(f"Unknown method: {method}")
+
+
 @torch.no_grad()
 def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
              source: str = "deployment") -> dict:
@@ -314,7 +359,10 @@ def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
     result = {key: float(np.mean([rep[key] for rep in replicates])) for key in replicates[0]}
     result.update(draws=draws, examples=count, channel_source=source,
                   bounded_loss_definition=bounded_loss_description(config),
-                  posterior_rule="one weight draw fixed across entire loader per replicate",
+                  posterior_rule=("one weight draw fixed across entire loader per replicate"
+                                  if model.stochastic else "fixed deterministic posterior mean"),
+                  predictor=dict(family="diagonal_gaussian" if model.stochastic else "deterministic_dirac",
+                                 stochastic=model.stochastic),
                   replicate_statistics=replicates,
                   mc_note="Finite-data Gibbs Monte Carlo estimates, not population-risk certificates",
                   bounded_loss_mc_upper_radius_95pct=math.sqrt(math.log(20) / (2 * draws)))
@@ -356,9 +404,20 @@ def provenance(config: dict, split: dict) -> dict:
                                   matmul_allow_tf32=torch.backends.cuda.matmul.allow_tf32)
                              if config["device"].startswith("cuda") else None),
                 prior="fixed N(0,prior_std^2 I), independent of all data and channel banks",
-                training_objective=("raw cross entropy + tuned complexity surrogate"
-                                    if config["training_loss"] == "raw_ce" else
-                                    "normalized bounded empirical CE + configured regularization; proposed with eta_channel=eta_data=1 matches the separated bound's trainable objective"),
+                predictor=dict(family="diagonal_gaussian" if uses_gaussian_predictor(config) else "deterministic_dirac",
+                               stochastic=uses_gaussian_predictor(config),
+                               configuration=config["predictor"]),
+                regularization=("l2 * E_q[||W||^2] = l2 * sum(mu^2 + softplus(rho)^2)"
+                                if config["method"] == "l2" and uses_gaussian_predictor(config) else
+                                "l2 * sum(mu^2)" if config["method"] == "l2" else
+                                "none" if config["method"] in {"erm", "stochastic_erm"} else
+                                "configured PAC-Bayes complexity penalty"),
+                training_objective=(("raw cross entropy" if config["training_loss"] == "raw_ce" else
+                                     "normalized bounded empirical CE") +
+                                    ("; no regularization" if config["method"] in {"erm", "stochastic_erm"} else
+                                     " + expected squared-weight L2 regularization" if config["method"] == "l2" else
+                                     " + tuned complexity surrogate" if config["training_loss"] == "raw_ce" else
+                                     " + configured PAC-Bayes penalty; proposed with eta_channel=eta_data=1 matches the separated bound's trainable objective")),
                 theoretical_loss=bounded_loss_description(config) + " in [0,1]; sigma_data^2=sigma_channel^2=1/4",
                 checkpoint_selection=("validation accuracy, with lower raw CE as tiebreak"
                                       if config["selection_metric"] == "accuracy" else
@@ -413,15 +472,7 @@ def train(config: dict, output: Path):
             ce = F.cross_entropy(logits, y)
             empirical = empirical_objective(logits, y, config)
             terms = complexities(model, config)
-            penalty = ce.new_zeros(())
-            if config["method"] == "l2":
-                penalty = config["l2"] * model.mu.square().sum()
-            elif config["method"] in {"proposed", "pac_bayes"}:
-                penalty = config["eta_data"] * terms["sample_complexity"]
-                if config["method"] == "proposed":
-                    penalty = penalty + config["eta_channel"] * terms["channel_complexity"]
-            elif config["method"] == "joint":
-                penalty = config["eta_data"] * terms["joint_complexity"]
+            penalty = training_penalty(model, config, terms)
             loss = empirical + penalty
             if not torch.isfinite(loss):
                 raise FloatingPointError(f"Nonfinite objective at epoch {epoch + 1}")
@@ -473,6 +524,15 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
                         risk_scope: str = "full"):
     if risk_scope not in {"deployment", "full"}:
         raise ValueError("risk_scope must be deployment or full")
+    checkpoint_sources = {name: file_fingerprint(checkpoint / filename) for name, filename in
+                          (("metadata", "metadata.json"), ("weights", "weights.pt"))}
+
+    def verify_frozen_sources():
+        current = {name: file_fingerprint(checkpoint / filename) for name, filename in
+                   (("metadata", "metadata.json"), ("weights", "weights.pt"))}
+        if current != checkpoint_sources:
+            raise ValueError("Checkpoint metadata or weights changed during evaluation")
+
     metadata = json.loads((checkpoint / "metadata.json").read_text())
     config = metadata["config"].copy()
     # Preserve data generated by checkpoints predating the IID sampler. Existing
@@ -489,23 +549,37 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
     torch.set_num_threads(config["threads"])
     data = load_data(config, include_test=split_name == "test")
     train_data, val_data, test_data, input_dim, classes, split = data
-    if split["train_indices_hash"] != metadata["split"]["train_indices_hash"]:
-        raise ValueError("Training data split no longer matches checkpoint")
+    split_matches = {}
+    for key in ("train_indices_hash", "validation_indices_hash"):
+        if key in metadata["split"]:
+            split_matches[key] = split[key] == metadata["split"][key]
+            if not split_matches[key]:
+                raise ValueError(f"Data split no longer matches checkpoint: {key}")
     model, bank = make_models(config, input_dim, classes)
     state = torch.load(checkpoint / "weights.pt", map_location=config["device"], weights_only=True)
     model.load_state_dict(state["model"])
     bank.load_state_dict(state["bank"])
+    saved_bank_hash = digest({"gain": bank.gain.cpu().tolist(), "noise": bank.noise.cpu().tolist()})
+    recorded_bank_hash = metadata.get("training_channel_bank_hash")
+    if recorded_bank_hash is not None and saved_bank_hash != recorded_bank_hash:
+        raise ValueError("Saved channel-bank buffers differ from the recorded bank hash")
     selected = {"train": train_data, "validation": val_data, "test": test_data}[split_name]
     loader = make_loader(selected, config)
     result = evaluate(model, bank, loader, config, config["eval_draws"], config["eval_seed"])
     report = dict(checkpoint=str(checkpoint.resolve()), split=split_name, risk_scope=risk_scope,
+                  checkpoint_source_fingerprints=checkpoint_sources,
                   evaluation_config=config, selected_epoch=metadata.get("selected_epoch"),
                   heldout_gibbs_mc=result,
                   channel_shift_diagnostic=channel_shift_diagnostic(config["deployment_channel"],
                                                                    config["train_channel"], config["width"]),
                   final_posterior_complexities={k: v.detach().item() for k, v in complexities(model, config).items()},
+                  checkpoint_verification=dict(split_hash_matches=split_matches,
+                      saved_channel_bank_hash=saved_bank_hash,
+                      bank_hash_matches_metadata=(saved_bank_hash == recorded_bank_hash
+                                                  if recorded_bank_hash is not None else None)),
                   certificate_note=metadata["certificate_note"])
     if risk_scope == "deployment":
+        verify_frozen_sources()
         save_json(output / "evaluation.json", report)
         print(json.dumps(report, indent=2), flush=True)
         return report
@@ -532,6 +606,7 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
                   heldout_fresh_training_channel_gibbs_mc=heldout_fresh_training,
                   signed_gap_decomposition_mc=signed,
                   bounded_gap_mc=result["bounded_loss"] - empirical["bounded_loss"])
+    verify_frozen_sources()
     save_json(output / "evaluation.json", report)
     print(json.dumps(report, indent=2), flush=True)
     return report

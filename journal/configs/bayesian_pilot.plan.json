@@ -1,0 +1,97 @@
+{
+  "stage": "pilot",
+  "tasks": 64,
+  "seeds": [
+    72000
+  ],
+  "seed_streams": "initialization=seed; bank=seed+10000; evaluation=seed+20000",
+  "datasets": [
+    "cifar10",
+    "fashionmnist",
+    "mnist",
+    "moons"
+  ],
+  "channels": [
+    "analog",
+    "outage"
+  ],
+  "groups": [
+    "cifar10_analog",
+    "cifar10_outage",
+    "fashionmnist_analog",
+    "fashionmnist_outage",
+    "mnist_analog",
+    "mnist_outage",
+    "moons_analog",
+    "moons_outage"
+  ],
+  "methods": [
+    "ERM-Matched",
+    "ERM-Perfect",
+    "L2-Matched",
+    "L2-Perfect",
+    "T1-Matched",
+    "T1-Perfect",
+    "T2-Matched",
+    "T2-Perfect"
+  ],
+  "predictor": "All methods use a single diagonal Gaussian posterior",
+  "tuning_variants_per_method_regime": null,
+  "tuning_seeds": [
+    72101,
+    72102
+  ],
+  "confirmation_seeds": [
+    73101,
+    73102,
+    73103,
+    73104,
+    73105
+  ],
+  "m_grid": [
+    2,
+    3,
+    5,
+    8,
+    12,
+    20,
+    35,
+    50,
+    75,
+    100,
+    200
+  ],
+  "p_train_grid": [
+    0.0,
+    0.025,
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "selection": "Complete paired screening validation only; no test-score or favorable-seed selection",
+  "all_trial_outcomes_retained": true,
+  "test_evaluation_during_screen": false,
+  "source_sha256": {},
+  "sweep_controls": "Selected matched hyperparameters, data split and optimizer updates fixed across each curve; image sweeps use n=10000 and 30 epochs (CIFAR 25), full-data main comparison is separate",
+  "training_loss": "Smooth bounded CE; tuned eta values are bound-inspired surrogates, not eta=1 bound minimization",
+  "training_budget": "Fixed budget: moons150 epochs; grayscale30; CIFAR25. Convergence is not assumed.",
+  "perfect_specialization": "T1 and T2 have identical candidate objectives under perfect training; retain both labels transparently",
+  "bound_note": "Finite KL permits evaluation; nonvacuity and mismatch shift validity require separate checking",
+  "resource_note": "Full-shape one-epoch CPU pilot first. Historical CNN full-data epochs ~7-9s on 2 CPUs; cnn_spatial3 and new Gaussian ERM/L2 costs require the matching pilot. Screen contains 1024 full-data trials; use bounded CPU array concurrency and measured pilot time/RSS. No GPU requested.",
+  "figure_formats": [
+    "png",
+    "pdf",
+    "eps"
+  ],
+  "confidence_shading": false,
+  "manifest_sha256": "7ece133ad6e17d54664740d3b74d101bc01c7491e7863c80d2e59ee84d38683f"
+}
