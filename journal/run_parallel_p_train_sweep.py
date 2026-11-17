@@ -1,15 +1,16 @@
 """Run the fixed p_train sweep separately and atomically publish its whole cache.
 
-Only the owned external output is written during computation. Linux
-renameat2(RENAME_NOREPLACE) is the sole publication primitive: an existing main
-stage, including an empty directory, is never replaced. No unsafe fallback is
-provided. The running main controller, status and manifests are never edited.
+Only the owned external output is written during computation. Atomic directory
+symlink creation is the sole publication primitive: an existing main stage,
+including an empty directory or broken link, is never replaced. The complete
+source stays permanently available. Main may rewrite aggregate JSON/CSV rows
+through the link; its cached per-checkpoint scientific files remain unchanged.
+The running main controller, status and manifests are never edited.
 """
 from __future__ import annotations
 
 import argparse
 from contextlib import nullcontext
-import ctypes
 import errno
 import fcntl
 import hashlib
@@ -17,7 +18,6 @@ import json
 import math
 import os
 from pathlib import Path
-import platform
 import shutil
 import subprocess
 import sys
@@ -45,25 +45,16 @@ def fingerprint(path):
     return dict(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw))
 
 
-def rename_noreplace(source, destination):
-    """Linux atomic absent-only directory rename; fail closed on unsupported FS."""
-    if platform.system() != "Linux":
-        raise OSError(errno.ENOTSUP, "Atomic no-replace publication requires Linux renameat2")
-    libc = ctypes.CDLL(None, use_errno=True)
-    function = getattr(libc, "renameat2", None)
-    if function is None:
-        raise OSError(errno.ENOSYS, "libc renameat2 is unavailable; no fallback is permitted")
-    function.argtypes = (ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint)
-    function.restype = ctypes.c_int
-    ctypes.set_errno(0)
-    result = function(-100, os.fsencode(source), -100, os.fsencode(destination), 1)
-    if result != 0:
-        code = ctypes.get_errno()
-        raise OSError(code, os.strerror(code), str(destination))
+def link_stage_noreplace(source, destination):
+    """Atomically create one absent-only directory link; never move the source."""
+    source = Path(source)
+    if source.is_symlink() or not source.is_dir():
+        raise ValueError("Publication requires a persistent real source directory")
+    os.symlink(str(source.resolve(strict=True)), destination, target_is_directory=True)
 
 
 def probe_publication(parent):
-    """Prove whole-directory success and empty/nonempty destination protection."""
+    """Prove directory-link success and EEXIST for every existing target kind."""
     parent = Path(parent).resolve(strict=True)
     if not parent.is_dir():
         raise ValueError("Publication probe parent must be an existing directory")
@@ -72,33 +63,42 @@ def probe_publication(parent):
         source, target = base / "source", base / "published"
         source.mkdir()
         (source / "marker").write_bytes(b"whole-stage-probe")
-        rename_noreplace(source, target)
-        if source.exists() or (target / "marker").read_bytes() != b"whole-stage-probe":
-            raise RuntimeError("Atomic publication probe did not move the whole directory")
-        for nonempty in (False, True):
-            source = base / ("source-nonempty" if nonempty else "source-empty")
-            target = base / ("existing-nonempty" if nonempty else "existing-empty")
+        link_stage_noreplace(source, target)
+        if (not source.is_dir() or not target.is_symlink() or os.readlink(target) != str(source.resolve())
+                or (target / "marker").read_bytes() != b"whole-stage-probe"):
+            raise RuntimeError("Atomic publication probe did not create the required directory link")
+        for kind in ("empty_directory", "nonempty_directory", "file", "broken_symlink"):
+            source = base / ("source-" + kind)
+            target = base / ("existing-" + kind)
             source.mkdir()
             (source / "marker").write_bytes(b"preserve-source")
-            target.mkdir()
-            if nonempty:
+            if kind in {"empty_directory", "nonempty_directory"}:
+                target.mkdir()
+            if kind == "nonempty_directory":
                 (target / "existing").write_bytes(b"preserve-target")
+            elif kind == "file":
+                target.write_bytes(b"preserve-file")
+            elif kind == "broken_symlink":
+                target.symlink_to(str(base / "missing-target"), target_is_directory=True)
             try:
-                rename_noreplace(source, target)
+                link_stage_noreplace(source, target)
             except OSError as error:
                 if error.errno != errno.EEXIST:
-                    raise RuntimeError("Filesystem did not provide the required EEXIST no-replace behavior") from error
+                    raise RuntimeError("Filesystem did not provide the required EEXIST symlink behavior") from error
             else:
-                raise RuntimeError("Unsafe rename behavior: an existing directory was replaced")
+                raise RuntimeError("Unsafe publication behavior: an existing target was replaced")
             if (source / "marker").read_bytes() != b"preserve-source":
-                raise RuntimeError("No-replace probe modified its source")
-            if (nonempty and (target / "existing").read_bytes() != b"preserve-target") or (
-                    not nonempty and any(target.iterdir())):
-                raise RuntimeError("No-replace probe modified the existing target")
-    return dict(parent=str(parent), device=parent.stat().st_dev, successful_whole_stage_rename=True,
-                existing_empty_destination="EEXIST; both directories preserved",
-                existing_nonempty_destination="EEXIST; both directories preserved",
-                primitive="Linux libc renameat2(RENAME_NOREPLACE); no fallback")
+                raise RuntimeError("Symlink publication probe modified its source")
+            if ((kind == "nonempty_directory" and (target / "existing").read_bytes() != b"preserve-target")
+                    or (kind == "empty_directory" and any(target.iterdir()))
+                    or (kind == "file" and target.read_bytes() != b"preserve-file")
+                    or (kind == "broken_symlink" and (not target.is_symlink() or
+                        os.readlink(target) != str(base / "missing-target")))):
+                raise RuntimeError("Symlink publication probe modified the existing target")
+    return dict(parent=str(parent), device=parent.stat().st_dev, successful_directory_symlink=True,
+                existing_target_kinds=["empty_directory", "nonempty_directory", "file", "broken_symlink"],
+                existing_destination="EEXIST; source and every existing target preserved",
+                primitive="Atomic os.symlink to persistent absolute stage; no rename or fallback")
 
 
 def verify_source_blobs(main_revision, repo_root=None):
@@ -256,18 +256,20 @@ def archive_publication_sources(output, stage, manifest, screen, frozen):
 
 
 def publication_committed(audit):
-    """Recognize a completed atomic move without touching an active main cache."""
+    """Recognize a committed directory pointer without touching the main cache."""
     source, target = Path(audit["source"]), Path(audit["target"])
     try:
-        stat = target.stat()
-        return (not source.exists() and not source.is_symlink() and not target.is_symlink()
-                and target.is_dir() and audit.get("stage_identity") == dict(device=stat.st_dev, inode=stat.st_ino))
+        stat = source.stat()
+        return (source.is_dir() and not source.is_symlink() and target.is_symlink()
+                and os.readlink(target) == str(source.resolve(strict=True)) and target.is_dir()
+                and audit.get("publication_kind") == "atomic_directory_symlink"
+                and audit.get("stage_identity") == dict(device=stat.st_dev, inode=stat.st_ino))
     except OSError:
         return False
 
 
 def recover_publication(output, main_root, verification):
-    """Reconcile an interrupted post-rename audit, using only external writes."""
+    """Reconcile an interrupted post-link audit, using only external writes."""
     output = Path(output)
     audit_path = output / "publication_audit.json"
     if not audit_path.is_file():
@@ -291,7 +293,7 @@ def recover_publication(output, main_root, verification):
 
 
 def publish(stage, main_root, manifest, inputs, source_verification, validation, output):
-    """Advisory stage guard plus atomic absent-only publication; never overwrite."""
+    """Advisory stage guard plus atomic absent-only directory symlink."""
     if Path(stage).is_symlink():
         raise ValueError("The completed stage must be a real directory, not a symbolic link")
     stage, main_root, output = Path(stage).resolve(strict=True), Path(main_root).resolve(strict=True), Path(output).resolve()
@@ -314,6 +316,7 @@ def publish(stage, main_root, manifest, inputs, source_verification, validation,
     recheck_validated_sources(manifest, validation)
     audit_path = output / "publication_audit.json"
     audit = dict(status="ready_to_publish", created_at=now(), source=str(stage), target=str(target),
+                 publication_kind="atomic_directory_symlink", source_must_remain_available=True,
                  stage_identity=dict(device=stage.stat().st_dev, inode=stage.stat().st_ino),
                  manifest=str(Path(manifest).resolve()), manifest_fingerprint=fingerprint(manifest),
                  original_selection_inputs=inputs, training_source_verification=source_verification,
@@ -322,13 +325,14 @@ def publish(stage, main_root, manifest, inputs, source_verification, validation,
                  task_path_map=[dict(task_id=record["task_id"], original=record["original_checkpoint"],
                                      published=str(target / record["task_id"]))
                                 for record in validation["source_records"]],
-                 publication="Linux renameat2(RENAME_NOREPLACE); existing targets including empty directories are refused",
-                 stage_guard="Advisory only; the atomic no-replace rename provides race protection")
+                 publication="Atomic os.symlink to the persistent absolute source stage; every existing target is refused",
+                 checkpoint_immutability="External helper never trains or evaluates after publication; main may rewrite only aggregate cache rows",
+                 stage_guard="Advisory only; atomic symlink creation provides race protection")
     save_json(audit_path, audit)
     try:
-        rename_noreplace(stage, target)
+        link_stage_noreplace(stage, target)
     except BaseException as error:
-        # A signal may arrive immediately after the kernel committed the move.
+        # A signal may arrive immediately after the kernel committed the link.
         committed = publication_committed(audit)
         audit.update(status="published" if committed else "not_published",
                      error=f"{type(error).__name__}: {error}", ended_at=now())

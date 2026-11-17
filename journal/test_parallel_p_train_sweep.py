@@ -1,19 +1,17 @@
 """Exercise atomic publication, complete-stage gating and immutable provenance.
 
-All campaign execution and model inference are mocked. Linux native renameat2
-is tested where available; the mandatory production probe still runs on the
-actual target filesystem before any expensive computation.
+Campaign execution is mocked; one synthetic saved-checkpoint portability check
+exercises the real cache readers. Native atomic directory symlink creation is
+tested locally and probed again on the actual production filesystem.
 """
 from __future__ import annotations
 
 from contextlib import ExitStack
-import ctypes
 import errno
 import io
 import json
 import os
 from pathlib import Path
-import platform
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -24,60 +22,41 @@ from journal.test_bayesian_campaign import fake_results
 
 
 def model_noreplace(source, target):
-    """Sequential filesystem model used only by mocked orchestration tests."""
+    """Use the actual atomic symlink primitive in mocked orchestration tests."""
     source, target = Path(source), Path(target)
-    if target.exists() or target.is_symlink():
-        raise FileExistsError(errno.EEXIST, "destination exists", str(target))
-    os.rename(source, target)
+    os.symlink(str(source.resolve()), target, target_is_directory=True)
 
 
 class AtomicPublicationTests(unittest.TestCase):
-    def test_non_linux_and_missing_syscall_fail_closed(self):
-        with patch.object(parallel.platform, "system", return_value="Darwin"):
-            with self.assertRaises(OSError) as error:
-                parallel.rename_noreplace("source", "target")
-            self.assertEqual(error.exception.errno, errno.ENOTSUP)
-        with patch.object(parallel.platform, "system", return_value="Linux"), \
-                patch.object(parallel.ctypes, "CDLL", return_value=object()):
-            with self.assertRaises(OSError) as error:
-                parallel.rename_noreplace("source", "target")
-            self.assertEqual(error.exception.errno, errno.ENOSYS)
+    def test_atomic_symlink_uses_absolute_persistent_source_and_never_renames(self):
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.object(parallel.os, "rename", side_effect=AssertionError("Rename publication forbidden")):
+            source, target = Path(directory, "source"), Path(directory, "target")
+            source.mkdir()
+            parallel.link_stage_noreplace(source, target)
+            self.assertTrue(source.is_dir())
+            self.assertTrue(target.is_symlink())
+            self.assertEqual(os.readlink(target), str(source.resolve()))
 
-    def test_libc_is_called_with_atomic_noreplace_flag_and_errno_is_preserved(self):
-        class Function:
-            def __call__(self, *args):
-                self.args = args
-                ctypes.set_errno(errno.EEXIST)
-                return -1
-        function = Function()
-        libc = type("FakeLibc", (), {"renameat2": function})()
-        with patch.object(parallel.platform, "system", return_value="Linux"), \
-                patch.object(parallel.ctypes, "CDLL", return_value=libc), \
-                patch.object(parallel.os, "rename", side_effect=AssertionError("Unsafe fallback forbidden")):
+    def test_unsupported_symlink_fails_without_fallback(self):
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.object(parallel.os, "symlink", side_effect=OSError(errno.ENOTSUP, "unsupported")), \
+                patch.object(parallel.os, "rename", side_effect=AssertionError("Fallback forbidden")):
+            source = Path(directory, "source")
+            source.mkdir()
             with self.assertRaises(OSError) as error:
-                parallel.rename_noreplace("source", "target")
-        self.assertEqual(error.exception.errno, errno.EEXIST)
-        self.assertEqual(function.args, (-100, b"source", -100, b"target", 1))
+                parallel.link_stage_noreplace(source, Path(directory, "target"))
+            self.assertEqual(error.exception.errno, errno.ENOTSUP)
 
     def test_probe_checks_empty_existing_destination_and_cleans_owned_files(self):
-        with tempfile.TemporaryDirectory() as directory, \
-                patch.object(parallel, "rename_noreplace", side_effect=model_noreplace):
+        with tempfile.TemporaryDirectory() as directory:
             parent = Path(directory)
             result = parallel.probe_publication(parent)
-            self.assertTrue(result["successful_whole_stage_rename"])
-            self.assertIn("EEXIST", result["existing_empty_destination"])
+            self.assertTrue(result["successful_directory_symlink"])
+            self.assertEqual(set(result["existing_target_kinds"]),
+                             {"empty_directory", "nonempty_directory", "file", "broken_symlink"})
+            self.assertIn("EEXIST", result["existing_destination"])
             self.assertEqual(list(parent.iterdir()), [])
-        # Plain rename replaces an empty target; the probe must detect it.
-        with tempfile.TemporaryDirectory() as directory, \
-                patch.object(parallel, "rename_noreplace", side_effect=os.rename):
-            with self.assertRaisesRegex(RuntimeError, "Unsafe rename"):
-                parallel.probe_publication(directory)
-
-    @unittest.skipUnless(platform.system() == "Linux", "Native production primitive requires Linux")
-    def test_native_renameat2_probe(self):
-        with tempfile.TemporaryDirectory() as directory:
-            result = parallel.probe_publication(directory)
-            self.assertTrue(result["successful_whole_stage_rename"])
 
 
 class ExactManifestTests(unittest.TestCase):
@@ -167,11 +146,11 @@ class SourceAndIntegrityTests(unittest.TestCase):
 
 
 class PortableCheckpointTests(unittest.TestCase):
-    def test_main_resume_reuses_moved_checkpoint_and_full_report_without_subprocess(self):
+    def test_main_resume_reuses_linked_checkpoint_and_full_report_without_subprocess(self):
         import torch
         from journal.bayesian_bounds import fingerprint, observation
         from journal.build_campaign import make_entry
-        from journal.campaign import evaluate_trial, train_trial
+        from journal.campaign import evaluate_trial, main as campaign_main, train_trial
         from journal.run_experiment import bounded_loss_description, digest, make_models, normalize_config
         config = normalize_config(dict(dataset="moons", predictor="gaussian", method="erm", width=4,
             train_size=8, val_size=4, epochs=1, m=3, threads=2, training_loss="bounded_ce_smooth",
@@ -208,6 +187,9 @@ class PortableCheckpointTests(unittest.TestCase):
             (checkpoint / "test_full" / "evaluation.json").write_text(json.dumps(report))
             before = {str(path.relative_to(old)): path.read_bytes() for path in old.rglob("*") if path.is_file()}
             model_noreplace(old, moved)
+            self.assertTrue(old.is_dir())
+            self.assertTrue(moved.is_symlink())
+            self.assertEqual(os.readlink(moved), str(old.resolve()))
             with patch("journal.campaign.subprocess.run", side_effect=AssertionError("Cached resume cannot train or infer")):
                 trained = train_trial(entry, moved, threads=2, resume=True, device="cpu")
                 evaluated_row = evaluate_trial(trained, draws=10, full_risks=True, resume=True)
@@ -219,8 +201,25 @@ class PortableCheckpointTests(unittest.TestCase):
                              (moved / entry["task_id"] / "test_full" / "evaluation.json").resolve())
             checked = observation(entry, evaluated_row, moved, 1, .025)
             self.assertTrue(checked["posterior_kl_float64"] > 0)
-            self.assertEqual(before, {str(path.relative_to(moved)): path.read_bytes()
-                                      for path in moved.rglob("*") if path.is_file()})
+            manifest = Path(directory, "single-checkpoint.jsonl")
+            manifest.write_text(json.dumps(entry) + "\n")
+            argv = ["campaign", "--manifest", str(manifest), "--output-root", str(moved),
+                    "--workers", "1", "--threads", "2", "--resume", "--evaluate-top", "1",
+                    "--eval-draws", "10", "--full-risks"]
+            with patch("sys.argv", argv), patch("sys.stdout", new_callable=io.StringIO), \
+                    patch("journal.run_task.verify_submission_snapshot"), \
+                    patch("journal.campaign.subprocess.run", side_effect=AssertionError("Main resume must hit every cache")):
+                campaign_main()
+            self.assertTrue(old.is_dir())
+            self.assertTrue(moved.is_symlink())
+            for filename in ("campaign_snapshot.json", "training_results.json", "test_results.json", "summary.json", "all_trials.csv"):
+                self.assertTrue((old / filename).is_file())
+            main_rows = json.loads((moved / "training_results.json").read_text())
+            self.assertTrue(main_rows[0]["resumed"])
+            main_test = json.loads((moved / "test_results.json").read_text())[0]
+            observation(entry, main_test, moved, 1, .025)
+            self.assertEqual(before, {str(path.relative_to(old)): path.read_bytes()
+                                      for path in (old / entry["task_id"]).rglob("*") if path.is_file()})
 
 
 class WholeStageOrchestrationTests(unittest.TestCase):
@@ -230,8 +229,8 @@ class WholeStageOrchestrationTests(unittest.TestCase):
         self.source_checks = 0
         self.race_destination = None
         self.fail_validation = False
-        self.fail_after_rename = False
-        self.fail_before_rename = False
+        self.fail_after_link = False
+        self.fail_before_link = False
 
     def fixture(self, directory):
         root = Path(directory).resolve()
@@ -280,17 +279,17 @@ class WholeStageOrchestrationTests(unittest.TestCase):
                                          original_evaluation=str(Path(stage) / f"task{index}" / "test_full" / "evaluation.json"),
                                          source_fingerprints={}) for index in range(672)], files={})
 
-    def fake_rename(self, source, destination):
+    def fake_link(self, source, destination):
         self.assertTrue(self.validation_called)
-        if self.fail_before_rename:
+        if self.fail_before_link:
             raise InterruptedError(errno.EINTR, "interrupted before atomic commit")
         if self.race_destination:
             Path(destination).mkdir()
             if self.race_destination == "nonempty":
                 (Path(destination) / "main-active").write_text("preserve-main")
         model_noreplace(source, destination)
-        if self.fail_after_rename:
-            raise OSError("simulated interruption after kernel committed rename")
+        if self.fail_after_link:
+            raise OSError("simulated interruption after kernel committed symlink")
 
     def execute(self, main, output, verification, extra=None):
         self.main = main
@@ -301,7 +300,7 @@ class WholeStageOrchestrationTests(unittest.TestCase):
             stack.enter_context(patch.object(parallel, "command", side_effect=self.fake_command))
             stack.enter_context(patch.object(parallel, "validate_stage", side_effect=self.fake_validate))
             stack.enter_context(patch.object(parallel, "recheck_validated_sources"))
-            stack.enter_context(patch.object(parallel, "rename_noreplace", side_effect=self.fake_rename))
+            stack.enter_context(patch.object(parallel, "link_stage_noreplace", side_effect=self.fake_link))
             stack.enter_context(patch.dict(os.environ, {"JOURNAL_GIT_SHA": "external_sha", "SLURM_MEM_PER_NODE": "32768", "SLURM_JOB_ID": "parallel_job"}))
             if extra:
                 extra(stack)
@@ -313,8 +312,10 @@ class WholeStageOrchestrationTests(unittest.TestCase):
             before_status = (main / "pipeline_status.json").read_bytes()
             result = self.execute(main, output, verification)
             self.assertEqual(result["status"], "published")
-            self.assertFalse((output / "stage").exists())
+            self.assertTrue((output / "stage").is_dir())
             target = main / "p_train_sweep"
+            self.assertTrue(target.is_symlink())
+            self.assertEqual(os.readlink(target), str((output / "stage").resolve()))
             self.assertEqual((target / "completed-marker").read_text(), "all672")
             self.assertEqual((main / "pipeline_status.json").read_bytes(), before_status)
             self.assertFalse((main / "manifests" / "p_train_sweep.jsonl").exists())
@@ -387,7 +388,7 @@ class WholeStageOrchestrationTests(unittest.TestCase):
     def test_post_commit_interruption_is_never_labeled_unpublished_and_resume_does_no_compute(self):
         with tempfile.TemporaryDirectory() as directory:
             main, output, verification = self.fixture(directory)
-            self.fail_after_rename = True
+            self.fail_after_link = True
             with self.assertRaisesRegex(OSError, "after kernel committed"):
                 self.execute(main, output, verification)
             status = json.loads((output / "status.json").read_text())
@@ -397,7 +398,7 @@ class WholeStageOrchestrationTests(unittest.TestCase):
             main_state["current_stage"] = "p_train_sweep"
             (main / "pipeline_status.json").write_text(json.dumps(main_state))
             self.commands = []
-            self.fail_after_rename = False
+            self.fail_after_link = False
             result = self.execute(main, output, verification)
             self.assertEqual(result["status"], "published")
             self.assertEqual(self.commands, [])
@@ -416,12 +417,12 @@ class WholeStageOrchestrationTests(unittest.TestCase):
     def test_interrupted_unpublished_complete_stage_resumes_without_rewriting_globals(self):
         with tempfile.TemporaryDirectory() as directory:
             main, output, verification = self.fixture(directory)
-            self.fail_before_rename = True
+            self.fail_before_link = True
             with self.assertRaises(InterruptedError):
                 self.execute(main, output, verification)
             archived = (output / "publication_snapshot" / "test_results.json").read_bytes()
             self.commands = []
-            self.fail_before_rename = False
+            self.fail_before_link = False
             result = self.execute(main, output, verification)
             self.assertTrue(result["resumed_complete_stage"])
             self.assertEqual(result["status"], "published")
