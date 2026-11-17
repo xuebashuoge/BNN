@@ -75,3 +75,16 @@ conda run -n torch28 python -m journal.plot_c1_bayesian \
 The evaluator records frozen source fingerprints and uses fresh empirical and test streams. The declared grids are erasure probabilities `0,.01,.05,.1,.25,.5` and lognormal standard deviations `0,.1,.25,.5,1,2`. Reports include all twelve individual posteriors, normalized empirical/test risks, accuracy, analytic components, uncapped/capped risk bounds and vacuity flags. Figures are exported as PNG, PDF and EPS without confidence shading.
 
 Distribution definitions and reference moments can also be checked against the official [SciPy lognormal documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.lognorm.html) and [SciPy Rayleigh documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rayleigh.html). Tests integrate the density-ratio and Rayleigh expressions independently and check the loss-gradient bound.
+
+Completed evaluation on 17 November 2026 using the twelve current frozen posteriors: 1000 fresh empirical draws, 100 deployment draws and a separate two-million-sample distance diagnostic. No optimizer was created and no checkpoint was modified. All22 focused tests passed, and all three actual figures were rendered as PNG/PDF/EPS without confidence shading.
+
+At sigma=.5, the first-distance diagnostic is 0.1918912956 (descriptive MC standard error about0.0000718). The analytic second term is 0.2126135379 =0.1976093712+0.0150041667. It is independent of the distance estimate. The current corrected risk results below average all three fixed seeds for each algorithm; all twelve individual risk bounds at this severity are below one.
+
+| Frozen perfect-trained method | Held-out bounded-risk estimate | C1 second-inequality risk RHS |
+| --- | ---: | ---: |
+| ERM | 0.077857 | 0.646119 |
+| L2 | 0.077916 | 0.646121 |
+| T1 | 0.077701 | 0.645531 |
+| T2 | 0.077701 | 0.645531 |
+
+The mean RHS across all twelve posteriors is 0.6458254620. These new-posterior values supersede the historical0.8801 number for this diagnostic; they do not overwrite that older experiment. Complete per-seed/severity data are in `results/journal_c1_bayesian/20261117/c1_evaluation.csv` and `.json`. `figures/c1_channel_terms` illustrates the tractability tradeoff; `c1_erasure_population_risk` and `c1_lognormal_population_risk` compare held-out risks with both C1 applications. Each figure has PNG, PDF and EPS copies.
