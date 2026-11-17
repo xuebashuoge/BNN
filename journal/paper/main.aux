@@ -1,0 +1,72 @@
+\relax 
+\citation{mnist_dataset}
+\citation{fashion_mnist}
+\citation{cifar10}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Numerical Results}{1}{}\protected@file@percent }
+\newlabel{sec:simulation}{{V}{1}{}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Experimental Setup}{1}{}\protected@file@percent }
+\newlabel{sec:sim_setup}{{\mbox  {V-A}}{1}{}{subsection.5.1}{}}
+\newlabel{equ:sim_bounded_loss}{{1}{1}{}{equation.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Generalization From a Finite Channel Bank}{1}{}\protected@file@percent }
+\newlabel{sec:sim_channel_bank}{{\mbox  {V-B}}{1}{}{subsection.5.2}{}}
+\newlabel{equ:sim_channel_gap}{{2}{1}{}{equation.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Choice of the Training Channel Distribution}{1}{}\protected@file@percent }
+\newlabel{sec:sim_mismatch}{{\mbox  {V-C}}{1}{}{subsection.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Bound Decomposition and Numerical Risk Guarantees}{1}{}\protected@file@percent }
+\newlabel{sec:sim_bounds}{{\mbox  {V-D}}{1}{}{subsection.5.4}{}}
+\newlabel{equ:sim_signed_decomposition}{{3}{1}{}{equation.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Main experimental setups. Left and right of $\mid $ are the transmitter and receiver; numerical arrows denote affine layers. The two lines in the two-moons row specify the finite-bank/certificate and training-law/decomposition settings, respectively. All test sets contain 10,000 examples. Channel laws refer to deployment.}}{2}{}\protected@file@percent }
+\newlabel{tab:sim_setup}{{I}{2}{}{table.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Effect of the reusable channel-bank size under matched feature erasures: $p_{\rm  tr}=p_{\rm  ch}=0.5$, $n=512$, and $d=8$. Curves show means over three initialization/channel-bank seeds; shading shows one sample standard deviation and points retain individual seeds. The data, number of optimizer updates, and deployment law are fixed across $m$. Perfect-trained references are reused across bank sizes. The right panel isolates the observed channel generalization gap in normalized-loss units.}}{2}{}\protected@file@percent }
+\newlabel{fig:sim_channel_bank}{{1}{2}{}{figure.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Two population-risk bounds evaluated at the same frozen T1-trained posterior ($d=8$, $n=512$, $m=2000$). A fresh 100-draw empirical-risk estimate is shared by both bounds. The total failure budget is $0.05$: $0.04$ is split across both theorems and 21 declared setups, and $0.01$ controls Monte Carlo error. Values concern normalized bounded loss, not classification error.}}{2}{}\protected@file@percent }
+\newlabel{tab:sim_certificate}{{II}{2}{}{table.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {V-D}0a}Two evaluations of the perfect-training guarantee.}{2}{}\protected@file@percent }
+\newlabel{equ:sim_c1_erasure}{{4}{2}{}{equation.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Fixed deployment feature-erasure probability $p_{\rm  ch}=0.5$ and varying training probability, with $n=800$, $d=16$, and $m=100$. Perfect training is the point $p_{\rm  tr}=0$; its data-only PAC objective is common to the proposed perfect-channel specialization. Means and one sample standard deviation use all three listed seeds. The vertical line marks matched training.}}{3}{}\protected@file@percent }
+\newlabel{fig:sim_training_mismatch}{{2}{3}{}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Unweighted bound terms and signed observed gaps for perfect, matched, and mismatched training, at the same deployment law $p_{\rm  ch}=0.5$, $n=800$, $d=16$, and $m=100$. Each column evaluates the frozen posterior learned under its stated training law. Stacked theoretical terms are those of T1; markers evaluate T2 at the same posterior. The per-run nominal failure budget is $0.05$. Shift uses the bounded-loss total-variation specialization. These illustrative gap estimates do not include the additional MC correction used in Table~\ref {tab:sim_certificate}.}}{3}{}\protected@file@percent }
+\newlabel{fig:sim_bound_decomposition}{{3}{3}{}{figure.3}{}}
+\newlabel{equ:sim_c1_lognormal_channel}{{5}{3}{}{equation.5}{}}
+\newlabel{equ:sim_c1_logit_lipschitz}{{6}{3}{}{equation.6}{}}
+\newlabel{equ:sim_c1_lognormal_distance}{{7}{3}{}{equation.7}{}}
+\newlabel{equ:sim_c1_lognormal_kl}{{8}{4}{}{equation.8}{}}
+\newlabel{equ:sim_c1_reference}{{9}{4}{}{equation.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Deployment Performance Under Analog Fading}{4}{}\protected@file@percent }
+\newlabel{sec:sim_performance}{{\mbox  {V-E}}{4}{}{subsection.5.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-E}1}CIFAR-10 with a convolutional transmitter}{4}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces C1 under identical perfect-channel training. Feature erasure uses the exact first expected-distance term. Centered lognormal output noise uses the closed-form Gaussian-reference expression in the second inequality. Risk-upper curves include empirical risk, its MC correction, and the data penalty. The lognormal direct-expectation MC curve is a diagnostic, not a certified risk upper; its distance estimates never enter the reference bound. The Jensen curve is a separate analytic upper bound. Held-out-risk error bars show one sample SD over all three seeds. Uncapped bounds above one are vacuous.}}{5}{}\protected@file@percent }
+\newlabel{fig:sim_c1_evaluation}{{4}{5}{}{figure.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Test performance, reused-bank empirical risk, and bounds. Training counts are $n=55{,}000$ for MNIST, $n=10{,}000$ for FashionMNIST, and $n=45{,}000$ for CIFAR-10; all use $m=100$. Perfect denotes training only. Accuracy is in percent; risks use $-\log (0.01+0.99p_y)/\log 100$. Test risk is a held-out estimate. Entries are mean $\pm $ sample SD over all selected seeds (three for MNIST/CIFAR-10, two for FashionMNIST), with ten Gibbs/channel draws. Unweighted T1/T2 bounds include fresh empirical Monte Carlo correction and total failure budget $0.05$: $0.04/(2\times 51)$ per theorem/run and $0.01/51$ per MC event. Values above one are vacuous; final clipping gives one. N/A denotes deterministic ERM/L2, whose Dirac posterior has infinite KL to the continuous Gaussian prior. Bounds concern smooth Gibbs loss under the theorem assumptions and declared confidence family.}}{5}{}\protected@file@percent }
+\newlabel{tab:sim_algorithm_risk_bounds}{{III}{5}{}{table.3}{}}
+\newlabel{tab:sim_accuracy_risk}{{III}{5}{}{table.3}{}}
+\newlabel{tab:sim_cifar}{{III}{5}{}{table.3}{}}
+\@writefile{toc}{\contentsline {section}{Appendix\nobreakspace  A: Supplementary Numerical Results}{6}{}\protected@file@percent }
+\newlabel{app:simulation_results}{{A}{6}{}{section.Appendix.A}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-A}}Additional Channel-Bank Comparisons}{6}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Reduced-data MNIST under the same analog deployment law ($n=10{,}000$, $d=128$, 35 epochs). Entries use all two paired initialization/channel-bank seeds and ten fresh draws per checkpoint; settings were selected on validation data.}}{6}{}\protected@file@percent }
+\newlabel{tab:app_reduced_mnist}{{IV}{6}{}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Initial reduced-data MNIST screen ($n=10{,}000$, $d=128$, $m=100$, 25 epochs). These entries use five inference draws and two seeds, and are kept separate from the ten-draw final comparisons.}}{6}{}\protected@file@percent }
+\newlabel{tab:app_screen_mnist}{{V}{6}{}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-B}}Data Size and Optimization Budget}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-C}}Internal Objective Ablations and Selected Cases}{6}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces Width-64 IID two-moons feature-erasure refinement ($n=800$, erasure probability $0.5$, 150 epochs). Entries use two seeds and ten inference draws. A matched L2 run is unavailable for this cohort and is not substituted from another experiment.}}{7}{}\protected@file@percent }
+\newlabel{tab:app_toy_erasure}{{VI}{7}{}{table.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {VII}{\ignorespaces Exploratory data-size slice for T1 on IID two moons ($d=8$, $m=100$). Accuracy is mean $\pm $ sample standard deviation over three initialization/channel-bank seeds. The same 150 epochs imply different optimizer-update counts. Negative observed data gaps and the changing optimization budget preclude interpreting this slice as a quantitative validation of the theoretical $n$-rate.}}{7}{}\protected@file@percent }
+\newlabel{tab:app_data_size}{{VII}{7}{}{table.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-D}}Selected Optimization Settings}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-E}}CIFAR-10 Screening and Optimization Settings}{7}{}\protected@file@percent }
+\bibcite{mnist_dataset}{1}
+\bibcite{fashion_mnist}{2}
+\bibcite{cifar10}{3}
+\@writefile{lot}{\contentsline {table}{\numberline {VIII}{\ignorespaces Validation-selected settings for Table~\ref {tab:sim_accuracy_risk}. The active coefficients are the L2 weight $\lambda _2$, T1 channel/data weights $(\eta _1,\eta _2)$, T2 joint weight $\eta $, or the perfect-training data weight $\eta _2$. The initial posterior standard deviation is $s_0$; dashes denote deterministic models or no penalty. Posterior means use fan-in-scaled uniform initialization with zero biases, separately from $s_0$; the fixed prior has standard deviation one. These are selected configurations from conditional grids, not an exhaustive or full-factorial search.}}{8}{}\protected@file@percent }
+\newlabel{tab:app_hyperparameters}{{VIII}{8}{}{table.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IX}{\ignorespaces CIFAR-10 deployment performance under Gaussian fading and additive noise. Entries are mean $\pm $ sample standard deviation across initialization/channel-bank seeds conditional on the fixed data split, using ten fresh Gibbs/channel draws per checkpoint. Screen: $n=10,000$, 30 epochs, 2 paired seeds. Configurations use aggregate validation accuracy; checkpoints use validation accuracy. Perfect refers to the training forward channel only. Bold marks the best mean within each metric.}}{8}{}\protected@file@percent }
+\newlabel{tab:app_cifar_screen}{{IX}{8}{}{table.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-F}}Implementation Details}{8}{}\protected@file@percent }
+\newlabel{app:sim_implementation}{{\mbox  {A-F}}{8}{}{subsection.Appendix.A.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-G}}Perfect-Training Bound Evaluations}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{8}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {X}{\ignorespaces C1 evaluation with identical perfect-channel training: the same three frozen posteriors face either hidden-feature erasures or centered lognormal output-logit noise. Test accuracy and risk are mean $\pm $ sample SD across all three seeds; risks use normalized smooth loss. Empirical risk, the data term, and the fresh empirical-MC correction are shared by both deployment cases. Erasure uses C1's first inequality with the discrete metric and $K=1$. Centered lognormal output noise uses the second inequality with the Euclidean metric and $K=\sqrt  2/\log 100$. For lognormal rows, the first term is an independent MC diagnostic (not a certified bound); the risk upper uses the analytic second term. The upper columns are uncapped means of the per-seed bounds, which include empirical MC error; values above one are vacuous.}}{9}{}\protected@file@percent }
+\newlabel{tab:c1_evaluation}{{X}{9}{}{table.10}{}}
+\gdef \@abspage@last{9}
