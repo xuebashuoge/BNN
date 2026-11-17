@@ -291,7 +291,9 @@ def decompositions(evidence, output, index):
             ax.set_xticks(xs, labels)
             ax.set_title(f"{regime.title()} training")
             ax.set_ylabel("Uncapped population-risk RHS")
-            ax.set_ylim(bottom=0)
+            # Empty final stack segments can make the bar total a sticky
+            # upper edge. Set explicit headroom so every full RHS is visible.
+            ax.set_ylim(0., 1.08 * max(1., float(bottom.max()), max(risks)))
             style(ax)
         handles = [Patch(color=COLORS[key], label=label) for key, label in (
             ("empirical", "Fresh empirical risk"), ("mc", "MC correction"), ("shift", "Channel shift"),

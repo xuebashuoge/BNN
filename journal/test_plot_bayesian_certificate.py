@@ -6,8 +6,9 @@ import math
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
-from journal.plot_bayesian_certificate import Evidence, export, fingerprint
+from journal.plot_bayesian_certificate import Evidence, decompositions, export, fingerprint, plt
 from journal.run_experiment import bounded_loss_description, normalize_config
 
 
@@ -94,6 +95,25 @@ class CertificatePlotTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "48 distinct checkpoints"):
             export(self.source, output)
         self.assertFalse(output.exists())
+
+    def test_zero_height_stack_segments_keep_full_rhs_and_headroom(self):
+        figures = []
+        self.addCleanup(plt.close, "all")
+        with mock.patch("journal.plot_bayesian_certificate.finish",
+                        side_effect=lambda fig, *args: figures.append(fig)):
+            decompositions(Evidence(self.source), self.root, {"figures": []})
+        self.assertEqual(len(figures), 2)
+        for fig in figures:
+            for ax in fig.axes:
+                # T1 has an empty final joint segment; perfect training also
+                # has empty channel segments. Both previously suppressed the
+                # normal autoscale margin, clipping high perfect-law bars.
+                self.assertTrue(any(patch.get_height() == 0 for patch in ax.patches))
+                highest_stack = max(patch.get_y() + patch.get_height() for patch in ax.patches)
+                highest_marker = max(float(value) for line in ax.lines for value in line.get_ydata())
+                expected_top = 1.08 * max(1., highest_stack, highest_marker)
+                self.assertGreaterEqual(ax.get_ylim()[1] + 1e-12, expected_top)
+                self.assertGreater(ax.get_ylim()[1], highest_stack)
 
     def test_gap_only_number_cannot_be_presented_as_risk_bound(self):
         self.data["rows"][0]["theorem_1"]["rhs_uncapped"] = .07

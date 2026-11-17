@@ -46,6 +46,23 @@ Since every label has exactly one declared configuration and all three seeds, `-
 
 A finite KL makes bound calculation possible for every method. **Nonvacuity and proposed-method superiority are outcomes, not requirements imposed on the data.** Perfect-to-noisy channel shift, posterior complexity and simultaneous finite-Monte-Carlo confidence can make some or all bounds vacuous. In particular, a perfect-to-continuous-noisy total-variation shift can equal one. Report uncapped theorem right-hand sides, capped risk bounds, individual seeds and nonvacuity flags. These statements concern normalized smooth Gibbs loss, not unbounded cross entropy or classification error, and remain conditional on the supplied theorems and assumptions.
 
-Export this diagnostic's accuracy, bound and decomposition figures to PNG, PDF and EPS without confidence shading. Individual runs, bound components and Monte Carlo information remain in the numerical exports. Results are pending until this separate campaign and its frozen-checkpoint certificate evaluation complete; no new training or test evaluation is performed by the builder or its unit tests.
+Export this diagnostic's accuracy, bound and decomposition figures to PNG, PDF and EPS without confidence shading. Individual runs, bound components and Monte Carlo information remain in the numerical exports. No training or test evaluation is performed by the builder or its unit tests.
 
 The complete coordinator is `python -m journal.run_bayesian_certificate`. The Slurm wrapper `journal/bayesian_certificate.slurm` requests eight CPUs, 4 GiB and 15 minutes, checks the matching one-epoch pilot before full training, then evaluates 1,000 fresh bank-only draws for each checkpoint using four independent two-thread processes. Export `DATASET`, `JOURNAL_GIT_SHA=$(git rev-parse HEAD)` and `JOURNAL_MANIFEST_SHA256` for the committed certificate manifest before submission. Its `status.json` records progress and failures. The certificate family uses failure budget `.025`; the final main-family bound report separately uses `.025`, so their union failure budget is at most `.05`.
+
+Completed on 17 November 2026 as Slurm job **35235753**, source revision `e31261594d36b7aa32e55e3923c26ea366ced674`: all 16 resource pilots, 48 training/test evaluations and 48 fresh bank evaluations succeeded. Slurm elapsed time was 203 seconds, peak step RSS 2,086,204 KiB and exit code `0:0`. All 24 matched checkpoints have nonvacuous bounds under **both** theorems. All 24 perfect-training bounds are vacuous after including the deployment shift. The paired T1/T2 perfect weights and saved banks are identical in all six law/seed pairs, as expected from their identical fixed objectives.
+
+Matched results below are means over all three paired seeds; risk RHSs use the normalized smooth loss, fresh empirical MC correction and family confidence budget `.025`:
+
+| Deployment | Algorithm | Test accuracy (%) | T1 risk RHS | T2 risk RHS |
+| --- | --- | ---: | ---: | ---: |
+| Gaussian analog | ERM | 64.4095 | 0.669655 | 0.555774 |
+| Gaussian analog | L2 | 64.1387 | 0.667749 | 0.554543 |
+| Gaussian analog | T1 | 64.3983 | 0.666187 | 0.553289 |
+| Gaussian analog | T2 | 64.4030 | 0.666372 | 0.553421 |
+| Outage | ERM | 82.6382 | 0.622944 | 0.508304 |
+| Outage | L2 | 82.6665 | 0.621700 | 0.507470 |
+| Outage | T1 | 82.5662 | 0.619955 | 0.506147 |
+| Outage | T2 | 82.5630 | 0.620144 | 0.506277 |
+
+The proposed methods slightly reduce the evaluated risk RHSs but do not have the highest accuracy in this fixed small-model diagnostic. This result is retained alongside the separate main accuracy campaign. Full rows, seed variation and all PNG/PDF/EPS figures are under `results/journal_bayesian_certificate/20261117/`; the original checkpoints and source-linked MC reports are retained there. Figure rendering received a later padding correction; the numerical data were unchanged.
