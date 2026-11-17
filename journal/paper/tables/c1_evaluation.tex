@@ -1,0 +1,26 @@
+\begin{table*}[t]
+\centering\footnotesize
+\caption{C1 evaluation with identical perfect-channel training: the same three frozen posteriors face either hidden-feature erasures or centered lognormal output-logit noise. Test accuracy and risk are mean $\pm$ sample SD across all three seeds; risks use normalized smooth loss. Empirical risk, the data term, and the fresh empirical-MC correction are shared by both deployment cases. Erasure uses C1's first inequality with the discrete metric and $K=1$. Centered lognormal output noise uses the second inequality with the Euclidean metric and $K=\sqrt2/\log100$. For lognormal rows, the first term is an independent MC diagnostic (not a certified bound); the risk upper uses the analytic second term. The upper columns are uncapped means of the per-seed bounds, which include empirical MC error; values above one are vacuous.}
+\label{tab:c1_evaluation}
+\begin{tabular}{rrrrrrrr}
+\toprule
+Severity & Test acc. (\%) & Test risk & Emp. risk & First shift$^*$ & Jensen & Second shift & Risk upper\\
+\midrule
+\multicolumn{8}{l}{\emph{Hidden-feature erasure: severity $p$}}\\
+0.00 & $85.02\pm0.06$ & $0.0730\pm0.0014$ & 0.0746 & 0.0000 & -- & -- & 0.6675\\
+0.01 & $84.93\pm0.09$ & $0.0734\pm0.0016$ & 0.0746 & 0.0773 & -- & -- & 0.7447\\
+0.05 & $84.56\pm0.37$ & $0.0754\pm0.0023$ & 0.0746 & 0.3366 & -- & -- & 1.0041\\
+0.10 & $84.03\pm0.75$ & $0.0779\pm0.0032$ & 0.0746 & 0.5695 & -- & -- & 1.2370\\
+0.25 & $81.86\pm1.87$ & $0.0864\pm0.0050$ & 0.0746 & 0.8999 & -- & -- & 1.5674\\
+0.50 & $75.77\pm3.56$ & $0.1037\pm0.0060$ & 0.0746 & 0.9961 & -- & -- & 1.6636\\
+\midrule
+\multicolumn{8}{l}{\emph{Centered lognormal output noise: severity $\sigma$, shape $\tau=0.1$}}\\
+0.00 & $85.02\pm0.06$ & $0.0730\pm0.0014$ & 0.0746 & 0.0000 & 0.0000 & 0.0000 & 0.6675\\
+0.10 & $84.96\pm0.08$ & $0.0732\pm0.0015$ & 0.0746 & 0.0384 & 0.0434 & 0.0537 & 0.7212\\
+0.25 & $84.73\pm0.16$ & $0.0746\pm0.0016$ & 0.0746 & 0.0959 & 0.1086 & 0.1125 & 0.7800\\
+0.50 & $83.85\pm0.53$ & $0.0793\pm0.0023$ & 0.0746 & 0.1919 & 0.2171 & 0.2126 & 0.8801\\
+1.00 & $79.54\pm1.56$ & $0.0974\pm0.0044$ & 0.0746 & 0.3838 & 0.4343 & 0.4210 & 1.0885\\
+2.00 & $69.99\pm1.95$ & $0.1553\pm0.0085$ & 0.0746 & 0.7676 & 0.8686 & 0.8728 & 1.5403\\
+\bottomrule
+\end{tabular}
+\end{table*}

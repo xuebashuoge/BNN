@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering\footnotesize
+\caption{C1 first inequality for hidden-feature erasures, evaluated without retraining on the same three perfect-trained posteriors. The discrete channel metric admits the uniform constant $K=1$. Risk denotes normalized bounded loss; test risk is a held-out estimate. Risk upper bounds include empirical MC correction and the data penalty. Means are over all three seeds; uncapped bounds above one are vacuous.}
+\label{tab:c1_erasure}
+\begin{tabular}{rrrrrr}
+\toprule
+$p$ & Test acc. (\%) & Test risk & Emp. risk & First shift & Risk upper\\
+\midrule
+0.00 & 85.02 & 0.0730 & 0.0746 & 0.0000 & 0.6675\\
+0.01 & 84.93 & 0.0734 & 0.0746 & 0.0773 & 0.7447\\
+0.05 & 84.56 & 0.0754 & 0.0746 & 0.3366 & 1.0041\\
+0.10 & 84.03 & 0.0779 & 0.0746 & 0.5695 & 1.2370\\
+0.25 & 81.86 & 0.0864 & 0.0746 & 0.8999 & 1.5674\\
+0.50 & 75.77 & 0.1037 & 0.0746 & 0.9961 & 1.6636\\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,122 @@
+% Same frozen perfect-trained posteriors; inference only.
+% Numerical evidence: assets/c1_evaluation.json and tables/c1_evaluation.csv.
+\paragraph{Two evaluations of the perfect-training guarantee.}
+We freeze the same three perfect-trained two-moons posteriors, with $n=512$
+and hidden width eight. Both deployment cases retain the trained weights,
+Gaussian prior, noiseless predictor, empirical training risk, and data
+penalty. Only the channel-shift evaluation changes.
+
+For independent feature erasures with probability $p$, choose the discrete
+metric $d_{\mathcal C}(c,c')=\mathbf1\{c\ne c'\}$ on complete masks.
+Every $[0,1]$ loss is uniformly $1$-Lipschitz for this metric. Thus C1's
+first inequality has the explicit expected-distance term
+\begin{equation}
+ B_{\rm erasure}=\mathbb E_Pd_{\mathcal C}(C,c_0)=1-(1-p)^8.
+ \label{equ:sim_c1_erasure}
+\end{equation}
+This equals the earlier total-variation specialization numerically.
+
+For the second case, the entire trained network transmits its two output
+logits, and the receiver applies softmax after additive, centered lognormal
+interference. The deployment law is fully specified by independent
+$Z_i\sim\mathcal N(0,1)$ and
+\begin{equation}
+ N_i=\frac{\sigma}{\sqrt{v_\tau}}
+       (e^{\tau Z_i-\tau^2/2}-1),\quad
+ v_\tau=e^{\tau^2}-1,\quad \tau=0.1.
+ \label{equ:sim_c1_lognormal_channel}
+\end{equation}
+Each coordinate has zero mean and variance $\sigma^2$, but its density is
+skewed and non-Gaussian. The fixed shape is chosen analytically before the
+deployment-risk evaluation. Moving the communication split to the output
+preserves exactly the noiseless trained predictor. This is an additive-output
+case, rather than a Lipschitz claim for the earlier hidden-feature channel.
+For the smooth bounded loss, $L=\log(1/\varepsilon_\ell)$ and
+\begin{equation}
+ \nabla_{\rm logits}\ell=
+ \frac{(1-\varepsilon_\ell)p_y}
+ {\varepsilon_\ell+(1-\varepsilon_\ell)p_y}
+ \frac{\boldsymbol p-\boldsymbol e_y}{L},\qquad
+ \|\nabla_{\rm logits}\ell\|_2\leq\frac{\sqrt2}{L}.
+ \label{equ:sim_c1_logit_lipschitz}
+\end{equation}
+Consequently, $K=\sqrt2/\log100$ is uniform over all weights and inputs for
+the Euclidean noise metric. This argument uses the smooth loss, rather
+than the discontinuous $0$--$1$ loss.
+
+The first expected-distance term now requires integration of
+\begin{equation}
+ K\mathbb E_P\|N\|_2=
+ \frac{K\sigma}{\sqrt{v_\tau}}\,
+ \mathbb E\sqrt{\sum_{i=1}^2(e^{\tau Z_i-\tau^2/2}-1)^2}.
+ \label{equ:sim_c1_lognormal_distance}
+\end{equation}
+This fully known channel has no simple known closed-form expression for
+its mean Euclidean distance. A direct evaluation therefore requires
+numerical integration or Monte Carlo. We retain an independent two-million-draw
+MC estimate as a diagnostic, with its standard error in the source data;
+it does not enter the analytic guarantee.
+
+Instead choose the fixed, moment-matched Gaussian reference
+$Q_\sigma=\mathcal N(0,\sigma^2 I_2)$. Its support contains that of $P$.
+Writing $a=\sigma/\sqrt{v_\tau}$, the coordinate entropy is
+$h(N_i)=\log(a\tau)-\tau^2/2+\tfrac12\log(2\pi e)$.
+Together with $\mathbb E N_i^2=\sigma^2$, this yields the exact KL
+\begin{equation}
+ D(P\Vert Q_\sigma)
+ =J_\tau=\tau^2+\log\frac{e^{\tau^2}-1}{\tau^2}.
+ \label{equ:sim_c1_lognormal_kl}
+\end{equation}
+C1's second inequality is therefore an entirely closed-form evaluation:
+\begin{align}
+ K\mathbb E_P\|N\|_2
+ &\leq B_{\rm ref}(\sigma)=\log M_2(K\sigma)+J_\tau,\nonumber\\
+ M_2(t)&=1+t\sqrt{2\pi}\,e^{t^2/2}\Phi(t),
+ \label{equ:sim_c1_reference}
+\end{align}
+where $\Phi$ is the standard normal CDF. Neither deployment-distance
+integration nor numerical reference optimization is needed. For positive
+$\sigma$ and $\tau$, the lognormal tail gives
+$\mathbb E_P e^{K\|N\|_2}=\infty$, so choosing $Q=P$ would not be useful;
+the Gaussian reference has the required finite exponential moment. The first
+inequality remains valid; the second provides a closed-form relaxation
+when the first expectation has no simple analytic expression.
+A further control is the elementary Jensen upper bound
+$K\mathbb E\|N\|_2\leq K\sigma\sqrt2$. Neither analytic upper bound
+uniformly dominates the other. At $\sigma=0$, both channel laws are the
+identity and their shift penalties are exactly zero; this endpoint is
+treated separately from the continuous Gaussian reference, whose positive-noise
+KL term retains the non-Gaussian shape penalty $J_\tau$.
+
+For each posterior we add its empirical risk, a fresh 100-draw empirical-MC
+upper correction, and the unweighted data penalty. The conservative data-event
+budget is $0.04/473$, covering the 473 previously explored journal trials;
+the three posteriors are fixed before the fresh MC evaluations, which each
+receive budget $0.01/3$. Thus the declared family has failure probability
+at most $0.05$. Analytic channel-shift bounds cover every displayed severity.
+Test risks remain finite-test estimates.
+
+Figure~\ref{fig:sim_c1_evaluation} compares the two evaluations;
+Table~\ref{tab:c1_evaluation} in the supplement gives numerical values.
+\begin{figure*}[t]
+ \centering
+ \includegraphics[width=0.92\textwidth]{\simroot/assets/fig_c1_evaluation.pdf}
+ \caption{C1 under identical perfect-channel training. Feature erasure uses
+ the exact first expected-distance term. Centered lognormal output noise
+ uses the closed-form Gaussian-reference expression in the second inequality.
+ Risk-upper curves include empirical risk, its MC correction, and the data
+ penalty. The lognormal direct-expectation MC curve is a diagnostic, not a
+ certified risk upper; its distance estimates never enter the reference bound.
+ The Jensen curve is a separate analytic upper bound. Held-out-risk error bars
+ show one sample SD over all three seeds. Uncapped bounds above one are vacuous.}
+ \label{fig:sim_c1_evaluation}
+\end{figure*}
+
+The shared mean empirical risk, data penalty, and empirical-MC correction
+are $0.0746$, $0.4240$, and $0.1689$. At $\sigma=0.5$,
+$J_\tau=0.0150042$ and $\log M_2(K\sigma)=0.1976094$, giving the
+closed-form second shift upper $0.2126135$ and corrected mean risk upper
+$0.8800855$. The Jensen shift upper is $0.2171472$. This example exhibits
+the intended tradeoff: the first expectation needs numerical evaluation,
+whereas a chosen reference produces an explicit, looser analytic guarantee
+without changing training.

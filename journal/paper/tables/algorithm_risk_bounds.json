@@ -1,0 +1,3887 @@
+{
+  "schema_version": 1,
+  "generated_by": "journal/paper/generate_risk_bound_table.py",
+  "definitions": {
+    "predictor": "Gibbs risk for Gaussian-posterior methods; deterministic predictor for ERM/L2. Each sampled weight is fixed for a full test pass.",
+    "loss": "-log(0.01+0.99*p_y)/log(100), in [0,1]; all reported risks and RHSs use this same loss.",
+    "test_risk": "Ten-draw held-out estimate on the official 10,000-example test set under deployment channels; not the known population risk.",
+    "empirical_risk": "Same frozen checkpoint on all training examples with the saved reused channel bank; not the average training trajectory loss.",
+    "uncertainty": "Mean +/- sample SD over all validation-selected initialization/channel-bank seeds, conditional on the fixed data.",
+    "nominal_rhs": "Unweighted empirical risk + T1 channel/data or T2 joint complexity + bounded-loss channel shift at the saved nominal delta. Training eta coefficients never scale these terms.",
+    "corrected_risk_rhs": "min(1, empirical MC estimate + its upper correction) + unweighted T1 channel/data or T2 joint complexity + bounded-loss shift, using overall delta .05 across 51 selected runs: theorem failure .04/(2*51), MC failure .01/51. Displayed before final clipping so vacuity is visible; final clipping to the loss range gives the trivial bound one whenever the RHS exceeds one.",
+    "complexity_shift_floor": "Nonnegative part of the nominal risk-bound RHS before empirical risk. It is not a lower bound on true population risk.",
+    "bound_status": "Vacuous means complexity+shift alone exceeds one for every seed. Missing empirical risk is not replaced by zero. N/A means a Dirac posterior has infinite KL to the continuous Gaussian prior.",
+    "certificate_limit": "Nominal complexity terms remain diagnostics. Corrected rows include fresh bank-risk Monte Carlo control and the declared 51-run confidence allocation, conditional on theorem assumptions and the declared candidate family; they do not certify classification error or unbounded CE.",
+    "pending_queue": "Run each entry's argument-vector command from repository root only after saved checkpoint files and DATASET are available. The bank evaluator has no training fallback."
+  },
+  "rows": [
+    {
+      "dataset": "MNIST",
+      "method": "ERM-Perfect",
+      "display_method": "ERM (perfect)",
+      "seeds": [
+        9001,
+        9002,
+        9003
+      ],
+      "n_train": 55000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.58073,
+        "sd": 0.004181291666459046,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.2601641800006231,
+        "sd": 0.0029834983401553087,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.03958586882388953,
+        "sd": 0.0009667675788944752,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9001",
+          "seed": 9001,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.58397,
+          "test_bounded_risk": 0.2581137484478951,
+          "empirical_bounded_risk": 0.038526744261654935,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9002",
+          "seed": 9002,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.58221,
+          "test_bounded_risk": 0.25879188452959057,
+          "empirical_bounded_risk": 0.04042093220624056,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9003",
+          "seed": 9003,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9003/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9003/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.57601,
+          "test_bounded_risk": 0.26358690702438353,
+          "empirical_bounded_risk": 0.03980993000377308,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "MNIST",
+      "method": "ERM-Matched",
+      "display_method": "ERM (matched)",
+      "seeds": [
+        9001,
+        9002,
+        9003
+      ],
+      "n_train": 55000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.74598,
+        "sd": 0.011217437318746198,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.19444299877444904,
+        "sd": 0.009762391559074822,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.03889420382644191,
+        "sd": 0.0019081985240785144,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9001",
+          "seed": 9001,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.73305,
+          "test_bounded_risk": 0.20568993556797505,
+          "empirical_bounded_risk": 0.03832095991091294,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9002",
+          "seed": 9002,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.75178,
+          "test_bounded_risk": 0.1894783919143677,
+          "empirical_bounded_risk": 0.037338336932875894,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9003",
+          "seed": 9003,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9003/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9003/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.75311,
+          "test_bounded_risk": 0.18816066884100438,
+          "empirical_bounded_risk": 0.04102331463553689,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "MNIST",
+      "method": "L2-Matched",
+      "display_method": "$\\ell_2$ (matched)",
+      "seeds": [
+        9001,
+        9002,
+        9003
+      ],
+      "n_train": 55000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.70115,
+        "sd": 0.012093399025914942,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.19503259568591913,
+        "sd": 0.007022266808926383,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.062007495807011925,
+        "sd": 0.0017998561174572617,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9001",
+          "seed": 9001,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.70561,
+          "test_bounded_risk": 0.19126046243250366,
+          "empirical_bounded_risk": 0.06012890287659385,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9002",
+          "seed": 9002,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.68746,
+          "test_bounded_risk": 0.20313480976700782,
+          "empirical_bounded_risk": 0.06371662893988869,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9003",
+          "seed": 9003,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9003/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9003/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.71038,
+          "test_bounded_risk": 0.19070251485824585,
+          "empirical_bounded_risk": 0.06217695560455322,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "MNIST",
+      "method": "PAC-Perfect",
+      "display_method": "Proposed (perfect)",
+      "seeds": [
+        9001,
+        9002,
+        9003
+      ],
+      "n_train": 55000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.5793633333333333,
+        "sd": 0.005990069559974575,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.2601456491295497,
+        "sd": 0.0029471249458353664,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.039299705315792195,
+        "sd": 0.0009249385398219818,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "confirm_mnist_analog_PAC_Perfect_921abec5e444_s9001",
+          "seed": 9001,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.58347,
+          "test_bounded_risk": 0.2593764723920822,
+          "empirical_bounded_risk": 0.038275591166236175,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 389785.8125,
+            "channel_complexity": 0.0,
+            "sample_complexity": 1.882458209991455,
+            "joint_complexity": 1.882458209991455
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 389785.80227497075,
+              "channel_complexity": 0.0,
+              "sample_complexity": 1.8824698260364152,
+              "joint_complexity": 1.8824698260364152
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 3.574082842225603,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 3.574082842225603,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 2.882458209991455,
+            "t2": 2.882458209991455
+          },
+          "nominal_risk_rhs": {
+            "t1": 2.920733801157691,
+            "t2": 2.920733801157691
+          }
+        },
+        {
+          "task_id": "confirm_mnist_analog_PAC_Perfect_921abec5e444_s9002",
+          "seed": 9002,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.58213,
+          "test_bounded_risk": 0.2576593803429604,
+          "empirical_bounded_risk": 0.04007425802664323,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 390999.0,
+            "channel_complexity": 0.0,
+            "sample_complexity": 1.8853853940963745,
+            "joint_complexity": 1.8853853940963745
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 390999.00041839725,
+              "channel_complexity": 0.0,
+              "sample_complexity": 1.885397019330673,
+              "joint_complexity": 1.885397019330673
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 3.578808702380268,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 3.578808702380268,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 2.8853853940963745,
+            "t2": 2.8853853940963745
+          },
+          "nominal_risk_rhs": {
+            "t1": 2.925459652123018,
+            "t2": 2.925459652123018
+          }
+        },
+        {
+          "task_id": "confirm_mnist_analog_PAC_Perfect_921abec5e444_s9003",
+          "seed": 9003,
+          "source": "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9003/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9003/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.5724899999999999,
+          "test_bounded_risk": 0.2634010946536064,
+          "empirical_bounded_risk": 0.03954926675449718,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 389985.3125,
+            "channel_complexity": 0.0,
+            "sample_complexity": 1.8829398155212402,
+            "joint_complexity": 1.8829398155212402
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 389985.3520442923,
+              "channel_complexity": 0.0,
+              "sample_complexity": 1.8829516105661395,
+              "joint_complexity": 1.8829516105661395
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 3.5758383023435885,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 3.5758383023435885,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 2.8829398155212402,
+            "t2": 2.8829398155212402
+          },
+          "nominal_risk_rhs": {
+            "t1": 2.9224890822757374,
+            "t2": 2.9224890822757374
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 3.5762432823164865,
+          "sd": 0.002388816680743792,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 2.9228941785188156,
+          "sd": 0.0023888269215740303,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 2.8835944732030234,
+          "sd": 0.00156956497357115,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 3.5762432823164865,
+          "sd": 0.002388816680743792,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 2.9228941785188156,
+          "sd": 0.0023888269215740303,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 2.8835944732030234,
+          "sd": 0.00156956497357115,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "MNIST",
+      "method": "T1-Matched",
+      "display_method": "Proposed T1 (matched)",
+      "seeds": [
+        9001,
+        9002,
+        9003
+      ],
+      "n_train": 55000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.7663066666666666,
+        "sd": 0.004370747457052709,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.17948044696795443,
+        "sd": 0.0034098682105213984,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.045529123593099186,
+        "sd": 0.0020149970724344184,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "full_refine_mnist_analog_T1_Matched_e91619e7a399_s9001",
+          "seed": 9001,
+          "source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": true,
+          "accuracy": 0.7618900000000001,
+          "test_bounded_risk": 0.18309815042175354,
+          "empirical_bounded_risk": 0.04426800748781724,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 77283.75,
+            "channel_complexity": 19.757333755493164,
+            "sample_complexity": 0.838257372379303,
+            "joint_complexity": 19.77571678161621
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 77283.7561740204,
+              "channel_complexity": 19.757953999263965,
+              "sample_complexity": 0.8382837236839327,
+              "joint_complexity": 19.77633795932188
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 21.293843155458667,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 20.47394339183265,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 20.595591127872467,
+            "t2": 19.77571678161621
+          },
+          "nominal_risk_rhs": {
+            "t1": 20.639859135360286,
+            "t2": 19.81998478910403
+          }
+        },
+        {
+          "task_id": "full_refine_mnist_analog_T1_Matched_e91619e7a399_s9002",
+          "seed": 9002,
+          "source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.7664000000000001,
+          "test_bounded_risk": 0.17901746577844024,
+          "empirical_bounded_risk": 0.04446634091550654,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 80554.09375,
+            "channel_complexity": 20.170997619628906,
+            "sample_complexity": 0.8558074831962585,
+            "joint_complexity": 20.189741134643555
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 80554.09794389835,
+              "channel_complexity": 20.17160439485856,
+              "sample_complexity": 0.8558332324008867,
+              "joint_complexity": 20.190347981826616
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 21.725241393197905,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 20.888151747765075,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 21.026805102825165,
+            "t2": 20.189741134643555
+          },
+          "nominal_risk_rhs": {
+            "t1": 21.07127144374067,
+            "t2": 20.23420747555906
+          }
+        },
+        {
+          "task_id": "full_refine_mnist_analog_T1_Matched_e91619e7a399_s9003",
+          "seed": 9003,
+          "source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9003/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9003/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.7706299999999999,
+          "test_bounded_risk": 0.17632572470366953,
+          "empirical_bounded_risk": 0.04785302237597379,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 81525.109375,
+            "channel_complexity": 20.29219627380371,
+            "sample_complexity": 0.8609494566917419,
+            "joint_complexity": 20.311044692993164
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 81525.11015722019,
+              "channel_complexity": 20.292799854878606,
+              "sample_complexity": 0.8609750669676947,
+              "joint_complexity": 20.311648905467827
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 21.854965369245225,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 21.012839352866752,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 21.153145730495453,
+            "t2": 20.311044692993164
+          },
+          "nominal_risk_rhs": {
+            "t1": 21.200998752871428,
+            "t2": 20.35889771536914
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 21.624683305967267,
+          "sd": 0.29376603170175314,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 20.970709777324128,
+          "sd": 0.2937752612959293,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 20.92518065373103,
+          "sd": 0.29233958031163687,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 20.791644830821493,
+          "sd": 0.2821123942122792,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 20.137696660010743,
+          "sd": 0.28212149627821104,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 20.092167536417644,
+          "sd": 0.28068567558367924,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "MNIST",
+      "method": "T2-Matched",
+      "display_method": "Proposed T2 (matched)",
+      "seeds": [
+        9001,
+        9002,
+        9003
+      ],
+      "n_train": 55000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.7643466666666666,
+        "sd": 0.0075708409924745744,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.179234310165147,
+        "sd": 0.006440474316922232,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.039568691107143054,
+        "sd": 0.002017638368464366,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9001",
+          "seed": 9001,
+          "source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.75761,
+          "test_bounded_risk": 0.18499596274316307,
+          "empirical_bounded_risk": 0.03800598215363242,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 136516.765625,
+            "channel_complexity": 26.258501052856445,
+            "sample_complexity": 1.114076852798462,
+            "joint_complexity": 26.282581329345703
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 136516.76858500828,
+              "channel_complexity": 26.258967507793475,
+              "sample_complexity": 1.1140966399558694,
+              "joint_complexity": 26.283048969657337
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 28.06440755492593,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 26.974392376833922,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 27.372577905654907,
+            "t2": 26.282581329345703
+          },
+          "nominal_risk_rhs": {
+            "t1": 27.41058388780854,
+            "t2": 26.320587311499335
+          }
+        },
+        {
+          "task_id": "full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9002",
+          "seed": 9002,
+          "source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.76289,
+          "test_bounded_risk": 0.18042561220228673,
+          "empirical_bounded_risk": 0.03885360977476293,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 139223.171875,
+            "channel_complexity": 26.51749610900879,
+            "sample_complexity": 1.1250649690628052,
+            "joint_complexity": 26.541805267333984
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 139223.1706092447,
+              "channel_complexity": 26.51795753197174,
+              "sample_complexity": 1.1250846302718989,
+              "joint_complexity": 26.542267505539574
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 28.335233197041354,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 27.23445854033729,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 27.642561078071594,
+            "t2": 26.541805267333984
+          },
+          "nominal_risk_rhs": {
+            "t1": 27.681414687846356,
+            "t2": 26.580658877108746
+          }
+        },
+        {
+          "task_id": "full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9003",
+          "seed": 9003,
+          "source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9003/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9003/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.77254,
+          "test_bounded_risk": 0.17228135554999113,
+          "empirical_bounded_risk": 0.041846481393033805,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 142175.0625,
+            "channel_complexity": 26.797128677368164,
+            "sample_complexity": 1.1369287967681885,
+            "joint_complexity": 26.821683883666992
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 142175.07221428643,
+              "channel_complexity": 26.797586936743276,
+              "sample_complexity": 1.1369482760166754,
+              "joint_complexity": 26.822143729715982
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 28.629719119175935,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 27.517327636131967,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 27.934057474136353,
+            "t2": 26.821683883666992
+          },
+          "nominal_risk_rhs": {
+            "t1": 27.975903955529386,
+            "t2": 26.863530365060026
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 28.343119957047737,
+          "sd": 0.2827382922531823,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 27.68930084372809,
+          "sd": 0.28274253010984957,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 27.649732152620953,
+          "sd": 0.2808084661974632,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 27.24205951776773,
+          "sd": 0.27154742696384027,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 26.5882588512227,
+          "sd": 0.2715513018885225,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 26.54869016011556,
+          "sd": 0.2696172144548544,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "FashionMNIST",
+      "method": "ERM-Perfect",
+      "display_method": "ERM (perfect)",
+      "seeds": [
+        1001,
+        1002
+      ],
+      "n_train": 10000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 25,
+      "accuracy": {
+        "mean": 0.5095149999999999,
+        "sd": 0.012989551570396956,
+        "n": 2
+      },
+      "test_bounded_risk": {
+        "mean": 0.3012150808107853,
+        "sd": 0.013352965356126824,
+        "n": 2
+      },
+      "empirical_available_count": 2,
+      "empirical_bounded_risk": {
+        "mean": 0.08449467459917068,
+        "sd": 0.005168854350904375,
+        "n": 2
+      },
+      "observations": [
+        {
+          "task_id": "fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1001",
+          "seed": 1001,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.5187,
+          "test_bounded_risk": 0.29177310845851895,
+          "empirical_bounded_risk": 0.08814960656166075,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1002",
+          "seed": 1002,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.5003299999999999,
+          "test_bounded_risk": 0.3106570531630516,
+          "empirical_bounded_risk": 0.0808397426366806,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "FashionMNIST",
+      "method": "ERM-Matched",
+      "display_method": "ERM (matched)",
+      "seeds": [
+        1001,
+        1002
+      ],
+      "n_train": 10000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 25,
+      "accuracy": {
+        "mean": 0.615685,
+        "sd": 0.0008555992052357539,
+        "n": 2
+      },
+      "test_bounded_risk": {
+        "mean": 0.22867931411802772,
+        "sd": 9.420793812918261e-05,
+        "n": 2
+      },
+      "empirical_available_count": 2,
+      "empirical_bounded_risk": {
+        "mean": 0.1128133066099882,
+        "sd": 6.418361232457222e-05,
+        "n": 2
+      },
+      "observations": [
+        {
+          "task_id": "fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1001",
+          "seed": 1001,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.61629,
+          "test_bounded_risk": 0.22861269904613496,
+          "empirical_bounded_risk": 0.11285869127750396,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1002",
+          "seed": 1002,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.61508,
+          "test_bounded_risk": 0.22874592918992045,
+          "empirical_bounded_risk": 0.11276792194247245,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "FashionMNIST",
+      "method": "L2-Matched",
+      "display_method": "$\\ell_2$ (matched)",
+      "seeds": [
+        1001,
+        1002
+      ],
+      "n_train": 10000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 25,
+      "accuracy": {
+        "mean": 0.614905,
+        "sd": 0.00416485894118873,
+        "n": 2
+      },
+      "test_bounded_risk": {
+        "mean": 0.22947789846897126,
+        "sd": 0.002406697814708218,
+        "n": 2
+      },
+      "empirical_available_count": 2,
+      "empirical_bounded_risk": {
+        "mean": 0.11211443958580494,
+        "sd": 0.0022155471803356743,
+        "n": 2
+      },
+      "observations": [
+        {
+          "task_id": "fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1001",
+          "seed": 1001,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.6119600000000001,
+          "test_bounded_risk": 0.2311796908140183,
+          "empirical_bounded_risk": 0.11368106802105904,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1002",
+          "seed": 1002,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.61785,
+          "test_bounded_risk": 0.22777610612392424,
+          "empirical_bounded_risk": 0.11054781115055086,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "FashionMNIST",
+      "method": "PAC-Perfect",
+      "display_method": "Proposed (perfect)",
+      "seeds": [
+        1001,
+        1002
+      ],
+      "n_train": 10000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 25,
+      "accuracy": {
+        "mean": 0.524365,
+        "sd": 0.0028920667350530063,
+        "n": 2
+      },
+      "test_bounded_risk": {
+        "mean": 0.2880842310345173,
+        "sd": 0.005990265871916525,
+        "n": 2
+      },
+      "empirical_available_count": 2,
+      "empirical_bounded_risk": {
+        "mean": 0.08346645959258078,
+        "sd": 0.007870098204866461,
+        "n": 2
+      },
+      "observations": [
+        {
+          "task_id": "fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1001",
+          "seed": 1001,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.52641,
+          "test_bounded_risk": 0.2838484734153748,
+          "empirical_bounded_risk": 0.08903145940184594,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 395797.78125,
+            "channel_complexity": 0.0,
+            "sample_complexity": 4.448847770690918,
+            "joint_complexity": 4.448847770690918
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 395797.7782554652,
+              "channel_complexity": 0.0,
+              "sample_complexity": 4.4488752075975055,
+              "joint_complexity": 4.4488752075975055
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 6.191244092022303,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 6.191244092022303,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 5.448847770690918,
+            "t2": 5.448847770690918
+          },
+          "nominal_risk_rhs": {
+            "t1": 5.537879230092764,
+            "t2": 5.537879230092764
+          }
+        },
+        {
+          "task_id": "fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1002",
+          "seed": 1002,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.52232,
+          "test_bounded_risk": 0.2923199886536598,
+          "empirical_bounded_risk": 0.07790145978331564,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 387509.75,
+            "channel_complexity": 0.0,
+            "sample_complexity": 4.402022838592529,
+            "joint_complexity": 4.402022838592529
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 387509.77505245886,
+              "channel_complexity": 0.0,
+              "sample_complexity": 4.402050545878023,
+              "joint_complexity": 4.402050545878023
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 6.13328943068429,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 6.13328943068429,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 5.402022838592529,
+            "t2": 5.402022838592529
+          },
+          "nominal_risk_rhs": {
+            "t1": 5.479924298375845,
+            "t2": 5.479924298375845
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 6.162266761353296,
+          "sd": 0.04098013403347904,
+          "n": 2
+        },
+        "nominal_risk_rhs": {
+          "mean": 5.508901764234304,
+          "sd": 0.040980325220236286,
+          "n": 2
+        },
+        "complexity_shift_floor": {
+          "mean": 5.425435304641724,
+          "sd": 0.03311022701537027,
+          "n": 2
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 6.162266761353296,
+          "sd": 0.04098013403347904,
+          "n": 2
+        },
+        "nominal_risk_rhs": {
+          "mean": 5.508901764234304,
+          "sd": 0.040980325220236286,
+          "n": 2
+        },
+        "complexity_shift_floor": {
+          "mean": 5.425435304641724,
+          "sd": 0.03311022701537027,
+          "n": 2
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "FashionMNIST",
+      "method": "T1-Matched",
+      "display_method": "Proposed T1 (matched)",
+      "seeds": [
+        1001,
+        1002
+      ],
+      "n_train": 10000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 25,
+      "accuracy": {
+        "mean": 0.63237,
+        "sd": 0.0021354624791833894,
+        "n": 2
+      },
+      "test_bounded_risk": {
+        "mean": 0.2188446394276619,
+        "sd": 0.00030718850234215666,
+        "n": 2
+      },
+      "empirical_available_count": 2,
+      "empirical_bounded_risk": {
+        "mean": 0.11149889882981777,
+        "sd": 0.0017759637774319068,
+        "n": 2
+      },
+      "observations": [
+        {
+          "task_id": "fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1001",
+          "seed": 1001,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.63086,
+          "test_bounded_risk": 0.2190618545007706,
+          "empirical_bounded_risk": 0.11275469485998155,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 385444.0,
+            "channel_complexity": 44.12161636352539,
+            "sample_complexity": 4.390277862548828,
+            "joint_complexity": 44.33972930908203
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 385443.9823223654,
+              "channel_complexity": 44.12189393899616,
+              "sample_complexity": 4.390305650269555,
+              "joint_complexity": 44.34000616417081
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 49.27829170914865,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 45.10609828405374,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 48.51189422607422,
+            "t2": 44.33972930908203
+          },
+          "nominal_risk_rhs": {
+            "t1": 48.6246489209342,
+            "t2": 44.45248400394201
+          }
+        },
+        {
+          "task_id": "fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1002",
+          "seed": 1002,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.63388,
+          "test_bounded_risk": 0.21862742435455323,
+          "empirical_bounded_risk": 0.11024310279965399,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 383702.8125,
+            "channel_complexity": 44.0218505859375,
+            "sample_complexity": 4.380350589752197,
+            "joint_complexity": 44.23946762084961
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 383702.79948151135,
+              "channel_complexity": 44.02212707301227,
+              "sample_complexity": 4.380378505787051,
+              "joint_complexity": 44.23974712923088
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 49.166086106621925,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 45.00332765705348,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 48.4022011756897,
+            "t2": 44.23946762084961
+          },
+          "nominal_risk_rhs": {
+            "t1": 48.512444278489355,
+            "t2": 44.34971072364927
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 49.22218890788528,
+          "sd": 0.07934134243376703,
+          "n": 2
+        },
+        "nominal_risk_rhs": {
+          "mean": 48.56854659971178,
+          "sd": 0.07934066355336124,
+          "n": 2
+        },
+        "complexity_shift_floor": {
+          "mean": 48.45704770088196,
+          "sd": 0.07756469977593276,
+          "n": 2
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 45.05471297055361,
+          "sd": 0.0726698072586779,
+          "n": 2
+        },
+        "nominal_risk_rhs": {
+          "mean": 44.40109736379564,
+          "sd": 0.07267168341978546,
+          "n": 2
+        },
+        "complexity_shift_floor": {
+          "mean": 44.28959846496582,
+          "sd": 0.07089571964235698,
+          "n": 2
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "FashionMNIST",
+      "method": "T2-Matched",
+      "display_method": "Proposed T2 (matched)",
+      "seeds": [
+        1001,
+        1002
+      ],
+      "n_train": 10000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "mlp",
+      "epochs": 25,
+      "accuracy": {
+        "mean": 0.632085,
+        "sd": 0.0017465537495309096,
+        "n": 2
+      },
+      "test_bounded_risk": {
+        "mean": 0.21872966738820077,
+        "sd": 0.00036069964332526835,
+        "n": 2
+      },
+      "empirical_available_count": 2,
+      "empirical_bounded_risk": {
+        "mean": 0.1114104408299923,
+        "sd": 0.0018642479793746058,
+        "n": 2
+      },
+      "observations": [
+        {
+          "task_id": "fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1001",
+          "seed": 1001,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1001/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1001/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.6308499999999999,
+          "test_bounded_risk": 0.21898472055196763,
+          "empirical_bounded_risk": 0.1127286632180214,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 385185.0625,
+            "channel_complexity": 44.10679626464844,
+            "sample_complexity": 4.388803005218506,
+            "joint_complexity": 44.324832916259766
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 385185.0390454738,
+              "channel_complexity": 44.10707120673839,
+              "sample_complexity": 4.388830737690659,
+              "joint_complexity": 44.325110308405094
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 49.261968032670026,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 45.09117639664607,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 48.49559926986694,
+            "t2": 44.324832916259766
+          },
+          "nominal_risk_rhs": {
+            "t1": 48.608327933084965,
+            "t2": 44.43756157947779
+          }
+        },
+        {
+          "task_id": "fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1002",
+          "seed": 1002,
+          "source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1002/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1002/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.6333200000000001,
+          "test_bounded_risk": 0.2184746142244339,
+          "empirical_bounded_risk": 0.1100922184419632,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 383473.96875,
+            "channel_complexity": 44.00872039794922,
+            "sample_complexity": 4.379044532775879,
+            "joint_complexity": 44.22627639770508
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 383473.98209697544,
+              "channel_complexity": 44.00899940553293,
+              "sample_complexity": 4.379072257971209,
+              "joint_complexity": 44.226554700639085
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 49.15150130696906,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 44.989984344104,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 48.3877649307251,
+            "t2": 44.22627639770508
+          },
+          "nominal_risk_rhs": {
+            "t1": 48.49785714916706,
+            "t2": 44.33636861614704
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 49.20673466981954,
+          "sd": 0.07811177083862776,
+          "n": 2
+        },
+        "nominal_risk_rhs": {
+          "mean": 48.55309254112601,
+          "sd": 0.07811464043134386,
+          "n": 2
+        },
+        "complexity_shift_floor": {
+          "mean": 48.44168210029602,
+          "sd": 0.07625039245196905,
+          "n": 2
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 45.04058037037504,
+          "sd": 0.07155358655468153,
+          "n": 2
+        },
+        "nominal_risk_rhs": {
+          "mean": 44.386965097812414,
+          "sd": 0.07155423057953214,
+          "n": 2
+        },
+        "complexity_shift_floor": {
+          "mean": 44.27555465698242,
+          "sd": 0.06968998260015732,
+          "n": 2
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "CIFAR-10",
+      "method": "ERM-Perfect",
+      "display_method": "ERM (perfect)",
+      "seeds": [
+        5101,
+        5102,
+        5103
+      ],
+      "n_train": 45000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "cnn",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.34441000000000005,
+        "sd": 0.009738054220428257,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.44380296967983246,
+        "sd": 0.008572202968120288,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.13588019443088106,
+        "sd": 0.0032937035324575115,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101",
+          "seed": 5101,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.33830000000000005,
+          "test_bounded_risk": 0.45275372116088863,
+          "empirical_bounded_risk": 0.1349049213197496,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102",
+          "seed": 5102,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.35564000000000007,
+          "test_bounded_risk": 0.4356675803232193,
+          "empirical_bounded_risk": 0.13318426149156357,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103",
+          "seed": 5103,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.33929,
+          "test_bounded_risk": 0.4429876075553894,
+          "empirical_bounded_risk": 0.13955140048133002,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "CIFAR-10",
+      "method": "ERM-Matched",
+      "display_method": "ERM (matched)",
+      "seeds": [
+        5101,
+        5102,
+        5103
+      ],
+      "n_train": 45000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "cnn",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.46161666666666673,
+        "sd": 0.013318341988901366,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.42051019566377,
+        "sd": 0.01000233241642127,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.1011760246290984,
+        "sd": 0.010219137123838287,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101",
+          "seed": 5101,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.47047,
+          "test_bounded_risk": 0.412829088807106,
+          "empirical_bounded_risk": 0.09394000364197626,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102",
+          "seed": 5102,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.46808000000000005,
+          "test_bounded_risk": 0.41688100332260136,
+          "empirical_bounded_risk": 0.09672181338628133,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103",
+          "seed": 5103,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.44630000000000003,
+          "test_bounded_risk": 0.43182049486160273,
+          "empirical_bounded_risk": 0.11286625685903762,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "CIFAR-10",
+      "method": "L2-Perfect",
+      "display_method": "$\\ell_2$ (perfect)",
+      "seeds": [
+        5101,
+        5102,
+        5103
+      ],
+      "n_train": 45000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "cnn",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.34429000000000004,
+        "sd": 0.00916240688902214,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.4399900264501572,
+        "sd": 0.0029063651140672784,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.13353489253432663,
+        "sd": 0.011549538176039008,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101",
+          "seed": 5101,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.33940000000000003,
+          "test_bounded_risk": 0.4372789849328996,
+          "empirical_bounded_risk": 0.14549837273491753,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102",
+          "seed": 5102,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.35486000000000006,
+          "test_bounded_risk": 0.4396324656009674,
+          "empirical_bounded_risk": 0.12244940986633299,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103",
+          "seed": 5103,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.33861,
+          "test_bounded_risk": 0.4430586288166046,
+          "empirical_bounded_risk": 0.13265689500172934,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "CIFAR-10",
+      "method": "L2-Matched",
+      "display_method": "$\\ell_2$ (matched)",
+      "seeds": [
+        5101,
+        5102,
+        5103
+      ],
+      "n_train": 45000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "cnn",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.5367000000000001,
+        "sd": 0.007273953532983243,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.3526372136847178,
+        "sd": 0.005512144201297916,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.09764939841376412,
+        "sd": 0.0029915979560187806,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101",
+          "seed": 5101,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.5388999999999999,
+          "test_bounded_risk": 0.3504657034945488,
+          "empirical_bounded_risk": 0.0995218613550398,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102",
+          "seed": 5102,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.52858,
+          "test_bounded_risk": 0.3589043914914131,
+          "empirical_bounded_risk": 0.09922714192920261,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103",
+          "seed": 5103,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.54262,
+          "test_bounded_risk": 0.3485415460681915,
+          "empirical_bounded_risk": 0.0941991919570499,
+          "deterministic": true,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {},
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {},
+            "t1": null,
+            "t2": null
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {},
+          "nominal_risk_rhs": {}
+        }
+      ],
+      "t1": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      },
+      "t2": {
+        "status": "not_applicable_deterministic_dirac",
+        "risk_rhs": null,
+        "nominal_risk_rhs": null,
+        "complexity_shift_floor": null,
+        "known_vacuous_in_every_seed": false
+      }
+    },
+    {
+      "dataset": "CIFAR-10",
+      "method": "PAC-Perfect",
+      "display_method": "Proposed (perfect)",
+      "seeds": [
+        5101,
+        5102,
+        5103
+      ],
+      "n_train": 45000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "cnn",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.34019666666666665,
+        "sd": 0.008872712850832784,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.45006177881876636,
+        "sd": 0.021404716904156393,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.13269612592343932,
+        "sd": 0.02544043491878842,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101",
+          "seed": 5101,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.3349,
+          "test_bounded_risk": 0.47361738649845125,
+          "empirical_bounded_risk": 0.11392467339621651,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 820207.375,
+            "channel_complexity": 0.0,
+            "sample_complexity": 3.018892288208008,
+            "joint_complexity": 3.018892288208008
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 820207.3709832176,
+              "channel_complexity": 0.0,
+              "sample_complexity": 3.018901197399882,
+              "joint_complexity": 3.018901197399882
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 4.786163295819049,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 4.786163295819049,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 4.018892288208008,
+            "t2": 4.018892288208008
+          },
+          "nominal_risk_rhs": {
+            "t1": 4.132816961604225,
+            "t2": 4.132816961604225
+          }
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102",
+          "seed": 5102,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.35044,
+          "test_bounded_risk": 0.4447656349420548,
+          "empirical_bounded_risk": 0.12251299538930256,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 870024.875,
+            "channel_complexity": 0.0,
+            "sample_complexity": 3.109220266342163,
+            "joint_complexity": 3.109220266342163
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 870024.8567996449,
+              "channel_complexity": 0.0,
+              "sample_complexity": 3.109228901308506,
+              "joint_complexity": 3.109228901308506
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 4.8850793217207595,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 4.8850793217207595,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 4.109220266342163,
+            "t2": 4.109220266342163
+          },
+          "nominal_risk_rhs": {
+            "t1": 4.231733261731466,
+            "t2": 4.231733261731466
+          }
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103",
+          "seed": 5103,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.33525,
+          "test_bounded_risk": 0.4318023150157929,
+          "empirical_bounded_risk": 0.16165070898479889,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 909700.25,
+            "channel_complexity": 0.0,
+            "sample_complexity": 3.179323434829712,
+            "joint_complexity": 3.179323434829712
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 909700.301947071,
+              "channel_complexity": 0.0,
+              "sample_complexity": 3.179332074001056,
+              "joint_complexity": 3.179332074001056
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 4.994320208008807,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 4.994320208008807,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 1.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 4.179323434829712,
+            "t2": 4.179323434829712
+          },
+          "nominal_risk_rhs": {
+            "t1": 4.340974143814511,
+            "t2": 4.340974143814511
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 4.888520941849539,
+          "sd": 0.10412112458539187,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 4.235174789050067,
+          "sd": 0.10412125723955243,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 4.102478663126628,
+          "sd": 0.08042776331606809,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 4.888520941849539,
+          "sd": 0.10412112458539187,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 4.235174789050067,
+          "sd": 0.10412125723955243,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 4.102478663126628,
+          "sd": 0.08042776331606809,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "CIFAR-10",
+      "method": "T1-Matched",
+      "display_method": "Proposed T1 (matched)",
+      "seeds": [
+        5101,
+        5102,
+        5103
+      ],
+      "n_train": 45000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "cnn",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.5503,
+        "sd": 0.002945097621471959,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.3395456446782748,
+        "sd": 0.0019832588090288256,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.10498028018527561,
+        "sd": 0.008719414411170471,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101",
+          "seed": 5101,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.54866,
+          "test_bounded_risk": 0.338073344540596,
+          "empirical_bounded_risk": 0.10789672465960184,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 200591.875,
+            "channel_complexity": 31.829553604125977,
+            "sample_complexity": 1.4929664134979248,
+            "joint_complexity": 31.864919662475586
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 200591.86000197445,
+              "channel_complexity": 31.82993791053187,
+              "sample_complexity": 1.4929843796585318,
+              "joint_complexity": 31.86530281507537
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 34.084156439872956,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 32.626536964757925,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 33.3225200176239,
+            "t2": 31.864919662475586
+          },
+          "nominal_risk_rhs": {
+            "t1": 33.430416742283505,
+            "t2": 31.972816387135186
+          }
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102",
+          "seed": 5102,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.54854,
+          "test_bounded_risk": 0.3387627276873589,
+          "empirical_bounded_risk": 0.11186765267795987,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 220787.78125,
+            "channel_complexity": 33.39341354370117,
+            "sample_complexity": 1.566318154335022,
+            "joint_complexity": 33.430477142333984
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 220787.7590748999,
+              "channel_complexity": 33.393778427360004,
+              "sample_complexity": 1.5663352844282714,
+              "joint_complexity": 33.43084530234154
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 35.72531878948919,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 34.19605038004245,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 34.959731698036194,
+            "t2": 33.430477142333984
+          },
+          "nominal_risk_rhs": {
+            "t1": 35.07159935071415,
+            "t2": 33.54234479501194
+          }
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103",
+          "seed": 5103,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.5537,
+          "test_bounded_risk": 0.3418008618068695,
+          "empirical_bounded_risk": 0.09517646321826512,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 238459.6875,
+            "channel_complexity": 34.704063415527344,
+            "sample_complexity": 1.6277934312820435,
+            "joint_complexity": 34.742557525634766
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 238459.69949026435,
+              "channel_complexity": 34.704418479145225,
+              "sample_complexity": 1.6278100258593104,
+              "joint_complexity": 34.74291296374207
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 37.08074239324576,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 35.49142685198329,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 36.33185684680939,
+            "t2": 34.742557525634766
+          },
+          "nominal_risk_rhs": {
+            "t1": 36.42703331002765,
+            "t2": 34.83773398885303
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 35.6300725408693,
+          "sd": 1.5005618047567768,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 34.97634980100844,
+          "sd": 1.5005772459487168,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 34.87136952082316,
+          "sd": 1.5066130703151388,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 34.104671398927884,
+          "sd": 1.43462925702904,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 33.450965057000055,
+          "sd": 1.4346431293347917,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 33.34598477681478,
+          "sd": 1.4406783602682125,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    },
+    {
+      "dataset": "CIFAR-10",
+      "method": "T2-Matched",
+      "display_method": "Proposed T2 (matched)",
+      "seeds": [
+        5101,
+        5102,
+        5103
+      ],
+      "n_train": 45000,
+      "n_validation": 5000,
+      "m": 100,
+      "width": 128,
+      "architecture": "cnn",
+      "epochs": 100,
+      "accuracy": {
+        "mean": 0.5326366666666668,
+        "sd": 0.0060370881502039946,
+        "n": 3
+      },
+      "test_bounded_risk": {
+        "mean": 0.35409196004390714,
+        "sd": 0.00232802144307033,
+        "n": 3
+      },
+      "empirical_available_count": 3,
+      "empirical_bounded_risk": {
+        "mean": 0.11265032923203927,
+        "sd": 0.011042887184854636,
+        "n": 3
+      },
+      "observations": [
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101",
+          "seed": 5101,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.52651,
+          "test_bounded_risk": 0.35657369007110595,
+          "empirical_bounded_risk": 0.12538148048506842,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 172513.59375,
+            "channel_complexity": 29.517976760864258,
+            "sample_complexity": 1.384543538093567,
+            "joint_complexity": 29.55082893371582
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 172513.59905287786,
+              "channel_complexity": 29.518393395567838,
+              "sample_complexity": 1.3845630168519527,
+              "joint_complexity": 29.55124594925515
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 31.68167531792781,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 30.32996485476317,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 30.902520298957825,
+            "t2": 29.55082893371582
+          },
+          "nominal_risk_rhs": {
+            "t1": 31.027901779442892,
+            "t2": 29.676210414200888
+          }
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102",
+          "seed": 5102,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.5328200000000001,
+          "test_bounded_risk": 0.3519564186120033,
+          "empirical_bounded_risk": 0.10690418738471137,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 191393.4375,
+            "channel_complexity": 31.091217041015625,
+            "sample_complexity": 1.4583351612091064,
+            "joint_complexity": 31.125778198242188
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 191393.4431210863,
+              "channel_complexity": 31.091611352175647,
+              "sample_complexity": 1.4583536795407297,
+              "joint_complexity": 31.126173322135173
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 33.31020664412404,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 31.886414934542834,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 32.54955220222473,
+            "t2": 31.125778198242188
+          },
+          "nominal_risk_rhs": {
+            "t1": 32.656456389609446,
+            "t2": 31.232682385626898
+          }
+        },
+        {
+          "task_id": "cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103",
+          "seed": 5103,
+          "source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103/test_deployment/evaluation.json",
+          "empirical_source": "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103/empirical_bank/evaluation.json",
+          "checkpoint_weights_available_locally": false,
+          "accuracy": 0.5385800000000001,
+          "test_bounded_risk": 0.3537457714486122,
+          "empirical_bounded_risk": 0.10566531982633802,
+          "deterministic": false,
+          "nominal_delta": 0.05,
+          "posterior_complexities": {
+            "kl": 190252.84375,
+            "channel_complexity": 30.998437881469727,
+            "sample_complexity": 1.4539835453033447,
+            "joint_complexity": 31.032899856567383
+          },
+          "corrected_bound_evaluation": {
+            "allocation": {
+              "total_failure": 0.05,
+              "total_runs": 51,
+              "simultaneous_runs": 51,
+              "simultaneous_theorems": 2,
+              "posterior_failure_per_theorem_run": 0.00039215686274509813,
+              "posterior_union_failure": 0.04000000000000001,
+              "monte_carlo_failure_per_run": 0.00019607843137254907,
+              "mc_failure_per_run": 0.00019607843137254907,
+              "monte_carlo_union_failure": 0.010000000000000002,
+              "empirical_mc_upper_radius": 0.6533374250229516,
+              "scope": "T1/T2 normalized bounded-loss bounds for every declared run; zero-one empirical loss is descriptive only"
+            },
+            "posterior_complexities": {
+              "kl": 190252.83778851188,
+              "channel_complexity": 30.998833260010567,
+              "sample_complexity": 1.4540019877595147,
+              "joint_complexity": 31.033294362870627
+            },
+            "t1": {
+              "population_risk_upper_uncapped": 33.21183799261937,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            },
+            "t2": {
+              "population_risk_upper_uncapped": 31.792297107719918,
+              "population_risk_upper": 1.0,
+              "nonvacuous": false
+            }
+          },
+          "bounded_loss_shift": 0.0,
+          "nominal_rhs_complexity_shift_floor": {
+            "t1": 32.45242142677307,
+            "t2": 31.032899856567383
+          },
+          "nominal_risk_rhs": {
+            "t1": 32.55808674659941,
+            "t2": 31.138565176393723
+          }
+        }
+      ],
+      "t1": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 32.73457331822374,
+          "sd": 0.9131619501326632,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 32.08081497188392,
+          "sd": 0.9131751145200685,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 31.968164642651875,
+          "sd": 0.9241520423178774,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      },
+      "t2": {
+        "status": "corrected_vacuous_risk_rhs",
+        "risk_rhs": {
+          "mean": 31.336225632341975,
+          "sd": 0.8727170822790126,
+          "n": 3
+        },
+        "nominal_risk_rhs": {
+          "mean": 30.682485992073836,
+          "sd": 0.8727298644117275,
+          "n": 3
+        },
+        "complexity_shift_floor": {
+          "mean": 30.569835662841797,
+          "sd": 0.8837067568436271,
+          "n": 3
+        },
+        "known_vacuous_in_every_seed": true
+      }
+    }
+  ],
+  "pending_evaluations": 0,
+  "inference_family_runs": 51,
+  "source_hashes": {
+    "results/journal_campaign/full_refine/summary.json": {
+      "sha256": "07b65133b7853e6ad0f64c6d8dec18fa36b5476bd7f9db97fbe27996678534d3",
+      "bytes": 63330
+    },
+    "results/journal_campaign/full_refine/test_results.json": {
+      "sha256": "255b14c68473c5895a47bc4093e37966b472f82f454028c7b622d17a6abbf5d3",
+      "bytes": 55397
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9001/test_deployment/evaluation.json": {
+      "sha256": "e7f5a0a5968009594c6730c8ba401c20b1fe89fa276e7c7fc9687a3a5795bb30",
+      "bytes": 4474
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9001/empirical_bank/evaluation.json": {
+      "sha256": "f10779de37fcb9d712ed159b1e4702768672825558238473279b8555a32f1f9c",
+      "bytes": 7483
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9002/test_deployment/evaluation.json": {
+      "sha256": "4ea6f8fff1a29907b66856f5a317b04f52f70b90b54328e5ae84dcfb96aae6ef",
+      "bytes": 4477
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9002/empirical_bank/evaluation.json": {
+      "sha256": "1ab8c2437903876376229cd55ebc5c7bfdf4f31638a727931fe8b9e602466ef8",
+      "bytes": 7481
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9003/test_deployment/evaluation.json": {
+      "sha256": "3137b5f7428c8e20db1eed55ed471dea6a5f47044ef1b27d41a6975164869bb7",
+      "bytes": 4474
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Perfect_86a8ca1808a3_s9003/empirical_bank/evaluation.json": {
+      "sha256": "68c3f4fbc93bf46277b25e8674452c70aa6a061ae35531172f93582fd05a835c",
+      "bytes": 7471
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9001/test_deployment/evaluation.json": {
+      "sha256": "f05a4089bf1cd70e059d569c17e2a9b7b4ffeb1c76ca7b85d80f532521158e49",
+      "bytes": 4495
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9001/empirical_bank/evaluation.json": {
+      "sha256": "f36fc773b9938ccb30db99c72a787f033ab8c984f9ad3b61fcf51599d01097ba",
+      "bytes": 7592
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9002/test_deployment/evaluation.json": {
+      "sha256": "8261eeb9ace7c2ff4ecee67a3939af31006402efd47fc843575b8332014c3ec9",
+      "bytes": 4503
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9002/empirical_bank/evaluation.json": {
+      "sha256": "c82f1c2dfe6e3c2f2d6564d21e03b6d30cf6e1dc92e08fcd22f3a778626f265e",
+      "bytes": 7628
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9003/test_deployment/evaluation.json": {
+      "sha256": "57a3d6f7b1fd155ca3757495ebcdeb287224cf8fd78f0bcbb6cd23d502602dcc",
+      "bytes": 4497
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_ERM_Matched_53c33ab328b6_s9003/empirical_bank/evaluation.json": {
+      "sha256": "afb0890ce53f5315ea611de4cc9a4cfad622fc97b6a9cb98cdfa07b7c6b3fd14",
+      "bytes": 7612
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9001/test_deployment/evaluation.json": {
+      "sha256": "827886c0ead1c02e0f7ad1939d1270c3332c53a6d73375a1ba441efbf9303120",
+      "bytes": 4481
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9001/empirical_bank/evaluation.json": {
+      "sha256": "7f7938e3009fa7e519983a191b31c3618cddfb0a03b228840741ac652199e413",
+      "bytes": 7610
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9002/test_deployment/evaluation.json": {
+      "sha256": "e50462e08cccfcbebad81f3d298fe9fcf07c445b23ef04e89e4621cbdb929708",
+      "bytes": 4488
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9002/empirical_bank/evaluation.json": {
+      "sha256": "9a708ebc5b423c6d0043735b52dc413f1fdbba2856a4f1bd97ac75616f5dc069",
+      "bytes": 7594
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9003/test_deployment/evaluation.json": {
+      "sha256": "b1bfdaedbed70c126f826f291cd8a117c3a4f15cd8366e36b0e026438ded39f2",
+      "bytes": 4501
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_L2_Matched_887b8e2ba4c7_s9003/empirical_bank/evaluation.json": {
+      "sha256": "cb00cc32300fafb92994954cacf9980b5ac0ab057f4f584a49866b37eb4fcf1c",
+      "bytes": 7569
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9001/test_deployment/evaluation.json": {
+      "sha256": "bdc327f7ddae452230280fd647f0803bf42b60c3b2e99a56729e04ccb36c70fc",
+      "bytes": 4622
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9001/empirical_bank/evaluation.json": {
+      "sha256": "f355aa075e46be57d0ccf683f70e0da5cacbac39dcd2b93b1a49a6d525a742ff",
+      "bytes": 8594
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9002/test_deployment/evaluation.json": {
+      "sha256": "680faade91e2159742123b633119ce4db3bd4472af150760b2b24ab7cc9838c9",
+      "bytes": 4619
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9002/empirical_bank/evaluation.json": {
+      "sha256": "f5a0ef18e1d37598740d4b01a9f3790bc750f19d40feab7dd9f2e550b769cd27",
+      "bytes": 8545
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9003/test_deployment/evaluation.json": {
+      "sha256": "c1c7d16f672954b3fd3a81a54834b443960548b08c6724a779d149a21a3284cd",
+      "bytes": 4624
+    },
+    "results/journal_campaign/full_refine/confirm_mnist_analog_PAC_Perfect_921abec5e444_s9003/empirical_bank/evaluation.json": {
+      "sha256": "62918053325250b4d76595e1080af358d9bf8550e958f3bb9c6d7408d1a2dd94",
+      "bytes": 8596
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9001/test_deployment/evaluation.json": {
+      "sha256": "8dc99d1a2a509433e629a87e47a2d8fe6f538d6931531975f847e5cb4ce87080",
+      "bytes": 4682
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9001/empirical_bank/evaluation.json": {
+      "sha256": "48f2b25b824ef8790f25d95aa0c3239678f4f7cf48e737f545291cb7afc822d8",
+      "bytes": 8711
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9002/test_deployment/evaluation.json": {
+      "sha256": "71f087b0c2eb6c6ff22d9013ad4d2fa7aef92514489375d9758ef4c40d0e5eb7",
+      "bytes": 4681
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9002/empirical_bank/evaluation.json": {
+      "sha256": "5097b2965141008f8d8cb10ae43ed4059327e752a890fe5abdb76b8b04ba8223",
+      "bytes": 8688
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9003/test_deployment/evaluation.json": {
+      "sha256": "ba6fcb462865f7424ee248593cfa7877e3c2cb407291f1131536d57ce7a22257",
+      "bytes": 4685
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T1_Matched_e91619e7a399_s9003/empirical_bank/evaluation.json": {
+      "sha256": "baa1ab3086b2acf28773ad413bfc8f481119450240c14769be27686644e3f544",
+      "bytes": 8712
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9001/test_deployment/evaluation.json": {
+      "sha256": "fce4f3661c00e0121f63bf3548363c7c8738cb04ae248cf2a2aea72d24c78044",
+      "bytes": 4672
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9001/empirical_bank/evaluation.json": {
+      "sha256": "97a8522cd94a04c9307538461ee89074d5d1012b9c484bf032b2016abce4aa24",
+      "bytes": 8706
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9002/test_deployment/evaluation.json": {
+      "sha256": "612f1b4c9b0aab94af312e4520b5c7efed9ca57841eb3831ec60269f37c57954",
+      "bytes": 4677
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9002/empirical_bank/evaluation.json": {
+      "sha256": "40052a1fb5140232fbe09bfa26ded42a547d966bbaa9b320ff9930502a1a730b",
+      "bytes": 8709
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9003/test_deployment/evaluation.json": {
+      "sha256": "b20e355fc944934296dd70a482a986684d87a2890f860013d6c48d3fe6227d92",
+      "bytes": 4673
+    },
+    "results/journal_campaign/full_refine/full_refine_mnist_analog_T2_Matched_e72b5a55dcaf_s9003/empirical_bank/evaluation.json": {
+      "sha256": "db6cdd99e9e3c0dbf7e71877196a7aa20a973db6a3351175d410afcb25f29f9e",
+      "bytes": 8701
+    },
+    "results/journal_campaign/fashion_controls/summary.json": {
+      "sha256": "d762ab766b0f6b1d7419e6fdaef3c97282fa5708573409e8a48d7052bd556bbf",
+      "bytes": 87562
+    },
+    "results/journal_campaign/fashion_controls/test_results.json": {
+      "sha256": "636fc1001318876ea36bc3f08a10d932e8660881c159ff6bdf84d2141c5b84e7",
+      "bytes": 37865
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1001/test_deployment/evaluation.json": {
+      "sha256": "52f0e37a4570f235321adfd2b08a755504f21c28b8d6911e644ea282e219ba52",
+      "bytes": 4485
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1001/empirical_bank/evaluation.json": {
+      "sha256": "40f0e742aed62525e5f1566c70ac003581212de2619248ca449567d34f9a021c",
+      "bytes": 7364
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1002/test_deployment/evaluation.json": {
+      "sha256": "e67fbe1e1ab789537a22621ddd4034755d379ea3a248ef1305027a9f40b4922a",
+      "bytes": 4498
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Perfect_8f3fa7d61a9c_s1002/empirical_bank/evaluation.json": {
+      "sha256": "d029eac70c6e179f8f096bbd7f67d76dc503d8fc2eb58aedfc2b434101b9a30e",
+      "bytes": 7225
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1001/test_deployment/evaluation.json": {
+      "sha256": "99347b389ee1b3c2e6be4eb5a443c2186a68fe72cf489cc7f57d4823162756dc",
+      "bytes": 4506
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1001/empirical_bank/evaluation.json": {
+      "sha256": "2457cb10c4df1982494cf1589cbd0170ce1d9bd302a6c81079366d3efc3a9697",
+      "bytes": 7477
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1002/test_deployment/evaluation.json": {
+      "sha256": "1dcdd142fb2fc0ccd84551cfa4750d79b6c73bcb6bc83ad4f4073008d08070b0",
+      "bytes": 4514
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_ERM_Matched_e4771e31d032_s1002/empirical_bank/evaluation.json": {
+      "sha256": "89f8c91bdbe1c8e0ec94a598f56385ea8dba828e72d22ccb247b6544e149fab7",
+      "bytes": 7494
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1001/test_deployment/evaluation.json": {
+      "sha256": "4f47c51c63794adcb1f37da5f2000adccf204b0473b3de5815707cdec760843f",
+      "bytes": 4524
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1001/empirical_bank/evaluation.json": {
+      "sha256": "7453ec673b42a53b33171d2825dfc9c177ca5e6b1b3d70c88f042deff7eed63b",
+      "bytes": 7452
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1002/test_deployment/evaluation.json": {
+      "sha256": "48baa39d0b85a07ddb48c119a88ff6de6e31c8b15cbd0c57136aa1dfc3e72100",
+      "bytes": 4515
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_L2_Matched_b10a65498379_s1002/empirical_bank/evaluation.json": {
+      "sha256": "c3188fb00020fde6f6bc448219a9d53cd1969a0420ab387e4fc0de41f7d02314",
+      "bytes": 7475
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1001/test_deployment/evaluation.json": {
+      "sha256": "ca25e1816b96ce95768f2d023144a5f5e39876dadfb13e6cfa5ec8ab126571c6",
+      "bytes": 4634
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1001/empirical_bank/evaluation.json": {
+      "sha256": "e71205f6198731f9029ba007c6fb2a280bef2bc7419275d32772af0107e974ed",
+      "bytes": 8445
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1002/test_deployment/evaluation.json": {
+      "sha256": "513c00673cd160cbee29b89b993b4b6f9e2249184faa658a7acd9abe7d91663e",
+      "bytes": 4635
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_PAC_Perfect_eb39058a45f8_s1002/empirical_bank/evaluation.json": {
+      "sha256": "4849ef0367be57cf0527ebfa230cd4185e11ae44669c4910f73da9903fafa261",
+      "bytes": 8475
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1001/test_deployment/evaluation.json": {
+      "sha256": "bba2282ff4abab5aac6e1249310638781200506455d194846e78b8afe4ef2f02",
+      "bytes": 4670
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1001/empirical_bank/evaluation.json": {
+      "sha256": "c862647c4a532b997a235f0b149ae2dd64e6995b8ff22e9f24e57f7363ed1f59",
+      "bytes": 8545
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1002/test_deployment/evaluation.json": {
+      "sha256": "e896a76f59fb6893c7b13168cfb94ed2333036bc91b0b128af1d8ab395790d7a",
+      "bytes": 4676
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T1_Matched_18e04b00c5a7_s1002/empirical_bank/evaluation.json": {
+      "sha256": "8c083da849ed67e5e2720eeb5048f89a2fc425f69f412a1a0ae368b5dd7799ea",
+      "bytes": 8561
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1001/test_deployment/evaluation.json": {
+      "sha256": "88369202b447288eec550a3e458ed0867d525f74b26d074b16c82f01fca3fc25",
+      "bytes": 4685
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1001/empirical_bank/evaluation.json": {
+      "sha256": "3c3014d11aea032e858d8530af90aa444f4fc1b57169efb6c97a7dcd4961fe03",
+      "bytes": 8540
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1002/test_deployment/evaluation.json": {
+      "sha256": "0a2367efa0811e6891d402491cb8781a48e26f01242d5f04f5f6da2ee3856baa",
+      "bytes": 4685
+    },
+    "results/journal_campaign/fashion_controls/fashion_screen_fashion_analog_T2_Matched_2a38e25d9db7_s1002/empirical_bank/evaluation.json": {
+      "sha256": "ab0d9599bf59cf74b36379a579b6d5c795dd803dfa7a70362b5d122f3a70043f",
+      "bytes": 8580
+    },
+    "results/journal_cifar/confirm_cpu/summary.json": {
+      "sha256": "d69511da93857e975a4661fa05c78f1a61ca69f230983ca317a61c1a51026fcf",
+      "bytes": 43014
+    },
+    "results/journal_cifar/confirm_cpu/test_results.json": {
+      "sha256": "4e7b8322b258ea4b91fb200fe4c9140fa9ff6e73efbf50743c0089f780095514",
+      "bytes": 45563
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101/test_deployment/evaluation.json": {
+      "sha256": "a0ec1069756a612287c0496aebc26d6dc5e89406914acdd8572f2dd61fc8f06f",
+      "bytes": 4571
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5101/empirical_bank/evaluation.json": {
+      "sha256": "4ab3ffac918455db4577da9c18ff35ce3827032f1b70f6044574931f9a827ab7",
+      "bytes": 7556
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102/test_deployment/evaluation.json": {
+      "sha256": "41e8ec09937406a8c6043664b5b51c4cd2c748ad4bd7c42abd8f8fca6230e1ad",
+      "bytes": 4561
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5102/empirical_bank/evaluation.json": {
+      "sha256": "fb8d2fadbad3d79ae4b2585827e5bee4dd3dfb8d9105387b211ea2cafe1f777a",
+      "bytes": 7405
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103/test_deployment/evaluation.json": {
+      "sha256": "5007cd9bba87df0f65bad09453b35333b3c79f0feb37633d7b2db107a90169ce",
+      "bytes": 4552
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Perfect_70912e7ab773_s5103/empirical_bank/evaluation.json": {
+      "sha256": "264a02534002eecaad82440b02d2550a5b973051035657ff1f7f57ad62c118b6",
+      "bytes": 7566
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101/test_deployment/evaluation.json": {
+      "sha256": "f073aa6791a2bc496e38400206ee73675164f690d0a4cb36209a8c5159c3eb27",
+      "bytes": 4567
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5101/empirical_bank/evaluation.json": {
+      "sha256": "80d41309f01b3583fa38844673c0e02757a880778938006d7f6d064ad3869774",
+      "bytes": 7674
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102/test_deployment/evaluation.json": {
+      "sha256": "12020ef1dc34caa18c5c28571a2d5b5b985177e31fbd244a52c15406f285e929",
+      "bytes": 4583
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5102/empirical_bank/evaluation.json": {
+      "sha256": "87226513983ae7c7b6dcf4980ec0f2215e41cd64351950c2ef746832f4623b52",
+      "bytes": 7690
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103/test_deployment/evaluation.json": {
+      "sha256": "7a275db4924eddd6bb44abf1536504fa48eb033bcb437f1b61055c85b967d075",
+      "bytes": 4594
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_ERM_Matched_46e4b6e2ba95_s5103/empirical_bank/evaluation.json": {
+      "sha256": "79baf52ee0fb678e5284b0a7106a4ca3f2b8084eea8a6344b1489934d48e2a25",
+      "bytes": 7668
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101/test_deployment/evaluation.json": {
+      "sha256": "58c02346e99c5095fdd28a1f3bc597c6a9de3daab75da4c38d334301b78d7ab8",
+      "bytes": 4564
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5101/empirical_bank/evaluation.json": {
+      "sha256": "ac9b6d21a7769b0ca3ce7156444fd6d68b3507e13b467bd8272490cca072ef5c",
+      "bytes": 7548
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102/test_deployment/evaluation.json": {
+      "sha256": "fb9f5b7c93eae61b718dfd2a96cdb2613f23254fc3c008ceb9b321258d928b33",
+      "bytes": 4568
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5102/empirical_bank/evaluation.json": {
+      "sha256": "bd97a332d52206244ea1d1f0de336a319a7a3bbfb247c2bb393da20a1529e512",
+      "bytes": 7549
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103/test_deployment/evaluation.json": {
+      "sha256": "26c06f1aa25b802e1099761a7e550fe8c7698c5dc751a9b488b3dc39959b9955",
+      "bytes": 4554
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Perfect_f039aededa55_s5103/empirical_bank/evaluation.json": {
+      "sha256": "f1e525429ab55a21eb916c79a13ba80180557bfbfa99d317b2ebfdca58f4f85c",
+      "bytes": 7551
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101/test_deployment/evaluation.json": {
+      "sha256": "15e6ee6e499d685070e16e6cdb3130ce79bfd930e02b09ea7d85ff2874559e90",
+      "bytes": 4593
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5101/empirical_bank/evaluation.json": {
+      "sha256": "04840cee1835dedf0895e3f3ba6bb7990d9a93babfcff5746e8f4b8cc49045ad",
+      "bytes": 7639
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102/test_deployment/evaluation.json": {
+      "sha256": "5324d1bc7d14cc729d3be474a6e20da4d9f33ec6a7bab0e7a84614754311bcda",
+      "bytes": 4580
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5102/empirical_bank/evaluation.json": {
+      "sha256": "102820c6da545fe2e5cedb4522f03a79f62297bb1c8307cca84c2503dba1b8df",
+      "bytes": 7690
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103/test_deployment/evaluation.json": {
+      "sha256": "5a34b1b919e703e07129c697ccc440410fad97934bf936c237d7b64a50b3096d",
+      "bytes": 4568
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_L2_Matched_c57502eede0e_s5103/empirical_bank/evaluation.json": {
+      "sha256": "b98f307d28b36163d530754e341099009c1968af8fe5f14f3079d813aa4168ed",
+      "bytes": 7696
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101/test_deployment/evaluation.json": {
+      "sha256": "68ca8d76d2f32a6ab31a93bd723b2bf57ccd8297e300f26ba9657d5a19528768",
+      "bytes": 4697
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5101/empirical_bank/evaluation.json": {
+      "sha256": "162878838068e39454941bb76d68aa1738986867fa2cd7b2a47ae8d078f8e95b",
+      "bytes": 8655
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102/test_deployment/evaluation.json": {
+      "sha256": "f797f7d254887bf58d73070df776192df819b87d8a735a88ee8f0ff47638048c",
+      "bytes": 4701
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5102/empirical_bank/evaluation.json": {
+      "sha256": "bb5725e15056a21aa20c8d15c7c100e744947364fa3f9e7a0eed02534fbb87d2",
+      "bytes": 8659
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103/test_deployment/evaluation.json": {
+      "sha256": "2620126863cf7e590346a223cfeca088403018c2c54c9b91f6d0b331579bc7a8",
+      "bytes": 4697
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_PAC_Perfect_7f2b2cb5163a_s5103/empirical_bank/evaluation.json": {
+      "sha256": "c4e605ffb063a0f2d0998b2dc92fbb7fa1c253b08208f67cf7299932c781350a",
+      "bytes": 8621
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101/test_deployment/evaluation.json": {
+      "sha256": "7a1421118e09572158a2090487b08b70fc5bbbd0bf4ef5940e3f31958dae06d4",
+      "bytes": 4737
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5101/empirical_bank/evaluation.json": {
+      "sha256": "222f045bfa86b90c1e7aaf163da2ca200b4e30ea32e968b1d095f7ad3af911a6",
+      "bytes": 8768
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102/test_deployment/evaluation.json": {
+      "sha256": "504c3a2c15f3f30a8851729579b682f382518a85431a4044b25931cb41fdcf66",
+      "bytes": 4734
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5102/empirical_bank/evaluation.json": {
+      "sha256": "fcca2beca5eae09ef8938ee491f37fec90aa482c16420e17a614be7508fe1a5d",
+      "bytes": 8741
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103/test_deployment/evaluation.json": {
+      "sha256": "100cf71fe8e12814bc889efcb6248ec66e114c9d231d777700023a0d5f76a49e",
+      "bytes": 4737
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T1_Matched_adffec3c1f01_s5103/empirical_bank/evaluation.json": {
+      "sha256": "1671bf29d8f786c8ce795f04d01c3853dcafc56bc977e571d03b2252cd98d39d",
+      "bytes": 8756
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101/test_deployment/evaluation.json": {
+      "sha256": "ed6a0fd1a8f6db7c7a4f15bcf277f1a26f935f341643193dd8b399d648fb8cca",
+      "bytes": 4742
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5101/empirical_bank/evaluation.json": {
+      "sha256": "3e8cd77ad38fdead5e6da193545044198d7459c7c6ba9b539a4bba914c8e20a6",
+      "bytes": 8756
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102/test_deployment/evaluation.json": {
+      "sha256": "2ac11b59e26624daf0cf843325b1e24966cbbbc4a4a33a0190e72ef2a9a369a6",
+      "bytes": 4750
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5102/empirical_bank/evaluation.json": {
+      "sha256": "607d61217248e1cf0fd6f92385d4f436b62bf451a7550acd666a541e2bb6c3dc",
+      "bytes": 8754
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103/test_deployment/evaluation.json": {
+      "sha256": "b53a3c52833da43b9d1a818968b2f0f7d79719d74d6ab1231a202ca9c0258338",
+      "bytes": 4746
+    },
+    "results/journal_cifar/confirm_cpu/cifar_confirm_cifar10_cnn_analog_severe_T2_Matched_79f9535139ba_s5103/empirical_bank/evaluation.json": {
+      "sha256": "d1e5dd012bcd593faa22c99902f32f7f82b4fef009336dc2850d14a25cf6b134",
+      "bytes": 8770
+    }
+  }
+}

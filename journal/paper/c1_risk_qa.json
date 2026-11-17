@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-13",
+  "timezone": "Australia/Melbourne",
+  "training_performed": false,
+  "image_rows": 19,
+  "image_checkpoint_evaluations": 51,
+  "pending_evaluations": 0,
+  "image_report_source_count": 108,
+  "empirical_job_id": "34969965",
+  "empirical_job_state": "COMPLETED",
+  "focused_unit_tests_passed": 14,
+  "c1_checkpoint_count": 3,
+  "c1_per_checkpoint_deployment_cases": [
+    12,
+    12,
+    12
+  ],
+  "latex_build": "success; no undefined references or overfull boxes",
+  "visual_review": "Changed C1 text, figure and supplementary table rendered and inspected without overlap/clipping; all other pages inspected in the previous revision.",
+  "files": {
+    "journal/paper/output/pdf/journal_simulation_draft.pdf": {
+      "sha256": "05e9493fea550189a924c1bd1ee2e974686850d072e97b0110f174df577c902c",
+      "bytes": 350852
+    },
+    "journal/paper/tables/algorithm_risk_bounds.csv": {
+      "sha256": "f523d34baddb1c4a020ea5aa34be1626614a434a9f200b33d2617de48353b853",
+      "bytes": 6182
+    },
+    "journal/paper/tables/algorithm_risk_bounds.tex": {
+      "sha256": "2e4511bd22d536a695fdbdc26c0f5ad941ab80fbbb47280e5303508f58413d6e",
+      "bytes": 3352
+    },
+    "journal/paper/tables/c1_evaluation.csv": {
+      "sha256": "a8dfe6ec27552418d51b50d5b089d538df3aa18111ff0be327d4159adcec85fa",
+      "bytes": 5902
+    },
+    "journal/paper/assets/fig_c1_evaluation.png": {
+      "sha256": "08f4fa58682f2e9d0cc819bb7f388345c0d7cf14c650ec1bdc613cdc0fe712cc",
+      "bytes": 142983
+    },
+    "journal/evaluate_c1_reference.py": {
+      "sha256": "54df92148cf9c381ba8a90a9c2d31381da07d046d84dadd04c48d25d5960425d",
+      "bytes": 32685
+    },
+    "journal/evaluate_empirical_bank.py": {
+      "sha256": "4df0733afc1c45effa0543c3b0a951b58bca6aabe7e00d1f606ad32b47271ddd",
+      "bytes": 10592
+    }
+  },
+  "c1_channel": "Fully known independent centered-lognormal output distortion; shape=.1",
+  "c1_focused_unit_tests_passed": 9,
+  "previous_unchanged_empirical_tests_passed": 5,
+  "image_comparison_csv_unchanged": true,
+  "c1_bound_checks": "All 18 lognormal per-checkpoint rows: exact log moment + exact KL and shared empirical/data baseline; direct-distance MC excluded from analytic certificate",
+  "c1_kl_independent_quadrature_error": 1.02e-15
+}
