@@ -304,11 +304,18 @@ def published_stage_records(root, entries, stage, cohort, reader, code):
     source = root.resolve(strict=True)
     audit = reader.json(source.parent / "publication_audit.json")
     stat = source.stat()
+    recorded_identity = audit.get("stage_identity", {})
     verification = audit.get("training_source_verification", {})
     if (audit.get("status") != "published" or audit.get("publication_kind") != "atomic_directory_symlink"
             or audit.get("source") != str(source) or audit.get("target") != str(root.absolute())
             or os.readlink(root) != str(source) or audit.get("source_must_remain_available") is not True
-            or audit.get("stage_identity") != dict(device=stat.st_dev, inode=stat.st_ino)
+            # GPFS st_dev is a host-local mount number and can differ between
+            # publisher and report nodes. The permanent path/link, persistent
+            # inode, exact manifest/code proof and scientific hashes remain
+            # identity gates; device numbers are retained as diagnostics.
+            or recorded_identity.get("inode") != stat.st_ino
+            or type(recorded_identity.get("device")) is not int
+            or recorded_identity["device"] < 0
             or verification.get("main_revision") != code["main_revision"]):
         raise ValueError("Published main stage link lacks its exact permanent-source audit")
     expected_files = {path: dict(main_blob=blob, external_blob=blob, working_blob=blob)
@@ -319,7 +326,26 @@ def published_stage_records(root, entries, stage, cohort, reader, code):
     by_id = {record["task_id"]: record for record in records}
     if len(records) != 672 or len(by_id) != 672 or set(by_id) != {entry["task_id"] for entry in entries}:
         raise ValueError("Published main stage audit lacks all672 original cases")
-    return dict(records=by_id, revision=verification["external_revision"])
+    # Bind the portable inode/link identity to the original manifest and all
+    # scientific bytes, including the old MNIST cases excluded downstream.
+    primary_manifest = reader.track(root.parent / "manifests" / "p_train_sweep.jsonl")
+    external_manifest = reader.track(audit["manifest"])
+    recorded_manifest = audit.get("manifest_fingerprint")
+    if (fingerprint(primary_manifest) != recorded_manifest or fingerprint(external_manifest) != recorded_manifest
+            or audit.get("complete_validation", {}).get("manifest_fingerprint") != recorded_manifest):
+        raise ValueError("Published main stage manifest differs from its immutable publication audit")
+    for task_id, record in by_id.items():
+        checkpoint = source / task_id
+        evaluation = checkpoint / "test_full" / "evaluation.json"
+        if record.get("original_checkpoint") != str(checkpoint) or record.get("original_evaluation") != str(evaluation):
+            raise ValueError("Published scientific source path differs from its permanent checkpoint")
+        paths = {"metadata": checkpoint / "metadata.json", "weights": checkpoint / "weights.pt", "evaluation": evaluation}
+        if {name: fingerprint(reader.track(path)) for name, path in paths.items()} != record.get("source_fingerprints"):
+            raise ValueError("Published scientific bytes differ from their frozen publication fingerprints")
+    return dict(records=by_id, revision=verification["external_revision"],
+                identity=dict(recorded_device=recorded_identity["device"], observed_device=stat.st_dev,
+                              recorded_inode=recorded_identity["inode"], observed_inode=stat.st_ino,
+                              device_scope="Host-local mount diagnostic; not a cross-node identity key"))
 
 
 def load_source_stage(root, manifest, entries, stage, cohort, reader, code, revision_cache):
@@ -399,7 +425,8 @@ def load_source_stage(root, manifest, entries, stage, cohort, reader, code, revi
             reader.track(checkpoint / filename)
         cases[task_id] = dict(entry=entry, training=training[task_id], test=test[task_id], cohort=cohort,
             checkpoint=checkpoint, evaluation=report_path, report=report,
-            source_fingerprints=checked["source_fingerprints"], checkpoint_revision=revision)
+            source_fingerprints=checked["source_fingerprints"], checkpoint_revision=revision,
+            published_stage_identity=published["identity"] if published else None)
     return cases
 
 
@@ -525,7 +552,8 @@ def assemble(main_root, mnist_root, output, run_bounds=False, run_plots=False):
                 source_map.append(dict(stage=stage, task_id=entry["task_id"], cohort=cohort, alias=str(alias),
                     actual_checkpoint=str(case["checkpoint"]), source_evaluation=str(case["evaluation"]),
                     exported_evaluation=str(exported_report), exported_evaluation_fingerprint=report_fingerprint,
-                    checkpoint_revision=case["checkpoint_revision"], source_fingerprints=case["source_fingerprints"]))
+                    checkpoint_revision=case["checkpoint_revision"], source_fingerprints=case["source_fingerprints"],
+                    published_stage_identity=case.get("published_stage_identity")))
             manifest = output / "manifests" / (stage + ".jsonl")
             manifest.write_text(manifest_text(entries))
             save_json(stage_root / "training_results.json", training)

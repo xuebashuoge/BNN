@@ -234,6 +234,88 @@ class ExactSourceMetricsTests(unittest.TestCase):
                     load("mnist32")
 
 
+class PublishedStagePortableIdentityTests(unittest.TestCase):
+    """Use the real publication-audit schema, with a remounted GPFS device ID."""
+    def fixture(self, directory):
+        root = Path(directory).resolve()
+        source = root / "external" / "stage"
+        source.mkdir(parents=True)
+        target = root / "main" / "p_train_sweep"
+        (target.parent / "manifests").mkdir(parents=True)
+        target.symlink_to(source, target_is_directory=True)
+        entries = [dict(task_id=f"published_{index}") for index in range(672)]
+        text = "".join(json.dumps(entry) + "\n" for entry in entries)
+        manifest = target.parent / "manifests" / "p_train_sweep.jsonl"
+        external_manifest = source.parent / "p_train_sweep.jsonl"
+        manifest.write_text(text)
+        external_manifest.write_text(text)
+        code = dict(main_revision="f602987cceff4a078d12fd33cb6eec8582a1cd3c",
+                    scientific_blobs={path: "same_blob" for path in assembly.SOURCE_FILES})
+        records = []
+        for entry in entries:
+            checkpoint = source / entry["task_id"]
+            (checkpoint / "test_full").mkdir(parents=True)
+            paths = {"metadata": checkpoint / "metadata.json", "weights": checkpoint / "weights.pt",
+                     "evaluation": checkpoint / "test_full" / "evaluation.json"}
+            for name, path in paths.items():
+                path.write_text("Frozen publication " + name + entry["task_id"])
+            records.append(dict(task_id=entry["task_id"], original_checkpoint=str(checkpoint),
+                original_evaluation=str(paths["evaluation"]),
+                source_fingerprints={name: assembly.fingerprint(path) for name, path in paths.items()}))
+        stat = source.stat()
+        audit = dict(status="published", publication_kind="atomic_directory_symlink", source=str(source), target=str(target),
+            source_must_remain_available=True, stage_identity=dict(device=stat.st_dev + 1, inode=stat.st_ino),
+            manifest=str(external_manifest), manifest_fingerprint=assembly.fingerprint(manifest),
+            resource_job_id="35239215", training_source_verification=dict(main_revision=code["main_revision"],
+                external_revision="d1c3b76653cbb6696aecb83485d72c89d4921def",
+                files={path: dict(main_blob=blob, external_blob=blob, working_blob=blob)
+                       for path, blob in code["scientific_blobs"].items()}),
+            complete_validation=dict(tasks=672, evaluation_draws=10, manifest_fingerprint=assembly.fingerprint(manifest),
+                complete_checkpoint_and_full_risk_coverage=True, source_records=records, files={}))
+        audit_path = source.parent / "publication_audit.json"
+        audit_path.write_text(json.dumps(audit))
+        return target, source, entries, code, audit_path, audit
+
+    def test_different_host_mount_device_same_inode_and_all_frozen_bytes_is_accepted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target, source, entries, code, audit_path, audit = self.fixture(directory)
+            reader = assembly.SourceReader()
+            result = assembly.published_stage_records(target, entries, "p_train_sweep", "main16", reader, code)
+            self.assertEqual(len(result["records"]), 672)
+            self.assertNotEqual(result["identity"]["recorded_device"], result["identity"]["observed_device"])
+            self.assertEqual(result["identity"]["recorded_inode"], source.stat().st_ino)
+            self.assertEqual(result["identity"]["observed_inode"], source.stat().st_ino)
+            self.assertEqual(len(reader.files), 3 * 672 + 3)
+            reader.recheck()
+            self.assertEqual(json.loads(audit_path.read_text()), audit)
+
+    def test_changed_inode_repointed_link_or_frozen_hash_is_still_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target, source, entries, code, audit_path, audit = self.fixture(directory)
+            def validate():
+                return assembly.published_stage_records(target, entries, "p_train_sweep", "main16", assembly.SourceReader(), code)
+            altered = copy.deepcopy(audit)
+            altered["stage_identity"]["inode"] += 1
+            audit_path.write_text(json.dumps(altered))
+            with self.assertRaisesRegex(ValueError, "permanent-source audit"):
+                validate()
+            audit_path.write_text(json.dumps(audit))
+            replacement = source.parent / "replacement"
+            replacement.mkdir()
+            target.unlink()
+            target.symlink_to(replacement, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "permanent-source audit"):
+                validate()
+            target.unlink()
+            target.symlink_to(source, target_is_directory=True)
+            # Even an excluded downstream MNIST-like case must retain every
+            # frozen scientific fingerprint; the check precedes cohort filtering.
+            weights = source / entries[-1]["task_id"] / "weights.pt"
+            weights.write_text("changed scientific content")
+            with self.assertRaisesRegex(ValueError, "frozen publication fingerprints"):
+                validate()
+
+
 class AliasAndAssemblyTests(unittest.TestCase):
     def test_leaf_alias_creation_never_replaces_existing_or_broken_outputs(self):
         with tempfile.TemporaryDirectory() as directory:
