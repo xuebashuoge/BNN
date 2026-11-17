@@ -1,0 +1,64 @@
+{
+  "stage": "bayes_certificate",
+  "scientific_setup": "small_model_bound_diagnostic",
+  "tasks": 48,
+  "seeds": [
+    76101,
+    76102,
+    76103
+  ],
+  "channel_seed_rule": "seed+10000",
+  "eval_seed_rule": "seed+20000",
+  "groups": [
+    "moons_analog_certificate_w8_n512_m2000",
+    "moons_outage_certificate_w8_n512_m2000"
+  ],
+  "method_counts": {
+    "ERM-Matched": 6,
+    "ERM-Perfect": 6,
+    "L2-Matched": 6,
+    "L2-Perfect": 6,
+    "T1-Matched": 6,
+    "T1-Perfect": 6,
+    "T2-Matched": 6,
+    "T2-Perfect": 6
+  },
+  "predictor": "One diagonal Gaussian posterior over every MLP weight and bias, including ERM/L2",
+  "dataset": "IID two moons",
+  "width": 8,
+  "n": 512,
+  "validation_n": 512,
+  "m": 2000,
+  "epochs": 150,
+  "lr": 0.003,
+  "posterior_std": 0.1,
+  "prior_std": 1.0,
+  "rho_lr_scale": 0.1,
+  "l2": 0.0001,
+  "t1": {
+    "eta_channel": 0.01,
+    "eta_data": 0.03
+  },
+  "t2": {
+    "eta_data": 0.03
+  },
+  "bounded_loss": "-log(.01+.99*p_y)/log(100)",
+  "evaluation_draws": 20,
+  "validation_draws": 5,
+  "checkpoint_selection": "Validation accuracy with CE tiebreak; no configuration or seed selection",
+  "hyperparameter_search": false,
+  "test_based_selection": false,
+  "all_declared_seeds_retained": true,
+  "main_accuracy_table": false,
+  "rationale": "Revisit the earlier width8/n512/m2000 proof-scale diagnostic using a common Gaussian predictor for every method; earlier selected stochastic-posterior nonvacuity is not evidence for deterministic ERM/L2",
+  "interpretation": "Bound/decomposition diagnostic, separate from main accuracy comparisons. Neither proposed-method superiority nor nonvacuity is promised. Perfect-to-noisy shift and simultaneous finite-MC allocation may make bounds vacuous.",
+  "certificate_scope": "Conditional on the supplied theorems and assumptions; normalized smooth Gibbs loss, not raw CE or classification error",
+  "execution": "Generate only. Training/evaluation belongs on Spartan after a matching CPU resource pilot.",
+  "figure_formats": [
+    "png",
+    "pdf",
+    "eps"
+  ],
+  "confidence_shading": false,
+  "manifest_sha256": "73df872fbc11b02e83ef979defe10d671e44c28ca51628cdb1e43e7b41ed820f"
+}
