@@ -4,19 +4,40 @@ The main numerical story should connect deployment performance against ERM/L2, g
 
 The original MNIST/FashionMNIST/toy campaigns contain 473 unique search trials, not 473 independent replications of one setting. The CIFAR extension adds a separate dataset/CNN family. Main figures/tables use ten inference draws and two or three initialization/channel-bank seeds conditional on a fixed dataset. The five-draw screen and 100-draw selected-checkpoint checks stay separate.
 
+The 13 November bound-evaluation update reuses all trained models. Job 34969965
+completed empirical-bank inference for all 51 selected image checkpoints in
+5 minutes 23 seconds; no optimization was performed. The consolidated
+`tables/algorithm_risk_bounds` table now contains accuracy, held-out bounded
+risk, reused-bank empirical risk, and both corrected unweighted theorem bounds
+for all 19 method/dataset rows. Every image-model stochastic bound is vacuous;
+deterministic ERM/L2 bounds remain unavailable under the Gaussian prior.
+
+`c1_evaluation.tex` adds two deployment cases for the same three perfect-trained
+toy posteriors. Feature erasure evaluates C1's first inequality with the
+discrete metric. Fully specified centered-lognormal output noise evaluates its
+second inequality with a moment-matched Gaussian reference and a uniform
+loss-Lipschitz constant. The direct expected Euclidean distance requires
+numerical integration; the reference moment and exact KL are closed form.
+This explicitly changes the deployment split to the output, while preserving
+the noiseless trained predictor. At shape 0.1 and standard deviation 0.5,
+the reference shift is 0.212614 and the corrected mean bounded-risk upper
+is approximately 0.880086. The direct distance is estimated separately as a
+diagnostic; no deployment-distance Monte Carlo estimate enters the certificate.
+The figure remains in the main text; the full C1 numerical table is supplementary.
+
 ## Recommended main text
 
 | Item | Presentation | Supported claim |
 | --- | --- | --- |
 | Experimental settings | Table I | Exact data/validation/test sizes, width, bank size, epochs and repetitions for the three image and two toy protocols. |
-| Image deployment performance | Table II | Six available method/training-law rows, with accuracy and normalized bounded loss for full MNIST and FashionMNIST. Mean plus sample SD over every listed seed. |
-| RGB/CNN extension | Separate CIFAR table | All seven matched/perfect rows, including L2 Perfect, with accuracy and normalized bounded loss. Keep the 10k screen separate from the 45k full-data cohort. |
+| Image deployment performance and bounds | Consolidated Table III | All 19 MNIST/FashionMNIST/CIFAR-10 rows, with accuracy, normalized test and empirical risks, and both corrected theorem bounds. Mean plus sample SD over every listed seed. Deterministic bounds are unavailable and stochastic image bounds are vacuous. |
 | Finite-bank mechanism | Figure 1, accuracy and channel-gap panels | Fix data, width, deployment law and 600 optimizer updates; vary `m=5,20,100,500,2000`. Include perfect-trained references. |
 | Training-law sensitivity | Figure 2, accuracy and CE panels | Fix deployment erasure probability 0.5 and vary training probability, including perfect at zero. Matching is best here, not a universal theorem about accuracy. |
 | Bound decomposition | Figure 3, theoretical and signed empirical panels | Compare perfect, matched and milder mismatched training at the same `n=800,d=16,m=100`. Stack unweighted T1 terms and mark T2 at each same posterior. These illustrative worst-case gap bounds are vacuous. |
 | Corrected numerical bound | Certificate table | At one width-8 posterior, `n=512,m=2000`, include empirical risk, MC correction, separate/joint terms and full risk bounds. Both theorems evaluate the same T1-trained posterior. |
+| Two uses of C1 | Figure 4; full numerical table in supplement | Same perfect-trained posteriors face feature erasure (direct closed-form first term) and centered-lognormal output noise (second inequality). The latter's direct expected norm has no simple known closed form, while its Gaussian-reference moment and exact KL do. No retraining or posterior-dependent channel-Lipschitz proxy. |
 
-This is four tables and three empirical figures in the main simulation section. Accuracy bars would duplicate the performance tables; tables report uncertainty and theoretical loss more compactly. CIFAR validation trajectories are an optional supplementary diagnostic. The corrected analytical T1/T2 comparison belongs near the theory example, outside Simulation.
+This is three tables and four empirical figures in the main simulation section. Accuracy bars would duplicate the performance tables; tables report uncertainty and theoretical loss more compactly. CIFAR validation trajectories are an optional supplementary diagnostic. The corrected analytical T1/T2 comparison belongs near the theory example, outside Simulation.
 
 ## Main numbers
 

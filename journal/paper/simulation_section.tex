@@ -7,189 +7,93 @@
 \section{Numerical Results}
 \label{sec:simulation}
 
-We evaluate the framework through three complementary experiments. First,
-image-classification comparisons examine deployment accuracy and bounded
-risk under analog fading and additive noise. Second, controlled feature-erasure
-experiments isolate the effect of a finite training channel bank and the
-choice of training channel law. Finally, we evaluate the channel-shift,
-channel-complexity, and data-complexity contributions at frozen learned
-posteriors and compute a numerical population-risk bound. ERM and L2 are
-the main competing baselines. Supplementary results record additional
-internal ablations and sensitivity checks.
+The synthetic experiments examine finite-channel generalization, training-law
+mismatch, and the bound components; image classification then assesses
+algorithm performance. ERM and L2 are the main competing baselines.
 
 \subsection{Experimental Setup}
 \label{sec:sim_setup}
 
-\subsubsection{Data and split networks}
-The image experiments use MNIST~\cite{mnist_dataset} and
-Fashion-MNIST~\cite{fashion_mnist}. Both contain ten classes of
-$28\times28$ grayscale images. For MNIST, we use 55,000 training and 5,000
-validation examples from the official training partition. For Fashion-MNIST,
-we use a subset of 10,000 training examples and a disjoint validation set of
-5,000 examples. Both use the official 10,000-example test partition. Pixel
-intensities are mapped to $[0,1]$, without augmentation or fitted
-normalization. The common image classifier has dimensions $784\to128\to10$.
-Its first affine layer and ReLU form the transmitter; its final affine
-layer forms the receiver, with transmission between the two.
+For the mechanism and bound studies (Parts~B--D), we use noisy two-moons
+points in $\mathbb R^2$ with a small split MLP $2\to d\to2$.
+The width-eight model keeps posterior KL modest and yields a nonvacuous
+bound at $m=2000$.
 
-We additionally evaluate CIFAR-10~\cite{cifar10}, which contains ten classes
-of $32\times32$ RGB images. Its official training partition is split into
-45,000 training and 5,000 validation examples; the official test partition
-contains 10,000 examples. Pixels are mapped to $[-1,1]$ by the fixed transform
-$x/127.5-1$. The transmitter uses three $3\times3$ convolution/ReLU blocks
-with 16, 32 and 64 output channels, max pooling after the first two blocks,
-adaptive $4\times4$ pooling, and an affine/ReLU projection to 128 transmitted
-features. A ten-class affine receiver follows the channel. All methods
-share this 156,074-weight architecture, without batch normalization,
-dropout or augmentation. This extends both the dataset and transmitter
-architecture; it is not an isolated architecture ablation.
+For algorithm performance (Part~E), MNIST~\cite{mnist_dataset} and
+Fashion-MNIST~\cite{fashion_mnist} pair $28\times28$ grayscale images with
+the same split MLP $784\to128\to10$.
 
-For controlled experiments, we sample an i.i.d. noisy two-moons population:
-the binary label is Bernoulli with parameter $1/2$, the arc angle is uniform
-on $[0,\pi]$, and independent Gaussian coordinate noise has standard
-deviation $0.3$. These experiments use $2\to d\to2$ split networks. The
-finite-channel study fixes $d=8$, $n=512$, a 512-example validation set, and
-an independent 10,000-example test set. The training-law study uses $d=16$,
-800 training examples, and 200 validation examples. Table~\ref{tab:sim_setup}
-summarizes the main settings.
+CIFAR-10~\cite{cifar10} pairs $32\times32\times3$ images with a split CNN:
+its convolutional transmitter sends 128 features to a ten-class affine
+receiver. Table~\ref{tab:sim_setup} summarizes the dataset--model pairs.
 
 \begin{table*}[t]
-\centering
-\caption{Settings of the Main Experiments}
+\centering\footnotesize
+\caption{Main experimental setups. Left and right of $\mid$ are the
+transmitter and receiver; numerical arrows denote affine layers.
+The two lines in the two-moons row specify the finite-bank/certificate
+and training-law/decomposition settings, respectively. All test sets
+contain 10,000 examples. Channel laws refer to deployment.}
 \label{tab:sim_setup}
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{@{}lrrrrrrl@{}}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lclcccl@{}}
 \toprule
-Experiment & $n$ & Validation & Test & $d$ & $m$ & Epochs & Seeds \\
+Dataset & $n_{\rm train}/n_{\rm val}$ & Transmitter $\mid$ receiver
+& Transmitted $d$ & Channel law & $m$ & Used in \\
 \midrule
-MNIST, analog & 55,000 & 5,000 & 10,000 & 128 & 100 & 100 & 3 \\
-Fashion-MNIST, analog & 10,000 & 5,000 & 10,000 & 128 & 100 & 25 & 2 \\
-CIFAR-10, analog & 45,000 & 5,000 & 10,000 & 128 & 100 & 100 & 3 \\
-Two moons, finite bank & 512 & 512 & 10,000 & 8 & $5$--$2000$ & 150 & 3 \\
-Two moons, training-law mismatch & 800 & 200 & 10,000 & 16 & 100 & 150 & 3 \\
+\multicolumn{7}{@{}l}{\emph{Synthetic: mechanism and bound}}\\
+\raisebox{0.45\baselineskip}{Two moons} &
+\shortstack{$512/512$\\$800/200$} &
+\raisebox{0.45\baselineskip}{$(2\to d)_{\rm ReLU}\mid(d\to2)$} &
+\shortstack{$8$\\$16$} & \raisebox{0.45\baselineskip}{Erasure} &
+\shortstack{$5$--$2000$\\$100$} &
+\shortstack{\ref{sec:sim_channel_bank}, \ref{sec:sim_bounds}\\
+\ref{sec:sim_mismatch}, \ref{sec:sim_bounds}}\\
+\midrule
+\multicolumn{7}{@{}l}{\emph{Images: algorithm performance}}\\
+MNIST & $55{,}000/5{,}000$ &
+$(784\to128)_{\rm ReLU}\mid(128\to10)$ &
+128 & Gaussian & 100 & \ref{sec:sim_performance}\\
+Fashion-MNIST & $10{,}000/5{,}000$ &
+$(784\to128)_{\rm ReLU}\mid(128\to10)$ &
+128 & Gaussian & 100 & \ref{sec:sim_performance}\\
+CIFAR-10 & $45{,}000/5{,}000$ &
+$\mathrm{CNN}\to128\mid(128\to10)$ &
+128 & Gaussian & 100 & \ref{sec:sim_performance}\\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-\subsubsection{Channel laws and finite observations}
-For analog transmission, the recovered representation is
-$\widehat f=Hf+N$, where $H$ is diagonal with independent
-$H_{kk}\sim\mathcal N(\mu_m,\sigma_m^2)$ and
-$N_k\sim\mathcal N(0,\sigma_b^2)$. The image comparisons use
-$(\mu_m,\sigma_m,\sigma_b)=(0.5,1,1)$. These are fixed distortion-law
-parameters: feature power is not normalized, so the comparisons are not at
-a common physical SNR or transmit-power constraint. Neither CSI nor
-equalization is supplied to the receiver.
-
-For feature erasures, $\widehat f_k=B_kf_k$, where the coordinates
-$B_k\sim\mathrm{Bernoulli}(1-p)$ are independent. The receiver observes
-zero-filled features without a separate erasure-indicator input. This is
-an erasure abstraction for continuous features, rather than a complete
-bit-level digital transmission system. A channel-bank entry is one full
-gain/noise vector or one full erasure mask. The bank is sampled separately
-from the data and reused throughout training. Each training example in a
-minibatch receives an independent uniform bank index, giving an unbiased
-stochastic estimate of the empirical risk on $S\times U$.
-
-\subsubsection{Bounded loss and optimization}
-Let $p_w(y\mid x,c)$ be the confidence assigned to the correct class. With
-$\varepsilon_\ell=0.01$, we use the common smooth bounded logarithmic loss
+The finite-bank, mismatch, and image comparisons transmit features through
+either $\widehat f=Hf+N$, with diagonal
+$H$, independent $H_{kk}\sim\mathcal N(0.5,1)$ and $N_k\sim\mathcal N(0,1)$,
+or independent zero-filled continuous-feature erasures with deployment probability
+$0.5$. Feature power is unnormalized; CSI, equalization, and erasure flags
+are absent. The bank $U$ contains $m$ full channel realizations drawn
+independently of the data and reused with uniform per-example sampling.
+All methods use the smooth bounded loss with $\varepsilon_\ell=0.01$,
 \begin{equation}
 \label{equ:sim_bounded_loss}
 \ell_{\varepsilon_\ell}(w,c,z)=
 \frac{-\log[\varepsilon_\ell+(1-\varepsilon_\ell)p_w(y\mid x,c)]}
-{\log(1/\varepsilon_\ell)}.
+{\log(1/\varepsilon_\ell)},
 \end{equation}
-It lies in $[0,1]$ uniformly over weights, channels, and data. Hence the
-standing sub-Gaussian assumptions hold with
-$\sigma^2=\sigma_{\rm tr}^2=1/4$ by Hoeffding's lemma. For perfect training,
-the sharper channel variance proxy is zero.
-
-The proposed learner uses one diagonal Gaussian posterior and the fixed,
-data-independent prior $Q_W=\mathcal N(0,I)$. Its weight means start from
-fan-in-scaled uniform initialization with zero biases; posterior standard
-deviations initialize at $0.003$ or $0.01$ in the grayscale experiments,
-and at $0.001$ or $0.003$ in the CIFAR-10 search.
-We optimize with Adam and a constant learning rate, drawing one weight
-sample per minibatch. Grayscale-image batches contain 256 examples;
-CIFAR-10 and toy batches contain 128. The T1 objective uses the separate penalties in
-Theorem~\ref{thm:separate_bound_US}; T2 uses the joint penalty in
-Theorem~\ref{thm:joint_bound_US}. Unless a joint confidence allocation is
-specified below, the nominal failure budget is $0.05$, split equally
-between T1's two terms. ERM and L2 use the same loss
-\eqref{equ:sim_bounded_loss}; L2 adds an explicit squared-weight penalty.
-
-\subsubsection{Selection and evaluation}
-The explored configurations are selected by mean validation accuracy over
-the listed initialization/channel-bank seeds, breaking ties by lower
-cross entropy. Checkpoint selection uses two fixed validation random-number
-streams across epochs; test evaluation uses fresh streams. These are
-exploratory numerical comparisons, and all listed seeds are retained in
-the main tables. The data split is fixed across these seeds. Thus the
-reported standard deviations measure initialization/channel-bank
-variation conditional on that split. Search ranges and selected settings
-are provided in the supplement.
-
-Test accuracy is the Gibbs-expected accuracy: a weight draw is held fixed
-for one complete test pass, with a fresh channel for each example, and
-the resulting accuracy is averaged over ten passes. ERM and L2 are
-deterministic, so only their channels vary. Bounded loss is evaluated
-using the same posterior convention; ordinary cross entropy is a separate
-metric. Perfect training means identity transmission in the training
-forward pass, followed by testing through the deployment channel. For
-Proposed Perfect, the objective retains only the data PAC-Bayes penalty.
-Checkpoint selection for these references uses deployment-channel
-validation; the perfect-training label refers to the training forward
-channel.
-
-\subsection{Deployment Performance Under Analog Fading}
-\label{sec:sim_performance}
-\input{\simroot/tables/accuracy_and_loss}
-
-Table~\ref{tab:sim_accuracy_risk} reports mean test accuracy and normalized
-bounded loss. On MNIST, T1 attains $76.63\%$, compared with $74.60\%$ for
-matched ERM and $70.12\%$ for matched L2, giving gains of $2.03$ and $6.52$
-percentage points. T2 reaches $76.43\%$ and slightly lowers the bounded
-loss relative to T1. On Fashion-MNIST, T1 and T2 attain $63.24\%$ and
-$63.21\%$, respectively, versus $61.57\%$ for ERM and $61.49\%$ for L2.
-Both proposed variants outperform these evaluated baselines in every
-reported seed of the two image comparisons. Their small differences in
-accuracy and bounded loss do not imply a universal ordering between T1
-and T2.
-
-The perfect-training references also expose the importance of training
-with channel observations. On MNIST, Proposed Perfect attains $57.94\%$
-under deployment, whereas matched T1 attains $76.63\%$; the corresponding
-Fashion-MNIST accuracies are $52.44\%$ and $63.24\%$. Removing the
-finite-channel penalty during perfect training therefore does not remove
-the deployment mismatch. These results concern the tested configurations;
-they do not assert optimality over all baseline hyperparameters.
-
-\subsubsection{CIFAR-10 with a convolutional transmitter}
-\input{\simroot/tables/cifar_comparison}
-Table~\ref{tab:sim_cifar} extends the comparison to the shared convolutional
-architecture. The 34-run preliminary screen selects one setting per method
-by aggregate validation accuracy. We then train these seven fixed settings
-for 100 epochs on 45,000 examples using three new initialization/channel-bank
-seeds; all three are retained. T1 achieves $55.03\%$ mean test accuracy,
-versus $53.67\%$ for L2 and $46.16\%$ for ERM, gains of $1.36$ and $8.87$
-percentage points. It exceeds both baselines in every reported seed and
-also has the lowest mean bounded risk, $0.3395$, compared with $0.3526$
-for L2 and $0.4205$ for ERM. T2 attains $53.26\%$, slightly below L2;
-the benefit therefore does not extend uniformly to both proposed variants.
-Mean transmitted feature power is $22.73$ per coordinate for T1, versus
-$12.59$ for L2 and $6.71$ for ERM. These remain fixed-channel-law
-comparisons with unconstrained feature power.
-
-Perfect-trained ERM, L2 and Proposed attain approximately $34\%$ under
-the same deployment law, reinforcing the training/deployment distinction.
-The full-data comparison uses a fixed 100-epoch budget; several selected
-checkpoints occur near its end, so these results do not establish fully
-converged or globally optimal baseline accuracy. The preliminary screen
-and search settings are recorded in the supplement. The high-dimensional
-CNN bound at $m=100$ is vacuous; the numerical certificate below is
-computed separately on the controlled small network.
+where $p_w(y\mid x,c)$ is the correct-class probability; its $[0,1]$
+range gives $\sigma^2=\sigma_{\rm tr}^2=1/4$ by Hoeffding's lemma.
+T1 and T2 use one diagonal Gaussian posterior, the fixed prior
+$Q_W=\mathcal N(0,I)$, and the separate/joint theorem penalties;
+ERM and L2 are deterministic. Adam uses one weight draw per minibatch
+for posterior training. Validation accuracy selects configurations and
+checkpoints, with cross entropy breaking ties; all seeds are retained.
+Test metrics average ten fresh Gibbs/channel passes, holding each
+weight draw fixed throughout a pass with fresh channels per example.
+Perfect references train through
+identity transmission and validate/test under deployment channels;
+Proposed Perfect retains only the data PAC-Bayes penalty. Further
+implementation details are in Appendix~\ref{app:sim_implementation}.
+The additional C1 evaluation in Part~\ref{sec:sim_bounds} reuses the
+perfect-trained toy checkpoints, with its deployment laws and 100-draw
+evaluation protocol specified there.
 
 \subsection{Generalization From a Finite Channel Bank}
 \label{sec:sim_channel_bank}
@@ -317,3 +221,64 @@ $0.7178$ for T2, including MC error. Both are below one. The joint bound
 is tighter at the same posterior; it does not change the predictor or
 imply an accuracy ordering. These bounds concern the normalized Gibbs
 loss in \eqref{equ:sim_bounded_loss}, rather than classification error or unbounded CE.
+
+\input{\simroot/c1_evaluation}
+
+\subsection{Deployment Performance Under Analog Fading}
+\label{sec:sim_performance}
+\input{\simroot/tables/algorithm_risk_bounds}
+
+Table~\ref{tab:sim_accuracy_risk} reports test accuracy, held-out and
+training-bank empirical bounded risks, and both population-risk bounds.
+The empirical risk is reevaluated at each selected frozen checkpoint;
+an average training-epoch objective would mix different posteriors.
+Both bounds restore unweighted complexity and channel-shift terms and
+include a fresh empirical Monte Carlo correction. All image-model
+bounds are vacuous: their uncapped values exceed one on the
+normalized-loss scale. The deterministic ERM and L2 predictors have
+infinite KL to the continuous Gaussian prior, so their theorem-bound
+entries are unavailable. These experiments establish practical
+performance differences, while the small-network studies assess
+nonvacuous risk guarantees.
+
+On MNIST, T1 attains $76.63\%$, compared with $74.60\%$ for
+matched ERM and $70.12\%$ for matched L2, giving gains of $2.03$ and $6.52$
+percentage points. T2 reaches $76.43\%$ and slightly lowers the bounded
+loss relative to T1. On Fashion-MNIST, T1 and T2 attain $63.24\%$ and
+$63.21\%$, respectively, versus $61.57\%$ for ERM and $61.49\%$ for L2.
+Both proposed variants outperform these evaluated baselines in every
+reported seed of the two image comparisons. Their small differences in
+accuracy and bounded loss do not imply a universal ordering between T1
+and T2.
+
+The perfect-training references also expose the importance of training
+with channel observations. On MNIST, Proposed Perfect attains $57.94\%$
+under deployment, whereas matched T1 attains $76.63\%$; the corresponding
+Fashion-MNIST accuracies are $52.44\%$ and $63.24\%$. Removing the
+finite-channel penalty during perfect training therefore does not remove
+the deployment mismatch. These results concern the tested configurations;
+they do not assert optimality over all baseline hyperparameters.
+
+\subsubsection{CIFAR-10 with a convolutional transmitter}
+Table~\ref{tab:sim_cifar} extends the comparison to the shared convolutional
+architecture. The 34-run preliminary screen selects one setting per method
+by aggregate validation accuracy. We then train these seven fixed settings
+for 100 epochs on 45,000 examples using three new initialization/channel-bank
+seeds; all three are retained. T1 achieves $55.03\%$ mean test accuracy,
+versus $53.67\%$ for L2 and $46.16\%$ for ERM, gains of $1.36$ and $8.87$
+percentage points. It exceeds both baselines in every reported seed and
+also has the lowest mean bounded risk, $0.3395$, compared with $0.3526$
+for L2 and $0.4205$ for ERM. T2 attains $53.26\%$, slightly below L2;
+the benefit therefore does not extend uniformly to both proposed variants.
+Mean transmitted feature power is $22.73$ per coordinate for T1, versus
+$12.59$ for L2 and $6.71$ for ERM. These remain fixed-channel-law
+comparisons with unconstrained feature power.
+
+Perfect-trained ERM, L2 and Proposed attain approximately $34\%$ under
+the same deployment law, reinforcing the training/deployment distinction.
+The full-data comparison uses a fixed 100-epoch budget; several selected
+checkpoints occur near its end, so these results do not establish fully
+converged or globally optimal baseline accuracy. The preliminary screen
+and search settings are recorded in the supplement. The high-dimensional
+CNN bound at $m=100$ is vacuous; Part~\ref{sec:sim_bounds} gives a separate
+small-network certificate.

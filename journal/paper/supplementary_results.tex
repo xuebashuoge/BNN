@@ -111,3 +111,43 @@ joint coefficient $0.002$, both with $s_0=0.003$. The two stages share
 the validation prefix and a seeded data permutation, with the smaller
 training subset nested inside the larger one. They are separate
 data-size/optimization-budget stages on the same official test set.
+
+\subsection{Implementation Details}
+\label{app:sim_implementation}
+Two-moons labels are Bernoulli with parameter $1/2$, arc angles are
+uniform on $[0,\pi]$, and independent Gaussian coordinate noise has
+standard deviation $0.3$. Grayscale pixels lie in $[0,1]$; CIFAR-10 uses
+the fixed transform $x/127.5-1$. There is no augmentation or fitted
+normalization. The CNN transmitter has three $3\times3$
+convolution/ReLU blocks (16, 32 and 64 channels), max pooling after the
+first two, adaptive $4\times4$ pooling, and an affine/ReLU projection
+to 128 features. It has no batch normalization or dropout.
+
+Weight means use fan-in-scaled uniform initialization with zero biases.
+Initial posterior standard deviations are $0.003$ or $0.01$ in the
+grayscale searches and $0.001$ or $0.003$ in the CIFAR-10 search.
+Adam uses a constant learning rate and batch sizes 256 for grayscale
+images and 128 otherwise. The main epoch/seed budgets are 150/3 for
+two moons, 100/3 for MNIST, 25/2 for Fashion-MNIST, and 100/3 for CIFAR-10.
+Training-law changes and identity-channel references are specified in
+the relevant experiments.
+
+Configuration selection averages validation accuracy across the declared
+seeds; checkpoints use two fixed validation random-number streams across
+epochs. Splits are fixed across initialization/channel-bank seeds, so
+reported sample standard deviations are conditional on each split.
+The searches are exploratory. Except for the joint certificate allocation
+in Part~\ref{sec:sim_bounds}, the nominal failure budget is $0.05$, split
+equally between T1's two terms. Perfect training has zero channel variance
+and assigns the full budget to the data term.
+The erasure model masks continuous features without bit-level coding.
+
+\subsection{Perfect-Training Bound Evaluations}
+Table~\ref{tab:c1_evaluation} gives the numerical values underlying
+Figure~\ref{fig:sim_c1_evaluation}. Both deployment cases use the same
+three frozen perfect-trained posteriors, empirical risks, and data penalties.
+The centered-lognormal output-noise rows include a separate numerical estimate
+of the direct expected distance as a diagnostic. The reported analytic risk
+upper bound uses the closed-form Gaussian-reference expression, without this
+distance estimate. No model is retrained for either deployment law.
+\input{\simroot/tables/c1_evaluation}

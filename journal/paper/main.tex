@@ -12,11 +12,18 @@
 \makeatletter
 \@namedef{r@thm:separate_bound_US}{{1}{1}}
 \@namedef{r@thm:joint_bound_US}{{2}{1}}
+% Keep standalone float pages compact instead of distributing spare space
+% between the bound figure and the comparison table.
+\setlength{\@fptop}{0pt}
+\setlength{\@dblfptop}{0pt}
+\setlength{\@fpsep}{18pt}
+\setlength{\@dblfpsep}{18pt}
 \makeatother
 \title{Simulation Section Draft}
 \author{}
 \begin{document}
 \maketitle
+\raggedbottom
 \setcounter{section}{4}
 \input{simulation_section}
 \clearpage
