@@ -241,7 +241,7 @@ def pipeline(output, workers, threads, confirm_draws=20, sweep_draws=10):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=Path("results/journal_bayesian/20261117"))
+    parser.add_argument("--output", type=Path, default=Path("results/journal_bayesian/20261117_refined"))
     parser.add_argument("--workers", type=int, default=16)
     parser.add_argument("--threads", type=int, default=2)
     parser.add_argument("--confirm-draws", type=int, default=20)

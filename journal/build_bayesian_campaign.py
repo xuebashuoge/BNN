@@ -67,18 +67,21 @@ def base_config(dataset, channel_name, stage="screen"):
 
 
 def method_variants(base, method):
-    """Eight distinct trials per method and training regime, never test-tuned.
+    """Sixteen distinct trials per method/regime, retaining the initial eight.
 
-    ERM spends its eight trials on learning rate and initial posterior scale;
+    ERM spends its sixteen trials on learning rate and initial posterior scale;
     the regularized methods divide the same budget across their coefficient.
     All methods optimize both Gaussian means and scales with rho LR factor .1.
     """
     if method == "erm":
-        for lr in (.0003, .001, .003, .01):
+        # Keep the original eight configurations and their ordering intact.
+        for lr in (.0003, .001, .003, .01, .0001, .0005, .006, .03):
             for posterior_std in (.001, .003):
                 yield {**base, "method": method, "lr": lr, "posterior_std": posterior_std}
         return
-    for lr in (.001, .003):
+    # The appended common .01/.03 choices test the upper-LR boundary seen in
+    # completed moons validation groups; no test outcomes motivated this grid.
+    for lr in (.001, .003, .01, .03):
         for posterior_std in (.001, .003):
             for index in range(2):
                 config = {**base, "method": method, "lr": lr, "posterior_std": posterior_std}
@@ -89,7 +92,7 @@ def method_variants(base, method):
                     ratio = math.sqrt((base["train_size"] - 1) / (base["m"] - 1))
                     if base["train_channel"]["kind"] == "perfect":
                         # Both objectives specialize to the data term. Their
-                        # eight candidates intentionally coincide in this case.
+                        # sixteen candidates intentionally coincide in this case.
                         config.update(eta_channel=0., eta_data=(.003, .03)[index])
                     elif method == "proposed":
                         config.update(eta_channel=strength, eta_data=strength * ratio)
@@ -189,8 +192,8 @@ def select_validation(entries, rows):
             raise ValueError(f"Unequal or incomplete method tuning budget in {group}")
         common = None
         variants_by_label = Counter(label for label, _ in seed_sets[group])
-        if set(variants_by_label.values()) != {8}:
-            raise ValueError(f"Require eight variants per method/regime in {group}")
+        if set(variants_by_label.values()) != {16}:
+            raise ValueError(f"Require sixteen variants per method/regime in {group}")
         for seeds in seed_sets[group].values():
             if len(seeds) < 2 or (common is not None and seeds != common):
                 raise ValueError("All variants require the same complete paired screening seeds")
@@ -264,7 +267,7 @@ def make_plan(entries, stage, seeds, source_hashes=None):
                 groups=sorted({item["group"] for item in entries}),
                 methods=sorted({item["method_label"] for item in entries}),
                 predictor="All methods use a single diagonal Gaussian posterior",
-                tuning_variants_per_method_regime=8 if stage == "screen" else None,
+                tuning_variants_per_method_regime=16 if stage == "screen" else None,
                 tuning_seeds=list(seeds) if stage == "screen" else sorted({seed for item in entries for seed in item.get("screening_seed_set", SEEDS["screen"])}),
                 confirmation_seeds=list(SEEDS["confirm"]),
                 m_grid=list(M_GRID), p_train_grid=list(P_GRID),
@@ -276,7 +279,10 @@ def make_plan(entries, stage, seeds, source_hashes=None):
                 training_budget="Fixed budget: moons150 epochs; grayscale30; CIFAR25. Convergence is not assumed.",
                 perfect_specialization="T1 and T2 have identical candidate objectives under perfect training; retain both labels transparently",
                 bound_note="Finite KL permits evaluation; nonvacuity and mismatch shift validity require separate checking",
-                resource_note="Full-shape one-epoch CPU pilot first. Historical CNN full-data epochs ~7-9s on 2 CPUs; cnn_spatial3 and new Gaussian ERM/L2 costs require the matching pilot. Screen contains 1024 full-data trials; use bounded CPU array concurrency and measured pilot time/RSS. No GPU requested.",
+                validation_refinement="Initial eight candidates preserved; append eight per method/regime after completed moons validation showed ERM best at lr=.01 and regularized methods at their old upper boundary .003. No test results used.",
+                total_full_pipeline_training_tasks=4160,
+                total_full_pipeline_final_evaluation_tasks=2048,
+                resource_note="Full-shape one-epoch CPU pilot first. Historical CNN full-data epochs ~7-9s on 2 CPUs; cnn_spatial3 and new Gaussian ERM/L2 costs require the matching pilot. Screen contains 2048 full-data trials; use bounded CPU array concurrency and measured pilot time/RSS. No GPU requested.",
                 figure_formats=["png", "pdf", "eps"], confidence_shading=False)
 
 

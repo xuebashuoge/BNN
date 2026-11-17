@@ -4,7 +4,7 @@ from collections import Counter, defaultdict
 import unittest
 
 from journal.build_bayesian_campaign import (
-    CHANNELS, DATASETS, METHODS, M_GRID, P_GRID, SEEDS, screen_entries,
+    CHANNELS, DATASETS, METHODS, M_GRID, P_GRID, SEEDS, base_config, method_variants, screen_entries,
     select_validation, selected_entries,
 )
 from journal.campaign import validate_entries
@@ -22,11 +22,11 @@ def fake_results(entries):
 class BayesianCampaignTests(unittest.TestCase):
     def test_full_matrix_has_equal_budgets_and_gaussian_predictors(self):
         entries = screen_entries()
-        self.assertEqual(len(entries), 4 * 2 * 2 * 4 * 8 * 2)
+        self.assertEqual(len(entries), 4 * 2 * 2 * 4 * 16 * 2)
         validate_entries(entries)
         budgets = Counter((item["group"], item["method_label"]) for item in entries)
         self.assertEqual(len(budgets), 64)
-        self.assertEqual(set(budgets.values()), {16})
+        self.assertEqual(set(budgets.values()), {32})
         self.assertTrue(all(item["config"]["predictor"] == "gaussian" for item in entries))
         self.assertEqual({item["config"]["dataset"] for item in entries}, set(DATASETS))
         for item in entries:
@@ -35,6 +35,18 @@ class BayesianCampaignTests(unittest.TestCase):
             self.assertEqual(config["train_channel"], {"kind": "perfect"} if
                              item["training_regime"] == "perfect" else config["deployment_channel"])
             self.assertEqual(item["family"], "proposed" if config["method"] in {"proposed", "joint"} else "baseline")
+
+    def test_fair_expansion_preserves_initial_grid_then_appends_eight(self):
+        for method, _ in METHODS:
+            with self.subTest(method=method):
+                variants = list(method_variants(base_config("moons", "outage"), method))
+                self.assertEqual(len(variants), 16)
+                self.assertEqual(len({tuple(sorted((key, str(value)) for key, value in config.items()))
+                                      for config in variants}), 16)
+                old_lrs = {.0003, .001, .003, .01} if method == "erm" else {.001, .003}
+                new_lrs = {.0001, .0005, .006, .03} if method == "erm" else {.01, .03}
+                self.assertEqual({config["lr"] for config in variants[:8]}, old_lrs)
+                self.assertEqual({config["lr"] for config in variants[8:]}, new_lrs)
 
     def test_complete_paired_validation_selects_one_per_label_without_test(self):
         entries = screen_entries(datasets=("moons",), channels=("outage",))

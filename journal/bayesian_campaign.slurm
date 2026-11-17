@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
 #SBATCH --mem=64G
-#SBATCH --time=04:00:00
+#SBATCH --time=06:00:00
 #SBATCH --output=logs/journal/%x_%j.out
 #SBATCH --error=logs/journal/%x_%j.err
 

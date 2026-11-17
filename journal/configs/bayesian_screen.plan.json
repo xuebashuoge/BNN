@@ -1,6 +1,6 @@
 {
   "stage": "screen",
-  "tasks": 1024,
+  "tasks": 2048,
   "seeds": [
     72101,
     72102
@@ -37,7 +37,7 @@
     "T2-Perfect"
   ],
   "predictor": "All methods use a single diagonal Gaussian posterior",
-  "tuning_variants_per_method_regime": 8,
+  "tuning_variants_per_method_regime": 16,
   "tuning_seeds": [
     72101,
     72102
@@ -87,12 +87,15 @@
   "training_budget": "Fixed budget: moons150 epochs; grayscale30; CIFAR25. Convergence is not assumed.",
   "perfect_specialization": "T1 and T2 have identical candidate objectives under perfect training; retain both labels transparently",
   "bound_note": "Finite KL permits evaluation; nonvacuity and mismatch shift validity require separate checking",
-  "resource_note": "Full-shape one-epoch CPU pilot first. Historical CNN full-data epochs ~7-9s on 2 CPUs; cnn_spatial3 and new Gaussian ERM/L2 costs require the matching pilot. Screen contains 1024 full-data trials; use bounded CPU array concurrency and measured pilot time/RSS. No GPU requested.",
+  "validation_refinement": "Initial eight candidates preserved; append eight per method/regime after completed moons validation showed ERM best at lr=.01 and regularized methods at their old upper boundary .003. No test results used.",
+  "total_full_pipeline_training_tasks": 4160,
+  "total_full_pipeline_final_evaluation_tasks": 2048,
+  "resource_note": "Full-shape one-epoch CPU pilot first. Historical CNN full-data epochs ~7-9s on 2 CPUs; cnn_spatial3 and new Gaussian ERM/L2 costs require the matching pilot. Screen contains 2048 full-data trials; use bounded CPU array concurrency and measured pilot time/RSS. No GPU requested.",
   "figure_formats": [
     "png",
     "pdf",
     "eps"
   ],
   "confidence_shading": false,
-  "manifest_sha256": "dc05ab7b8e358235a4d1ff01730f3855a8eaa020cfedf4a43886567beba3c4a5"
+  "manifest_sha256": "78df1526beadad132f9fe49eeb651ef4e9b9e093712e35ab242c3266cfc3353c"
 }

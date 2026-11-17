@@ -1,5 +1,12 @@
 # Journal simulation audit and experiment plan
 
+The all-Bayesian rerun on `codex/all-bayesian-bounds` gives ERM, L2, T1 and T2
+the same Gaussian posterior family. Its four-dataset/two-channel experiment
+matrix, dense trend sweeps, bounds and PNG/PDF/EPS export workflow are documented
+in [BAYESIAN_CAMPAIGN.md](BAYESIAN_CAMPAIGN.md). Execution snapshots are in
+`jobs_20261117_bayesian.json`; completion requires the live pipeline status and
+final reports. The audit and results below describe the earlier predictor mix.
+
 The current main journal comparison uses ERM and L2 against Proposed T1/T2,
 with the data-only PAC penalty retained as an optional ablation. The objective
 equivalence and the existing main results are in `MAIN_COMPARISONS.md`.

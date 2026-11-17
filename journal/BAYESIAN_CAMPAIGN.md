@@ -4,15 +4,19 @@ This campaign replaces the deterministic ERM/L2 predictors in the new comparison
 
 The main matrix is four datasets (IID moons, MNIST, FashionMNIST, CIFAR-10), two deployment laws (analog Gaussian gain/noise and Bernoulli outage), two training conditions (matched and perfect), and ERM/L2/T1/T2. CIFAR uses the existing `cnn_spatial3` split; grayscale datasets and moons use split MLPs. Main train/validation sizes are 800/200, 55000/5000, 55000/5000, and 45000/5000 respectively. The fixed epoch budgets are 150, 30, 30 and 25. These are fixed-budget comparisons; convergence is not claimed. Main bank size is `m=20`.
 
-All methods use smooth bounded cross entropy with epsilon .01, a fixed standard Gaussian prior, the same candidates for initial posterior scale (.001/.003), and scale learning-rate factor .1. Each method and training condition gets **eight distinct hyperparameter candidates and the same two paired screening seeds**. ERM allocates its budget to four learning rates and two posterior scales; L2/T1/T2 allocate it to two learning rates, two scales and two regularization strengths. Candidate selection uses the highest mean validation accuracy across every declared screening seed, with validation CE as tiebreak. Every trial and failure remains recorded. No test or favorable-seed selection is used. Perfect-trained T1 and T2 have the same candidate objectives and should coincide under paired randomness; their duplicate labels are explicit references, not distinct mechanisms.
+All methods use smooth bounded cross entropy with epsilon .01, a fixed standard Gaussian prior, the same candidates for initial posterior scale (.001/.003), and scale learning-rate factor .1. Each method and training condition gets **sixteen distinct hyperparameter candidates and the same two paired screening seeds**. ERM allocates its budget to eight learning rates and two posterior scales; L2/T1/T2 allocate it to four learning rates, two scales and two regularization strengths. Candidate selection uses the highest mean validation accuracy across every declared screening seed, with validation CE as tiebreak. Every trial and failure remains recorded. No test or favorable-seed selection is used. Perfect-trained T1 and T2 have the same candidate objectives and should coincide under paired randomness; their duplicate labels are explicit references, not distinct mechanisms.
+
+The first eight-candidate campaign began as Spartan job **35235071**, code revision `9120ddee`, in its separate checkout. Its 64-case full-shape pilot completed in about 50 seconds. During its screen, both complete moons validation groups selected ERM learning rate `.01`, while the regularized methods selected their old upper boundary `.003`. That validation-only evidence motivated the expanded fair budget. The original eight configurations, task IDs and outcomes are preserved. ERM appends learning rates `.0001,.0005,.006,.03` at both scales; L2/T1/T2 append `.01,.03` at both scales and both strengths. No test results were inspected for this decision. Earlier complete and partial outputs remain archived; the refined campaign uses a fresh `20261117_refined` output root and can reuse only complete matching checkpoints. The training algorithms are unchanged.
 
 | Stage | Paired initialization seeds | Full matrix tasks | Purpose |
 | --- | --- | ---: | --- |
 | pilot | 72000 | 64 | One full-shape epoch per dataset/law/method/regime; execution/resources only |
-| screen | 72101, 72102 | 1024 | Eight candidates per method/regime; validation only |
+| screen | 72101, 72102 | 2048 | Sixteen candidates per method/regime; validation only |
 | confirm | 73101–73105 | 320 | Fresh seeds for all selected main comparisons |
 | m_sweep | 74101–74103 | 1056 | Four matched methods at eleven bank sizes, all datasets/laws |
 | p_train_sweep | 75101–75103 | 672 | Four methods at fourteen outage training probabilities, all datasets |
+
+The full refined pipeline declares **4,160 training tasks** and **2,048 final confirmation/sweep evaluations**. Complete matching pilot/screen checkpoint reuse reduces new optimization; it does not remove any declared candidate or seed.
 
 Channel-bank seed is initialization seed +10000, evaluation seed is +20000. The stages use disjoint seed sets. Dataset split seed is 20261117. Confirmation preserves the full-data screening configuration and optimizer budget. Seed identifiers are predetermined labels, never tuned to test accuracy. The objective may improve accuracy, but a proposed-method win is an empirical outcome and is not guaranteed.
 
@@ -33,7 +37,7 @@ The full coordinator runs the pilot, validation-only screen, confirmation, both 
 
 ```bash
 python -u -m journal.run_bayesian_campaign \
-  --output results/journal_bayesian/20261117 \
+  --output results/journal_bayesian/20261117_refined \
   --workers 32 --threads 2 --confirm-draws 20 --sweep-draws 10
 ```
 
