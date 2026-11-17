@@ -166,6 +166,17 @@ class SeedSelectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "320-case"):
             examples.select_examples(rows[:-1])
 
+    def test_all_settings_retains_best_available_initial_losses(self):
+        cases = examples.select_examples(cohort_rows(False), all_settings=True)
+        self.assertEqual(len(cases), 8)
+        for case in cases:
+            self.assertEqual(case["selected_seed"], 73101)
+            self.assertEqual(len(case["selected_task_ids"]), 8)
+            self.assertEqual(case["selection_status"], "bestavailable_no_initial_win")
+            self.assertFalse(case["initial_strict_win"])
+            self.assertLess(case["initial_best_margin"], 0)
+            self.assertEqual(case["initial_margin"], case["initial_best_margin"])
+
     def test_fresh_winner_change_and_negative_margin_are_reported_without_retry(self):
         case = examples.select_examples(cohort_rows())[0]
         values = []
@@ -181,6 +192,32 @@ class SeedSelectionTests(unittest.TestCase):
         self.assertEqual(len(result["methods"]), 8)
         self.assertFalse(report["retry_after_loss"])
         self.assertEqual(result["paired_mc_differences"]["T1-Matched"]["ERM-Matched"]["n"], 500)
+
+    def test_initially_losing_candidate_does_not_imply_actual_winner_changed(self):
+        rows = cohort_rows(False)
+        for row in rows:
+            row["test_accuracy"] = (.9 if row["method_label"] == "ERM-Matched" else
+                                    .79 if row["method_label"] == "T1-Matched" else
+                                    .78 if row["method_label"] == "T2-Matched" else .8)
+        case = examples.select_examples(rows, all_settings=True)[0]
+        self.assertFalse(case["initial_strict_win"])
+        methods = []
+        for task_id, label in zip(case["selected_task_ids"], examples.LABELS):
+            score = .89 if label == "ERM-Matched" else .8 if label == "T1-Matched" else .75
+            methods.append(dict(task_id=task_id, method_label=label,
+                statistics=dict(accuracy=examples.statistics_of([score]*500)), accuracy_draws=[score]*500))
+        protocol = dict(conditions=[case], original_main_means=[], original_mean_rankings={})
+        result = examples.summarize(protocol, methods)["conditions"][0]
+        self.assertEqual(result["initial_top_methods"], ["ERM-Matched"])
+        self.assertEqual(result["fresh_top_methods"], ["ERM-Matched"])
+        self.assertFalse(result["winner_changed"])
+        self.assertTrue(result["fixed_candidate_not_fresh_top"])
+        changed = copy.deepcopy(methods)
+        item = next(item for item in changed if item["method_label"] == "L2-Matched")
+        item.update(statistics=dict(accuracy=examples.statistics_of([.92]*500)), accuracy_draws=[.92]*500)
+        result = examples.summarize(protocol, changed)["conditions"][0]
+        self.assertEqual(result["fresh_top_methods"], ["L2-Matched"])
+        self.assertTrue(result["winner_changed"])
 
 
 class FrozenVerificationTests(unittest.TestCase):
@@ -270,6 +307,14 @@ class FrozenVerificationTests(unittest.TestCase):
                 self.assertFalse((self.output / "evaluations").exists())
         path.write_text(original)
 
+    def test_changed_all_settings_policy_cannot_resume_frozen_positive_only_protocol(self):
+        path = self.output / "selection_protocol.json"
+        original = path.read_bytes()
+        with self.assertRaisesRegex(ValueError, "complete source replay"):
+            examples.freeze_selection(self.source, self.output, self.code, all_settings=True)
+        self.assertEqual(path.read_bytes(), original)
+        self.assertFalse((self.output / "evaluations").exists())
+
     def test_physical_source_overlap_rejected_before_output_or_lock_creation(self):
         for source in (Path(self.task["checkpoint"]), self.fixture.physical_main / "unrelated_source_subfolder"):
             output = source / "new_exploratory_run"
@@ -356,6 +401,39 @@ class FrozenVerificationTests(unittest.TestCase):
         self.assertEqual(len(report["conditions"]), 8)
         self.assertTrue(all(case["fresh_verification"] == "not_run_no_initial_winning_seed" for case in report["conditions"]))
         self.assertTrue(report["original_five_seed_means_retained"])
+
+    def test_all_settings_driver_verifies_all_eight_methods_after_negative_initial_scores(self):
+        protocol = copy.deepcopy(self.protocol)
+        negative = [{**row, "test_accuracy": .79 if row["method_label"] in examples.PROPOSED else .8}
+                    for row in self.fixture.rows]
+        protocol.update(conditions=examples.select_examples(negative, all_settings=True), all_settings=True,
+                        selection_mode="all_settings_best_available")
+        output = self.base / "all_settings_verification"
+        seen = []
+        def freeze(source, target, code, all_settings):
+            self.assertTrue(all_settings)
+            examples.write_once(output / "selection_protocol.json", examples.encoded(protocol))
+            return protocol
+        def verify(task, target, protocol_hash, environment):
+            seen.append(task["task_id"])
+            self.assertEqual(task["seed"], 73101)
+            acc = .78 if task["method_label"] in examples.PROPOSED else .8
+            return dict(task_id=task["task_id"], method_label=task["method_label"],
+                        statistics=dict(accuracy=examples.statistics_of([acc]*500)), accuracy_draws=[acc]*500)
+        with patch.object(examples, "verify_code", return_value=self.code), \
+             patch.object(examples, "freeze_selection", side_effect=freeze), \
+             patch.object(examples, "evaluate_one", side_effect=verify), \
+             patch("journal.batch_campaign.validate_cpu_budget", return_value=32), \
+             patch.dict("os.environ", {"JOURNAL_GIT_SHA": "execution"}):
+            report = examples.run(self.source, output, all_settings=True)
+        self.assertEqual(len(seen), 64)
+        self.assertEqual(len(set(seen)), 64)
+        self.assertTrue(report["all_settings"])
+        for case in report["conditions"]:
+            self.assertEqual(len(case["methods"]), 8)
+            self.assertFalse(case["initial_strict_win"])
+            self.assertFalse(case["fresh_fixed_initial_candidate"]["strictly_best"])
+            self.assertFalse(case["initial_strict_win_lost"])
 
 
 if __name__ == "__main__":

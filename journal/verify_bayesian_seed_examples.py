@@ -27,7 +27,7 @@ from .build_bayesian_mnist_scale import encoded, write_once
 from .run_experiment import bounded_loss_description, normalize_config, save_json
 
 
-# Prespecified before inspecting the final assembled official-test results.
+# Fixed before any fresh verification MC; initial20 scores select exploratory examples.
 DRAWS, INITIAL_DRAWS, SEED_OFFSET, THREADS = 500, 20, 9000019, 2
 TOLERANCE = 1e-12
 LABELS = tuple(f"{method}-{regime}" for method in ("ERM", "L2", "T1", "T2")
@@ -155,7 +155,7 @@ def margin(scores, candidate):
                 strictly_best=value > TOLERANCE, ties_best=abs(value) <= TOLERANCE)
 
 
-def select_examples(rows):
+def select_examples(rows, all_settings=False):
     """Keep all five seeds and select one common seed across all eight methods."""
     grouped = defaultdict(lambda: defaultdict(dict))
     ids = set()
@@ -180,11 +180,13 @@ def select_examples(rows):
             candidate = best(scores, PROPOSED)
             search.append(dict(seed=seed, scores=scores, **margin(scores, candidate)))
         winner = min(search, key=lambda item: (-item["margin"], item["seed"]))
-        selected = winner["seed"] if winner["strictly_best"] else None
+        selected = winner["seed"] if winner["strictly_best"] or all_settings else None
         means = {label: statistics_of(by_seed[seed][label]["test_accuracy"] for seed in SEEDS["confirm"])
                  for label in LABELS}
         output.append(dict(group=group, interpretation=EXPLORATORY, selected_seed=selected,
-            selection_status="selected_existing_paired_seed" if selected is not None else "no_strictly_winning_paired_seed",
+            selection_status=("selected_existing_paired_seed" if winner["strictly_best"] else
+                              "bestavailable_no_initial_win" if all_settings else "no_strictly_winning_paired_seed"),
+            initial_best_margin=winner["margin"], initial_strict_win=winner["strictly_best"],
             initial_candidate=winner["candidate"] if selected is not None else None,
             initial_strongest_other=winner["strongest_other"] if selected is not None else None,
             initial_margin=winner["margin"] if selected is not None else None,
@@ -224,7 +226,7 @@ def recheck(protocol):
             raise ValueError("An assembled checkpoint alias changed after exploratory selection")
 
 
-def build_protocol(source_root, code, frozen_at):
+def build_protocol(source_root, code, frozen_at, all_settings=False):
     """Rebuild every selection/task field from attested immutable source data."""
     from .assemble_bayesian_results import POLICY
     from .plot_bayesian_campaign import Evidence
@@ -349,7 +351,7 @@ def build_protocol(source_root, code, frozen_at):
                                             "weights": files[str(checkpoint / "weights.pt")]}))
     if conditions != {(dataset, channel) for dataset in DATASETS for channel in CHANNELS}:
         raise ValueError("Retain all four datasets and both deployment laws")
-    chosen = select_examples(rows)
+    chosen = select_examples(rows, all_settings)
     mean_rows = {(row["group"], row["method_label"]): row for row in original_means}
     if len(original_means) != 64 or len(mean_rows) != 64:
         raise ValueError("Retain every original five-seed main mean")
@@ -364,19 +366,23 @@ def build_protocol(source_root, code, frozen_at):
     protocol = dict(schema_version=1, interpretation=EXPLORATORY, frozen_at=frozen_at,
         source_root=str(source_root), code_verification=code, initial_draws=INITIAL_DRAWS,
         fresh_draws=DRAWS, fresh_seed_offset=SEED_OFFSET, all_original_seeds=list(SEEDS["confirm"]),
-        selection="Per setting maximize initial20-draw margin of best matched T1/T2 versus strongest of all other seven methods; seed-number tiebreak",
-        no_winning_seed="Report none; no new seed training or retry until a win",
+        all_settings=all_settings, selection_mode="all_settings_best_available" if all_settings else "strict_positive_only",
+        coverage_policy_timing="Coverage mode is frozen before any fresh500-draw verification; initial20-draw results may inform this exploratory analysis",
+        selection=("Every setting: choose the best available existing paired seed, regardless of the sign of its initial20-draw margin; seed-number tiebreak"
+                   if all_settings else "Per setting maximize initial20-draw margin of best matched T1/T2 versus strongest of all other seven methods; require strict positive margin; seed-number tiebreak"),
+        no_winning_seed=("Still verify the best available paired seed once; label bestavailable_no_initial_win and preserve negative margins/ties"
+                         if all_settings else "Report none; no new seed training or retry until a win"),
         all_original_tasks=tasks, original_main_means=original_means, original_mean_rankings=original_outcome,
         conditions=chosen, source_fingerprints=files, source_writes=False, new_training=False)
     recheck(protocol)
     return protocol
 
 
-def freeze_selection(source_root, output, code):
+def freeze_selection(source_root, output, code, all_settings=False):
     source_root, output = Path(source_root).resolve(), preflight_output(source_root, output)
     selection = owned_path(output, output / "selection_protocol.json")
     previous = json.loads(selection.read_text()) if selection.exists() else None
-    protocol = build_protocol(source_root, code, previous["frozen_at"] if previous else now())
+    protocol = build_protocol(source_root, code, previous["frozen_at"] if previous else now(), all_settings)
     if previous is not None and previous != protocol:
         raise ValueError("Cached exploratory selection protocol differs from complete source replay")
     output.mkdir(parents=True, exist_ok=True)
@@ -479,6 +485,10 @@ def summarize(protocol, evaluations):
         fixed = case["initial_candidate"]
         top_score = max(scores.values())
         top_methods = [label for label in LABELS if abs(scores[label]-top_score) <= TOLERANCE]
+        initial_scores = next(item["scores"] for item in case["all_five_seed_search"]
+                              if item["seed"] == case["selected_seed"])
+        initial_top_score = max(initial_scores.values())
+        initial_top_methods = [label for label in LABELS if abs(initial_scores[label]-initial_top_score) <= TOLERANCE]
         pairs = {}
         for selected in {fixed, candidate}:
             pairs[selected] = {}
@@ -488,17 +498,22 @@ def summarize(protocol, evaluations):
         conditions.append({**case, "fresh_verification": "complete_once_500_draws_all_eight_methods",
             "fresh_scores": scores, "fresh_fixed_initial_candidate": margin(scores, fixed),
             "fresh_best_matched_proposed": margin(scores, candidate), "fresh_highest_method": best(scores, LABELS),
-            "fresh_top_methods": top_methods, "winner_changed": fixed not in top_methods,
-            "initial_strict_win_lost": not margin(scores, fixed)["strictly_best"], "paired_mc_differences": pairs,
+            "initial_top_methods": initial_top_methods, "fresh_top_methods": top_methods,
+            "winner_changed": set(initial_top_methods) != set(top_methods),
+            "fixed_candidate_not_fresh_top": fixed not in top_methods,
+            "initial_strict_win_lost": case.get("initial_strict_win", False) and not margin(scores, fixed)["strictly_best"],
+            "paired_mc_differences": pairs,
             "paired_mc_scope": "Descriptive SD/SE across common-seed full-loader MC replicates; fixed checkpoint/test set; excludes test-selection and training-seed uncertainty",
             "methods": [methods[label] for label in LABELS]})
     return dict(schema_version=1, interpretation=EXPLORATORY, conditions=conditions,
         original_five_seed_means_retained=True, original_main_files_modified=False,
+        all_settings=protocol.get("all_settings", False),
+        selection_mode=protocol.get("selection_mode", "strict_positive_only"),
         fresh_draws=DRAWS, retry_after_loss=False, new_training=False,
         original_main_means=protocol["original_main_means"], original_mean_rankings=protocol["original_mean_rankings"])
 
 
-def run(source_root, output, main_revision="f602987", workers=16, select_only=False):
+def run(source_root, output, main_revision="f602987", workers=16, select_only=False, all_settings=False):
     from .batch_campaign import validate_cpu_budget
     if workers != 16:
         raise ValueError("Use the prescribed sixteen two-thread CPU workers")
@@ -511,14 +526,15 @@ def run(source_root, output, main_revision="f602987", workers=16, select_only=Fa
     output.mkdir(parents=True, exist_ok=True)
     with owned_path(output, output / ".verification.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        protocol = freeze_selection(source_root, output, code)
+        protocol = freeze_selection(source_root, output, code, all_settings)
         protocol_hash = fingerprint(output / "selection_protocol.json")["sha256"]
         if select_only:
-            return dict(status="selection_frozen_before_fresh_mc", selection=str(output / "selection_protocol.json"), interpretation=EXPLORATORY)
+            return dict(status="selection_frozen_before_fresh_mc", selection=str(output / "selection_protocol.json"),
+                        all_settings=all_settings, selection_mode=protocol["selection_mode"], interpretation=EXPLORATORY)
         chosen = {task for case in protocol["conditions"] for task in case["selected_task_ids"]}
         tasks = [task for task in protocol["all_original_tasks"] if task["task_id"] in chosen]
         status = dict(status="running", started_at=now(), interpretation=EXPLORATORY,
-                      fixed_draws=DRAWS, selected_checkpoints=len(tasks), completed=[], failed=[])
+                      fixed_draws=DRAWS, all_settings=all_settings, selected_checkpoints=len(tasks), completed=[], failed=[])
         owned_save(output, output / "verification_status.json", status)
         environment = {**os.environ, "OMP_NUM_THREADS": "2", "MKL_NUM_THREADS": "2", "OPENBLAS_NUM_THREADS": "2"}
         evaluations = []
@@ -559,8 +575,10 @@ def main():
     parser.add_argument("--main-revision", default="f602987")
     parser.add_argument("--workers", type=int, default=16)
     parser.add_argument("--select-only", action="store_true")
+    parser.add_argument("--all-settings", action="store_true",
+                        help="Verify the best available existing paired seed in every setting, including initial losses/ties")
     args = parser.parse_args()
-    result = run(args.source_root, args.output, args.main_revision, args.workers, args.select_only)
+    result = run(args.source_root, args.output, args.main_revision, args.workers, args.select_only, args.all_settings)
     print(json.dumps(dict(output=str(args.output.resolve()), interpretation=EXPLORATORY,
                          selected_conditions=sum(case["selected_seed"] is not None for case in result.get("conditions", [])))))
 

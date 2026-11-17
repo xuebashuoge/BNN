@@ -1,24 +1,30 @@
 # Exploratory paired-seed examples
 
 This optional analysis uses the user's explicit seed-search authorization to
-identify a favorable **existing paired seed** for each of the eight final
+inspect the best available **existing paired seed** for each of the eight final
 dataset/channel conditions. It supplements the complete five-seed main result;
 it never replaces that result or changes its mean rankings. Every output is
 labelled **test-selected exploratory paired-seed example**. A selected example
 is not fresh-seed confirmation or evidence of general improvement.
 
-The protocol is declared in `verify_bayesian_seed_examples.py` before opening
-the final assembled test scores:
+The fresh count of 500 draws and the seed offset were fixed before any fresh
+Monte Carlo verification. The `--all-settings` coverage rule is declared after
+an initial twenty-draw preview and before any fresh 500-draw evaluation. This
+remains an explicitly test-selected exploratory analysis. The selected mode is
+frozen in `selection_protocol.json`:
 
 1. Require the completed final assembled confirmation cohort: four datasets,
    two deployment laws, eight matched/perfect method labels, and all five
    prescribed paired seeds `73101–73105`—320 checkpoints in total.
 2. For each setting and each existing seed, compare its best matched T1/T2
    accuracy with the strongest of the other seven methods using the saved
-   twenty-draw scores. Select the seed with the largest strictly positive
-   margin, using seed number as a deterministic tiebreak. The selected seed is
-   shared by **all eight methods**. A tie is not a strict win. If none wins,
-   report no example for that setting; do not train another seed.
+   twenty-draw scores. In `--all-settings` mode, select the seed with the
+   largest margin regardless of its sign, using seed number as a deterministic
+   tiebreak. The selected seed is shared by **all eight methods**. Preserve
+   `initial_best_margin` and `initial_strict_win`; an initial loss or tie is
+   labelled `bestavailable_no_initial_win`. Such a seed is not called an
+   initial winner. The default compatibility mode instead requires a strictly
+   positive initial margin and reports no example if no existing seed wins.
 3. Freeze the selected seeds, every initial five-seed score, all 64 main mean
    rows and the original mean rankings, all 320 checkpoint identities, and
    source fingerprints before running any new Monte Carlo evaluation.
@@ -31,6 +37,11 @@ the final assembled test scores:
    initial chosen T1/T2 candidate and report its fresh margin, as well as the
    fresh descriptive ranking. Losses, ties and winner changes remain visible.
    A measured loss never triggers another Monte Carlo attempt or seed search.
+
+`winner_changed` compares the actual top-method sets at the selected seed in
+the initial and fresh scores. A proposed candidate that initially lost and
+remains below the same leading method does not count as a winner change.
+`fixed_candidate_not_fresh_top` records that separate candidate outcome.
 
 Exactly 500 draws and the fixed seed offset are constants rather than tuning
 options. A failed execution can resume the same frozen request and stream;
@@ -46,6 +57,13 @@ selected seed, candidate, task ID or stream is rejected before any new MC
 request. The source assembly policy, 2048-case audit, confirmation manifest
 hash, metadata configurations/revisions and byte-exact exported reports are
 checked against the physical source map.
+
+The supplied Slurm launcher passes `--all-settings`, producing one paired-seed
+example for every condition and 64 checkpoint verifications in total. This
+uniform rule avoids excluding a condition because its initial twenty-draw
+margin is slightly negative or tied. It introduces no new training seeds,
+threshold search or retries. Changing coverage mode after freezing is rejected
+on resume; use the same mode for selection-only and verification commands.
 
 The JSON report includes the mean, sample SD and descriptive standard error of
 the fresh accuracy/loss replicates, all 500 accuracy draws per method, and
@@ -71,7 +89,7 @@ files.
 conda run -n torch28 python -m journal.verify_bayesian_seed_examples \
   --source-root FINAL_ASSEMBLED_ROOT \
   --output results/journal_bayesian_seed_examples/20261117 \
-  --select-only
+  --select-only --all-settings
 
 # In a clean committed server checkout, after assembly completes:
 export JOURNAL_GIT_SHA="$(git rev-parse HEAD)"
@@ -92,10 +110,11 @@ clearly labelled exploratory display later if needed.
 
 Outputs include `selection_protocol.json` frozen before new MC,
 `verification_status.json`, one owned request/override/log/evaluation directory
-per selected checkpoint, and `exploratory_seed_examples.json`. A setting with
-no initial winning seed remains in the report with an explicit not-run status.
-This document describes the prepared analysis; no final assembled scores have
-been inspected and no verification job has been launched during preparation.
+per selected checkpoint, and `exploratory_seed_examples.json`. In default
+positive-only mode, a setting with no initial winning seed remains in the
+report with an explicit not-run status. In all-settings mode it is evaluated
+once and its initial loss/tie remains labelled. The coverage extension was
+prepared before any 500-draw verification had run.
 
 ```bash
 conda run -n torch28 python -m unittest journal.test_verify_bayesian_seed_examples -v

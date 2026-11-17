@@ -26,4 +26,4 @@ srun --ntasks=1 --cpus-per-task=32 --cpu-bind=cores \
     /usr/bin/time -v python -u -m journal.verify_bayesian_seed_examples \
     --source-root "$SEED_EXAMPLES_SOURCE_ROOT" \
     --output "${SEED_EXAMPLES_OUTPUT:-results/journal_bayesian_seed_examples/20261117}" \
-    --main-revision "${SEED_EXAMPLES_MAIN_REVISION:-f602987}" --workers 16
+    --main-revision "${SEED_EXAMPLES_MAIN_REVISION:-f602987}" --workers 16 --all-settings
