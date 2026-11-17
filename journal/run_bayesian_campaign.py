@@ -23,6 +23,7 @@ from .campaign import save_json
 
 
 STAGES = ("pilot", "screen", "confirm", "m_sweep", "p_train_sweep")
+ACCURACY_TOLERANCE = 1e-12
 
 
 def now():
@@ -116,11 +117,11 @@ def ranking_outcome(root, manifest=None):
                       for method, runs in methods.items()}
             margin = scores[candidate] - max(value for method, value in scores.items() if method != candidate)
             per_seed.append(dict(seed=seed, fixed_matched_candidate=candidate, margin=margin,
-                                 target_met=margin > 0.))
+                                 target_met=margin > ACCURACY_TOLERANCE))
         output.append(dict(group=group, means=means, best_matched_proposed_by_observed_mean=candidate,
                            strongest_other_method=strongest,
                            mean_accuracy_margin=means[candidate] - means[strongest],
-                           target_met=means[candidate] > means[strongest],
+                           target_met=means[candidate] - means[strongest] > ACCURACY_TOLERANCE,
                            fixed_candidate_per_seed=per_seed,
                            target_met_for_every_seed=all(item["target_met"] for item in per_seed),
                            seeds={key: sorted(row["seed"] for row in runs) for key, runs in methods.items()}))

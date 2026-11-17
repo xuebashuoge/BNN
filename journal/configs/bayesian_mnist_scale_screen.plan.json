@@ -1,0 +1,53 @@
+{
+  "added_candidates_per_method_regime": 16,
+  "change": "Only rho_lr_scale changes from .1 to 0; Gaussian posterior_std remains .001 or .003",
+  "channels": [
+    "analog",
+    "outage"
+  ],
+  "combined_candidates_per_method_regime": 32,
+  "combined_training_tasks": 1024,
+  "datasets": [
+    "mnist"
+  ],
+  "favorable_seed_selection": false,
+  "fixed_conditions": {
+    "data_seed": 20261117,
+    "epochs": 30,
+    "m": 20,
+    "train_size": 55000,
+    "val_size": 5000
+  },
+  "labels": [
+    "ERM-Matched",
+    "ERM-Perfect",
+    "L2-Matched",
+    "L2-Perfect",
+    "T1-Matched",
+    "T1-Perfect",
+    "T2-Matched",
+    "T2-Perfect"
+  ],
+  "manifest_sha256": "d8e88526476169e5750e320aaed431bb267bcec2ea63e22ffe101048bda10f70",
+  "original_candidates_per_method_regime": 16,
+  "original_ids_preserved": true,
+  "original_tasks": 512,
+  "predictor": "All methods retain one positive-variance diagonal Gaussian; fixed scale is still Bayesian with finite Gaussian KL",
+  "resource_note": "Parent coordinator launches separately with measured CPU resources; this builder never submits jobs",
+  "scientific_setup": "mnist_fixed_positive_variance_control",
+  "screening_seeds": [
+    72101,
+    72102
+  ],
+  "selection": "All 1024 paired training/validation records; mean validation accuracy, CE tiebreak, deterministic variant-ID tiebreak",
+  "selection_uses_test": false,
+  "source_fingerprints": {
+    "/Users/yangshuo/Git/BNN/journal/configs/bayesian_screen.jsonl": {
+      "bytes": 2617408,
+      "sha256": "78df1526beadad132f9fe49eeb651ef4e9b9e093712e35ab242c3266cfc3353c"
+    }
+  },
+  "stage": "bayes_screen",
+  "tasks": 512,
+  "test_evaluation_during_screen": false
+}

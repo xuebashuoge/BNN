@@ -45,6 +45,14 @@ def write_manifest(root, rows, name="confirm.jsonl"):
 
 
 class RankingOutcomeTests(unittest.TestCase):
+    def test_floating_point_roundoff_cannot_turn_a_tie_into_a_win(self):
+        rows = ranking_rows({"T1-Matched": [.9, .9], "T2-Matched": [.9 + 2e-16, .9]})
+        with tempfile.TemporaryDirectory() as directory:
+            write_rows(directory, rows)
+            outcome = ranking_outcome(directory)
+            self.assertFalse(outcome["target_met_in_every_condition"])
+            self.assertFalse(outcome["conditions"][0]["target_met_for_every_seed"])
+
     def test_all_eight_means_and_one_fixed_proposed_method_per_condition(self):
         with tempfile.TemporaryDirectory() as directory:
             # Switching between T1 and T2 for each seed would manufacture a .9
