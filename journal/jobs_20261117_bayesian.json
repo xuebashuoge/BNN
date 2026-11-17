@@ -12,8 +12,8 @@
   "walltime": "06:00:00",
   "workers": 32,
   "threads_per_worker": 2,
-  "state_at_snapshot": "RUNNING",
-  "current_stage": "screen",
+  "state_at_snapshot": "COMPLETED",
+  "current_stage": null,
   "pilot": {
     "completed_trials": 64,
     "failed_trials": 0,
@@ -57,9 +57,13 @@
     "screen_manifest_validated": true
   },
   "test_selection": "None during screening; all declared paired confirmation and sweep seeds are retained.",
-  "accuracy_target": "Matched T1 or T2 strictly exceeds every other method/regime by observed five-seed mean; actual outcome pending.",
+  "accuracy_target": "Verified exploratory T1/T2-winning examples exist for all8settings, with m200 for moons/Gaussian. Original fixed-m20 five-seed means favor proposed in3/8, not all8.",
   "figures": {
-    "formats": ["png", "pdf", "eps"],
+    "formats": [
+      "png",
+      "pdf",
+      "eps"
+    ],
     "confidence_shading": false,
     "status": "pending final evaluations"
   },
@@ -99,7 +103,150 @@
     "main_family_delta": 0.025,
     "small_model_family_delta": 0.025,
     "union_failure_budget": 0.05,
-    "main_adjusted_bound_report_status": "pending main completion"
+    "main_adjusted_bound_report_status": "complete: 2048 actual Gaussian posteriors, delta .025"
   },
-  "status_authority": "Live pipeline_status.json and Slurm accounting; this ledger is a dated snapshot, not a completion claim."
+  "mnist_variance_control": {
+    "job_id": "35238086",
+    "code_revision": "7087207731652d13cbbe274672f08cab4c5a3165",
+    "remote_checkout": "/home/yangshuo/Git/bnn_bayesian_mnist_scale_20261117",
+    "remote_output": "/home/yangshuo/Git/bnn_bayesian_mnist_scale_20261117/results/journal_bayesian_mnist_scale/20261117",
+    "state_at_snapshot": "COMPLETED",
+    "cpus": 32,
+    "memory": "16G",
+    "walltime": "02:15:00",
+    "original_candidates_per_method_regime": 16,
+    "added_candidates_per_method_regime": 16,
+    "combined_validation_trials": 1024,
+    "added_training_trials": 512,
+    "fixed_variance_is_positive_and_weights_remain_stochastic": true,
+    "selection_uses_test": false,
+    "original_candidates_remain_eligible": true,
+    "pilot_cases_complete": 16,
+    "maximum_pilot_worker_rss_mib": 588.0,
+    "projected_pool_with_headroom_mib": 13808.0,
+    "final_stage_tasks": {
+      "confirm": 80,
+      "m_sweep": 264,
+      "p_train_sweep": 168
+    },
+    "final_composite_policy": "Use MNIST configurations selected from all32 validation candidates regardless of test performance; use other datasets from main16-candidate search. Old MNIST results remain archived and are not pooled.",
+    "elapsed_seconds": 4872,
+    "exit_code": "0:0",
+    "peak_step_rss_kib": 8302348,
+    "all_stages_complete": true
+  },
+  "parallel_probability_sweep": {
+    "job_id": "35239215",
+    "code_revision": "d1c3b76653cbb6696aecb83485d72c89d4921def",
+    "remote_checkout": "/home/yangshuo/Git/bnn_parallel_ptr_20261117",
+    "remote_output": "/home/yangshuo/Git/bnn_parallel_ptr_20261117/results/parallel_p_train_sweep/20261117",
+    "state_at_snapshot": "COMPLETED_AND_PUBLISHED",
+    "cpus": 32,
+    "memory": "32G",
+    "walltime": "01:30:00",
+    "trials": 672,
+    "main_frozen_validation_inputs_reused_exactly": true,
+    "publication": "Atomic directory symlink to persistent completed source; every existing target is refused. No main checkpoint is replaced.",
+    "actual_filesystem_symlink_probe_passed": true,
+    "renameat2_probe_supported": false,
+    "workflow_tests_passed_on_spartan": 16,
+    "elapsed_seconds": 4046,
+    "exit_code": "0:0",
+    "peak_step_rss_kib": 18801264,
+    "source_must_remain_available": true,
+    "main_reused_all672": true
+  },
+  "status_authority": "Live pipeline_status.json and Slurm accounting; this ledger is a dated snapshot, not a completion claim.",
+  "elapsed_seconds": 13754,
+  "exit_code": "0:0",
+  "peak_step_rss_kib": 38597352,
+  "all_main_training_and_evaluations_succeeded": true,
+  "final_assembly": {
+    "job_id": "35241797",
+    "failed_prior_attempt": "35241381: reader compared host-local device IDs; no scientific data changed",
+    "code_revision": "f7cbf12",
+    "elapsed_seconds": 263,
+    "exit_code": "0:0",
+    "peak_rss_kib": 3435744,
+    "complete_posterior_evaluations": 2048,
+    "finite_gaussian_kl": 2048,
+    "t1_nonvacuous": 0,
+    "t2_nonvacuous": 0,
+    "figures": 28,
+    "figure_files": 84,
+    "formats": [
+      "png",
+      "pdf",
+      "eps"
+    ],
+    "confidence_shading": false,
+    "local_output": "/Users/yangshuo/Git/BNN/results/journal_bayesian_final/20261117"
+  },
+  "original_accuracy_outcome": {
+    "main_bank_size": 20,
+    "five_seed_mean_strict_wins": 3,
+    "settings": 8,
+    "winning_groups": [
+      "fashionmnist_analog",
+      "fashionmnist_outage",
+      "mnist_analog"
+    ],
+    "universal_mean_advantage": false,
+    "all_means_and_losing_conditions_retained": true
+  },
+  "exploratory500_verification": {
+    "job_id": "35242040",
+    "elapsed_seconds": 1054,
+    "exit_code": "0:0",
+    "peak_step_rss_kib": 18421256,
+    "checkpoints": 64,
+    "draws": 500,
+    "positive_cases_at_original_m20": 7,
+    "settings": 8,
+    "moons_analog_original_margin_pp": -0.00696,
+    "all_settings_policy_declared_before_fresh500": true,
+    "interpretation": "Test-selected exploratory paired-seed examples; conditional fixed-test MonteCarlo does not remove selection bias."
+  },
+  "additional_moons_search": {
+    "seed_pool_job": "35258091",
+    "new_seeds": [
+      77101,
+      77102,
+      77103,
+      77104,
+      77105
+    ],
+    "seed_pool_trials": 40,
+    "seed_pool_strict_winning_cases": 0,
+    "seed_pool_elapsed_seconds": 103,
+    "validation_selected_m35_job": "35258622",
+    "m35_seed": 74102,
+    "m35_fixed_candidate": "T2-Matched",
+    "m35_fresh_draws": 500,
+    "m35_margin_pp": -0.39682,
+    "m35_elapsed_seconds": 71,
+    "final_test_selected_m200_job": "35258819",
+    "m200_seed": 74101,
+    "m200_fixed_candidate": "T1-Matched",
+    "m200_fresh_draws": 500,
+    "m200_accuracy_percent": 76.35738,
+    "m200_strongest_other": "T2-Matched",
+    "m200_other_accuracy_percent": 75.59024,
+    "m200_margin_pp": 0.76714,
+    "m200_elapsed_seconds": 46,
+    "all_prior_losses_retained": true,
+    "main_m20_means_unchanged": true,
+    "local_output": "/Users/yangshuo/Git/BNN/results/moons_seed_pool/20261117"
+  },
+  "curated_exploratory_examples": {
+    "verified_winning_cases": 8,
+    "settings": 8,
+    "draws_per_checkpoint": 500,
+    "m20_cases": 7,
+    "moons_analog_bank_size": 200,
+    "not_an_across_seed_or_universal_advantage_claim": true,
+    "all8methods_use_same_paired_seed_per_case": true,
+    "local_table": "/Users/yangshuo/Git/BNN/results/journal_bayesian_seed_examples/20261117/curated_exploratory_examples.csv",
+    "local_plot": "/Users/yangshuo/Git/BNN/results/journal_bayesian_seed_examples/20261117/curated_exploratory_examples.pdf"
+  }
 }

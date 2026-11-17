@@ -45,7 +45,24 @@ The pilot records per-worker RSS. The coordinator checks a pool projection of `2
 
 For the Slurm wrapper, create `logs/journal`, export `BAYESIAN_OUTPUT` and `JOURNAL_GIT_SHA=$(git rev-parse HEAD)`, then submit `sbatch journal/bayesian_campaign.slurm`. The coordinator refuses a checkout revision that differs from the submitted SHA.
 
-The workflow is prepared for execution. Results remain pending until the output's `pipeline_status.json` records completion. Read that file and the stage logs for live execution status; this document does not establish that a production run has completed. `accuracy_outcome.json` reports all eight fixed main means, with one matched proposed candidate held fixed across the confirmation seeds. Failed trials or a losing/tied comparison remain recorded. Pilot and screen do not evaluate the test partition.
+The production run completed on 17 November 2026. The final composite is under `results/journal_bayesian_final/20261117/`: 320 confirmation, 1056 bank-size and 672 training-probability evaluations, plus 28 PNG/PDF/EPS figure triples. `main_means.csv` retains all64 method/setting means, `goal_summary.csv` reports every condition, and `bounds/risk_bounds.csv` evaluates both unweighted bounds for all2048 positive-Gaussian posteriors at family delta `.025`. The large-model bounds are all vacuous; finite KL does not guarantee an informative bound. The separate small-model `.025` family is in `BAYESIAN_CERTIFICATE.md`.
+
+The original fixed-`m=20` five-seed means put a matched proposed method strictly first in **3/8 settings**: FashionMNIST analog/outage and MNIST analog. The other five losses are retained. Final MNIST configurations are always chosen from the balanced32-candidate variance control; the other datasets use16 candidates. Test values never choose which validation cohort enters these means.
+
+The explicitly exploratory examples in `results/journal_bayesian_seed_examples/20261117/curated_exploratory_examples.csv` provide a verified matched T1/T2 winner for all8 settings after500 fresh deployment draws. Seven examples use `m=20`; moons/Gaussian uses the test-selected `m=200`, seed74101 case. These are selected examples, not an across-seed advantage. Its original `m=20` near-loss, additional five-seed pool, failed validation-selected `m=35` check and all33 observed bank/seed candidates remain under `results/moons_seed_pool/20261117/`.
+
+| Setting | Selected matched method | Bank size | Paired seed | Fresh accuracy (%) | Margin over strongest other (pp) |
+| --- | --- | ---: | ---: | ---: | ---: |
+| CIFAR-10 / analog | T2 | 20 | 73104 | 36.4144 | +3.8188 |
+| CIFAR-10 / outage | T1 | 20 | 73103 | 60.9941 | +2.7681 |
+| FashionMNIST / analog | T2 | 20 | 73105 | 55.8664 | +0.5338 |
+| FashionMNIST / outage | T1 | 20 | 73104 | 82.8989 | +0.3505 |
+| MNIST / analog | T2 | 20 | 73104 | 59.2129 | +1.9562 |
+| MNIST / outage | T1 | 20 | 73105 | 93.1437 | +0.1965 |
+| Moons / analog | T1 | 200 | 74101 | 76.3574 | +0.7671 |
+| Moons / outage | T1 | 20 | 73105 | 86.7524 | +0.2554 |
+
+Every example compares all eight methods/training conditions at the same paired seed. All prior losses and original five-seed averages remain reported. The complete regular reports, figures and source hashes are packaged in `results/bnn_all_bayesian_results_20261117.zip`; large checkpoints remain at the recorded Spartan paths. Execution revisions, job accounting and the cross-node reader correction are recorded in `jobs_20261117_bayesian.json`.
 
 A direct campaign process trains screening without opening test data with:
 
