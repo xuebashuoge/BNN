@@ -50,11 +50,41 @@ have finished. It writes a canonical original MNIST manifest, a validation-only
 training-results snapshot, and source hashes into a separate owned directory.
 All generated snapshots and manifests are immutable on retries.
 
-The parent coordinator launches the added screen separately, using the measured
-CPU resource envelope. The intended allocation is 32 CPUs, sixteen workers,
-two threads per worker, and 16 GiB, with approximately 90 minutes for the
-screen. The actual runtime remains an observed outcome. Screening must use
-`--evaluate-top 0`; no official test evaluation occurs during selection.
+The separate `run_bayesian_mnist_scale` coordinator runs the whole control in a
+clean committed checkout. It verifies that seven training/campaign source
+blobs equal the running main revision, defaults to `f602987`, and verifies its
+own builder/runner/Slurm files against the execution commit. It captures the
+original main manifest and training records into owned immutable files once;
+resume validates those historical files and never refreshes selection inputs
+from the advancing main campaign.
+
+The allocation is 32 CPUs, sixteen workers, two threads per worker, and 16 GiB.
+Before the added screen, sixteen full-shape one-epoch pilots cover every
+method/law/regime with positive fixed Gaussian variance and seed `76200`.
+The measured memory gate requires `2048 + 1.25*16*max_worker_RSS_MB` to fit the
+allocated host memory. Pilot and screening use `--evaluate-top 0`; neither
+produces an official-test results file. Approximate screen/final training
+times are 55/45 minutes, respectively; the Slurm limit is two hours and fifteen
+minutes and actual runtime remains an observed outcome.
+
+```bash
+export JOURNAL_GIT_SHA="$(git rev-parse HEAD)"
+export MNIST_SCALE_MAIN_ROOT=ORIGINAL_MAIN_OUTPUT_ROOT
+export MNIST_SCALE_OUTPUT=results/journal_bayesian_mnist_scale/20261117
+sbatch journal/mnist_scale_control.slurm
+```
+
+The coordinator validates every completed stage, stops on failures, enforces
+manifest hashes and committed source identity throughout execution, and
+resumes complete matching stages without rerunning training or evaluation. It
+runs the selected 80-case confirmation with twenty full-risk Gibbs draws, then
+the 264-case `m` and 168-case `p_train` sweeps with ten full-risk draws each.
+All outputs, status and logs stay under the separate control root. Plotting and
+formal bounds are deferred to the final composite campaign. It never edits the
+running main controller, status, manifests or results.
+
+For manual operation, the same builder stages and campaign commands remain
+available:
 
 ```bash
 conda run -n torch28 python -m journal.campaign \
@@ -97,5 +127,6 @@ the official test set.
 Verification without training or dataset access:
 
 ```bash
-conda run -n torch28 python -m unittest journal.test_bayesian_mnist_scale -v
+conda run -n torch28 python -m unittest \
+  journal.test_bayesian_mnist_scale journal.test_run_bayesian_mnist_scale -v
 ```
