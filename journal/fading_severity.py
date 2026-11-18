@@ -48,24 +48,25 @@ def transfer(source, output):
     return result
 
 
-def report(manifest, root):
+def report(manifest, root, law=HARD, role="severity_confirmation"):
     entries = read_manifest(manifest)
-    if any(r.get('role')!='severity_confirmation' or r['config']['deployment_channel']!=HARD
-           or r['config']['train_channel']!=(HARD if r['method_label'].endswith('-Matched') else {'kind':'perfect'})
+    if any(r.get('role')!=role or r['config']['deployment_channel']!=law
+           or r['config']['train_channel']!=(law if r['method_label'].endswith('-Matched') else {'kind':'perfect'})
            for r in entries):
-        raise ValueError('Only complete hard-law confirmation manifests can be reported')
+        raise ValueError('Expected a confirmation at the declared matched/perfect laws')
     rows = [validate_test(item,row,root) for item,row in zip(entries,read_results(root,entries),strict=True)]
     seeds=sorted({r['seed'] for r in rows})
     groups=group_results(rows,seeds)
     for g in groups:
-        g.update(rho_c=.85, noise_std=2., mean_ranking=ranking({k:v['test_accuracy']['mean'] for k,v in g['methods'].items()}))
+        g.update({k:v for k,v in law.items() if k!='kind'})
+        g.update(mean_ranking=ranking({k:v['test_accuracy']['mean'] for k,v in g['methods'].items()}))
     means=[dict(dataset=g['dataset'],m=g['m'],method=k,mean_accuracy=v['test_accuracy']['mean'],
                 sd_accuracy=v['test_accuracy']['sd']) for g in groups for k,v in g['methods'].items()]
     write_csv(root/'accuracy_means.csv',means,list(means[0]))
     write_csv(root/'accuracy_by_seed.csv',rows,['dataset','channel','m','method_label','seed','variant_id','validation_accuracy',
                                                 'test_accuracy','test_cross_entropy','test_bounded_loss','task_id'])
     result=dict(stage=entries[0]['stage'], manifest=file_fingerprint(manifest),trials=len(rows),confirmation_seeds=seeds,
-                channel=HARD,groups=groups)
+                channel=law,groups=groups)
     save_json(root/'accuracy_summary.json',result)
     return {'trials':len(rows),'winners':[g['highest_mean_methods'] for g in groups]}
 

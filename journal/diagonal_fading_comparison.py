@@ -369,7 +369,7 @@ def run_task(args):
         save_json(result, row)
         if row["status"] != "complete":
             raise RuntimeError(row["error"])
-        if (item.get("role") == "severity_confirmation"
+        if (item.get("role") in {"severity_confirmation", "erasure_confirmation"}
                 or item["stage"] in {"diagonal_fading_accuracy_" + stage for stage in CONFIRM_SEEDS}):
             row = evaluate_trial(row, item["config"]["eval_draws"], full_risks=False, resume=True)
             save_json(result, row)
