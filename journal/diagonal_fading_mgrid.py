@@ -194,7 +194,39 @@ def gap_figure(rows, differences, output, title):
     plt.close(fig)
 
 
-def write_index(output, initial, common, displayed, locked, precision):
+def copy_seed_examples(root, output):
+    rows = []
+    for m in SIZES:
+        case = root/f'm{m}'/'comparison/cifar10/seed-illustration'
+        report = case/'seed_illustration.json'
+        if not report.is_file():
+            continue
+        z = json.loads(report.read_text())
+        seeds = z['seeds']
+        if (z['m'] != m or seeds != [122101,122102] or z['test_draws'] != 100 or
+                z['test_examples'] != 10000 or len(z['rows']) != len(METHODS)):
+            raise ValueError(f'Unexpected design in {report}')
+        chosen = z['validation_selected_seed']
+        if chosen not in seeds or z['protocol']['sha256'] != hashlib.sha256((case/'protocol.json').read_bytes()).hexdigest():
+            raise ValueError(f'Invalid frozen seed selection in {report}')
+        second = next(seed for seed in seeds if seed != chosen)
+        ranking = z['test_ranking_by_seed'][str(chosen)]
+        rows.append(dict(m=m, selected_seed=chosen, selected_proposed='/'.join(ranking['best_matched_proposed']),
+                         selected_gap_pp=100*ranking['margin'], other_seed=second,
+                         other_seed_gap_pp=100*z['test_ranking_by_seed'][str(second)]['margin'],
+                         two_seed_mean_gap_pp=100*z['test_ranking_two_seed_mean']['margin']))
+        dest = output/'cifar_seed_examples'/f'm{m}'
+        dest.mkdir(parents=True, exist_ok=True)
+        for name in ('protocol.json','seed_illustration.json','seed_illustration.csv','seed_illustration.pdf','seed_illustration.png'):
+            shutil.copy2(case/name, dest/name)
+    if rows:
+        if len(rows) != len(SIZES):
+            raise ValueError('Expected both screened CIFAR seeds at every bank size')
+        csv_write(output/'cifar_seed_examples'/'selection.csv', rows)
+    return rows
+
+
+def write_index(output, initial, common, displayed, locked, precision, examples):
     lines = [
         '# Deployment accuracy with correlated diagonal fading',
         '',
@@ -274,6 +306,19 @@ def write_index(output, initial, common, displayed, locked, precision):
                       'The margins in percentage points, for 200, 500 and 1000, are ' +
                       ', '.join(f"{100*precision['ranks'][str(m)]['integrated']['margin']:+.4f}" for m in SIZES)
                       + '. [Figure](moons_integrated/accuracy.pdf) · [Seven-method means](moons_integrated/accuracy_means.csv)', ''])
+    if examples:
+        lines.extend(['## CIFAR-10 paired screening-seed illustrations', '',
+                      'At each bank size, the seven original configurations were fixed by the two-seed validation mean. '
+                      'The larger proposed validation margin then selected one of those shared screening seeds. Both '
+                      'seeds were subsequently evaluated on all seven methods with 100 fresh deployment draws. '
+                      'These examples use existing screened checkpoints. The confirmation cohorts above use freshly trained models.',
+                      '', '| m | Selected seed | Selected-seed gap (pp) | Other-seed gap (pp) | Two-seed mean gap (pp) |',
+                      '|---:|---:|---:|---:|---:|'])
+        for r in examples:
+            lines.append(f"| {r['m']} | {r['selected_seed']} | {r['selected_gap_pp']:+.4f} | "
+                         f"{r['other_seed_gap_pp']:+.4f} | {r['two_seed_mean_gap_pp']:+.4f} |")
+        lines.extend(['', '[Selection table](cifar_seed_examples/selection.csv) · ' + ' · '.join(
+                      f'[m={m} figure](cifar_seed_examples/m{m}/seed_illustration.pdf)' for m in SIZES), ''])
     if (output/'historical_iid_m20.csv').is_file():
         lines.extend(['## Earlier i.i.d. fading reference', '',
                       'The prior five-seed study used m=20 and independent gains. Its matched T1/T2 mean led on '
@@ -350,7 +395,8 @@ def assemble(root, output):
             shutil.copy2(source/name, dest/name)
     if (root/'historical_iid_m20.csv').is_file():
         shutil.copy2(root/'historical_iid_m20.csv', output/'historical_iid_m20.csv')
-    write_index(output, initial, common, display, locked, precision)
+    examples = copy_seed_examples(root, output)
+    write_index(output, initial, common, display, locked, precision, examples)
     print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
 
 
