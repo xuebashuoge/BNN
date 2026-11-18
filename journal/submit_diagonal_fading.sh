@@ -98,7 +98,12 @@ case $phase in
         if [[ $dataset == cifar10 ]]; then limit=00:30:00; fi
         if [[ $phase == screen || $phase == refine ]]; then
             if [[ $phase == screen ]]; then
-                "$py" -m "$compare" screen --datasets "$dataset" --m "${DIAGONAL_M:-2000}" --output "$stage/screen.jsonl"
+                options=()
+                if [[ $dataset == moons && -n ${DIAGONAL_MOONS_TRAIN_SIZE:-} ]]; then
+                    options=(--moons-train-size "$DIAGONAL_MOONS_TRAIN_SIZE")
+                fi
+                "$py" -m "$compare" screen --datasets "$dataset" --m "${DIAGONAL_M:-2000}" \
+                    "${options[@]}" --output "$stage/screen.jsonl"
                 next=confirm
             else
                 "$py" -m "$compare" refine-screen --screen-manifest "$stage/screen.jsonl" --output "$stage/refine.jsonl"

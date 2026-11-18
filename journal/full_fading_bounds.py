@@ -196,7 +196,7 @@ def evaluate_case(config, case, draws, test_draws, iid_weights, family_size, lab
     return report
 
 
-def draw_figure(rows, output, families, moons_only=None):
+def draw_figure(rows, output, families, moons_only=None, panel_labels=None):
     os.environ.setdefault("MPLCONFIGDIR", "/tmp/bnn-full-fading-matplotlib")
     import matplotlib
     matplotlib.use("Agg")
@@ -214,6 +214,7 @@ def draw_figure(rows, output, families, moons_only=None):
         2, 2, figsize=(8.4, 6.4))
     panels = (("moons", family) for family in families) if compact else (
         (dataset, families[0]) for dataset in DATASETS)
+    shared_limit = max(1.05, 1.13 * max(r["uncapped_risk_upper"] for r in rows)) if moons_only else None
     for ax, (dataset, family) in zip(axes.flat, panels):
         cells = sorted((r for r in rows if r["dataset"] == dataset and r["family"] == family),
                        key=lambda r: REGIMES.index(r["regime"]))
@@ -228,9 +229,13 @@ def draw_figure(rows, output, families, moons_only=None):
             ax.annotate(f"{value:.2f}", (position, value), xytext=(0, 2),
                         textcoords="offset points", ha="center", fontsize=8)
         ax.axhline(1., color="#474747", linestyle=":", linewidth=.8)
-        ax.set_ylim(0., max(1.05, max(bottom) * 1.13))
-        ax.set_xticks(range(len(cells)), [r["regime"].title() for r in cells])
-        ax.set_title(FAMILIES[family] if compact else DATASETS[dataset])
+        ax.set_ylim(0., shared_limit or max(1.05, max(bottom) * 1.13))
+        title = FAMILIES[family] if compact else DATASETS[dataset]
+        ticks = [r["regime"].title() for r in cells]
+        if panel_labels:
+            title, ticks = panel_labels[family]
+        ax.set_xticks(range(len(cells)), ticks)
+        ax.set_title(title)
         ax.set_ylabel("Population-risk upper bound")
         ax.grid(axis="y", alpha=.19)
         ax.set_axisbelow(True)

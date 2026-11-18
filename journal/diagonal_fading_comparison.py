@@ -23,7 +23,10 @@ from .run_task import read_manifest, verify_submission_snapshot
 
 SCREEN_SEEDS = (122101, 122102)
 CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
-                 "refined_confirm": (124101, 124102, 124103)}
+                 "refined_confirm": (124101, 124102, 124103),
+                 "small_sample_confirm": (141101, 141102, 141103),
+                 "small_sample_refined_confirm": (142101, 142102, 142103)}
+SMALL_SAMPLE_SCREEN_SEEDS = (140101, 140102)
 
 
 def candidates(base, method, perfect, refine):
@@ -32,19 +35,30 @@ def candidates(base, method, perfect, refine):
     rates = {"mnist": (.003, .01), "fashionmnist": (.001, .003),
              "cifar10": (.001, .003), "moons": (.01, .03)}[dataset]
     if refine:
-        rates = {"mnist": (.006, .03), "fashionmnist": (.006, .01),
+        rates = {"mnist": (.006, .03), "fashionmnist": (.0006, .0015),
                  "cifar10": (.0003, .0006), "moons": (.003, .02)}[dataset]
+    small_sample = dataset == "moons" and base["train_size"] != 800
+    if small_sample:
+        rates = (.006, .02) if not refine else (.01, .03)
     for rate in rates:
         for index in range(2):
             config = dict(base, lr=rate, method=method)
             if method == "erm":
-                config["posterior_std"] = (.001, .003)[index]
+                config["posterior_std"] = ((.03, .10) if small_sample else (.001, .003))[index]
             elif method == "l2":
-                config["l2"] = (1e-6, 1e-5)[index] if not refine else (1e-7, 1e-4)[index]
+                strengths = (1e-6, 1e-5) if not refine else (1e-7, 1e-4)
+                if small_sample:
+                    strengths = (1e-5, 1e-3) if not refine else (1e-4, 3e-3)
+                config["l2"] = strengths[index]
             elif perfect:
                 config.update(eta_channel=0., eta_data=(.003, .03)[index])
             else:
-                strength = ((.001, .01) if not refine else (.0003, .03))[index]
+                strengths = (.0003, .03) if refine else (.001, .01)
+                if refine and dataset == "fashionmnist":
+                    strengths = (.03, .1)
+                strength = strengths[index]
+                if small_sample:
+                    strength = ((.03, .3) if not refine else (.1, 1.))[index]
                 ratio = math.sqrt((config["train_size"] - 1) / (config["m"] - 1))
                 if method == "proposed":
                     config.update(eta_channel=strength, eta_data=strength * ratio)
@@ -59,11 +73,13 @@ def entry(config, seed, group, label, stage):
     return item
 
 
-def screening_entries(datasets, m, rho_c, stage="screen"):
+def screening_entries(datasets, m, rho_c, stage="screen", moons_train_size=800):
     if m < 2 or not 0 <= rho_c < 1:
         raise ValueError("Require m >= 2 and 0 <= rho_c < 1")
     deployment = dict(kind="diagonal_fading", rho_c=rho_c)
     entries = []
+    if moons_train_size != 800 and (set(datasets) != {"moons"} or moons_train_size < 2):
+        raise ValueError("A custom training size requires a moons-only comparison with at least two examples")
     for dataset in datasets:
         base = base_config(dataset, "analog", stage)
         # Use the larger validation-selected initial posterior scale from the
@@ -72,11 +88,18 @@ def screening_entries(datasets, m, rho_c, stage="screen"):
                     posterior_std=.003 if dataset == "fashionmnist" else .001,
                     val_draws=3, eval_draws=20)
         group = f"{dataset}_diagonal_fading_r{str(rho_c).replace('.', 'p')}_m{m}"
+        seeds = SCREEN_SEEDS
+        if moons_train_size != 800:
+            base.update(train_size=moons_train_size, val_size=1000, batch_size=32,
+                        posterior_std=.03, data_seed=20262220, val_draws=8)
+            group += f"_n{moons_train_size}"
+            seeds = SMALL_SAMPLE_SCREEN_SEEDS
+        if stage == "pilot":
+            seeds = (122000,)
         for label, (method, perfect) in METHODS.items():
             train_channel = dict(kind="perfect") if perfect else deployment
             variants = candidates(dict(base, train_channel=train_channel), method, perfect, stage == "refine")
             for config in variants:
-                seeds = (122000,) if stage == "pilot" else SCREEN_SEEDS
                 entries.extend(entry(config, seed, group, label, stage) for seed in seeds)
                 if stage == "pilot":
                     break
@@ -85,11 +108,14 @@ def screening_entries(datasets, m, rho_c, stage="screen"):
 
 def conditions(entries):
     return sorted({(item["config"]["dataset"], item["config"]["m"],
-                    item["config"]["deployment_channel"]["rho_c"]) for item in entries})
+                    item["config"]["deployment_channel"]["rho_c"],
+                    item["config"]["train_size"] if item["config"]["dataset"] == "moons" else 800)
+                   for item in entries})
 
 
 def grid(design, stage):
-    return [item for dataset, m, rho in design for item in screening_entries((dataset,), m, rho, stage)]
+    return [item for dataset, m, rho, n_moons in design
+            for item in screening_entries((dataset,), m, rho, stage, n_moons)]
 
 
 def confirmation_entries(selection):
@@ -127,8 +153,13 @@ def prepare_confirmation(args):
     margins = {group: max(scores["T1-Matched"], scores["T2-Matched"]) -
                max(score for label, score in scores.items() if label not in {"T1-Matched", "T2-Matched"})
                for group, scores in accuracy.items()}
-    selection = dict(stage="refined_confirm" if args.refinement_manifest else "confirm",
-                     eval_draws=args.eval_draws, screening_seeds=SCREEN_SEEDS,
+    stage = "refined_confirm" if args.refinement_manifest else "confirm"
+    if any(n_moons != 800 for _, _, _, n_moons in design):
+        if len(design) != 1:
+            raise ValueError("Select a separate confirmation cohort for each small-sample design")
+        stage = "small_sample_" + stage
+    selection = dict(stage=stage, eval_draws=args.eval_draws,
+                     screening_seeds=sorted({row["seed"] for row in rows}),
                      sources={stage: file_fingerprint(manifest) for stage, manifest, _ in stages},
                      validation_trials=variants, selected_variants=selected, validation_proposed_margins=margins,
                      selection_rule="Highest mean validation accuracy, then lowest mean validation CE, then variant ID")
@@ -160,6 +191,16 @@ def run_task(args):
     return {key: row[key] for key in ("task_id", "validation_accuracy", "test_accuracy", "seconds") if key in row}
 
 
+def ranking(scores):
+    proposed = ("T1-Matched", "T2-Matched")
+    best = max(scores[label] for label in proposed)
+    competitor = max(score for label, score in scores.items() if label not in proposed)
+    return dict(best_matched_proposed=[label for label in proposed if abs(scores[label] - best) <= 1e-12],
+                best_other_methods=sorted(label for label, score in scores.items()
+                                          if label not in proposed and abs(score - competitor) <= 1e-12),
+                margin=best - competitor, above_all_other_methods=best - competitor > 1e-12)
+
+
 def report(manifest, root):
     selection_path = manifest.with_suffix(".selection.json")
     selection = json.loads(selection_path.read_text())
@@ -169,6 +210,14 @@ def report(manifest, root):
     rows = [validate_test(item, row, root) for item, row in zip(entries, read_results(root, entries))]
     seeds = CONFIRM_SEEDS[selection["stage"]]
     groups = group_results(rows, seeds)
+    for group in groups:
+        subset = [row for row in rows if row["group"] == group["group"]]
+        group["rho_c"] = subset[0]["config"]["deployment_channel"]["rho_c"]
+        group["mean_ranking"] = ranking({label: metrics["test_accuracy"]["mean"]
+                                         for label, metrics in group["methods"].items()})
+        group["descriptive_ranking_by_seed"] = {
+            seed: ranking({row["method_label"]: row["test_accuracy"] for row in subset if row["seed"] == seed})
+            for seed in seeds}
     summary = dict(trials=len(rows), groups=groups, confirmation_seeds=seeds, stage=selection["stage"],
                    selection=file_fingerprint(selection_path), manifest=file_fingerprint(manifest),
                    validation_proposed_margins=selection["validation_proposed_margins"],
@@ -189,6 +238,8 @@ def main():
     screen.add_argument("--datasets", default=",".join(IMAGE_DATASETS))
     screen.add_argument("--m", type=int, default=2000)
     screen.add_argument("--rho-c", type=float, default=.35)
+    screen.add_argument("--moons-train-size", type=int, default=800,
+                        help="Use a separate small-sample moons comparison when set below the reference size 800")
     screen.add_argument("--pilot", action="store_true")
     refine = commands.add_parser("refine-screen")
     refine.add_argument("--screen-manifest", type=Path, required=True)
@@ -212,7 +263,7 @@ def main():
     args = parser.parse_args()
     if args.command == "screen":
         entries = screening_entries(scope(args.datasets, DATASETS), args.m, args.rho_c,
-                                    "pilot" if args.pilot else "screen")
+                                    "pilot" if args.pilot else "screen", args.moons_train_size)
         result = write_manifest(args.output, entries)
     elif args.command == "refine-screen":
         entries = read_manifest(args.screen_manifest)

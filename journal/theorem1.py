@@ -111,6 +111,13 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
         raise ValueError("width must be a positive integer")
     width = int(width)
     deployment, training = validate_channel(deployment), validate_channel(training)
+    # The historical iid analog law is precisely the rho_c=0 endpoint.
+    if "diagonal_fading" in (deployment["kind"], training["kind"]):
+        iid = dict(kind="gaussian", gain_mean=.5, gain_std=1., noise_std=1.)
+        if deployment == iid:
+            deployment = dict(kind="diagonal_fading", rho_c=0.)
+        if training == iid:
+            training = dict(kind="diagonal_fading", rho_c=0.)
     for config in (deployment, training):
         if config["kind"] == "full_fading":
             validate_fading_dimensions(config, width, width)

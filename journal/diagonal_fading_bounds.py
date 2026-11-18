@@ -7,7 +7,7 @@ import math
 from pathlib import Path
 
 from .c1_full_fading import perfect_shift as erasure_shift
-from .diagonal_fading import diagonal_gain_kl
+from .diagonal_fading import DEPLOYMENT_RHO, diagonal_gain_kl
 from .full_fading_bounds import REGIMES, draw_figure, evaluate_case
 from .run_experiment import normalize_config, save_json
 
@@ -49,7 +49,7 @@ def perfect_shift(deployment, width, model, loss_epsilon):
 
 
 def design(width, family, regime, m, threads, epochs):
-    deploy = (dict(kind="diagonal_fading", rho_c=.35) if family == "fading"
+    deploy = (dict(kind="diagonal_fading", rho_c=DEPLOYMENT_RHO) if family == "fading"
               else dict(kind="outage", outage_prob=.5))
     if regime == "matched":
         training = deploy.copy()
@@ -95,7 +95,12 @@ def aggregate(output, width):
         raise ValueError("Cases must use a common training and evaluation budget")
     report = dict(width=width, m=rows[0]["config"]["m"], cases=len(rows),
                   nonvacuous=sum(row["nonvacuous"] for row in rows), rows=rows)
-    draw_figure(rows, root / "bound_decomposition", FAMILIES, moons_only=True)
+    panel_labels = {
+        "fading": (rf"Diagonal fading ($\rho_c={DEPLOYMENT_RHO}$)",
+                   ["Perfect", "Matched", "i.i.d. mismatch"]),
+        "erasure": (r"Feature erasure ($p=0.50$)", ["Perfect", "Matched", "Mismatch\n($p_{tr}=0.45$)"]),
+    }
+    draw_figure(rows, root / "bound_decomposition", FAMILIES, moons_only=True, panel_labels=panel_labels)
     save_json(root / "bound_decomposition.json", report)
     return report
 
