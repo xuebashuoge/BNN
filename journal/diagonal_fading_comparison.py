@@ -24,6 +24,7 @@ from .run_task import read_manifest, verify_submission_snapshot
 SCREEN_SEEDS = (122101, 122102)
 CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "refined_confirm": (124101, 124102, 124103),
+                 "cifar_balanced_confirm": (151101, 151102, 151103),
                  "small_sample_confirm": (141101, 141102, 141103),
                  "small_sample_refined_confirm": (142101, 142102, 142103)}
 SMALL_SAMPLE_SCREEN_SEEDS = (140101, 140102)
@@ -126,26 +127,60 @@ def confirmation_entries(selection):
             for choice in selection["selected_variants"] for seed in CONFIRM_SEEDS[stage]]
 
 
-def prepare_confirmation(args):
-    if args.eval_draws < 1 or (args.refinement_manifest is None) != (args.refinement_root is None):
-        raise ValueError("Require positive draws and a results root for every manifest")
-    stages = [("screen", args.screen_manifest, args.screen_root)]
-    if args.refinement_manifest:
-        stages.append(("refine", args.refinement_manifest, args.refinement_root))
-    entries, rows, design = [], [], None
-    for stage, manifest, root in stages:
-        additional = read_manifest(manifest)
-        if design is None:
-            design = conditions(additional)
-        if not variant_grid(additional, grid(design, stage)):
-            raise ValueError(f"Incomplete or altered {stage} tuning grid")
-        entries.extend(additional)
-        rows.extend(read_results(root, additional))
+def validation_rows(root, entries):
+    rows = read_results(root, entries)
     for row in rows:
         if (any(key.startswith("test_") for key in row)
                 or not 0 <= row["validation_accuracy"] <= 1
                 or not math.isfinite(row["validation_cross_entropy"]) or row["validation_cross_entropy"] < 0):
             raise ValueError(f"Selection requires successful validation-only observations: {row['task_id']}")
+    return rows
+
+
+def balanced_cifar_entries(original, rows):
+    """Carry each label's original validation-selected penalty into a shared 2x2 grid."""
+    if not variant_grid(original, screening_entries(("cifar10",), 2000, .35)):
+        raise ValueError("Balanced follow-up requires the complete m=2000, rho=.35 CIFAR screen")
+    _, selected = select_variants(rows, original, top=1)
+    by_id = {item["task_id"]: item for item in original}
+    entries = []
+    for choice in selected:
+        config = by_id[choice["task_ids"][0]]["config"]
+        for rate in (.0015, .002):
+            for scale in (.001, .003):
+                candidate = {**config, "lr": rate, "posterior_std": scale}
+                for seed in SCREEN_SEEDS:
+                    item = entry(candidate, seed, choice["group"], choice["method_label"], "cifar_balanced")
+                    item["penalty_from_validation_variant"] = choice["variant_id"]
+                    entries.append(item)
+    return entries
+
+
+def prepare_confirmation(args):
+    if (args.eval_draws < 1
+            or (args.refinement_manifest is None) != (args.refinement_root is None)
+            or (args.balanced_manifest is None) != (args.balanced_root is None)):
+        raise ValueError("Require positive draws and a results root for every manifest")
+    stages = [("screen", args.screen_manifest, args.screen_root)]
+    if args.refinement_manifest:
+        stages.append(("refine", args.refinement_manifest, args.refinement_root))
+    if args.balanced_manifest:
+        if not args.refinement_manifest:
+            raise ValueError("Balanced confirmation includes the original screen and both refinements")
+        stages.append(("cifar_balanced", args.balanced_manifest, args.balanced_root))
+    entries, rows, design = [], [], None
+    for stage, manifest, root in stages:
+        additional = read_manifest(manifest)
+        if design is None:
+            design = conditions(additional)
+        expected = balanced_grid if stage == "cifar_balanced" else grid(design, stage)
+        if not variant_grid(additional, expected):
+            raise ValueError(f"Incomplete or altered {stage} tuning grid")
+        entries.extend(additional)
+        stage_rows = validation_rows(root, additional)
+        rows.extend(stage_rows)
+        if stage == "screen" and args.balanced_manifest:
+            balanced_grid = balanced_cifar_entries(additional, stage_rows)
     variants, selected = select_variants(rows, entries, top=1)
     accuracy = defaultdict(dict)
     for choice in selected:
@@ -154,6 +189,8 @@ def prepare_confirmation(args):
                max(score for label, score in scores.items() if label not in {"T1-Matched", "T2-Matched"})
                for group, scores in accuracy.items()}
     stage = "refined_confirm" if args.refinement_manifest else "confirm"
+    if args.balanced_manifest:
+        stage = "cifar_balanced_confirm"
     if any(n_moons != 800 for _, _, _, n_moons in design):
         if len(design) != 1:
             raise ValueError("Select a separate confirmation cohort for each small-sample design")
@@ -243,15 +280,20 @@ def main():
     screen.add_argument("--pilot", action="store_true")
     refine = commands.add_parser("refine-screen")
     refine.add_argument("--screen-manifest", type=Path, required=True)
+    balanced = commands.add_parser("balanced-screen")
+    balanced.add_argument("--screen-manifest", type=Path, required=True)
+    balanced.add_argument("--screen-root", type=Path, required=True)
     confirm = commands.add_parser("confirm")
     confirm.add_argument("--screen-manifest", type=Path, required=True)
     confirm.add_argument("--screen-root", type=Path, required=True)
     confirm.add_argument("--refinement-manifest", type=Path)
     confirm.add_argument("--refinement-root", type=Path)
+    confirm.add_argument("--balanced-manifest", type=Path)
+    confirm.add_argument("--balanced-root", type=Path)
     confirm.add_argument("--eval-draws", type=int, default=20)
     combine = commands.add_parser("combine")
     combine.add_argument("--summary", type=Path, action="append", required=True)
-    for command in (screen, refine, confirm, combine):
+    for command in (screen, refine, balanced, confirm, combine):
         command.add_argument("--output", type=Path, required=True)
     task = commands.add_parser("task")
     task.add_argument("--index", type=int)
@@ -271,6 +313,10 @@ def main():
         if not variant_grid(entries, grid(design, "screen")):
             raise ValueError("Refinement requires a complete original screen design")
         result = write_manifest(args.output, grid(design, "refine"))
+    elif args.command == "balanced-screen":
+        original = read_manifest(args.screen_manifest)
+        entries = balanced_cifar_entries(original, validation_rows(args.screen_root, original))
+        result = write_manifest(args.output, entries)
     elif args.command == "task":
         result = run_task(args)
     elif args.command == "confirm":

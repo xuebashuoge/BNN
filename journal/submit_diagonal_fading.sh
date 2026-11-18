@@ -92,13 +92,16 @@ case $phase in
         python -u -m "$bounds" aggregate --output "$root/bounds" --width 16
         python -u -m "$bounds" fallback --output "$root/bounds"
         ;;
-    screen|refine|confirm|confirm-refine)
+    screen|refine|balanced|confirm|confirm-refine|confirm-balanced)
         case $dataset in mnist|fashionmnist|cifar10|moons) ;; *) echo "Supply comparison dataset" >&2; exit 2;; esac
         stage="$root/comparison/$dataset"
         mkdir -p "$stage"
         limit=00:12:00
         if [[ $dataset == cifar10 ]]; then limit=00:30:00; fi
-        if [[ $phase == screen || $phase == refine ]]; then
+        if [[ $phase == *balanced && $dataset != cifar10 ]]; then
+            echo "Balanced refinement requires CIFAR-10" >&2; exit 2
+        fi
+        if [[ $phase == screen || $phase == refine || $phase == balanced ]]; then
             if [[ $phase == screen ]]; then
                 options=()
                 if [[ $dataset == moons && -n ${DIAGONAL_MOONS_TRAIN_SIZE:-} ]]; then
@@ -107,6 +110,10 @@ case $phase in
                 "$py" -m "$compare" screen --datasets "$dataset" --m "${DIAGONAL_M:-2000}" \
                     "${options[@]}" --output "$stage/screen.jsonl"
                 next=confirm
+            elif [[ $phase == balanced ]]; then
+                "$py" -m "$compare" balanced-screen --screen-manifest "$stage/screen.jsonl" \
+                    --screen-root "$stage/screen" --output "$stage/balanced.jsonl"
+                next=confirm-balanced
             else
                 "$py" -m "$compare" refine-screen --screen-manifest "$stage/screen.jsonl" --output "$stage/refine.jsonl"
                 next=confirm-refine
@@ -114,12 +121,16 @@ case $phase in
             job=$(array "$stage" "$phase" "$compare" "$stage/$phase" "$limit")
             depends="$job"
             if [[ $phase == refine ]]; then depends+=":$(cat "$stage/screen.job")"; fi
+            if [[ $phase == balanced ]]; then depends+=":$(cat "$stage/refine.job")"; fi
             submit "$stage/$phase-select.job" "select_$dataset" "${cpu[@]}" --time=00:05:00 --dependency="afterok:$depends" \
                 "$worker" bash "$launcher" "$next" "$dataset"
         else
             extra=()
-            if [[ $phase == confirm-refine ]]; then
+            if [[ $phase == confirm-refine || $phase == confirm-balanced ]]; then
                 extra=(--refinement-manifest "$stage/refine.jsonl" --refinement-root "$stage/refine")
+            fi
+            if [[ $phase == confirm-balanced ]]; then
+                extra+=(--balanced-manifest "$stage/balanced.jsonl" --balanced-root "$stage/balanced")
             fi
             python -m "$compare" confirm --screen-manifest "$stage/screen.jsonl" --screen-root "$stage/screen" \
                 "${extra[@]}" --output "$stage/$phase.jsonl"
