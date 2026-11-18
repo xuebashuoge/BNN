@@ -17,10 +17,10 @@ class MoonsRevalidationTests(unittest.TestCase):
         w1, b1, w2, b2 = model.split(theta)
         x = torch.randn(11, 2, generator=rng)
         y = torch.arange(len(x)) % 2
-        for rho in (0., .35, .85):
-            law = dict(kind="diagonal_fading", rho_c=rho)
+        for rho, sigma in ((0., 1.), (.35, 1.), (.85, 2.)):
+            law = dict(kind="diagonal_fading", rho_c=rho, noise_std=sigma)
             bank = ChannelBank(16, 3, law, seed=13)
-            exact = conditional_correct(x.double(), y, model, theta.double(), correlation_factor(rho, 16))
+            exact = conditional_correct(x.double(), y, model, theta.double(), correlation_factor(rho, 16), sigma)
             estimates = []
             for inp, target in zip(x, y):
                 hidden = (inp @ w1 + b1).relu().expand(120000, -1)

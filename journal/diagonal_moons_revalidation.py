@@ -41,14 +41,14 @@ def collect_entries(root):
 
 
 @torch.no_grad()
-def conditional_correct(x, y, model, theta, factor):
-    """For u=w2[:,1]-w2[:,0], class margin is Gaussian with variance (f*u)'R(f*u)+||u||²."""
+def conditional_correct(x, y, model, theta, factor, noise_std=1.):
+    """For u=w2[:,1]-w2[:,0], class margin is Gaussian with variance (f*u)'R(f*u) + noise_std² ||u||²."""
     w1, b1, w2, b2 = model.split(theta)
     hidden = (x @ w1 + b1).relu()
     receiver = w2[:,1] - w2[:,0]
     weighted = hidden * receiver
     mean = .5*weighted.sum(1) + (b2[1]-b2[0])
-    sd = ((weighted @ factor).square().sum(1) + receiver.square().sum()).sqrt()
+    sd = ((weighted @ factor).square().sum(1) + (noise_std*receiver).square().sum()).sqrt()
     p = torch.special.ndtr(((2*y-1)*mean) / sd.clamp_min(torch.finfo(sd.dtype).tiny))
     return torch.where(sd > 0, p, ((mean > 0) == y).to(p.dtype))
 
