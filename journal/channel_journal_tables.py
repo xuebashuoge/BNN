@@ -131,7 +131,7 @@ def notes(m, rows, view="common"):
     long_mnist = 'mnist' in datasets and any(x in get('mnist','Erasure')['phase'] for x in ('epochs60','penalty60'))
     if long_mnist:
         extra.append('The MNIST erasure comparison allowed 60 epochs for every method.')
-    return (conditions, sample, *extra)
+    return (conditions, sample, "Bold marks the highest unrounded mean in each displayed row.", *extra)
 
 
 def render(m, rows, view="common"):
