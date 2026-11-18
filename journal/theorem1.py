@@ -13,6 +13,13 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+try:
+    from .full_fading import (correlation_factor, draw_full_fading, fading_gain_kl,
+                              normalize_full_fading, sample_received, validate_fading_dimensions)
+except ImportError:
+    from full_fading import (correlation_factor, draw_full_fading, fading_gain_kl,
+                             normalize_full_fading, sample_received, validate_fading_dimensions)
+
 
 def gaussian_kl(mu: torch.Tensor, rho: torch.Tensor, prior_std: float = 1.0) -> torch.Tensor:
     """Exact KL(diagonal Gaussian || fixed zero-mean isotropic Gaussian)."""
@@ -61,7 +68,7 @@ def joint_complexity(kl: torch.Tensor, n: int, m: int, delta: float = .05,
 def validate_channel(config: Mapping) -> dict:
     config = dict(config)
     kind = config.get("kind", "gaussian")
-    if kind not in {"gaussian", "outage", "perfect"}:
+    if kind not in {"gaussian", "full_fading", "outage", "perfect"}:
         raise ValueError(f"Unknown channel kind: {kind}")
     if kind == "gaussian":
         config = {"kind": kind, "gain_mean": float(config.get("gain_mean", 1.)),
@@ -69,6 +76,8 @@ def validate_channel(config: Mapping) -> dict:
                   "noise_std": float(config.get("noise_std", .1))}
         if min(config["gain_std"], config["noise_std"]) < 0:
             raise ValueError("Channel standard deviations must be nonnegative")
+    elif kind == "full_fading":
+        config = normalize_full_fading(config)
     elif kind == "outage":
         config = {"kind": kind, "outage_prob": float(config.get("outage_prob", .1))}
         if not 0 <= config["outage_prob"] <= 1:
@@ -79,7 +88,7 @@ def validate_channel(config: Mapping) -> dict:
 
 
 def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int) -> dict:
-    """Uniform shift bound for a loss in [0,1], independent feature channels.
+    """Uniform shift bound for a loss in [0,1] over the channel law.
 
     The bounded-loss inequality |E_P loss-E_Q loss| <= TV(P,Q) applies without
     a channel Lipschitz assumption. For independent feature-erasure masks, the
@@ -88,6 +97,8 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
     Perfect transmission is the erasure law with probability zero.
 
     Where KL(deployment||training) is finite, Pinsker gives sqrt(KL/2).
+    Full fading uses the KL between matrix-normal gains and independent noise
+    vectors. Its correlated gain covariance is handled via the two factors.
     Unsupported or singular continuous pairs retain the universal bound one.
     These bounded-loss consequences supplement, rather than instantiate, the
     draft's Wasserstein theorem. They do not supply a channel Lipschitz K.
@@ -96,6 +107,9 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
         raise ValueError("width must be a positive integer")
     width = int(width)
     deployment, training = validate_channel(deployment), validate_channel(training)
+    for config in (deployment, training):
+        if config["kind"] == "full_fading":
+            validate_fading_dimensions(config, width, width)
 
     def normal_kl(mean_p, std_p, mean_q, std_q):
         if std_p == 0 or std_q == 0:
@@ -130,6 +144,9 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
             for k in range(width + 1)))
     elif deployment == training:
         divergence = 0.
+    elif deployment["kind"] == training["kind"] == "full_fading":
+        divergence = fading_gain_kl(deployment, training, width, width)
+        divergence += width * normal_kl(0., deployment["noise_std"], 0., training["noise_std"])
     elif {deployment["kind"], training["kind"]} <= {"perfect", "gaussian"}:
         perfect = {"kind": "gaussian", "gain_mean": 1., "gain_std": 0., "noise_std": 0.}
         p = perfect if deployment["kind"] == "perfect" else deployment
@@ -211,19 +228,36 @@ class ChannelBank(nn.Module):
 
     Minibatches sample an independent bank index for each example.  This gives
     an unbiased stochastic estimator of the Cartesian data-by-channel risk.
-    A bank entry is a complete diagonal gain/noise vector (or outage mask).
+    A bank entry is a complete full fading matrix and noise vector, diagonal
+    gain and noise vector, or outage mask, depending on the channel.
     """
     def __init__(self, width: int, m: int, config: Mapping, seed: int):
         super().__init__()
         self.width, self.m = width, m
         self.config = validate_channel(config)
+        self._fading_factors = {}
         generator = torch.Generator().manual_seed(seed)
         gain, noise = self.draw(m, self.config, generator)
         self.register_buffer("gain", gain)
         self.register_buffer("noise", noise)
 
+    def _factors(self, config, reference):
+        key = (tuple(tuple(row) for row in config["rx_correlation"])
+               if isinstance(config["rx_correlation"], list) else config["rx_correlation"],
+               tuple(tuple(row) for row in config["tx_correlation"])
+               if isinstance(config["tx_correlation"], list) else config["tx_correlation"],
+               reference.device, reference.dtype)
+        if key not in self._fading_factors:
+            self._fading_factors[key] = tuple(correlation_factor(spec, self.width).to(reference)
+                                              for spec in key[:2])
+        return self._fading_factors[key]
+
     def draw(self, count: int, config: Mapping, generator: torch.Generator):
         config = validate_channel(config)
+        if config["kind"] == "full_fading":
+            reference = torch.empty(0, device=generator.device)
+            rx, tx = self._factors(config, reference)
+            return draw_full_fading(count, rx, tx, config["noise_std"], generator)
         shape = (count, self.width)
         if config["kind"] == "perfect":
             return torch.ones(shape), torch.zeros(shape)
@@ -240,11 +274,18 @@ class ChannelBank(nn.Module):
             return hidden
         generator = generator or torch.default_generator
         if source == "bank":
-            indices = torch.randint(self.m, (len(hidden),), generator=generator).to(hidden.device)
+            indices = torch.randint(self.m, (len(hidden),), generator=generator,
+                                    device=generator.device).to(hidden.device)
             gain, noise = self.gain[indices], self.noise[indices]
         elif source == "deployment":
-            gain, noise = self.draw(len(hidden), config or self.config, generator)
+            deployment = validate_channel(config or self.config)
+            if deployment["kind"] == "full_fading":
+                rx, tx = self._factors(deployment, hidden)
+                return sample_received(hidden, rx, tx, deployment["noise_std"], generator)
+            gain, noise = self.draw(len(hidden), deployment, generator)
             gain, noise = gain.to(hidden.device), noise.to(hidden.device)
         else:
             raise ValueError(f"Unknown source: {source}")
+        if gain.ndim == 3:
+            return torch.bmm(gain.to(hidden.dtype), hidden.unsqueeze(-1)).squeeze(-1) + noise
         return hidden * gain + noise

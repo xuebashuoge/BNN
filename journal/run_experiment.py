@@ -11,6 +11,7 @@ term. Coefficients of one recover the separated bound's trainable objective.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 import hashlib
 import json
 import math
@@ -27,9 +28,11 @@ from torch.nn import functional as F
 from torch.utils.data import DataLoader, Subset, TensorDataset
 
 try:
+    from .full_fading import validate_fading_dimensions
     from .theorem1 import (ChannelBank, GaussianMLP, channel_shift_diagnostic, gaussian_kl, joint_complexity,
                            theorem1_terms, validate_channel)
 except ImportError:
+    from full_fading import validate_fading_dimensions
     from theorem1 import (ChannelBank, GaussianMLP, channel_shift_diagnostic, gaussian_kl, joint_complexity,
                           theorem1_terms, validate_channel)
 
@@ -41,20 +44,75 @@ DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", predicto
                 m=100, seed=0, data_seed=20261110, channel_seed=1, eval_seed=2,
                 eval_draws=10, val_draws=1, clip_ce=10., delta=.05, l2=1e-4,
                 device="cpu", threads=1, cpu_flush_denormal=False, rho_lr_scale=1., download=False, moon_noise=.3, moons_sampler="iid",
+                bounded_feature_norm=1., bounded_receiver_norm=.3, posterior_mean_clip=0.,
                 train_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1},
                 deployment_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1})
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
 CNN_ARCHITECTURES = {"cnn", "cnn_mid", "cnn_mid_relu", "cnn_rxconv", "cnn_spatial3"}
 _CPU_FLUSH_DENORMAL_SUPPORTED: bool | None = None
+LEGACY_BANK_HASH_ALGORITHM = "legacy-json-sha256"
+TENSOR_BANK_HASH_ALGORITHM = "tensor-bytes-sha256-v1"
 
 
 def digest(value) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
 
 
+def channel_bank_hash_algorithm(bank_or_state) -> str:
+    state = bank_or_state if isinstance(bank_or_state, Mapping) else bank_or_state.state_dict()
+    return TENSOR_BANK_HASH_ALGORITHM if state["gain"].ndim == 3 else LEGACY_BANK_HASH_ALGORITHM
+
+
+def channel_bank_fingerprint(bank_or_state, algorithm: str | None = None) -> str:
+    """Hash actual bank buffers without materializing Python floats for full matrices."""
+    state = bank_or_state if isinstance(bank_or_state, Mapping) else bank_or_state.state_dict()
+    algorithm = channel_bank_hash_algorithm(state) if algorithm is None else algorithm
+    if algorithm == LEGACY_BANK_HASH_ALGORITHM:
+        return digest({name: state[name].detach().cpu().tolist() for name in ("gain", "noise")})
+    if algorithm != TENSOR_BANK_HASH_ALGORITHM:
+        raise ValueError(f"Unknown channel-bank hash algorithm: {algorithm}")
+    hasher = hashlib.sha256()
+    hasher.update(algorithm.encode() + b"\0")
+    for name in ("gain", "noise"):
+        tensor = state[name].detach().cpu().contiguous()
+        descriptor = json.dumps(dict(name=name, dtype=str(tensor.dtype), shape=list(tensor.shape),
+                                     nbytes=tensor.numel() * tensor.element_size()),
+                                sort_keys=True, separators=(",", ":")).encode()
+        hasher.update(len(descriptor).to_bytes(8, "big"))
+        hasher.update(descriptor)
+        # CPU tensor bytes retain their dtype, shape and bit pattern.
+        raw = memoryview(tensor.view(torch.uint8).numpy()).cast("B")
+        for start in range(0, len(raw), 8 * 1024**2):
+            hasher.update(raw[start:start + 8 * 1024**2])
+    return hasher.hexdigest()
+
+
+def _bank_recipe(config):
+    return dict(version=1, width=config["width"], m=config["m"],
+                channel=validate_channel(config["train_channel"]),
+                seed=config["channel_seed"], torch_version=str(torch.__version__))
+
+
+def checkpoint_bank_state(state: Mapping, config: dict, regenerated_bank=None):
+    """Restore legacy buffers or a verified recipe for a compact full-matrix checkpoint."""
+    if "bank_recipe" not in state:
+        return state["bank"]
+    expected = _bank_recipe(config)
+    if "bank" in state or state["bank_recipe"] != expected:
+        raise ValueError("Channel-bank recipe differs from its declared training configuration/runtime")
+    if regenerated_bank is None:
+        regenerated_bank = ChannelBank(expected["width"], expected["m"], expected["channel"], expected["seed"])
+    return regenerated_bank.state_dict()
+
+
 def file_fingerprint(path: Path) -> dict:
-    raw = path.read_bytes()
-    return dict(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw))
+    hasher = hashlib.sha256()
+    size = 0
+    with path.open("rb") as source:
+        for raw in iter(lambda: source.read(8 * 1024**2), b""):
+            hasher.update(raw)
+            size += len(raw)
+    return dict(sha256=hasher.hexdigest(), bytes=size)
 
 
 def read_config(path: str | None) -> dict:
@@ -72,13 +130,18 @@ def normalize_config(supplied: dict) -> dict:
     if (not isinstance(config["rho_lr_scale"], (int, float)) or isinstance(config["rho_lr_scale"], bool)
             or not math.isfinite(config["rho_lr_scale"]) or config["rho_lr_scale"] < 0):
         raise ValueError("rho_lr_scale must be a finite nonnegative number")
+    for key in ("bounded_feature_norm", "bounded_receiver_norm", "posterior_mean_clip"):
+        value = config[key]
+        if (not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value)
+                or value < 0 or (key != "posterior_mean_clip" and value == 0)):
+            raise ValueError(f"{key} requires a finite {'nonnegative' if key == 'posterior_mean_clip' else 'positive'} number")
     config["train_channel"] = validate_channel(config["train_channel"])
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist", "cifar10"}:
         raise ValueError("Unknown method or dataset")
     if not isinstance(config["predictor"], str) or config["predictor"] not in {"legacy", "gaussian"}:
         raise ValueError("predictor must be legacy or gaussian")
-    if config["architecture"] not in {"mlp", *CNN_ARCHITECTURES}:
+    if config["architecture"] not in {"mlp", "bounded_mlp", *CNN_ARCHITECTURES}:
         raise ValueError("Unknown architecture")
     if config["architecture"] in CNN_ARCHITECTURES and config["dataset"] != "cifar10":
         raise ValueError("The compact CNN requires CIFAR-10 RGB inputs")
@@ -101,6 +164,9 @@ def normalize_config(supplied: dict) -> dict:
     for key in ("width", "batch_size", "epochs", "m", "threads", "eval_draws", "val_draws"):
         if config[key] <= 0:
             raise ValueError(f"{key} must be positive")
+    for channel in (config["train_channel"], config["deployment_channel"]):
+        if channel["kind"] == "full_fading":
+            validate_fading_dimensions(channel, config["width"], config["width"])
     if config["train_size"] <= 1 or config["val_size"] <= 0:
         raise ValueError("Require train_size>1 and val_size>0")
     if min(config["clip_ce"], config["prior_std"], config["posterior_std"], config["lr"]) <= 0:
@@ -223,6 +289,10 @@ def make_models(config: dict, input_dim: int, classes: int):
             model_class = CIFAR_SEARCH_MODELS[config["architecture"]]
         model = model_class(config["width"], classes, stochastic,
                             config["posterior_std"]).to(config["device"])
+    elif config["architecture"] == "bounded_mlp":
+        from .bounded_mlp import BoundedGaussianMLP
+        model = BoundedGaussianMLP(input_dim, config["width"], classes, stochastic, config["posterior_std"],
+                                   config["bounded_feature_norm"], config["bounded_receiver_norm"]).to(config["device"])
     else:
         model = GaussianMLP(input_dim, config["width"], classes, stochastic,
                             config["posterior_std"]).to(config["device"])
@@ -339,7 +409,10 @@ def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
     """Independent full-loader Gibbs draws; do not resample W per minibatch."""
     model.eval()
     weight_generator = torch.Generator(device=config["device"]).manual_seed(seed)
-    channel_generator = torch.Generator().manual_seed(seed + 1)
+    channel_kind = (config["deployment_channel"]["kind"] if source == "deployment"
+                    else bank.config["kind"] if source == "bank" else "perfect")
+    channel_device = config["device"] if channel_kind == "full_fading" else "cpu"
+    channel_generator = torch.Generator(device=channel_device).manual_seed(seed + 1)
     replicates = []
     for _ in range(draws):
         theta = model.sample(weight_generator)
@@ -366,6 +439,10 @@ def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
                   replicate_statistics=replicates,
                   mc_note="Finite-data Gibbs Monte Carlo estimates, not population-risk certificates",
                   bounded_loss_mc_upper_radius_95pct=math.sqrt(math.log(20) / (2 * draws)))
+    if channel_kind == "full_fading" and source == "deployment":
+        result["channel_sampling"] = (
+            "Exact conditional received-signal law per example; paired seeds reuse standardized "
+            "Gaussian variates in received space.")
     return result
 
 
@@ -435,17 +512,23 @@ def train(config: dict, output: Path):
     output.mkdir(parents=True, exist_ok=True)
     if (output / "metadata.json").exists():
         old_config = json.loads((output / "metadata.json").read_text())["config"]
-        if old_config != config:
+        if normalize_config(old_config) != config:
             raise ValueError("Output contains a different experiment; use a fresh output directory")
     train_data, val_data, _, input_dim, classes, split = load_data(config, include_test=False)
     train_loader, val_loader = make_loader(train_data, config, True), make_loader(val_data, config)
     model, bank = make_models(config, input_dim, classes)
+    mean_clip = config["posterior_mean_clip"]
+    if mean_clip:
+        with torch.no_grad():
+            model.mu.clamp_(-mean_clip, mean_clip)
     optimizer = make_optimizer(model, config)
-    channel_generator = torch.Generator().manual_seed(config["channel_seed"] + 109)
+    channel_device = config["device"] if bank.config["kind"] == "full_fading" else "cpu"
+    channel_generator = torch.Generator(device=channel_device).manual_seed(config["channel_seed"] + 109)
     metadata = provenance(config, split)
+    bank_hash_algorithm = channel_bank_hash_algorithm(bank)
     metadata.update(input_dim=input_dim, classes=classes, parameter_count=model.d,
-                    training_channel_bank_hash=digest({"gain": bank.gain.cpu().tolist(),
-                                                       "noise": bank.noise.cpu().tolist()}))
+                    training_channel_bank_hash=channel_bank_fingerprint(bank, bank_hash_algorithm),
+                    training_channel_bank_hash_algorithm=bank_hash_algorithm)
     if hasattr(model, "split_description"):
         metadata["network_split"] = dict(
             description=model.split_description,
@@ -478,6 +561,9 @@ def train(config: dict, output: Path):
                 raise FloatingPointError(f"Nonfinite objective at epoch {epoch + 1}")
             loss.backward()
             optimizer.step()
+            if mean_clip:
+                with torch.no_grad():
+                    model.mu.clamp_(-mean_clip, mean_clip)
             ce_sum += ce.item() * len(y)
             empirical_sum += empirical.item() * len(y)
             objective_sum += loss.item() * len(y)
@@ -498,7 +584,11 @@ def train(config: dict, output: Path):
                          (validation["cross_entropy"], -validation["accuracy"]))
         if selection_key < best:
             best = selection_key
-            state = dict(model=model.state_dict(), bank=bank.state_dict())
+            state = dict(model=model.state_dict())
+            if bank.config["kind"] == "full_fading":
+                state["bank_recipe"] = _bank_recipe(config)
+            else:
+                state["bank"] = bank.state_dict()
             torch.save(state, output / "weights.pt.tmp")
             (output / "weights.pt.tmp").replace(output / "weights.pt")
             metadata["selected_epoch"] = epoch + 1
@@ -558,8 +648,9 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
     model, bank = make_models(config, input_dim, classes)
     state = torch.load(checkpoint / "weights.pt", map_location=config["device"], weights_only=True)
     model.load_state_dict(state["model"])
-    bank.load_state_dict(state["bank"])
-    saved_bank_hash = digest({"gain": bank.gain.cpu().tolist(), "noise": bank.noise.cpu().tolist()})
+    bank.load_state_dict(checkpoint_bank_state(state, config, regenerated_bank=bank))
+    bank_hash_algorithm = metadata.get("training_channel_bank_hash_algorithm", LEGACY_BANK_HASH_ALGORITHM)
+    saved_bank_hash = channel_bank_fingerprint(bank, bank_hash_algorithm)
     recorded_bank_hash = metadata.get("training_channel_bank_hash")
     if recorded_bank_hash is not None and saved_bank_hash != recorded_bank_hash:
         raise ValueError("Saved channel-bank buffers differ from the recorded bank hash")
@@ -575,6 +666,7 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
                   final_posterior_complexities={k: v.detach().item() for k, v in complexities(model, config).items()},
                   checkpoint_verification=dict(split_hash_matches=split_matches,
                       saved_channel_bank_hash=saved_bank_hash,
+                      channel_bank_hash_algorithm=bank_hash_algorithm,
                       bank_hash_matches_metadata=(saved_bank_hash == recorded_bank_hash
                                                   if recorded_bank_hash is not None else None)),
                   certificate_note=metadata["certificate_note"])
