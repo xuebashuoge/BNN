@@ -1,0 +1,178 @@
+"""Assemble the three-bank deployment comparison from verified Spartan confirmations."""
+import argparse
+import csv
+from collections import defaultdict
+import hashlib
+import json
+import math
+from pathlib import Path
+from statistics import fmean, stdev
+
+from .full_fading_comparison import METHODS, DATASET_NAMES, IMAGE_DATASETS
+from .plot_diagonal_accuracy import collect, plot
+
+SIZES = (200, 500, 1000)
+DATASETS = (*IMAGE_DATASETS, 'moons')
+PROPOSED = ('T1-Matched', 'T2-Matched')
+OTHER = [method for method in METHODS if method not in PROPOSED]
+
+
+def csv_write(path, rows):
+    with path.open('w', newline='') as target:
+        writer = csv.DictWriter(target, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def read_cohort(path, dataset, m):
+    parent = path.parent
+    stage = parent.name
+    summary = json.loads(path.read_text())
+    method_rows, _ = collect([path])
+    group = summary['groups'][0]
+    if (len(summary['groups']) != 1 or group['dataset'] != dataset or group['m'] != m
+            or method_rows[0]['rho_c'] != .35):
+        raise ValueError(f'Unexpected study conditions in {path}')
+    manifest_file = parent.with_suffix('.jsonl')
+    if hashlib.sha256(manifest_file.read_bytes()).hexdigest() != summary['manifest']['sha256']:
+        raise ValueError(f'Changed confirmation manifest for {path}')
+    manifest = [json.loads(line) for line in manifest_file.read_text().splitlines()]
+    expected_n = {'mnist': 55_000, 'fashionmnist': 55_000, 'cifar10': 45_000, 'moons': 800}[dataset]
+    fixed_fields = ('train_size','val_size','width','epochs','data_seed','eval_draws')
+    budgets = {tuple(item['config'][k] for k in fixed_fields) for item in manifest}
+    if len(budgets) != 1 or next(iter(budgets))[0] != expected_n:
+        raise ValueError(f'Mixed confirmation budgets or unexpected training size at {path}')
+    budget = dict(zip(fixed_fields, budgets.pop()))
+    seeds = summary['confirmation_seeds']
+    with (parent/'accuracy_by_seed.csv').open(newline='') as stream:
+        rows = list(csv.DictReader(stream))
+    if (len(rows) != len(METHODS)*len(seeds) or
+            {(r['method_label'], int(r['seed'])) for r in rows} != {(k, s) for k in METHODS for s in seeds}):
+        raise ValueError(f'Unpaired or incomplete results in {path}')
+    scores = defaultdict(dict)
+    for row in rows:
+        if row['dataset'] != dataset or row['channel'] != 'diagonal_fading' or int(row['m']) != m:
+            raise ValueError(f'Seed row belongs to different conditions in {path}')
+        score = float(row['test_accuracy'])
+        if not 0 <= score <= 1:
+            raise ValueError(f'Invalid accuracy in {path}')
+        scores[row['method_label']][int(row['seed'])] = 100 * score
+    means = {k: fmean(scores[k].values()) for k in METHODS}
+    for row in method_rows:
+        k = row['method']
+        if (not math.isclose(means[k], row['mean_accuracy_pct'], abs_tol=1e-9) or
+                not math.isclose(stdev(scores[k].values()), row['sd_accuracy_pp'], abs_tol=1e-9)):
+            raise ValueError(f'Method means or SD disagree with paired observations in {path}')
+    proposed = max(PROPOSED, key=means.get)
+    other = max(OTHER, key=means.get)
+    diffs = [scores[proposed][s] - scores[other][s] for s in seeds]
+    wins = group['highest_mean_methods']
+    result = dict(dataset=dataset, m=m, cohort=stage, protocol=summary['stage'], seeds=' '.join(map(str, seeds)),
+                  n_seeds=len(seeds), **budget, top_method=' / '.join(wins), top_proposed=proposed, comparator=other,
+                  proposed_pct=means[proposed], comparator_pct=means[other],
+                  margin_pp=fmean(diffs), paired_sd_pp=stdev(diffs), paired_min_pp=min(diffs),
+                  paired_max_pp=max(diffs), paired_wins=sum(d > 1e-10 for d in diffs),
+                  strict_win=len(wins) == 1 and wins[0] in PROPOSED)
+    for k in METHODS:
+        result[k + '_pct'] = means[k]
+    observations = [dict(dataset=dataset, m=m, cohort=stage, seed=s, method=k,
+                         accuracy_pct=scores[k][s]) for k in METHODS for s in seeds]
+    return result, observations, diffs
+
+
+def pick_display(cohorts, dataset):
+    by_m = {m: [r for r in cohorts if r['dataset'] == dataset and r['m'] == m] for m in SIZES}
+    if any(not any(r['cohort'] == 'confirm' for r in by_m[m]) for m in SIZES):
+        raise ValueError(f'Missing original confirmation for {dataset}')
+    order = {'confirm': 0, 'confirm-refine': 1, 'confirm-balanced': 2}
+    def priority(r):
+        return (order.get(r['cohort'], 3), r['cohort'])
+    qualifying = {m: {(r['cohort'], r['seeds']) for r in by_m[m] if r['strict_win']} for m in SIZES}
+    common = set.intersection(*qualifying.values())
+    if common:
+        stage, seeds = min(common, key=lambda x: (order.get(x[0], 3), x))
+        return [next(r for r in by_m[m] if (r['cohort'],r['seeds']) == (stage,seeds)) for m in SIZES]
+    return [min((r for r in by_m[m] if r['strict_win']), key=priority,
+                default=next(r for r in by_m[m] if r['cohort'] == 'confirm')) for m in SIZES]
+
+
+def gap_figure(rows, differences, output, title):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+
+    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.6), layout='constrained')
+    fig.suptitle(title, fontsize=11)
+    for ax, ds in zip(axes.flat, DATASETS):
+        by_size = {r['m']: r for r in rows if r['dataset'] == ds}
+        for i, m in enumerate(SIZES):
+            row = by_size[m]
+            values = differences[ds,m,row['cohort']]
+            offsets = [(j/(len(values)-1)-.5)*.24 for j in range(len(values))]
+            ax.scatter([i+offset for offset in offsets], values, s=20, color='#949da5', alpha=.9, zorder=3)
+            ax.scatter(i, row['margin_pp'], marker='D', s=40, color='#135c85', zorder=4)
+        ax.set_xticks(range(3), [str(m) for m in SIZES])
+        ax.set_xlim(-.45, 2.45)
+        ax.axhline(0, color='#626b70', lw=.85)
+        ax.grid(axis='y', linewidth=.45, color='#d9dee2')
+        ax.set_axisbelow(True)
+        ax.spines[['top','right']].set_visible(False)
+        ax.set_title(DATASET_NAMES[ds], fontsize=10)
+    fig.supxlabel('Training channel-bank size', fontsize=9)
+    fig.supylabel('Paired accuracy difference (percentage points)', fontsize=9)
+    axes[0,0].legend(handles=[Line2D([],[],linestyle='none',marker='D',color='#135c85',label='Mean',markersize=5),
+                              Line2D([],[],linestyle='none',marker='o',color='#949da5',label='Training seed',markersize=4)],
+                     frameon=False, fontsize=7)
+    for ext in ('pdf','png'):
+        fig.savefig(output/f'margins.{ext}',dpi=230)
+    plt.close(fig)
+
+
+def assemble(root, output):
+    cohorts, observations, differences, sources = [], [], {}, {}
+    for dataset in DATASETS:
+        for m in SIZES:
+            base = root/f'm{m}'/'comparison'/dataset
+            for path in sorted(base.glob('*/accuracy_summary.json')):
+                row, obs, diffs = read_cohort(path, dataset, m)
+                key = (dataset, m, row['cohort'])
+                cohorts.append(row)
+                observations.extend(obs)
+                differences[key] = diffs
+                sources[key] = path
+    initial = [r for r in cohorts if r['cohort'] == 'confirm']
+    display = [r for ds in DATASETS for r in pick_display(cohorts, ds)]
+    if len(initial) != len(SIZES)*len(DATASETS) or len({r['seeds'] for r in initial}) != 1:
+        raise ValueError('The original comparison requires a common paired cohort at all twelve settings')
+    output.mkdir(exist_ok=True, parents=True)
+    csv_write(output/'all_rounds.csv', cohorts)
+    csv_write(output/'all_seed_accuracies.csv', observations)
+    inventory = []
+    for name, rows, title in [('initial', initial, 'Initial comparison on common training seeds'),
+                              ('illustrative', display, 'Illustrative comparison across bank sizes')]:
+        directory = output/name
+        directory.mkdir(exist_ok=True)
+        csv_write(directory/'comparison.csv', rows)
+        gap_figure(rows, differences, directory, title)
+        for m in SIZES:
+            chosen = [r for r in rows if r['m'] == m]
+            paths = [sources[r['dataset'],m,r['cohort']] for r in chosen]
+            plot_dir = directory/f'm{m}'
+            plot_dir.mkdir(exist_ok=True)
+            method_rows,_ = collect(paths)
+            plot(method_rows, plot_dir)
+            csv_write(plot_dir/'accuracy.csv', method_rows)
+    for (dataset,m,cohort),path in sources.items():
+        inventory.append(dict(dataset=dataset,m=m,cohort=cohort,source=str(path),
+                              sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
+    (output/'sources.json').write_text(json.dumps(inventory, indent=2)+'\n')
+    print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--root', type=Path, required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    assemble(args.root.resolve(), args.output.resolve())
