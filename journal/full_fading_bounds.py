@@ -107,7 +107,7 @@ def empirical_mc(model, bank, train_data, config, draws, compact):
                 examples_per_observation=cluster_size, total_evaluations=len(indices), seed=seed)
 
 
-def risk_decomposition(config, model, empirical, family_size=FAMILY_SIZE):
+def risk_decomposition(config, model, empirical, family_size=FAMILY_SIZE, perfect_shift_fn=perfect_shift):
     # Allocate a theorem and an empirical MC event to each declared cell.
     failure = config["delta"] / (2 * family_size)
     radius = math.sqrt(math.log(1 / failure) / (2 * empirical["iid_observations"]))
@@ -116,8 +116,8 @@ def risk_decomposition(config, model, empirical, family_size=FAMILY_SIZE):
     terms = theorem1_terms(torch.tensor(kl, dtype=torch.float64), n=config["train_size"],
                            m=config["m"], delta=failure, perfect_training=perfect)
     if perfect:
-        shift = perfect_shift(config["deployment_channel"], config["width"], model,
-                              config["loss_epsilon"])
+        shift = perfect_shift_fn(config["deployment_channel"], config["width"], model,
+                                 config["loss_epsilon"])
     else:
         diagnostic = channel_shift_diagnostic(config["deployment_channel"],
                                               config["train_channel"], config["width"])
@@ -143,14 +143,24 @@ def run(args):
     supplemental = profile == "validation"
     protocol_fingerprint = file_fingerprint(COMPACT_PROTOCOL) if supplemental else None
     case = case_path(args.output, args.dataset, args.family, args.regime, args.fallback, profile)
+    draws = args.empirical_draws or (10000 if args.fallback else 128)
+    family_size = len(FAMILIES) * len(REGIMES) if supplemental else FAMILY_SIZE
+    labels = dict(dataset=args.dataset, family=args.family, regime=args.regime, fallback=args.fallback,
+                  fallback_profile=profile, compact_selection_protocol=protocol_fingerprint)
+    return evaluate_case(config, case, draws, args.test_draws, args.fallback, family_size, labels)
+
+
+def evaluate_case(config, case, draws, test_draws, iid_weights, family_size, labels,
+                  perfect_shift_fn=perfect_shift):
+    """Train once, then certify and evaluate the same frozen posterior and channel bank."""
     checkpoint = case / "checkpoint"
     report_path = case / "bound.json"
-    draws = args.empirical_draws or (10000 if args.fallback else 128)
     if report_path.is_file():
         cached = json.loads(report_path.read_text())
         if (cached["config"] != config or cached["empirical"]["iid_observations"] != draws
-                or cached["test"]["draws"] != args.test_draws
-                or cached.get("compact_selection_protocol") != protocol_fingerprint):
+                or cached["test"]["draws"] != test_draws
+                or cached["confidence"]["family_size"] != family_size
+                or any(cached.get(key) != value for key, value in labels.items())):
             raise ValueError("Output already contains a different experiment")
         if cached["checkpoint_weights"] != file_fingerprint(checkpoint / "weights.pt"):
             raise ValueError("Saved model changed after evaluation")
@@ -173,23 +183,20 @@ def run(args):
     bank_hash = channel_bank_fingerprint(bank, metadata.get("training_channel_bank_hash_algorithm"))
     if bank_hash != metadata["training_channel_bank_hash"]:
         raise ValueError("Saved bank differs from checkpoint metadata")
-    empirical = empirical_mc(model, bank, train_data, config, draws, args.fallback)
-    family_size = len(FAMILIES) * len(REGIMES) if supplemental else FAMILY_SIZE
-    decomposition = risk_decomposition(config, model, empirical, family_size)
-    test = evaluate(model, bank, make_loader(test, config), config, args.test_draws,
+    empirical = empirical_mc(model, bank, train_data, config, draws, iid_weights)
+    decomposition = risk_decomposition(config, model, empirical, family_size, perfect_shift_fn)
+    test = evaluate(model, bank, make_loader(test, config), config, test_draws,
                     config["eval_seed"] + 97557)
     if file_fingerprint(path) != weight_fingerprint:
         raise ValueError("Saved weights changed during evaluation")
-    report = dict(dataset=args.dataset, family=args.family, regime=args.regime, fallback=args.fallback,
-                  config=config, checkpoint_weights=weight_fingerprint, saved_bank_hash=bank_hash,
-                  selected_epoch=metadata["selected_epoch"], empirical=empirical, test=test,
-                  fallback_profile=profile, compact_selection_protocol=protocol_fingerprint,
-                  **decomposition)
+    report = dict(**labels, config=config, checkpoint_weights=weight_fingerprint,
+                  saved_bank_hash=bank_hash, selected_epoch=metadata["selected_epoch"],
+                  empirical=empirical, test=test, **decomposition)
     save_json(report_path, report)
     return report
 
 
-def draw_figure(rows, output, families):
+def draw_figure(rows, output, families, moons_only=None):
     os.environ.setdefault("MPLCONFIGDIR", "/tmp/bnn-full-fading-matplotlib")
     import matplotlib
     matplotlib.use("Agg")
@@ -197,7 +204,7 @@ def draw_figure(rows, output, families):
     from matplotlib.lines import Line2D
     from matplotlib.patches import Patch
 
-    compact = rows[0]["fallback"]
+    compact = rows[0]["fallback"] if moons_only is None else moons_only
     labels = {"empirical": ("Empirical Gibbs loss", "#777777"),
               "mc": ("Monte Carlo correction", "#CBD0D5"),
               "sample": ("Sample complexity", "#009E73"),
@@ -231,7 +238,7 @@ def draw_figure(rows, output, families):
     handles = [Patch(color=color, label=label) for label, color in labels.values()]
     handles.append(Line2D([], [], marker="D", markersize=4, linestyle="None",
                           color="black", label="Held-out Gibbs loss"))
-    figure.suptitle((f"Two moons, bounded FC (d=8), m={rows[0]['config']['m']}" if compact else
+    figure.suptitle((f"Two moons, bounded FC (d={rows[0]['config']['width']}), m={rows[0]['config']['m']}" if compact else
                      f"{FAMILIES[families[0]]}, paper models, m={rows[0]['config']['m']}"))
     figure.legend(handles=handles, loc="upper center", bbox_to_anchor=(.5, .91),
                   ncol=3, fontsize=8, frameon=False)
