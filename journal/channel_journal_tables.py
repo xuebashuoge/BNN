@@ -106,7 +106,7 @@ def short(value):
     return format(value.normalize(),"f")
 
 
-def notes(m, rows):
+def notes(m, rows, view="common"):
     datasets = datasets_at(m)
     get = lambda d,c: rows[(m,d,c,DISPLAY[0])]
     fading = {(get(d,"Fading")["rho_c"],get(d,"Fading")["noise_std"]) for d in datasets}
@@ -123,10 +123,15 @@ def notes(m, rows):
     else:
         pairs = ", ".join(f"{DATASETS[d]} {f}/{e}" for d,(f,e) in zip(datasets,counts))
         sample = f"Paired training-seed counts (fading/erasure) are {pairs}."
-    return conditions, sample
+    extra = []
+    if view in ("illustrative","validation_examples"):
+        selected = [DATASETS[d] for d in datasets if get(d,"Erasure")["phase"]=="validation_selected_triple"]
+        extra.append(("Erasure seed triples selected on validation: "+", ".join(selected)+".")
+                     if selected else "Illustrative rounds were chosen using observed rankings.")
+    return (conditions, sample, *extra)
 
 
-def render(m, rows):
+def render(m, rows, view="common"):
     datasets=datasets_at(m)
     width=8.35
     height=1.74 + .53*len(datasets) + .065*(len(datasets)-1)
@@ -171,12 +176,12 @@ def render(m, rows):
             rule(y+.0325,lw=.32,color=".45")
             y+=.065
     rule(y+.018,lw=1.05)
-    for i,line in enumerate(notes(m,rows)):
+    for i,line in enumerate(notes(m,rows,view)):
         text(left+.03,y+.18+.19*i,line,ha="left",fontsize=9.3)
     return fig
 
 
-def latex(m, rows):
+def latex(m, rows, view="common"):
     parts = [r"\documentclass[border=4pt]{standalone}",r"\usepackage{booktabs,multirow}",
              r"\begin{document}",r"\begin{minipage}{7.8in}",r"\centering",
              rf"Deployment accuracy at $m={m}$ (mean $\pm$ sample SD, \%)\\[4pt]",
@@ -195,9 +200,9 @@ def latex(m, rows):
                     mean=r"\mathbf{"+mean+"}"
                 cells.append(rf"${mean}\,\pm\,{fmt(r['sd_pp'])}$")
             parts.append(" & ".join(cells) + r" \\")
-    conditions,seeds=notes(m,rows)
+    note_lines=notes(m,rows,view)
     parts += [r"\bottomrule",r"\end{tabular*}",r"\par\smallskip\raggedright\footnotesize",
-              conditions+r"\\",seeds,r"\end{minipage}",r"\end{document}"]
+              (r"\\"+"\n").join(note_lines),r"\end{minipage}",r"\end{document}"]
     return "\n".join(parts)+"\n"
 
 
@@ -208,7 +213,7 @@ def write_csv(path, rows):
         writer.writerows(rows)
 
 
-def export(input_file, output, sizes, defaults):
+def export(input_file, output, sizes, defaults, view="common"):
     rows=read_rows(input_file,sizes,defaults)
     output.mkdir(parents=True,exist_ok=True)
     all_rows=[]
@@ -219,7 +224,7 @@ def export(input_file, output, sizes, defaults):
             all_rows.extend(records)
             stem=output/f"channel_accuracy_m{m}"
             write_csv(stem.with_suffix(".csv"),records)
-            document=latex(m,rows)
+            document=latex(m,rows,view)
             stem.with_suffix(".tex").write_text(document)
             start=document.index(r"\begin{tabular*}")
             end=document.index(r"\end{tabular*}")+len(r"\end{tabular*}")
@@ -238,7 +243,7 @@ def export(input_file, output, sizes, defaults):
                         cells.append(f"{value} ± {fmt(row['sd_pp'])}")
                     md.append("| "+" | ".join([DATASETS[ds] if channel=="Fading" else "",channel,*cells])+" |")
             stem.with_suffix(".md").write_text("\n".join(md)+"\n")
-            fig=render(m,rows)
+            fig=render(m,rows,view)
             for ext in ("png","pdf"):
                 fig.savefig(stem.with_suffix("."+ext),dpi=300,facecolor="white")
             bundle.savefig(fig,facecolor="white")
@@ -248,7 +253,7 @@ def export(input_file, output, sizes, defaults):
               renderer_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               m_in_pdf_order=sizes,displayed_methods=DISPLAY,within_row_bold_tolerance_pp=str(TOL),
               units="Mean deployment accuracy in percent; sample SD across paired training seeds in percentage points",
-              footnotes={m:list(notes(m,rows)) for m in sizes},globally_defaulted_parameters=defaults,
+              view=view,footnotes={m:list(notes(m,rows,view)) for m in sizes},globally_defaulted_parameters=defaults,
               source_mapping="The exact CSV lists the selected phase, source, deployment parameters and n_seeds for every input method.")
     (output/"table_sources.json").write_text(json.dumps(info,indent=2,default=str)+"\n")
     print(f"Rendered {len(sizes)} tables from {len(all_rows)} designated method rows to {output}")
@@ -258,6 +263,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input",type=Path,required=True)
     parser.add_argument("--output",type=Path,required=True)
+    parser.add_argument("--view",choices=("common","initial","milder_fading","illustrative","validation_examples"),default="common")
     parser.add_argument("--m",type=int,choices=SIZES,action="append",help="Render only explicitly listed sizes, in this order")
     parser.add_argument("--fading-rho",default=".35",help="Fallback if the CSV omits rho_c")
     parser.add_argument("--fading-noise",default="1",help="Fallback if the CSV omits noise_std")
@@ -266,7 +272,7 @@ def main():
     sizes=tuple(args.m or SIZES)
     if len(set(sizes)) != len(sizes):
         parser.error("Use distinct bank sizes")
-    export(args.input,args.output,sizes,dict(rho_c=args.fading_rho,noise_std=args.fading_noise,outage_prob=args.erasure_p))
+    export(args.input,args.output,sizes,dict(rho_c=args.fading_rho,noise_std=args.fading_noise,outage_prob=args.erasure_p),view=args.view)
 
 
 if __name__=="__main__":

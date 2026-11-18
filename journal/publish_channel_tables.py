@@ -15,7 +15,7 @@ def publish(fading, erasure, output):
         dest=output/name
         export(inputs/(name+'_cells.csv'),dest,SIZES,
                {'rho_c':'.35' if name=='milder_fading' else '.85',
-                'noise_std':'1' if name=='milder_fading' else '2','outage_prob':'.5'})
+                'noise_std':'1' if name=='milder_fading' else '2','outage_prob':'.5'},view=name)
         (dest/'all_tables.md').write_text('\n'.join((dest/f'channel_accuracy_m{m}.md').read_text() for m in SIZES))
 
     lines=['# Deployment accuracy by training channel and bank size','',
