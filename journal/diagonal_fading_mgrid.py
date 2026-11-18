@@ -194,6 +194,44 @@ def gap_figure(rows, differences, output, title):
     plt.close(fig)
 
 
+def pool_identical_cifar_configs(sources, observations, output):
+    """Compare all eight seeds only when the two rounds selected the same seven configurations."""
+    pooled = []
+    method_rows = []
+    for m in SIZES:
+        names = ('confirm-balanced', 'confirm-upper')
+        paths = [sources.get(('cifar10',m,name)) for name in names]
+        if None in paths:
+            continue
+        choices = [json.loads(p.parent.with_suffix('.selection.json').read_text())['selected_variants'] for p in paths]
+        configs = [{v['method_label']: (v['variant_id'],v['config']) for v in rows} for rows in choices]
+        if configs[0] != configs[1]:
+            raise ValueError(f'CIFAR configurations differ between the two cohorts at m={m}')
+        seeds = [set(json.loads(p.read_text())['confirmation_seeds']) for p in paths]
+        if [len(group) for group in seeds] != [3,5] or seeds[0] & seeds[1]:
+            raise ValueError(f'Unexpected or shared CIFAR confirmation seeds at m={m}')
+        values = defaultdict(dict)
+        for r in observations:
+            if r['dataset']=='cifar10' and r['m']==m and r['cohort'] in names:
+                values[r['method']][r['seed']] = r['accuracy_pct']
+        means = {k:fmean(values[k].values()) for k in METHODS}
+        proposed = max(PROPOSED, key=means.get)
+        other = max(OTHER, key=means.get)
+        diffs = [values[proposed][seed]-values[other][seed] for seed in sorted(set.union(*seeds))]
+        pooled.append(dict(m=m, proposed=proposed, comparator=other, proposed_pct=means[proposed],
+                           comparator_pct=means[other], margin_pp=fmean(diffs), n_seeds=len(diffs),
+                           paired_wins=sum(d>1e-10 for d in diffs), paired_sd_pp=stdev(diffs)))
+        for k in METHODS:
+            method_rows.append(dict(m=m, method=k, mean_pct=means[k], sd_pp=stdev(values[k].values()),
+                                    variant_id=configs[0][k][0], seeds=' '.join(map(str,sorted(values[k])))))
+    if pooled:
+        if len(pooled)!=len(SIZES):
+            raise ValueError('The pooled CIFAR comparison requires complete, matching cohorts at all three sizes')
+        csv_write(output/'cifar_eight_seed_gaps.csv', pooled)
+        csv_write(output/'cifar_eight_seed_means.csv', method_rows)
+    return pooled
+
+
 def copy_seed_examples(root, output):
     rows = []
     for m in SIZES:
@@ -226,7 +264,7 @@ def copy_seed_examples(root, output):
     return rows
 
 
-def write_index(output, initial, common, displayed, locked, precision, examples):
+def write_index(output, initial, common, displayed, locked, precision, examples, pooled):
     lines = [
         '# Deployment accuracy with correlated diagonal fading',
         '',
@@ -306,6 +344,17 @@ def write_index(output, initial, common, displayed, locked, precision, examples)
                       'The margins in percentage points, for 200, 500 and 1000, are ' +
                       ', '.join(f"{100*precision['ranks'][str(m)]['integrated']['margin']:+.4f}" for m in SIZES)
                       + '. [Figure](moons_integrated/accuracy.pdf) · [Seven-method means](moons_integrated/accuracy_means.csv)', ''])
+    if pooled:
+        lines.extend(['## CIFAR-10 seed sensitivity at fixed hyperparameters', '',
+                      'At all three bank sizes the 12- and 16-candidate grids selected exactly the same seven model '
+                      'configurations. This descriptive check pools the three earlier and five new confirmation seeds. '
+                      'The broadest-common comparison above reports the five fresh seeds separately.', '',
+                      '| m | Best matched proposed | Strongest other | Mean gap (pp) | Positive pairs |',
+                      '|---:|---|---|---:|---:|'])
+        for r in pooled:
+            lines.append(f"| {r['m']} | {r['proposed']} {r['proposed_pct']:.3f}% | {r['comparator']} "
+                         f"{r['comparator_pct']:.3f}% | {r['margin_pp']:+.4f} | {r['paired_wins']}/8 |")
+        lines.extend(['', '[All seven method means](cifar_eight_seed_means.csv) · [Paired differences](cifar_eight_seed_gaps.csv)', ''])
     if examples:
         lines.extend(['## CIFAR-10 paired screening-seed illustrations', '',
                       'At each bank size, the seven original configurations were fixed by the two-seed validation mean. '
@@ -395,8 +444,9 @@ def assemble(root, output):
             shutil.copy2(source/name, dest/name)
     if (root/'historical_iid_m20.csv').is_file():
         shutil.copy2(root/'historical_iid_m20.csv', output/'historical_iid_m20.csv')
+    pooled = pool_identical_cifar_configs(sources, observations, output)
     examples = copy_seed_examples(root, output)
-    write_index(output, initial, common, display, locked, precision, examples)
+    write_index(output, initial, common, display, locked, precision, examples, pooled)
     print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
 
 
