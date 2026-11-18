@@ -76,6 +76,8 @@ def read_cohort(path, dataset, m):
     wins = group['highest_mean_methods']
     result = dict(dataset=dataset, m=m, cohort=stage, protocol=summary['stage'], seeds=' '.join(map(str, seeds)),
                   n_seeds=len(seeds), **budget, min_candidates=min(counts), max_candidates=max(counts),
+                  preliminary_candidates=selection.get('finalist_protocol', {}).get('preliminary_variants_per_label', 0),
+                  screening_seeds=len(selection['screening_seeds']),
                   top_method=' / '.join(wins), top_proposed=proposed, comparator=other,
                   proposed_pct=means[proposed], comparator_pct=means[other],
                   margin_pp=fmean(diffs), paired_sd_pp=stdev(diffs), paired_min_pp=min(diffs),
@@ -110,10 +112,51 @@ def broadest_common(cohorts, dataset):
     shared = set.intersection(*(set(rows) for rows in by_size.values()))
     def breadth(key):
         rows = [by_size[m][key] for m in SIZES]
-        return (min(r['min_candidates'] for r in rows), 'revalid' in key[0],
+        return (min(max(r['min_candidates'], r['preliminary_candidates']) for r in rows),
+                'revalid' in key[0], min(r['screening_seeds'] for r in rows),
                 min(r['n_seeds'] for r in rows), min(r['eval_draws'] for r in rows), key)
     key = max(shared, key=breadth)
     return [by_size[m][key] for m in SIZES]
+
+
+def validation_locked_pairs(sources, observations):
+    """Test the prespecified direction check only on the fresh nine-seed Fashion cohort."""
+    results = []
+    for m in SIZES:
+        key = ('fashionmnist', m, 'confirm-finalists')
+        if key not in sources:
+            continue
+        path = sources[key]
+        selection = json.loads(path.parent.with_suffix('.selection.json').read_text())
+        choices = {v['method_label']: v for v in selection['selected_variants']}
+        def validation_order(label):
+            v = choices[label]
+            return -v['validation_accuracy']['mean'], v['validation_cross_entropy']['mean'], label
+        proposed = min(PROPOSED, key=validation_order)
+        other = min(OTHER, key=validation_order)
+        seeds = json.loads(path.read_text())['confirmation_seeds']
+        if len(seeds) != 9 or len(selection['screening_seeds']) != 8 or set(seeds) & set(selection['screening_seeds']):
+            raise ValueError('Expected eight screening seeds and nine distinct fresh confirmation seeds')
+        scores = {(r['method'],r['seed']):r['accuracy_pct'] for r in observations
+                  if (r['dataset'],r['m'],r['cohort']) == key}
+        diffs = [scores[proposed,seed] - scores[other,seed] for seed in seeds]
+        wins = sum(d > 1e-10 for d in diffs)
+        losses = sum(d < -1e-10 for d in diffs)
+        n = wins + losses
+        p_value = min(1., 2*sum(math.comb(n,i) for i in range(min(wins,losses)+1))/2**n)
+        results.append(dict(dataset=key[0], m=m, cohort=key[2], validation_proposed=proposed,
+                            validation_comparator=other, proposed_test_pct=fmean(scores[proposed,k] for k in seeds),
+                            comparator_test_pct=fmean(scores[other,k] for k in seeds), mean_gap_pp=fmean(diffs),
+                            paired_sd_pp=stdev(diffs), wins=wins, losses=losses, ties=len(seeds)-n,
+                            exact_sign_p=p_value))
+    if results:
+        if len(results) != len(SIZES):
+            raise ValueError('The final sign analysis requires the full three-size family')
+        lower = 0.
+        for i, row in enumerate(sorted(results, key=lambda r:r['exact_sign_p'])):
+            lower = max(lower, min(1., (len(results)-i)*row['exact_sign_p']))
+            row['holm_p_three_sizes'] = lower
+    return results
 
 
 def gap_figure(rows, differences, output, title):
@@ -233,6 +276,9 @@ def assemble(root, output):
     output.mkdir(exist_ok=True, parents=True)
     csv_write(output/'all_rounds.csv', cohorts)
     csv_write(output/'all_seed_accuracies.csv', observations)
+    locked = validation_locked_pairs(sources, observations)
+    if locked:
+        csv_write(output/'fashion_validation_locked_pairs.csv', locked)
     inventory = []
     for name, rows, title in [('initial', initial, 'Initial comparison on common training seeds'),
                               ('common', common, 'Broadest common validation search'),
