@@ -1,0 +1,2604 @@
+{
+  "stage": "confirm",
+  "eval_draws": 20,
+  "screening_seeds": [
+    122101,
+    122102
+  ],
+  "sources": {
+    "screen": {
+      "sha256": "d1d788dd404af893a25e2563495241ff24ad67917dfe88934c43d3eba2c3777c",
+      "bytes": 64232
+    }
+  },
+  "validation_trials": [
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Matched",
+      "variant_id": "b5f055571a40",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7575000000000001,
+        "sd": 0.029462782549439456,
+        "ci95_low": 0.49278740132433163,
+        "ci95_high": 1.0222125986756685
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5253377676010131,
+        "sd": 0.018027295058758983,
+        "ci95_low": 0.3633689476469074,
+        "ci95_high": 0.6873065875551189
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_b5f055571a40_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_b5f055571a40_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Matched",
+      "variant_id": "96148885d965",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7583333333333333,
+        "sd": 0.0329983164553722,
+        "ci95_low": 0.4618552228165846,
+        "ci95_high": 1.054811443850082
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5166246477762858,
+        "sd": 0.028531937368471462,
+        "ci95_low": 0.26027536123535155,
+        "ci95_high": 0.7729739343172201
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_96148885d965_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_96148885d965_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Matched",
+      "variant_id": "5e1834a74cf9",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7466666666666666,
+        "sd": 0.028284271247461926,
+        "ci95_low": 0.4925425719380245,
+        "ci95_high": 1.0007907613953086
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5275843032201131,
+        "sd": 0.009609106072553041,
+        "ci95_low": 0.44124991049439766,
+        "ci95_high": 0.6139186959458285
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_5e1834a74cf9_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_5e1834a74cf9_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Matched",
+      "variant_id": "44a8173a9c88",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7508333333333332,
+        "sd": 0.03417682775734988,
+        "ci95_low": 0.4437667188695569,
+        "ci95_high": 1.0578999477971096
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5317767858505249,
+        "sd": 0.003223069534148521,
+        "ci95_low": 0.5028186550064624,
+        "ci95_high": 0.5607349166945874
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_44a8173a9c88_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_44a8173a9c88_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Matched",
+      "variant_id": "83c8fe0935df",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7558333333333334,
+        "sd": 0.029462782549439532,
+        "ci95_low": 0.49112073465766426,
+        "ci95_high": 1.0205459320090025
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5244793812433879,
+        "sd": 0.016509446554386627,
+        "ci95_low": 0.3761478890370657,
+        "ci95_high": 0.67281087344971
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_83c8fe0935df_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_83c8fe0935df_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Matched",
+      "variant_id": "62a625b78307",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7516666666666666,
+        "sd": 0.028284271247461926,
+        "ci95_low": 0.4975425719380245,
+        "ci95_high": 1.0057907613953088
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5212463188171387,
+        "sd": 0.017553400389766362,
+        "ci95_low": 0.36353527353577747,
+        "ci95_high": 0.6789573640984998
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_62a625b78307_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_62a625b78307_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Matched",
+      "variant_id": "264a8c5e0f11",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7458333333333332,
+        "sd": 0.024748737341529263,
+        "ci95_low": 0.5234747504457706,
+        "ci95_high": 0.9681919162208958
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5315493043263753,
+        "sd": 0.003975618935007869,
+        "ci95_low": 0.49582978537516376,
+        "ci95_high": 0.5672688232775868
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_264a8c5e0f11_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_264a8c5e0f11_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Matched",
+      "variant_id": "a67488b05ae2",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7441666666666666,
+        "sd": 0.024748737341529263,
+        "ci95_low": 0.5218080837791041,
+        "ci95_high": 0.9665252495542291
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5322159862518311,
+        "sd": 0.008388041064487033,
+        "ci95_low": 0.45685242735332415,
+        "ci95_high": 0.607579545150338
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_a67488b05ae2_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_a67488b05ae2_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T1-Matched",
+      "variant_id": "4532fe577e38",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.0006322181980336871,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7558333333333334,
+        "sd": 0.029462782549439532,
+        "ci95_low": 0.49112073465766426,
+        "ci95_high": 1.0205459320090025
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5195451641082763,
+        "sd": 0.02335054542595316,
+        "ci95_low": 0.3097488371718749,
+        "ci95_high": 0.7293414910446778
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_4532fe577e38_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_4532fe577e38_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T1-Matched",
+      "variant_id": "65f16558619d",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.01,
+        "eta_data": 0.006322181980336872,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.755,
+        "sd": 0.028284271247461926,
+        "ci95_low": 0.5008759052713578,
+        "ci95_high": 1.0091240947286422
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5222496032714844,
+        "sd": 0.020549247834222906,
+        "ci95_low": 0.3376219366246018,
+        "ci95_high": 0.706877269918367
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_65f16558619d_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_65f16558619d_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T1-Matched",
+      "variant_id": "1f8e134882dc",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.0006322181980336871,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7458333333333333,
+        "sd": 0.0271057599454844,
+        "ci95_low": 0.5022977425517176,
+        "ci95_high": 0.9893689241149491
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5277188126246134,
+        "sd": 0.009499461327131064,
+        "ci95_low": 0.44236953885170155,
+        "ci95_high": 0.6130680863975253
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_1f8e134882dc_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_1f8e134882dc_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T1-Matched",
+      "variant_id": "2773dfc43e9e",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.01,
+        "eta_data": 0.006322181980336872,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7449999999999999,
+        "sd": 0.025927248643506793,
+        "ci95_low": 0.512052913165411,
+        "ci95_high": 0.9779470868345888
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5265340423583985,
+        "sd": 0.0130636168769085,
+        "ci95_low": 0.40916210147715404,
+        "ci95_high": 0.643905983239643
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_2773dfc43e9e_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_2773dfc43e9e_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T2-Matched",
+      "variant_id": "6ce65e949891",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.0,
+        "eta_data": 0.0010687583732204423,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7558333333333334,
+        "sd": 0.029462782549439532,
+        "ci95_low": 0.49112073465766426,
+        "ci95_high": 1.0205459320090025
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5195443916320801,
+        "sd": 0.023351242253848613,
+        "ci95_low": 0.30974180394543466,
+        "ci95_high": 0.7293469793187255
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_6ce65e949891_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_6ce65e949891_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T2-Matched",
+      "variant_id": "4bd8c6d28ecf",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.0,
+        "eta_data": 0.010687583732204424,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.755,
+        "sd": 0.028284271247461926,
+        "ci95_low": 0.5008759052713578,
+        "ci95_high": 1.0091240947286422
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5222525564829509,
+        "sd": 0.0205678823608445,
+        "ci95_low": 0.3374574652569806,
+        "ci95_high": 0.7070476477089211
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_4bd8c6d28ecf_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_4bd8c6d28ecf_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T2-Matched",
+      "variant_id": "7e693e81ae31",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.0,
+        "eta_data": 0.0010687583732204423,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7458333333333333,
+        "sd": 0.0271057599454844,
+        "ci95_low": 0.5022977425517176,
+        "ci95_high": 0.9893689241149491
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5277204004923504,
+        "sd": 0.009501814807151827,
+        "ci95_low": 0.4423499815403916,
+        "ci95_high": 0.6130908194443091
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_7e693e81ae31_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_7e693e81ae31_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T2-Matched",
+      "variant_id": "89efb67685b0",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.0,
+        "eta_data": 0.010687583732204424,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7449999999999999,
+        "sd": 0.025927248643506793,
+        "ci95_low": 0.512052913165411,
+        "ci95_high": 0.9779470868345888
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5265343379974365,
+        "sd": 0.013221769835176705,
+        "ci95_low": 0.4077414491625774,
+        "ci95_high": 0.6453272268322957
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_89efb67685b0_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_89efb67685b0_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Perfect",
+      "variant_id": "4272858a9bf2",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6091666666666666,
+        "sd": 0.003535533905932819,
+        "ci95_low": 0.5774011548255856,
+        "ci95_high": 0.6409321785077476
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.9584368960062664,
+        "sd": 0.05391420365849732,
+        "ci95_low": 0.4740369948081501,
+        "ci95_high": 1.4428367972043827
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_4272858a9bf2_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_4272858a9bf2_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Perfect",
+      "variant_id": "89c23128ba7e",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6066666666666667,
+        "sd": 0.007071067811865481,
+        "ci95_low": 0.5431356429845061,
+        "ci95_high": 0.6701976903488273
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.9828947257995605,
+        "sd": 0.08945747045771286,
+        "ci95_low": 0.17915124243792047,
+        "ci95_high": 1.7866382091612005
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_89c23128ba7e_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_89c23128ba7e_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Perfect",
+      "variant_id": "7aa89612ca16",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.61,
+        "sd": 0.004714045207910269,
+        "ci95_low": 0.5676459842118934,
+        "ci95_high": 0.6523540157881066
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.3003854179382324,
+        "sd": 0.19208469142429627,
+        "ci95_low": -0.4254270625162566,
+        "ci95_high": 3.0261978983927214
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_7aa89612ca16_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_7aa89612ca16_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Perfect",
+      "variant_id": "03616e15d9ce",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6091666666666666,
+        "sd": 0.003535533905932819,
+        "ci95_low": 0.5774011548255856,
+        "ci95_high": 0.6409321785077476
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.132010637919108,
+        "sd": 0.04663477981024923,
+        "ci95_low": 0.7130137651178479,
+        "ci95_high": 1.551007510720368
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_03616e15d9ce_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_03616e15d9ce_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Perfect",
+      "variant_id": "eccd69dedede",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6091666666666666,
+        "sd": 0.003535533905932819,
+        "ci95_low": 0.5774011548255856,
+        "ci95_high": 0.6409321785077476
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.9584247461954752,
+        "sd": 0.053900968424148835,
+        "ci95_low": 0.4741437588600463,
+        "ci95_high": 1.4427057335309041
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_eccd69dedede_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_eccd69dedede_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Perfect",
+      "variant_id": "8709381bebfa",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6091666666666666,
+        "sd": 0.003535533905932819,
+        "ci95_low": 0.5774011548255856,
+        "ci95_high": 0.6409321785077476
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.958303098678589,
+        "sd": 0.05376666046689415,
+        "ci95_low": 0.4752288204626415,
+        "ci95_high": 1.4413773768945366
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_8709381bebfa_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_8709381bebfa_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Perfect",
+      "variant_id": "98d7bdba7648",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6099999999999999,
+        "sd": 0.004714045207910347,
+        "ci95_low": 0.5676459842118926,
+        "ci95_high": 0.6523540157881071
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.1281301053365071,
+        "sd": 0.05147561172980801,
+        "ci95_low": 0.6656400833383491,
+        "ci95_high": 1.5906201273346652
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_98d7bdba7648_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_98d7bdba7648_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Perfect",
+      "variant_id": "f29d817af45a",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.61,
+        "sd": 0.004714045207910269,
+        "ci95_low": 0.5676459842118934,
+        "ci95_high": 0.6523540157881066
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.2985185845692953,
+        "sd": 0.18977788088978312,
+        "ci95_low": -0.4065680255360946,
+        "ci95_high": 3.003605194674685
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_f29d817af45a_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_f29d817af45a_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "e3e2c394c589",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.0,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6091666666666666,
+        "sd": 0.003535533905932819,
+        "ci95_low": 0.5774011548255856,
+        "ci95_high": 0.6409321785077476
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.9584289646148683,
+        "sd": 0.05390753658902077,
+        "ci95_low": 0.47408896465940376,
+        "ci95_high": 1.4427689645703328
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_e3e2c394c589_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_e3e2c394c589_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "374dbd94853a",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.0,
+        "eta_data": 0.03,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.6091666666666666,
+        "sd": 0.003535533905932819,
+        "ci95_low": 0.5774011548255856,
+        "ci95_high": 0.6409321785077476
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.9583302021026612,
+        "sd": 0.05380123212183264,
+        "ci95_low": 0.47494530989077055,
+        "ci95_high": 1.4417150943145518
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_374dbd94853a_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_374dbd94853a_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "c686c9ab6a9f",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.0,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.61,
+        "sd": 0.004714045207910269,
+        "ci95_low": 0.5676459842118934,
+        "ci95_high": 0.6523540157881066
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.3003983497619627,
+        "sd": 0.19214561666067184,
+        "ci95_low": -0.4259615222234807,
+        "ci95_high": 3.0267582217474063
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_c686c9ab6a9f_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_c686c9ab6a9f_s122102"
+      ]
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "f3ebfeb5efad",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.0,
+        "eta_data": 0.03,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.61,
+        "sd": 0.004714045207910269,
+        "ci95_low": 0.5676459842118934,
+        "ci95_high": 0.6523540157881066
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.2992552693684896,
+        "sd": 0.19086155616303127,
+        "ci95_low": -0.4155677767717765,
+        "ci95_high": 3.0140783155087556
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_f3ebfeb5efad_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_f3ebfeb5efad_s122102"
+      ]
+    }
+  ],
+  "selected_variants": [
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Matched",
+      "variant_id": "96148885d965",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7583333333333333,
+        "sd": 0.0329983164553722,
+        "ci95_low": 0.4618552228165846,
+        "ci95_high": 1.054811443850082
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5166246477762858,
+        "sd": 0.028531937368471462,
+        "ci95_low": 0.26027536123535155,
+        "ci95_high": 0.7729739343172201
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_96148885d965_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Matched_96148885d965_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "ERM-Perfect",
+      "variant_id": "7aa89612ca16",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.61,
+        "sd": 0.004714045207910269,
+        "ci95_low": 0.5676459842118934,
+        "ci95_high": 0.6523540157881066
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.3003854179382324,
+        "sd": 0.19208469142429627,
+        "ci95_low": -0.4254270625162566,
+        "ci95_high": 3.0261978983927214
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_7aa89612ca16_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_ERM_Perfect_7aa89612ca16_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Matched",
+      "variant_id": "83c8fe0935df",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7558333333333334,
+        "sd": 0.029462782549439532,
+        "ci95_low": 0.49112073465766426,
+        "ci95_high": 1.0205459320090025
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5244793812433879,
+        "sd": 0.016509446554386627,
+        "ci95_low": 0.3761478890370657,
+        "ci95_high": 0.67281087344971
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_83c8fe0935df_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Matched_83c8fe0935df_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "L2-Perfect",
+      "variant_id": "f29d817af45a",
+      "family": "baseline",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.61,
+        "sd": 0.004714045207910269,
+        "ci95_low": 0.5676459842118934,
+        "ci95_high": 0.6523540157881066
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.2985185845692953,
+        "sd": 0.18977788088978312,
+        "ci95_low": -0.4065680255360946,
+        "ci95_high": 3.003605194674685
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_f29d817af45a_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_L2_Perfect_f29d817af45a_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "f3ebfeb5efad",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.03,
+        "eta_channel": 0.0,
+        "eta_data": 0.03,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.61,
+        "sd": 0.004714045207910269,
+        "ci95_low": 0.5676459842118934,
+        "ci95_high": 0.6523540157881066
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.2992552693684896,
+        "sd": 0.19086155616303127,
+        "ci95_low": -0.4155677767717765,
+        "ci95_high": 3.0140783155087556
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_f3ebfeb5efad_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_Proposed_Perfect_f3ebfeb5efad_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T1-Matched",
+      "variant_id": "4532fe577e38",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.001,
+        "eta_data": 0.0006322181980336871,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7558333333333334,
+        "sd": 0.029462782549439532,
+        "ci95_low": 0.49112073465766426,
+        "ci95_high": 1.0205459320090025
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5195451641082763,
+        "sd": 0.02335054542595316,
+        "ci95_low": 0.3097488371718749,
+        "ci95_high": 0.7293414910446778
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_4532fe577e38_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T1_Matched_4532fe577e38_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "method_label": "T2-Matched",
+      "variant_id": "6ce65e949891",
+      "family": "proposed",
+      "config": {
+        "dataset": "moons",
+        "architecture": "mlp",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 16,
+        "train_size": 800,
+        "val_size": 200,
+        "batch_size": 128,
+        "epochs": 150,
+        "lr": 0.01,
+        "eta_channel": 0.0,
+        "eta_data": 0.0010687583732204423,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 2000,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.7558333333333334,
+        "sd": 0.029462782549439532,
+        "ci95_low": 0.49112073465766426,
+        "ci95_high": 1.0205459320090025
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 0.5195443916320801,
+        "sd": 0.023351242253848613,
+        "ci95_low": 0.30974180394543466,
+        "ci95_high": 0.7293469793187255
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_6ce65e949891_s122101",
+        "diagonal_fading_accuracy_screen_moons_diagonal_fading_r0p35_m2000_T2_Matched_6ce65e949891_s122102"
+      ],
+      "rank": 1
+    }
+  ],
+  "validation_proposed_margins": {
+    "moons_diagonal_fading_r0p35_m2000": -0.0024999999999999467
+  },
+  "selection_rule": "Highest mean validation accuracy, then lowest mean validation CE, then variant ID"
+}

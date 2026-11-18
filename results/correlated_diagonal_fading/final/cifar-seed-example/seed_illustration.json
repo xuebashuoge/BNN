@@ -1,0 +1,239 @@
+{
+  "scope": "Exploratory original-screen seed illustration. The mean describes both screened seeds. The independent three-seed confirmation is a separate comparison.",
+  "units": "CSV accuracies are percentages; JSON accuracy scores and margins are fractions.",
+  "validation_selected_seed": 122101,
+  "validation_ranking": {
+    "122101": {
+      "best_matched_proposed": [
+        "T1-Matched"
+      ],
+      "best_other_methods": [
+        "ERM-Matched"
+      ],
+      "margin": 0.017800000000000038,
+      "above_all_other_methods": true
+    },
+    "122102": {
+      "best_matched_proposed": [
+        "T2-Matched"
+      ],
+      "best_other_methods": [
+        "ERM-Matched"
+      ],
+      "margin": -0.031066666666666687,
+      "above_all_other_methods": false
+    }
+  },
+  "test_ranking_by_seed": {
+    "122101": {
+      "best_matched_proposed": [
+        "T1-Matched"
+      ],
+      "best_other_methods": [
+        "ERM-Matched"
+      ],
+      "margin": 0.01956800000000003,
+      "above_all_other_methods": true
+    },
+    "122102": {
+      "best_matched_proposed": [
+        "T2-Matched"
+      ],
+      "best_other_methods": [
+        "ERM-Matched"
+      ],
+      "margin": -0.02997799999999995,
+      "above_all_other_methods": false
+    }
+  },
+  "test_ranking_two_seed_mean": {
+    "best_matched_proposed": [
+      "T2-Matched"
+    ],
+    "best_other_methods": [
+      "ERM-Matched"
+    ],
+    "margin": -0.007392999999999983,
+    "above_all_other_methods": false
+  },
+  "m": 2000,
+  "deployment_channel": {
+    "kind": "diagonal_fading",
+    "rho_c": 0.35
+  },
+  "seeds": [
+    122101,
+    122102
+  ],
+  "test_draws": 100,
+  "test_examples": 10000,
+  "protocol": {
+    "sha256": "3ba55d86f3789cc2621a935974474cc7843bcff05e4df303c25e0fb83d915d3c",
+    "bytes": 10665
+  },
+  "rows": [
+    {
+      "method": "ERM-Matched",
+      "variant_id": "4420ca51ba52",
+      "validation_pct_s122101": 51.68000000000001,
+      "test_pct_s122101": 51.5145,
+      "validation_pct_s122102": 55.52666666666667,
+      "test_pct_s122102": 54.5802,
+      "test_mean_pct_two_seeds": 53.04735
+    },
+    {
+      "method": "L2-Matched",
+      "variant_id": "60bf483e8260",
+      "validation_pct_s122101": 50.040000000000006,
+      "test_pct_s122101": 50.234,
+      "validation_pct_s122102": 53.733333333333334,
+      "test_pct_s122102": 52.8288,
+      "test_mean_pct_two_seeds": 51.531400000000005
+    },
+    {
+      "method": "T1-Matched",
+      "variant_id": "07045573bda9",
+      "validation_pct_s122101": 53.46000000000001,
+      "test_pct_s122101": 53.4713,
+      "validation_pct_s122102": 50.953333333333326,
+      "test_pct_s122102": 50.2763,
+      "test_mean_pct_two_seeds": 51.87379999999999
+    },
+    {
+      "method": "T2-Matched",
+      "variant_id": "28d746f7d720",
+      "validation_pct_s122101": 52.95333333333333,
+      "test_pct_s122101": 53.033699999999996,
+      "validation_pct_s122102": 52.42,
+      "test_pct_s122102": 51.58240000000001,
+      "test_mean_pct_two_seeds": 52.30805000000001
+    },
+    {
+      "method": "ERM-Perfect",
+      "variant_id": "3b3d91dad956",
+      "validation_pct_s122101": 18.46,
+      "test_pct_s122101": 17.895599999999998,
+      "validation_pct_s122102": 19.799999999999997,
+      "test_pct_s122102": 19.151300000000003,
+      "test_mean_pct_two_seeds": 18.52345
+    },
+    {
+      "method": "L2-Perfect",
+      "variant_id": "1b469953437e",
+      "validation_pct_s122101": 18.573333333333334,
+      "test_pct_s122101": 18.0978,
+      "validation_pct_s122102": 18.633333333333333,
+      "test_pct_s122102": 18.405800000000003,
+      "test_mean_pct_two_seeds": 18.251800000000003
+    },
+    {
+      "method": "Proposed-Perfect",
+      "variant_id": "796507b144a5",
+      "validation_pct_s122101": 18.64,
+      "test_pct_s122101": 18.1528,
+      "validation_pct_s122102": 19.113333333333333,
+      "test_pct_s122102": 18.6919,
+      "test_mean_pct_two_seeds": 18.422349999999998
+    }
+  ],
+  "evaluations": [
+    {
+      "method": "ERM-Matched",
+      "seed": 122101,
+      "validation_accuracy": 0.5168,
+      "test_accuracy": 0.515145,
+      "evaluation_sha256": "739c6e4168066148f7529e866e4ea089192554e09a4f6f61385951f65c4e8179"
+    },
+    {
+      "method": "L2-Matched",
+      "seed": 122101,
+      "validation_accuracy": 0.5004000000000001,
+      "test_accuracy": 0.50234,
+      "evaluation_sha256": "4cab6bef244cd0ff0cc06bf5fd5546ac383addbc99f7ac6b6a0ff7db2647ebe3"
+    },
+    {
+      "method": "T1-Matched",
+      "seed": 122101,
+      "validation_accuracy": 0.5346000000000001,
+      "test_accuracy": 0.534713,
+      "evaluation_sha256": "07572d67f0f3201151df35451a21d289190790abc4689abe8d780b41e5d5b9d1"
+    },
+    {
+      "method": "T2-Matched",
+      "seed": 122101,
+      "validation_accuracy": 0.5295333333333333,
+      "test_accuracy": 0.530337,
+      "evaluation_sha256": "08c4f34a4111fa51050e814e9e4f5221706872be95c7d66eb3b4fccb149ea683"
+    },
+    {
+      "method": "ERM-Perfect",
+      "seed": 122101,
+      "validation_accuracy": 0.18460000000000001,
+      "test_accuracy": 0.17895599999999998,
+      "evaluation_sha256": "0352aa625b48974b1c0b8d47690d49a92e02e6e4762383046c1c459ffa4d34f9"
+    },
+    {
+      "method": "L2-Perfect",
+      "seed": 122101,
+      "validation_accuracy": 0.18573333333333333,
+      "test_accuracy": 0.180978,
+      "evaluation_sha256": "2283f3b9a4bea82ca4445b888cb92ec1377ac5ace68c777306ce2c3db00772cb"
+    },
+    {
+      "method": "Proposed-Perfect",
+      "seed": 122101,
+      "validation_accuracy": 0.1864,
+      "test_accuracy": 0.181528,
+      "evaluation_sha256": "07e6ad28e2f060692a35093c3a2219d8d5e464038d791604f910e693b2c9823d"
+    },
+    {
+      "method": "ERM-Matched",
+      "seed": 122102,
+      "validation_accuracy": 0.5552666666666667,
+      "test_accuracy": 0.545802,
+      "evaluation_sha256": "167ac88dfe34a7f877479ec4f8f0bccbc0163a9d7fd40337b78cccefa7ac393b"
+    },
+    {
+      "method": "L2-Matched",
+      "seed": 122102,
+      "validation_accuracy": 0.5373333333333333,
+      "test_accuracy": 0.528288,
+      "evaluation_sha256": "1a0fa57a369808d7c74db548713d380b25bc27a066b5ba0f1be3a6ca52b42d7f"
+    },
+    {
+      "method": "T1-Matched",
+      "seed": 122102,
+      "validation_accuracy": 0.5095333333333333,
+      "test_accuracy": 0.502763,
+      "evaluation_sha256": "28ed95679bdf7ca11ff5b830c8ec0e5abb2f6dddd9f494e20cd5ca2e6f300e39"
+    },
+    {
+      "method": "T2-Matched",
+      "seed": 122102,
+      "validation_accuracy": 0.5242,
+      "test_accuracy": 0.5158240000000001,
+      "evaluation_sha256": "56a40c455e5a6d0a6a6d47cefab9aca2f98f12686aa3b25bfb5243942b26d7fe"
+    },
+    {
+      "method": "ERM-Perfect",
+      "seed": 122102,
+      "validation_accuracy": 0.19799999999999998,
+      "test_accuracy": 0.19151300000000002,
+      "evaluation_sha256": "315852d4e80e63086f1b77af5557d59c475b3bffdcd99cc20bc0132ce7eb7db1"
+    },
+    {
+      "method": "L2-Perfect",
+      "seed": 122102,
+      "validation_accuracy": 0.18633333333333332,
+      "test_accuracy": 0.18405800000000003,
+      "evaluation_sha256": "b216fccd5ccacbbd58b00351a3fee6ce8d37443e30fec53e87aaa2ad4151d998"
+    },
+    {
+      "method": "Proposed-Perfect",
+      "seed": 122102,
+      "validation_accuracy": 0.19113333333333335,
+      "test_accuracy": 0.186919,
+      "evaluation_sha256": "76cd8e7092ee49fa3b9aa51f091c26572103ab8bda0077d1e9e8b6b60d7c941d"
+    }
+  ]
+}

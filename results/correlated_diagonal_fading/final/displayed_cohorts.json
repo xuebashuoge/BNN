@@ -1,0 +1,34 @@
+{
+  "mnist": {
+    "cohort": "initial",
+    "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/mnist/confirm/accuracy_summary.json",
+    "winner": [
+      "T1-Matched"
+    ],
+    "margin_pp": 0.11983333333334123
+  },
+  "fashionmnist": {
+    "cohort": "expanded",
+    "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/fashionmnist/confirm-refine/accuracy_summary.json",
+    "winner": [
+      "T1-Matched"
+    ],
+    "margin_pp": 0.22500000000000853
+  },
+  "cifar10": {
+    "cohort": "balanced",
+    "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/cifar10/confirm-balanced/accuracy_summary.json",
+    "winner": [
+      "T1-Matched"
+    ],
+    "margin_pp": 1.5233333333333432
+  },
+  "moons": {
+    "cohort": "initial",
+    "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/moons/confirm/accuracy_summary.json",
+    "winner": [
+      "T2-Matched"
+    ],
+    "margin_pp": 0.006166666666662657
+  }
+}

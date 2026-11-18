@@ -1,0 +1,2604 @@
+{
+  "stage": "confirm",
+  "eval_draws": 20,
+  "screening_seeds": [
+    122101,
+    122102
+  ],
+  "sources": {
+    "screen": {
+      "sha256": "557079cd6e679b7a1b5e2f35392ebc67c02a9f0daed60d179e35303004f7bda8",
+      "bytes": 65116
+    }
+  },
+  "validation_trials": [
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Matched",
+      "variant_id": "87be67cc59dd",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4283,
+        "sd": 0.016452017775606998,
+        "ci95_low": 0.2804844848995067,
+        "ci95_high": 0.5761155151004933
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8636244806289675,
+        "sd": 0.09212590409941405,
+        "ci95_low": 1.0359060722071098,
+        "ci95_high": 2.691342889050825
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_87be67cc59dd_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_87be67cc59dd_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Matched",
+      "variant_id": "aff3b8a78b85",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.44430000000000003,
+        "sd": 0.010795163526114575,
+        "ci95_low": 0.3473093038452355,
+        "ci95_high": 0.5412906961547646
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.794059178638458,
+        "sd": 0.054366789465319074,
+        "ci95_low": 1.305592955298281,
+        "ci95_high": 2.282525401978635
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_aff3b8a78b85_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_aff3b8a78b85_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Matched",
+      "variant_id": "c1091f23056a",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.3178,
+        "sd": 0.3009446460729947,
+        "ci95_low": -2.3860803679127502,
+        "ci95_high": 3.0216803679127504
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.9055439136187236,
+        "sd": 0.561595441046558,
+        "ci95_low": -3.1401909335357887,
+        "ci95_high": 6.951278760773236
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_c1091f23056a_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_c1091f23056a_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Matched",
+      "variant_id": "3869113f7f22",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.3266333333333333,
+        "sd": 0.3161710120945449,
+        "ci95_low": -2.514050505575002,
+        "ci95_high": 3.167317172241668
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8475492458661398,
+        "sd": 0.6452764273702254,
+        "ci95_low": -3.950029433835767,
+        "ci95_high": 7.645127925568047
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_3869113f7f22_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_3869113f7f22_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Matched",
+      "variant_id": "65a11fde4bb8",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4071,
+        "sd": 0.060104076400856514,
+        "ci95_low": -0.13291370129836377,
+        "ci95_high": 0.9471137012983638
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 2.0180642507394153,
+        "sd": 0.40008163029611465,
+        "ci95_low": -1.5765265812829141,
+        "ci95_high": 5.612655082761744
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_65a11fde4bb8_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_65a11fde4bb8_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Matched",
+      "variant_id": "f6f651096fa1",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.45840000000000003,
+        "sd": 0.017913371790059234,
+        "ci95_low": 0.29745474000519323,
+        "ci95_high": 0.6193452599948068
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.6964347997665405,
+        "sd": 0.08876162576401461,
+        "ci95_low": 0.8989432329316049,
+        "ci95_high": 2.4939263666014764
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_f6f651096fa1_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_f6f651096fa1_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Matched",
+      "variant_id": "0363510e9bce",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.43043333333333333,
+        "sd": 0.08791694312752739,
+        "ci95_low": -0.35946906111486165,
+        "ci95_high": 1.2203357277815283
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.6734570414861043,
+        "sd": 0.19113699883299698,
+        "ci95_low": -0.04384075885738192,
+        "ci95_high": 3.3907548418295903
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_0363510e9bce_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_0363510e9bce_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Matched",
+      "variant_id": "d640271a5993",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.48916666666666664,
+        "sd": 0.03417682775734976,
+        "ci95_low": 0.18210005220289133,
+        "ci95_high": 0.796233281130442
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.5735904184659324,
+        "sd": 0.00043294609472205406,
+        "ci95_low": 1.5697005521361638,
+        "ci95_high": 1.577480284795701
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_d640271a5993_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_d640271a5993_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T1-Matched",
+      "variant_id": "d52226ea15c8",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.02131983474456014,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4282,
+        "sd": 0.029792765713993218,
+        "ci95_low": 0.16052262021916375,
+        "ci95_high": 0.6958773797808363
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8238198845068614,
+        "sd": 0.12578826874435664,
+        "ci95_low": 0.693657129296712,
+        "ci95_high": 2.953982639717011
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_d52226ea15c8_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_d52226ea15c8_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T1-Matched",
+      "variant_id": "a40b63526f45",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.01,
+        "eta_data": 0.21319834744560137,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4435333333333334,
+        "sd": 0.021684607956387426,
+        "ci95_low": 0.24870486070804154,
+        "ci95_high": 0.6383618059586252
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8131288209597272,
+        "sd": 0.10972056924348925,
+        "ci95_low": 0.8273286181485965,
+        "ci95_high": 2.798929023770858
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_a40b63526f45_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_a40b63526f45_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T1-Matched",
+      "variant_id": "90ee37561cc1",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.02131983474456014,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4289666666666667,
+        "sd": 0.16362450916656718,
+        "ci95_low": -1.0411412213385276,
+        "ci95_high": 1.899074554671861
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.6383482162157694,
+        "sd": 0.27238274667850404,
+        "ci95_low": -0.8089136670327597,
+        "ci95_high": 4.085610099464299
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_90ee37561cc1_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_90ee37561cc1_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T1-Matched",
+      "variant_id": "ee70d4a9ddb5",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.01,
+        "eta_data": 0.21319834744560137,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.40970000000000006,
+        "sd": 0.14222274392265433,
+        "ci95_low": -0.868120656327188,
+        "ci95_high": 1.6875206563271883
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8138359502633414,
+        "sd": 0.3864240620473355,
+        "ci95_low": -1.6580464995259794,
+        "ci95_high": 5.285718400052662
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_ee70d4a9ddb5_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_ee70d4a9ddb5_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T2-Matched",
+      "variant_id": "faaaedbc4b74",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.0,
+        "eta_data": 0.0019978035746287064,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4232,
+        "sd": 0.02818999034330373,
+        "ci95_low": 0.16992298558711993,
+        "ci95_high": 0.6764770144128801
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8924852002620698,
+        "sd": 0.14251547109386825,
+        "ci95_low": 0.612034494649313,
+        "ci95_high": 3.1729359058748265
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_faaaedbc4b74_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_faaaedbc4b74_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T2-Matched",
+      "variant_id": "0607bf2fddc5",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.0,
+        "eta_data": 0.019978035746287065,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4356333333333334,
+        "sd": 0.03860803025278548,
+        "ci95_low": 0.08875394402873732,
+        "ci95_high": 0.7825127226379294
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8890358679771422,
+        "sd": 0.23410379515262075,
+        "ci95_low": -0.21430328102206198,
+        "ci95_high": 3.9923750169763466
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_0607bf2fddc5_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_0607bf2fddc5_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T2-Matched",
+      "variant_id": "09ab94db452a",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0,
+        "eta_data": 0.0019978035746287064,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.3320666666666667,
+        "sd": 0.3211207595628508,
+        "ci95_low": -2.553088888819181,
+        "ci95_high": 3.217222222152514
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8505917129675546,
+        "sd": 0.6393097219209916,
+        "ci95_low": -3.893378245210898,
+        "ci95_high": 7.594561671146008
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_09ab94db452a_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_09ab94db452a_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T2-Matched",
+      "variant_id": "5c6c3e776590",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0,
+        "eta_data": 0.019978035746287065,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4395666666666667,
+        "sd": 0.09432804461028549,
+        "ci95_low": -0.40793718925335437,
+        "ci95_high": 1.2870705225866879
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.7084444184780123,
+        "sd": 0.16350601729188044,
+        "ci95_low": 0.2394011377283496,
+        "ci95_high": 3.177487699227675
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_5c6c3e776590_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_5c6c3e776590_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Perfect",
+      "variant_id": "54b8309530d8",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.1781333333333333,
+        "sd": 0.0038655170704864463,
+        "ci95_low": 0.1434030403870857,
+        "ci95_high": 0.21286362627958091
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 8.611571986007691,
+        "sd": 3.3519217744127965,
+        "ci95_low": -21.50425030516454,
+        "ci95_high": 38.727394277179926
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_54b8309530d8_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_54b8309530d8_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Perfect",
+      "variant_id": "8432edfa2727",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.1813,
+        "sd": 0.010606601717798222,
+        "ci95_low": 0.0860034644767592,
+        "ci95_high": 0.27659653552324076
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 11.885841136169432,
+        "sd": 3.378434312632649,
+        "ci95_low": -18.46818686004401,
+        "ci95_high": 42.23986913238288
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_8432edfa2727_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_8432edfa2727_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Perfect",
+      "variant_id": "c7372a86cc5b",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.1913,
+        "sd": 0.009475230867899713,
+        "ci95_low": 0.10616842826590518,
+        "ci95_high": 0.2764315717340948
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 15.93548232167562,
+        "sd": 2.377470336103318,
+        "ci95_low": -5.425241156772538,
+        "ci95_high": 37.29620580012378
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_c7372a86cc5b_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_c7372a86cc5b_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Perfect",
+      "variant_id": "05eeef45bad0",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.17916666666666667,
+        "sd": 0.009475230867899713,
+        "ci95_low": 0.09403509493257185,
+        "ci95_high": 0.2642982384007615
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 13.744502000808717,
+        "sd": 9.884968670789293,
+        "ci95_low": -75.06841783394685,
+        "ci95_high": 102.5574218355643
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_05eeef45bad0_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_05eeef45bad0_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Perfect",
+      "variant_id": "abf0a544e78b",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.17506666666666665,
+        "sd": 0.015179225569471216,
+        "ci95_low": 0.038686735828962204,
+        "ci95_high": 0.3114465975043711
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 9.386750541432699,
+        "sd": 7.101522813679336,
+        "ci95_low": -54.417900475800124,
+        "ci95_high": 73.19140155866552
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_abf0a544e78b_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_abf0a544e78b_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Perfect",
+      "variant_id": "2f426d9843a7",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.17833333333333332,
+        "sd": 0.006505382386916227,
+        "ci95_low": 0.11988479154574577,
+        "ci95_high": 0.23678187512092086
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 7.628185944112142,
+        "sd": 2.5111097140563112,
+        "ci95_low": -14.933239707118735,
+        "ci95_high": 30.189611595343017
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_2f426d9843a7_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_2f426d9843a7_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Perfect",
+      "variant_id": "e587d2b7b2c5",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-06,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.1773,
+        "sd": 0.009003826347108675,
+        "ci95_low": 0.09640382984471595,
+        "ci95_high": 0.25819617015528407
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 16.537746652730306,
+        "sd": 11.050582669017583,
+        "ci95_low": -82.74779945233716,
+        "ci95_high": 115.82329275779777
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_e587d2b7b2c5_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_e587d2b7b2c5_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Perfect",
+      "variant_id": "4e66bd4e4ed5",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.18603333333333333,
+        "sd": 0.000424264068711921,
+        "ci95_low": 0.18222147191240376,
+        "ci95_high": 0.1898451947542629
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 7.0377190240224206,
+        "sd": 2.1387661628935173,
+        "ci95_low": -12.17833254846907,
+        "ci95_high": 26.25377059651391
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_4e66bd4e4ed5_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_4e66bd4e4ed5_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "e69ca30d0c91",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.0,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.17833333333333334,
+        "sd": 0.008862404990871401,
+        "ci95_low": 0.09870778365169217,
+        "ci95_high": 0.2579588830149745
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 7.823921618143718,
+        "sd": 2.6668150085058833,
+        "ci95_low": -16.136460599804597,
+        "ci95_high": 31.784303836092032
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_e69ca30d0c91_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_e69ca30d0c91_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "2aa2218848b6",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.0,
+        "eta_data": 0.03,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.178,
+        "sd": 0.001979898987322331,
+        "ci95_low": 0.16021131336899508,
+        "ci95_high": 0.1957886866310049
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 8.467409120559694,
+        "sd": 5.276216930796369,
+        "ci95_low": -38.93751920160377,
+        "ci95_high": 55.87233744272316
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_2aa2218848b6_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_2aa2218848b6_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "1023819df580",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0,
+        "eta_data": 0.003,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.18766666666666665,
+        "sd": 0.0049026070162266995,
+        "ci95_low": 0.14361849024703566,
+        "ci95_high": 0.23171484308629764
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 17.231979255167644,
+        "sd": 5.961053841064511,
+        "ci95_low": -36.32596458350021,
+        "ci95_high": 70.7899230938355
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_1023819df580_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_1023819df580_s122102"
+      ]
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "8ca7013e4c59",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0,
+        "eta_data": 0.03,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.1887666666666667,
+        "sd": 0.0033469720976163292,
+        "ci95_low": 0.15869531545711069,
+        "ci95_high": 0.2188380178762227
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 13.163102776845296,
+        "sd": 8.29045191963396,
+        "ci95_low": -61.32365244253714,
+        "ci95_high": 87.64985799622772
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_8ca7013e4c59_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_8ca7013e4c59_s122102"
+      ]
+    }
+  ],
+  "selected_variants": [
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Matched",
+      "variant_id": "aff3b8a78b85",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.003,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.44430000000000003,
+        "sd": 0.010795163526114575,
+        "ci95_low": 0.3473093038452355,
+        "ci95_high": 0.5412906961547646
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.794059178638458,
+        "sd": 0.054366789465319074,
+        "ci95_low": 1.305592955298281,
+        "ci95_high": 2.282525401978635
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_aff3b8a78b85_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Matched_aff3b8a78b85_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "ERM-Perfect",
+      "variant_id": "c7372a86cc5b",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "erm",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.1913,
+        "sd": 0.009475230867899713,
+        "ci95_low": 0.10616842826590518,
+        "ci95_high": 0.2764315717340948
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 15.93548232167562,
+        "sd": 2.377470336103318,
+        "ci95_low": -5.425241156772538,
+        "ci95_high": 37.29620580012378
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_c7372a86cc5b_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_ERM_Perfect_c7372a86cc5b_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Matched",
+      "variant_id": "d640271a5993",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.48916666666666664,
+        "sd": 0.03417682775734976,
+        "ci95_low": 0.18210005220289133,
+        "ci95_high": 0.796233281130442
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.5735904184659324,
+        "sd": 0.00043294609472205406,
+        "ci95_low": 1.5697005521361638,
+        "ci95_high": 1.577480284795701
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_d640271a5993_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Matched_d640271a5993_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "L2-Perfect",
+      "variant_id": "4e66bd4e4ed5",
+      "family": "baseline",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "l2",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.001,
+        "eta_data": 0.01,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.18603333333333333,
+        "sd": 0.000424264068711921,
+        "ci95_low": 0.18222147191240376,
+        "ci95_high": 0.1898451947542629
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 7.0377190240224206,
+        "sd": 2.1387661628935173,
+        "ci95_low": -12.17833254846907,
+        "ci95_high": 26.25377059651391
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_4e66bd4e4ed5_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_L2_Perfect_4e66bd4e4ed5_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "Proposed-Perfect",
+      "variant_id": "8ca7013e4c59",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0,
+        "eta_data": 0.03,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "perfect"
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.1887666666666667,
+        "sd": 0.0033469720976163292,
+        "ci95_low": 0.15869531545711069,
+        "ci95_high": 0.2188380178762227
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 13.163102776845296,
+        "sd": 8.29045191963396,
+        "ci95_low": -61.32365244253714,
+        "ci95_high": 87.64985799622772
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_8ca7013e4c59_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_Proposed_Perfect_8ca7013e4c59_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T1-Matched",
+      "variant_id": "a40b63526f45",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "proposed",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.001,
+        "eta_channel": 0.01,
+        "eta_data": 0.21319834744560137,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4435333333333334,
+        "sd": 0.021684607956387426,
+        "ci95_low": 0.24870486070804154,
+        "ci95_high": 0.6383618059586252
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.8131288209597272,
+        "sd": 0.10972056924348925,
+        "ci95_low": 0.8273286181485965,
+        "ci95_high": 2.798929023770858
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_a40b63526f45_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T1_Matched_a40b63526f45_s122102"
+      ],
+      "rank": 1
+    },
+    {
+      "group": "cifar10_diagonal_fading_r0p35_m100",
+      "method_label": "T2-Matched",
+      "variant_id": "5c6c3e776590",
+      "family": "proposed",
+      "config": {
+        "dataset": "cifar10",
+        "architecture": "cnn_spatial3",
+        "method": "joint",
+        "predictor": "gaussian",
+        "training_loss": "bounded_ce_smooth",
+        "loss_epsilon": 0.01,
+        "selection_metric": "accuracy",
+        "validation_seed_policy": "fixed",
+        "width": 128,
+        "train_size": 45000,
+        "val_size": 5000,
+        "batch_size": 128,
+        "epochs": 25,
+        "lr": 0.003,
+        "eta_channel": 0.0,
+        "eta_data": 0.019978035746287065,
+        "prior_std": 1.0,
+        "posterior_std": 0.001,
+        "m": 100,
+        "seed": 122101,
+        "data_seed": 20261118,
+        "channel_seed": 132101,
+        "eval_seed": 142101,
+        "eval_draws": 20,
+        "val_draws": 3,
+        "clip_ce": 10.0,
+        "delta": 0.05,
+        "l2": 1e-05,
+        "device": "cpu",
+        "threads": 2,
+        "cpu_flush_denormal": true,
+        "rho_lr_scale": 0.1,
+        "download": false,
+        "moon_noise": 0.3,
+        "moons_sampler": "iid",
+        "train_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        },
+        "deployment_channel": {
+          "kind": "diagonal_fading",
+          "rho_c": 0.35
+        }
+      },
+      "seeds": [
+        122101,
+        122102
+      ],
+      "complete_seed_set": true,
+      "validation_accuracy": {
+        "n": 2,
+        "mean": 0.4395666666666667,
+        "sd": 0.09432804461028549,
+        "ci95_low": -0.40793718925335437,
+        "ci95_high": 1.2870705225866879
+      },
+      "validation_cross_entropy": {
+        "n": 2,
+        "mean": 1.7084444184780123,
+        "sd": 0.16350601729188044,
+        "ci95_low": 0.2394011377283496,
+        "ci95_high": 3.177487699227675
+      },
+      "task_ids": [
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_5c6c3e776590_s122101",
+        "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m100_T2_Matched_5c6c3e776590_s122102"
+      ],
+      "rank": 1
+    }
+  ],
+  "validation_proposed_margins": {
+    "cifar10_diagonal_fading_r0p35_m100": -0.04563333333333325
+  },
+  "selection_rule": "Highest mean validation accuracy, then lowest mean validation CE, then variant ID"
+}

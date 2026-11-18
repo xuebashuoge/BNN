@@ -9,7 +9,7 @@ The correlated diagonal fading experiment gives non-vacuous bounds on smooth bou
 | 8 | Fading | 0.9161 | 0.4036 | 0.8819 |
 | 8 | Erasure | 0.3689 | 0.4164 | 0.5618 |
 
-Entries are uncapped population-risk upper bounds from the local CPU experiment. For fading at width eight, held-out Gibbs accuracies were 56.14%, 53.62% and 53.48%, respectively. The certificate-specific network projects each transmitted feature vector to the Euclidean ball of radius $B=1$ and each receiver matrix to the Frobenius ball of radius $L=0.075$. These fixed projections hold for every raw Gaussian weight draw in the two-layer $2\to d\to2$ classifier.
+Entries are uncapped population-risk upper bounds from the Spartan CPU experiment. For fading at width eight, held-out Gibbs accuracies were 56.14%, 53.62% and 53.48%, respectively. The certificate-specific network projects each transmitted feature vector to the Euclidean ball of radius $B=1$ and each receiver matrix to the Frobenius ball of radius $L=0.075$. These fixed projections hold for every raw Gaussian weight draw in the two-layer $2\to d\to2$ classifier.
 
 ## Perfect training under correlated fading
 

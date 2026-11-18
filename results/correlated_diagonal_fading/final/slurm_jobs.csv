@@ -1,0 +1,60 @@
+job_record,job_id
+bounds/report.job,35355715
+bounds/tasks.job,35355714
+comparison/cifar10/balanced-select.job,35356840
+comparison/cifar10/balanced.job,35356839
+comparison/cifar10/confirm-balanced-report.job,35357152
+comparison/cifar10/confirm-balanced.job,35357151
+comparison/cifar10/confirm-refine-report.job,35356805
+comparison/cifar10/confirm-refine.job,35356804
+comparison/cifar10/confirm-report.job,35356327
+comparison/cifar10/confirm.job,35356324
+comparison/cifar10/refine-select.job,35355980
+comparison/cifar10/refine.job,35355979
+comparison/cifar10/screen-select.job,35355722
+comparison/cifar10/screen.job,35355721
+comparison/fashionmnist/confirm-refine-report.job,35356523
+comparison/fashionmnist/confirm-refine.job,35356522
+comparison/fashionmnist/confirm-report.job,35356060
+comparison/fashionmnist/confirm.job,35356059
+comparison/fashionmnist/refine-select.job,35356083
+comparison/fashionmnist/refine.job,35356082
+comparison/fashionmnist/screen-select.job,35355726
+comparison/fashionmnist/screen.job,35355725
+comparison/mnist/confirm-report.job,35355906
+comparison/mnist/confirm.job,35355905
+comparison/mnist/screen-select.job,35355724
+comparison/mnist/screen.job,35355723
+comparison/moons/confirm-refine-report.job,35356326
+comparison/moons/confirm-refine.job,35356325
+comparison/moons/confirm-report.job,35356297
+comparison/moons/confirm.job,35356296
+comparison/moons/refine-select.job,35356168
+comparison/moons/refine.job,35356167
+comparison/moons/screen-select.job,35356166
+comparison/moons/screen.job,35356165
+extended/extended.job,35355935
+extended/report.job,35355936
+m100/comparison/cifar10/confirm-report.job,35357234
+m100/comparison/cifar10/confirm.job,35357233
+m100/comparison/cifar10/screen-select.job,35357064
+m100/comparison/cifar10/screen.job,35357063
+moons_small/n100/confirm-report.job,35356545
+moons_small/n100/confirm.job,35356544
+moons_small/n100/refine.job,35356628
+moons_small/n100/refined_confirm-report.job,35356737
+moons_small/n100/refined_confirm.job,35356736
+moons_small/n100/screen.job,35356406
+moons_small/n32/refine.job,35356583
+moons_small/n32/screen.job,35356394
+moons_small/refined_select.job,35356735
+sweep/report.job,35355615
+sweep/sweep.job,35355614
+cifar seed illustration validation,35356901
+cifar seed illustration evaluation,35356902
+cifar seed illustration report,35356903
+cifar seed illustration figure,35357031
+bounds final plots,35356709
+initial accuracy figure,35356792
+illustrative accuracy figure,35357276
+final test suite,35357328

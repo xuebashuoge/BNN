@@ -1,0 +1,1006 @@
+{
+  "metric": "Held-out Gibbs deployment accuracy across training seeds",
+  "uncertainty": "One sample standard deviation across the confirmation seeds",
+  "units": {
+    "mean_accuracy": "fraction",
+    "sd_accuracy": "fraction",
+    "mean_accuracy_pct": "percent",
+    "sd_accuracy_pp": "percentage points"
+  },
+  "datasets": [
+    "mnist",
+    "fashionmnist",
+    "cifar10",
+    "moons"
+  ],
+  "sources": [
+    {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/mnist/confirm/accuracy_summary.json",
+      "sha256": "19bab440035e27d0d2e54462e80bab228f3313dfe601bc477d98232b26cb7fea",
+      "bytes": 7067,
+      "summary": {
+        "trials": 21,
+        "groups": [
+          {
+            "group": "mnist_diagonal_fading_r0p35_m2000",
+            "dataset": "mnist",
+            "channel": "diagonal_fading",
+            "m": 2000,
+            "methods": {
+              "ERM-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.8331183333333333,
+                  "sd": 0.00625169243751903,
+                  "ci95_low": 0.8175882683872204,
+                  "ci95_high": 0.8486483982794462
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 2.500717896034022,
+                  "sd": 0.2264067399860661,
+                  "ci95_low": 1.9382923750471535,
+                  "ci95_high": 3.0631434170208904
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.14278081723512462,
+                  "sd": 0.0057956408255892475,
+                  "ci95_low": 0.12838364729669696,
+                  "ci95_high": 0.15717798717355227
+                }
+              },
+              "ERM-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5725083333333334,
+                  "sd": 0.0041143782438338595,
+                  "ci95_low": 0.5622876511775473,
+                  "ci95_high": 0.5827290154891195
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.4236335095071793,
+                  "sd": 0.03966646385096179,
+                  "ci95_low": 1.325096550764445,
+                  "ci95_high": 1.5221704682499135
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.26616240381479267,
+                  "sd": 0.004730111077650991,
+                  "ci95_low": 0.25441215650617743,
+                  "ci95_high": 0.2779126511234079
+                }
+              },
+              "L2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.8324433333333334,
+                  "sd": 0.0023690996883485825,
+                  "ci95_low": 0.8265581634546837,
+                  "ci95_high": 0.8383285032119832
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.6587524113198618,
+                  "sd": 0.008024256582975463,
+                  "ci95_low": 0.6388190529335787,
+                  "ci95_high": 0.678685769706145
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.10890320579173664,
+                  "sd": 0.0011044486217468357,
+                  "ci95_low": 0.10615960331979865,
+                  "ci95_high": 0.11164680826367462
+                }
+              },
+              "L2-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.57368,
+                  "sd": 0.004068743663589574,
+                  "ci95_low": 0.5635726804259572,
+                  "ci95_high": 0.5837873195740427
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.420093400293986,
+                  "sd": 0.022927131583269013,
+                  "ci95_low": 1.3631392481064313,
+                  "ci95_high": 1.4770475524815407
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.26550622890472414,
+                  "sd": 0.003031552050050971,
+                  "ci95_low": 0.25797543613215185,
+                  "ci95_high": 0.27303702167729643
+                }
+              },
+              "Proposed-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5741333333333333,
+                  "sd": 0.0043750466664178615,
+                  "ci95_low": 0.5632651149187518,
+                  "ci95_high": 0.5850015517479148
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.41942334558328,
+                  "sd": 0.022495333193739465,
+                  "ci95_low": 1.3635418400590154,
+                  "ci95_high": 1.4753048511075448
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.2653085510861874,
+                  "sd": 0.002938121684496915,
+                  "ci95_low": 0.2580098522081076,
+                  "ci95_high": 0.27260724996426716
+                }
+              },
+              "T1-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.8343166666666667,
+                  "sd": 0.001941683118671358,
+                  "ci95_low": 0.829493258407366,
+                  "ci95_high": 0.8391400749259674
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 2.0831336642154556,
+                  "sd": 0.413017893086136,
+                  "ci95_low": 1.0571403403852337,
+                  "ci95_high": 3.1091269880456776
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.13840917042478765,
+                  "sd": 0.002719438519586074,
+                  "ci95_low": 0.1316537106435811,
+                  "ci95_high": 0.14516463020599418
+                }
+              },
+              "T2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.834155,
+                  "sd": 0.0028220515587070363,
+                  "ci95_low": 0.8271446352985989,
+                  "ci95_high": 0.841165364701401
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 2.2340272901256135,
+                  "sd": 0.13907201356677173,
+                  "ci95_low": 1.8885532565796235,
+                  "ci95_high": 2.5795013236716033
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.13986686136508977,
+                  "sd": 0.0024938633632172282,
+                  "ci95_low": 0.13367176133664613,
+                  "ci95_high": 0.14606196139353342
+                }
+              }
+            },
+            "highest_mean_methods": [
+              "T1-Matched"
+            ],
+            "t1_or_t2_strictly_highest": true,
+            "paired_accuracy_differences": {
+              "T1-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": 0.0011983333333334123,
+                  "sd": 0.0078861180775672,
+                  "ci95_low": -0.018391869982224515,
+                  "ci95_high": 0.02078853664889134
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": 0.0018733333333333195,
+                  "sd": 0.002487133557598613,
+                  "ci95_low": -0.004305048931180592,
+                  "ci95_high": 0.008051715597847231
+                }
+              },
+              "T2-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": 0.0010366666666666857,
+                  "sd": 0.0037835477178610826,
+                  "ci95_low": -0.008362186903362453,
+                  "ci95_high": 0.010435520236695825
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": 0.001711666666666593,
+                  "sd": 0.005169396321944653,
+                  "ci95_low": -0.011129825683500435,
+                  "ci95_high": 0.014553159016833619
+                }
+              }
+            }
+          }
+        ],
+        "confirmation_seeds": [
+          123101,
+          123102,
+          123103
+        ],
+        "stage": "confirm",
+        "selection": {
+          "sha256": "31082bb3d035017128039a99148a2889bf0f1fcf324b6f3f798e74efd6ab8873",
+          "bytes": 75099
+        },
+        "manifest": {
+          "sha256": "16b20f9919b65321fe4932ad80d866d48095f4eba1d48617c2114c9b9d56309e",
+          "bytes": 25686
+        },
+        "validation_proposed_margins": {
+          "mnist_diagonal_fading_r0p35_m2000": 0.007333333333333414
+        },
+        "all_groups_t1_or_t2_strictly_highest": true,
+        "sampling": "Fresh training, bank and deployment randomness; fixed official test examples"
+      }
+    },
+    {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/fashionmnist/confirm/accuracy_summary.json",
+      "sha256": "cbcd2771555182b5953320b26620bb59a020a77bb867b1101157d7a9f6673223",
+      "bytes": 7133,
+      "summary": {
+        "trials": 21,
+        "groups": [
+          {
+            "group": "fashionmnist_diagonal_fading_r0p35_m2000",
+            "dataset": "fashionmnist",
+            "channel": "diagonal_fading",
+            "m": 2000,
+            "methods": {
+              "ERM-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7437450000000001,
+                  "sd": 0.0035847210491195556,
+                  "ci95_low": 0.7348400592558874,
+                  "ci95_high": 0.7526499407441128
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.7963361392915248,
+                  "sd": 0.009078969051940475,
+                  "ci95_low": 0.7737827298860648,
+                  "ci95_high": 0.8188895486969848
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.14770040377497673,
+                  "sd": 0.0019756956582016585,
+                  "ci95_low": 0.14279250368355742,
+                  "ci95_high": 0.15260830386639604
+                }
+              },
+              "ERM-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5045016666666667,
+                  "sd": 0.006582889436511438,
+                  "ci95_low": 0.48814886276534847,
+                  "ci95_high": 0.5208544705679851
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.7104113078546526,
+                  "sd": 0.12480351533340912,
+                  "ci95_low": 1.4003821888597625,
+                  "ci95_high": 2.0204404268495426
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.31184676954428353,
+                  "sd": 0.012253718435469244,
+                  "ci95_low": 0.2814068454699413,
+                  "ci95_high": 0.34228669361862574
+                }
+              },
+              "L2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7466916666666666,
+                  "sd": 0.002133016252477538,
+                  "ci95_low": 0.7413929605541765,
+                  "ci95_high": 0.7519903727791568
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.7756856062547367,
+                  "sd": 0.004239452598784074,
+                  "ci95_low": 0.7651542221770498,
+                  "ci95_high": 0.7862169903324236
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.14483720455318688,
+                  "sd": 0.0011381359360461182,
+                  "ci95_low": 0.1420099181533915,
+                  "ci95_high": 0.14766449095298226
+                }
+              },
+              "L2-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5058566666666667,
+                  "sd": 0.006948887201079903,
+                  "ci95_low": 0.4885946739159789,
+                  "ci95_high": 0.5231186594173546
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.635158160773913,
+                  "sd": 0.08947994004725887,
+                  "ci95_low": 1.412877667260113,
+                  "ci95_high": 1.8574386542877128
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.3054786094639698,
+                  "sd": 0.009945407063824829,
+                  "ci95_low": 0.2807728487183206,
+                  "ci95_high": 0.33018437020961905
+                }
+              },
+              "Proposed-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5038616666666665,
+                  "sd": 0.007360110959308439,
+                  "ci95_low": 0.4855781374702081,
+                  "ci95_high": 0.5221451958631249
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.6779840365473426,
+                  "sd": 0.08997425784900488,
+                  "ci95_low": 1.4544755895406514,
+                  "ci95_high": 1.9014924835540339
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.3095587184133132,
+                  "sd": 0.009416861157633788,
+                  "ci95_low": 0.2861659384856082,
+                  "ci95_high": 0.3329514983410183
+                }
+              },
+              "T1-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7456816666666667,
+                  "sd": 0.0027673377700117054,
+                  "ci95_low": 0.7388072185511148,
+                  "ci95_high": 0.7525561147822186
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.7860398108005523,
+                  "sd": 0.0072554633145196345,
+                  "ci95_low": 0.7680162407649563,
+                  "ci95_high": 0.8040633808361483
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.14589742127358915,
+                  "sd": 0.001503688234614684,
+                  "ci95_low": 0.14216205262331383,
+                  "ci95_high": 0.14963278992386447
+                }
+              },
+              "T2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7462883333333333,
+                  "sd": 0.0017659723478393146,
+                  "ci95_low": 0.7419014148262117,
+                  "ci95_high": 0.7506752518404549
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.7858977510778109,
+                  "sd": 0.003595918069338675,
+                  "ci95_low": 0.7769649953935129,
+                  "ci95_high": 0.7948305067621089
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.1458170907961329,
+                  "sd": 0.0010299758543085224,
+                  "ci95_low": 0.14325848893428453,
+                  "ci95_high": 0.14837569265798126
+                }
+              }
+            },
+            "highest_mean_methods": [
+              "L2-Matched"
+            ],
+            "t1_or_t2_strictly_highest": false,
+            "paired_accuracy_differences": {
+              "T1-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": 0.0019366666666666237,
+                  "sd": 0.0009554362005563865,
+                  "ci95_low": -0.0004367684302775353,
+                  "ci95_high": 0.0043101017636107825
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": -0.0010099999999999183,
+                  "sd": 0.0008706893820416687,
+                  "ci95_low": -0.0031729123291234142,
+                  "ci95_high": 0.0011529123291235779
+                }
+              },
+              "T2-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": 0.0025433333333332677,
+                  "sd": 0.0026076873534482676,
+                  "ci95_low": -0.00393452116174171,
+                  "ci95_high": 0.009021187828408245
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": -0.0004033333333332741,
+                  "sd": 0.0016417546507725557,
+                  "ci95_low": -0.004481677974708332,
+                  "ci95_high": 0.003675011308041784
+                }
+              }
+            }
+          }
+        ],
+        "confirmation_seeds": [
+          123101,
+          123102,
+          123103
+        ],
+        "stage": "confirm",
+        "selection": {
+          "sha256": "2c6b15e89272c78d9bd9ee23bf20e4a974bf0d2a9c8dd4dbbfaf18e26b7e2f37",
+          "bytes": 76134
+        },
+        "manifest": {
+          "sha256": "5b399a7a46f1a923e2c3b1f751f0ed312fa1131c7a6191aab0ab0c47ad8ac71c",
+          "bytes": 26136
+        },
+        "validation_proposed_margins": {
+          "fashionmnist_diagonal_fading_r0p35_m2000": -0.0008333333333332416
+        },
+        "all_groups_t1_or_t2_strictly_highest": false,
+        "sampling": "Fresh training, bank and deployment randomness; fixed official test examples"
+      }
+    },
+    {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/cifar10/confirm/accuracy_summary.json",
+      "sha256": "126c10004352f4c705e373764d0c6126177f1c858bd82c347237436d0fd709e9",
+      "bytes": 7054,
+      "summary": {
+        "trials": 21,
+        "groups": [
+          {
+            "group": "cifar10_diagonal_fading_r0p35_m2000",
+            "dataset": "cifar10",
+            "channel": "diagonal_fading",
+            "m": 2000,
+            "methods": {
+              "ERM-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5450716666666665,
+                  "sd": 0.011463269966869529,
+                  "ci95_low": 0.5165953254423439,
+                  "ci95_high": 0.5735480078909891
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.2810469168361027,
+                  "sd": 0.02607299563061695,
+                  "ci95_low": 1.216278005132588,
+                  "ci95_high": 1.3458158285396173
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.2588239633556207,
+                  "sd": 0.0061922634570292295,
+                  "ci95_low": 0.24344152818111153,
+                  "ci95_high": 0.27420639853012985
+                }
+              },
+              "ERM-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.175855,
+                  "sd": 0.011723989295457402,
+                  "ci95_low": 0.14673099605935802,
+                  "ci95_high": 0.204979003940642
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 23.903914202003477,
+                  "sd": 4.952998727062862,
+                  "ci95_low": 11.599983278007715,
+                  "ci95_high": 36.20784512599924
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.7821843767754237,
+                  "sd": 0.020319752630768212,
+                  "ci95_low": 0.73170731297252,
+                  "ci95_high": 0.8326614405783275
+                }
+              },
+              "L2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5486016666666665,
+                  "sd": 0.009725346180642299,
+                  "ci95_low": 0.5244425674598053,
+                  "ci95_high": 0.5727607658735278
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.274496494922638,
+                  "sd": 0.029809637355053552,
+                  "ci95_low": 1.2004452505962657,
+                  "ci95_high": 1.3485477392490104
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.2575163529034455,
+                  "sd": 0.005387926441280647,
+                  "ci95_low": 0.24413200164268933,
+                  "ci95_high": 0.27090070416420164
+                }
+              },
+              "L2-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.188375,
+                  "sd": 0.014989982488315314,
+                  "ci95_low": 0.15113781920276032,
+                  "ci95_high": 0.22561218079723966
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 14.770962051404316,
+                  "sd": 4.58256480029728,
+                  "ci95_low": 3.387240014587295,
+                  "ci95_high": 26.154684088221337
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.7456183175532024,
+                  "sd": 0.020033528917527292,
+                  "ci95_low": 0.6958522728703488,
+                  "ci95_high": 0.795384362236056
+                }
+              },
+              "Proposed-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.178505,
+                  "sd": 0.019763377747743432,
+                  "ci95_low": 0.12941004802587164,
+                  "ci95_high": 0.22759995197412836
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 24.335775858027137,
+                  "sd": 3.037392724907522,
+                  "ci95_low": 16.79047404478177,
+                  "ci95_high": 31.881077671272504
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.7788496010279656,
+                  "sd": 0.023224173016224012,
+                  "ci95_low": 0.7211575570148641,
+                  "ci95_high": 0.8365416450410672
+                }
+              },
+              "T1-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5393816666666665,
+                  "sd": 0.016191899466502745,
+                  "ci95_low": 0.4991587585775555,
+                  "ci95_high": 0.5796045747557776
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.2857847856934865,
+                  "sd": 0.04818545147535114,
+                  "ci95_low": 1.1660854885273346,
+                  "ci95_high": 1.4054840828596384
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.2608277209730943,
+                  "sd": 0.009184666213045138,
+                  "ci95_low": 0.23801174526371255,
+                  "ci95_high": 0.2836436966824761
+                }
+              },
+              "T2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.5349066666666668,
+                  "sd": 0.015169675617274522,
+                  "ci95_low": 0.49722310339124265,
+                  "ci95_high": 0.5725902299420909
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.3111385701640446,
+                  "sd": 0.025528032712024366,
+                  "ci95_low": 1.2477234213980946,
+                  "ci95_high": 1.3745537189299946
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.2636047369726499,
+                  "sd": 0.006852106193876343,
+                  "ci95_low": 0.2465831615717346,
+                  "ci95_high": 0.2806263123735652
+                }
+              }
+            },
+            "highest_mean_methods": [
+              "L2-Matched"
+            ],
+            "t1_or_t2_strictly_highest": false,
+            "paired_accuracy_differences": {
+              "T1-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": -0.0056899999999999356,
+                  "sd": 0.019870247230469904,
+                  "ci95_low": -0.05505043048640109,
+                  "ci95_high": 0.043670430486401214
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": -0.009220000000000006,
+                  "sd": 0.006519948235990763,
+                  "ci95_low": -0.025416449291483987,
+                  "ci95_high": 0.006976449291483975
+                }
+              },
+              "T2-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": -0.010164999999999832,
+                  "sd": 0.018278795775433246,
+                  "ci95_low": -0.05557204591057348,
+                  "ci95_high": 0.03524204591057381
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": -0.013694999999999902,
+                  "sd": 0.005447742651777867,
+                  "ci95_low": -0.027227942965024343,
+                  "ci95_high": -0.00016205703497546194
+                }
+              }
+            }
+          }
+        ],
+        "confirmation_seeds": [
+          123101,
+          123102,
+          123103
+        ],
+        "stage": "confirm",
+        "selection": {
+          "sha256": "3115af30b9769cc06bede51b9a043b9941b73d843077314837207c6966865000",
+          "bytes": 75758
+        },
+        "manifest": {
+          "sha256": "85c717515cd5a8c2f870547a7c2c330bd8a54e9abce2c3b87dc3db253a08e748",
+          "bytes": 26016
+        },
+        "validation_proposed_margins": {
+          "cifar10_diagonal_fading_r0p35_m2000": -0.009166666666666767
+        },
+        "all_groups_t1_or_t2_strictly_highest": false,
+        "sampling": "Fresh training, bank and deployment randomness; fixed official test examples"
+      }
+    },
+    {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/moons/confirm/accuracy_summary.json",
+      "sha256": "9eb3ac49e7c025f61790e6c2a8bdf0ad5753bb9df208ca099814190f68c295ce",
+      "bytes": 8238,
+      "summary": {
+        "trials": 21,
+        "groups": [
+          {
+            "group": "moons_diagonal_fading_r0p35_m2000",
+            "dataset": "moons",
+            "channel": "diagonal_fading",
+            "m": 2000,
+            "methods": {
+              "ERM-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7409066666666666,
+                  "sd": 0.002573540039193745,
+                  "ci95_low": 0.7345136388026853,
+                  "ci95_high": 0.7472996945306479
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.5174618030166626,
+                  "sd": 0.0035016720388406607,
+                  "ci95_low": 0.5087631674509046,
+                  "ci95_high": 0.5261604385824206
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.10972872899671395,
+                  "sd": 0.0005109647390914133,
+                  "ci95_low": 0.10845942221897803,
+                  "ci95_high": 0.11099803577444986
+                }
+              },
+              "ERM-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.6188366666666667,
+                  "sd": 0.010787702875651211,
+                  "ci95_low": 0.5920385271304361,
+                  "ci95_high": 0.6456348062028973
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.2384841688084602,
+                  "sd": 0.1179195907913389,
+                  "ci95_low": 0.9455556663731584,
+                  "ci95_high": 1.5314126712437621
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.2239414797188838,
+                  "sd": 0.014760254795898917,
+                  "ci95_low": 0.18727497414580202,
+                  "ci95_high": 0.2606079852919656
+                }
+              },
+              "L2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7425433333333334,
+                  "sd": 0.00461043743405475,
+                  "ci95_low": 0.7310903718358746,
+                  "ci95_high": 0.7539962948307923
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.5126111165801683,
+                  "sd": 0.005245585685931598,
+                  "ci95_low": 0.4995803593576894,
+                  "ci95_high": 0.5256418738026473
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.10891908467243115,
+                  "sd": 0.00104884403262185,
+                  "ci95_low": 0.1063136116572832,
+                  "ci95_high": 0.1115245576875791
+                }
+              },
+              "L2-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.6164000000000001,
+                  "sd": 0.010146404535597812,
+                  "ci95_low": 0.5911949338547593,
+                  "ci95_high": 0.6416050661452408
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.2505832434233028,
+                  "sd": 0.11172989376740819,
+                  "ci95_low": 0.9730308007892656,
+                  "ci95_high": 1.52813568605734
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.22590815009832385,
+                  "sd": 0.014079082837234982,
+                  "ci95_low": 0.190933769475925,
+                  "ci95_high": 0.2608825307207227
+                }
+              },
+              "Proposed-Perfect": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.6164533333333333,
+                  "sd": 0.010084116636242008,
+                  "ci95_low": 0.5914029989078661,
+                  "ci95_high": 0.6415036677588005
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 1.2509715373214088,
+                  "sd": 0.11203096747812995,
+                  "ci95_low": 0.9726711861285602,
+                  "ci95_high": 1.5292718885142573
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.22592937643945213,
+                  "sd": 0.014086391541066967,
+                  "ci95_low": 0.19093683999024047,
+                  "ci95_high": 0.2609219128886638
+                }
+              },
+              "T1-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7426033333333333,
+                  "sd": 0.004643630942843518,
+                  "ci95_low": 0.7310679145889079,
+                  "ci95_high": 0.7541387520777587
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.5124841523543994,
+                  "sd": 0.005261401228919793,
+                  "ci95_low": 0.49941410714515216,
+                  "ci95_high": 0.5255541975636466
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.10888920298427344,
+                  "sd": 0.001051620428929799,
+                  "ci95_low": 0.10627683301835425,
+                  "ci95_high": 0.11150157295019264
+                }
+              },
+              "T2-Matched": {
+                "test_accuracy": {
+                  "n": 3,
+                  "mean": 0.7426050000000001,
+                  "sd": 0.004648760587511498,
+                  "ci95_low": 0.7310568385118072,
+                  "ci95_high": 0.7541531614881929
+                },
+                "test_cross_entropy": {
+                  "n": 3,
+                  "mean": 0.5124834537061056,
+                  "sd": 0.005260527372324806,
+                  "ci95_low": 0.4994155792769806,
+                  "ci95_high": 0.5255513281352305
+                },
+                "test_bounded_loss": {
+                  "n": 3,
+                  "mean": 0.10888908897757531,
+                  "sd": 0.0010514613836297515,
+                  "ci95_low": 0.10627711410208383,
+                  "ci95_high": 0.11150106385306678
+                }
+              }
+            },
+            "highest_mean_methods": [
+              "T2-Matched"
+            ],
+            "t1_or_t2_strictly_highest": true,
+            "paired_accuracy_differences": {
+              "T1-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": 0.0016966666666666426,
+                  "sd": 0.0027828327893234693,
+                  "ci95_low": -0.005216273210701482,
+                  "ci95_high": 0.008609606544034767
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": 5.999999999991198e-05,
+                  "sd": 5.074445782551458e-05,
+                  "ci95_low": -6.605622134521082e-05,
+                  "ci95_high": 0.00018605622134503478
+                }
+              },
+              "T2-Matched": {
+                "ERM-Matched": {
+                  "n": 3,
+                  "mean": 0.0016983333333333572,
+                  "sd": 0.0027900462959122964,
+                  "ci95_low": -0.005232525887785809,
+                  "ci95_high": 0.008629192554452523
+                },
+                "L2-Matched": {
+                  "n": 3,
+                  "mean": 6.166666666662657e-05,
+                  "sd": 5.838093296054911e-05,
+                  "ci95_low": -8.335961054604409e-05,
+                  "ci95_high": 0.00020669294387929722
+                }
+              }
+            },
+            "rho_c": 0.35,
+            "mean_ranking": {
+              "best_matched_proposed": [
+                "T2-Matched"
+              ],
+              "best_other_methods": [
+                "L2-Matched"
+              ],
+              "margin": 6.166666666662657e-05,
+              "above_all_other_methods": true
+            },
+            "descriptive_ranking_by_seed": {
+              "123101": {
+                "best_matched_proposed": [
+                  "T1-Matched",
+                  "T2-Matched"
+                ],
+                "best_other_methods": [
+                  "L2-Matched"
+                ],
+                "margin": 4.999999999999449e-05,
+                "above_all_other_methods": true
+              },
+              "123102": {
+                "best_matched_proposed": [
+                  "T1-Matched"
+                ],
+                "best_other_methods": [
+                  "L2-Matched"
+                ],
+                "margin": 1.4999999999876223e-05,
+                "above_all_other_methods": true
+              },
+              "123103": {
+                "best_matched_proposed": [
+                  "T2-Matched"
+                ],
+                "best_other_methods": [
+                  "L2-Matched"
+                ],
+                "margin": 0.00012500000000004174,
+                "above_all_other_methods": true
+              }
+            }
+          }
+        ],
+        "confirmation_seeds": [
+          123101,
+          123102,
+          123103
+        ],
+        "stage": "confirm",
+        "selection": {
+          "sha256": "67fd3f28da46a03d816f515f0dd8d8a4d9168f8f1eba3cf3475289c6d92c6a47",
+          "bytes": 75033
+        },
+        "manifest": {
+          "sha256": "31f77ee96593b6527aef5636bbd9efdacae18988ca66fd995234cebd6a513a9f",
+          "bytes": 25623
+        },
+        "validation_proposed_margins": {
+          "moons_diagonal_fading_r0p35_m2000": -0.0024999999999999467
+        },
+        "all_groups_t1_or_t2_strictly_highest": true,
+        "sampling": "Fresh training, bank and deployment randomness; fixed official test examples"
+      }
+    }
+  ]
+}

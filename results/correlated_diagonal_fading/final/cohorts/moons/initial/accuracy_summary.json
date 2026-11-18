@@ -1,0 +1,275 @@
+{
+  "trials": 21,
+  "groups": [
+    {
+      "group": "moons_diagonal_fading_r0p35_m2000",
+      "dataset": "moons",
+      "channel": "diagonal_fading",
+      "m": 2000,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy": {
+            "n": 3,
+            "mean": 0.7409066666666666,
+            "sd": 0.002573540039193745,
+            "ci95_low": 0.7345136388026853,
+            "ci95_high": 0.7472996945306479
+          },
+          "test_cross_entropy": {
+            "n": 3,
+            "mean": 0.5174618030166626,
+            "sd": 0.0035016720388406607,
+            "ci95_low": 0.5087631674509046,
+            "ci95_high": 0.5261604385824206
+          },
+          "test_bounded_loss": {
+            "n": 3,
+            "mean": 0.10972872899671395,
+            "sd": 0.0005109647390914133,
+            "ci95_low": 0.10845942221897803,
+            "ci95_high": 0.11099803577444986
+          }
+        },
+        "ERM-Perfect": {
+          "test_accuracy": {
+            "n": 3,
+            "mean": 0.6188366666666667,
+            "sd": 0.010787702875651211,
+            "ci95_low": 0.5920385271304361,
+            "ci95_high": 0.6456348062028973
+          },
+          "test_cross_entropy": {
+            "n": 3,
+            "mean": 1.2384841688084602,
+            "sd": 0.1179195907913389,
+            "ci95_low": 0.9455556663731584,
+            "ci95_high": 1.5314126712437621
+          },
+          "test_bounded_loss": {
+            "n": 3,
+            "mean": 0.2239414797188838,
+            "sd": 0.014760254795898917,
+            "ci95_low": 0.18727497414580202,
+            "ci95_high": 0.2606079852919656
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy": {
+            "n": 3,
+            "mean": 0.7425433333333334,
+            "sd": 0.00461043743405475,
+            "ci95_low": 0.7310903718358746,
+            "ci95_high": 0.7539962948307923
+          },
+          "test_cross_entropy": {
+            "n": 3,
+            "mean": 0.5126111165801683,
+            "sd": 0.005245585685931598,
+            "ci95_low": 0.4995803593576894,
+            "ci95_high": 0.5256418738026473
+          },
+          "test_bounded_loss": {
+            "n": 3,
+            "mean": 0.10891908467243115,
+            "sd": 0.00104884403262185,
+            "ci95_low": 0.1063136116572832,
+            "ci95_high": 0.1115245576875791
+          }
+        },
+        "L2-Perfect": {
+          "test_accuracy": {
+            "n": 3,
+            "mean": 0.6164000000000001,
+            "sd": 0.010146404535597812,
+            "ci95_low": 0.5911949338547593,
+            "ci95_high": 0.6416050661452408
+          },
+          "test_cross_entropy": {
+            "n": 3,
+            "mean": 1.2505832434233028,
+            "sd": 0.11172989376740819,
+            "ci95_low": 0.9730308007892656,
+            "ci95_high": 1.52813568605734
+          },
+          "test_bounded_loss": {
+            "n": 3,
+            "mean": 0.22590815009832385,
+            "sd": 0.014079082837234982,
+            "ci95_low": 0.190933769475925,
+            "ci95_high": 0.2608825307207227
+          }
+        },
+        "Proposed-Perfect": {
+          "test_accuracy": {
+            "n": 3,
+            "mean": 0.6164533333333333,
+            "sd": 0.010084116636242008,
+            "ci95_low": 0.5914029989078661,
+            "ci95_high": 0.6415036677588005
+          },
+          "test_cross_entropy": {
+            "n": 3,
+            "mean": 1.2509715373214088,
+            "sd": 0.11203096747812995,
+            "ci95_low": 0.9726711861285602,
+            "ci95_high": 1.5292718885142573
+          },
+          "test_bounded_loss": {
+            "n": 3,
+            "mean": 0.22592937643945213,
+            "sd": 0.014086391541066967,
+            "ci95_low": 0.19093683999024047,
+            "ci95_high": 0.2609219128886638
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy": {
+            "n": 3,
+            "mean": 0.7426033333333333,
+            "sd": 0.004643630942843518,
+            "ci95_low": 0.7310679145889079,
+            "ci95_high": 0.7541387520777587
+          },
+          "test_cross_entropy": {
+            "n": 3,
+            "mean": 0.5124841523543994,
+            "sd": 0.005261401228919793,
+            "ci95_low": 0.49941410714515216,
+            "ci95_high": 0.5255541975636466
+          },
+          "test_bounded_loss": {
+            "n": 3,
+            "mean": 0.10888920298427344,
+            "sd": 0.001051620428929799,
+            "ci95_low": 0.10627683301835425,
+            "ci95_high": 0.11150157295019264
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy": {
+            "n": 3,
+            "mean": 0.7426050000000001,
+            "sd": 0.004648760587511498,
+            "ci95_low": 0.7310568385118072,
+            "ci95_high": 0.7541531614881929
+          },
+          "test_cross_entropy": {
+            "n": 3,
+            "mean": 0.5124834537061056,
+            "sd": 0.005260527372324806,
+            "ci95_low": 0.4994155792769806,
+            "ci95_high": 0.5255513281352305
+          },
+          "test_bounded_loss": {
+            "n": 3,
+            "mean": 0.10888908897757531,
+            "sd": 0.0010514613836297515,
+            "ci95_low": 0.10627711410208383,
+            "ci95_high": 0.11150106385306678
+          }
+        }
+      },
+      "highest_mean_methods": [
+        "T2-Matched"
+      ],
+      "t1_or_t2_strictly_highest": true,
+      "paired_accuracy_differences": {
+        "T1-Matched": {
+          "ERM-Matched": {
+            "n": 3,
+            "mean": 0.0016966666666666426,
+            "sd": 0.0027828327893234693,
+            "ci95_low": -0.005216273210701482,
+            "ci95_high": 0.008609606544034767
+          },
+          "L2-Matched": {
+            "n": 3,
+            "mean": 5.999999999991198e-05,
+            "sd": 5.074445782551458e-05,
+            "ci95_low": -6.605622134521082e-05,
+            "ci95_high": 0.00018605622134503478
+          }
+        },
+        "T2-Matched": {
+          "ERM-Matched": {
+            "n": 3,
+            "mean": 0.0016983333333333572,
+            "sd": 0.0027900462959122964,
+            "ci95_low": -0.005232525887785809,
+            "ci95_high": 0.008629192554452523
+          },
+          "L2-Matched": {
+            "n": 3,
+            "mean": 6.166666666662657e-05,
+            "sd": 5.838093296054911e-05,
+            "ci95_low": -8.335961054604409e-05,
+            "ci95_high": 0.00020669294387929722
+          }
+        }
+      },
+      "rho_c": 0.35,
+      "mean_ranking": {
+        "best_matched_proposed": [
+          "T2-Matched"
+        ],
+        "best_other_methods": [
+          "L2-Matched"
+        ],
+        "margin": 6.166666666662657e-05,
+        "above_all_other_methods": true
+      },
+      "descriptive_ranking_by_seed": {
+        "123101": {
+          "best_matched_proposed": [
+            "T1-Matched",
+            "T2-Matched"
+          ],
+          "best_other_methods": [
+            "L2-Matched"
+          ],
+          "margin": 4.999999999999449e-05,
+          "above_all_other_methods": true
+        },
+        "123102": {
+          "best_matched_proposed": [
+            "T1-Matched"
+          ],
+          "best_other_methods": [
+            "L2-Matched"
+          ],
+          "margin": 1.4999999999876223e-05,
+          "above_all_other_methods": true
+        },
+        "123103": {
+          "best_matched_proposed": [
+            "T2-Matched"
+          ],
+          "best_other_methods": [
+            "L2-Matched"
+          ],
+          "margin": 0.00012500000000004174,
+          "above_all_other_methods": true
+        }
+      }
+    }
+  ],
+  "confirmation_seeds": [
+    123101,
+    123102,
+    123103
+  ],
+  "stage": "confirm",
+  "selection": {
+    "sha256": "67fd3f28da46a03d816f515f0dd8d8a4d9168f8f1eba3cf3475289c6d92c6a47",
+    "bytes": 75033
+  },
+  "manifest": {
+    "sha256": "31f77ee96593b6527aef5636bbd9efdacae18988ca66fd995234cebd6a513a9f",
+    "bytes": 25623
+  },
+  "validation_proposed_margins": {
+    "moons_diagonal_fading_r0p35_m2000": -0.0024999999999999467
+  },
+  "all_groups_t1_or_t2_strictly_highest": true,
+  "sampling": "Fresh training, bank and deployment randomness; fixed official test examples"
+}

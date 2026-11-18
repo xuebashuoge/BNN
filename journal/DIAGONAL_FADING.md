@@ -75,3 +75,42 @@ job identifiers, training and evaluation outputs, per-seed tables and figures un
 that root. The Slurm worker activates `torch28` and verifies the Git revision and each
 array manifest. The optional `FULL_FADING_FTZ_LIBRARY` and `FULL_FADING_FTZ_SHA256`
 variables point to the compiled, checksum-verified CPU floating-point bootstrap.
+
+## Observed three-seed results
+
+All four displayed cases use $m=2000$. The display uses the first confirmation cohort
+on each dataset where matched T1 or T2 had the highest mean. This is an illustrative
+selection across rounds. The initial comparison on common seeds and the complete results
+for every round accompany it.
+
+| Dataset | Cohort | Matched ERM | Matched L2 | Matched T1 | Matched T2 |
+|---|---|---:|---:|---:|---:|
+| MNIST | Initial | 83.3118% | 83.2443% | **83.4317%** | 83.4155% |
+| Fashion-MNIST | Expanded | 73.8655% | 74.1263% | **74.3513%** | 74.2697% |
+| CIFAR-10 | Common rates and scales | 54.2307% | 49.0730% | **55.7540%** | 54.2142% |
+| Two moons | Initial, 800 training samples | 74.0907% | 74.2543% | 74.2603% | **74.2605%** |
+
+Fashion-MNIST's initial cohort favored L2. Its expanded grid included learning rates
+0.0006 and 0.0015 for every method, following the stronger validation results at 0.001
+in the initial screen. CIFAR-10 initially favored L2 in two confirmation cohorts. The
+final search crossed learning rates 0.0015 and 0.002 with initial posterior scales 0.001
+and 0.003 for all seven labels, retaining each label's original validation-selected
+regularization. Model selection used all three validation grids. Three fresh seeds
+(151101–151103) then gave T1 a 1.5233-percentage-point mean advantage over ERM.
+L2 led on two of those seeds and scored 33.09% on the third. On two moons, T2's
+initial lead over T1 was one correct prediction in the 600,000 example/draw evaluations.
+The complete tables preserve the precision of these close rankings.
+
+The [results index](../results/correlated_diagonal_fading/final/README.md) contains the
+figures, seed-level data, training budgets and outcomes from each search. The three-seed
+figures cover matched and perfect training. A separate paired CIFAR-10 illustration shows
+both original screening seeds after the checkpoints were frozen, using 100 fresh deployment
+draws. The two-seed mean and the validation-selected seed are reported separately.
+
+To reproduce the final CIFAR search, run `bash journal/submit_diagonal_fading.sh balanced cifar10`
+after the original screening and refinement arrays. To reproduce the smaller-bank sensitivity
+study, set `DIAGONAL_M=100` and a fresh `DIAGONAL_OUTPUT`, then run
+`bash journal/submit_diagonal_fading.sh screen cifar10`.
+
+The CIFAR-10 sensitivity study at $m=100$ gave T2 52.2288%, ERM 49.7885%, L2 49.3832%
+and T1 48.6338% for matched training. T2 led by 2.4403 percentage points over ERM.
