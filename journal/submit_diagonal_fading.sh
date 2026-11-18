@@ -97,19 +97,22 @@ case $phase in
         python -u -m "$bounds" aggregate --output "$root/bounds" --width 16
         python -u -m "$bounds" fallback --output "$root/bounds"
         ;;
-    screen|refine|balanced|posterior|finalists|confirm|confirm-refine|confirm-balanced|confirm-posterior|confirm-finalists)
+    screen|refine|balanced|upper|posterior|finalists|confirm|confirm-refine|confirm-balanced|confirm-upper|confirm-posterior|confirm-finalists)
         case $dataset in mnist|fashionmnist|cifar10|moons) ;; *) echo "Supply comparison dataset" >&2; exit 2;; esac
         stage="$root/comparison/$dataset"
         mkdir -p "$stage"
         limit=00:12:00
         if [[ $dataset == cifar10 ]]; then limit=00:30:00; fi
+        if [[ $phase == *upper && $dataset != cifar10 ]]; then
+            echo "Upper-rate refinement requires CIFAR-10" >&2; exit 2
+        fi
         if [[ $phase == *balanced && $dataset != cifar10 && $dataset != moons ]]; then
             echo "Balanced refinement supports CIFAR-10 and two moons" >&2; exit 2
         fi
         if [[ ( $phase == *posterior || $phase == *finalists ) && $dataset != fashionmnist ]]; then
             echo "Posterior refinement requires Fashion-MNIST" >&2; exit 2
         fi
-        if [[ $phase == screen || $phase == refine || $phase == balanced || $phase == posterior || $phase == finalists ]]; then
+        if [[ $phase == screen || $phase == refine || $phase == balanced || $phase == upper || $phase == posterior || $phase == finalists ]]; then
             if [[ $phase == screen ]]; then
                 options=()
                 if [[ $dataset == moons && -n ${DIAGONAL_MOONS_TRAIN_SIZE:-} ]]; then
@@ -118,10 +121,12 @@ case $phase in
                 "$py" -m "$compare" screen --datasets "$dataset" --m "${DIAGONAL_M:-2000}" \
                     "${options[@]}" --output "$stage/screen.jsonl"
                 next=confirm
-            elif [[ $phase == balanced ]]; then
-                "$py" -m "$compare" balanced-screen --screen-manifest "$stage/screen.jsonl" \
-                    --screen-root "$stage/screen" --output "$stage/balanced.jsonl"
-                next=confirm-balanced
+            elif [[ $phase == balanced || $phase == upper ]]; then
+                options=()
+                if [[ $phase == upper ]]; then options=(--upper); fi
+                "$py" -m "$compare" balanced-screen "${options[@]}" --screen-manifest "$stage/screen.jsonl" \
+                    --screen-root "$stage/screen" --output "$stage/$phase.jsonl"
+                next=confirm-$phase
             elif [[ $phase == posterior ]]; then
                 "$py" -m "$compare" posterior-screen --screen-manifest "$stage/screen.jsonl" --screen-root "$stage/screen" \
                     --refinement-manifest "$stage/refine.jsonl" --refinement-root "$stage/refine" --output "$stage/posterior.jsonl"
@@ -137,12 +142,13 @@ case $phase in
             fi
             job=$(array "$stage" "$phase" "$compare" "$stage/$phase" "$limit")
             depends="$job"
-            prerequisite=""
+            prerequisites=()
             case $phase in
-                refine) prerequisite=screen ;;
-                balanced) prerequisite=refine ;;
+                refine) prerequisites=(screen) ;;
+                balanced) prerequisites=(refine) ;;
+                upper) prerequisites=(refine balanced) ;;
             esac
-            if [[ -n $prerequisite ]]; then
+            for prerequisite in "${prerequisites[@]}"; do
                 # Slurm can forget a finished array by the time a new grid is submitted.
                 # The confirmation controller validates each expected report before selection.
                 reports="$stage/$prerequisite/reports"
@@ -151,15 +157,18 @@ case $phase in
                 if (( done_count < $(wc -l < "$stage/$prerequisite.jsonl") )); then
                     depends+=":$(cat "$stage/$prerequisite.job")"
                 fi
-            fi
+            done
             submit "$stage/$phase-select.job" "select_$dataset" "${cpu[@]}" --time=00:05:00 --dependency="afterok:$depends" \
                 "$worker" bash "$launcher" "$next" "$dataset"
         else
             extra=()
-            if [[ $phase == confirm-refine || $phase == confirm-balanced || $phase == confirm-posterior || $phase == confirm-finalists ]]; then
+            if [[ $phase == confirm-refine || $phase == confirm-balanced || $phase == confirm-upper || $phase == confirm-posterior || $phase == confirm-finalists ]]; then
                 extra=(--refinement-manifest "$stage/refine.jsonl" --refinement-root "$stage/refine")
             fi
-            if [[ $phase == confirm-balanced ]]; then
+            if [[ $phase == confirm-upper ]]; then
+                extra+=(--upper-manifest "$stage/upper.jsonl" --upper-root "$stage/upper")
+            fi
+            if [[ $phase == confirm-balanced || $phase == confirm-upper ]]; then
                 extra+=(--balanced-manifest "$stage/balanced.jsonl" --balanced-root "$stage/balanced")
                 if [[ $dataset == moons ]]; then extra+=(--eval-draws 100); fi
             fi

@@ -26,6 +26,7 @@ SCREEN_SEEDS = (122101, 122102)
 CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "refined_confirm": (124101, 124102, 124103),
                  "cifar_balanced_confirm": (151101, 151102, 151103),
+                 "cifar_upper_confirm": (152101, 152102, 152103),
                  "moons_balanced_confirm": (162101, 162102, 162103),
                  "fashion_posterior_confirm": (161101, 161102, 161103),
                  "moons_revalidated_confirm": (163101, 163102, 163103),
@@ -34,6 +35,7 @@ CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "small_sample_refined_confirm": (142101, 142102, 142103)}
 FASHION_FINALIST_SCREEN_SEEDS = tuple(range(178301, 178307))
 SMALL_SAMPLE_SCREEN_SEEDS = (140101, 140102)
+CIFAR_RATE_GRIDS = {"cifar_balanced": (.0015, .002), "cifar_upper": (.0045, .006)}
 
 
 def candidates(base, method, perfect, refine):
@@ -153,7 +155,7 @@ def cifar_screen_bank_size(original):
     return m
 
 
-def balanced_cifar_entries(original, rows):
+def balanced_cifar_entries(original, rows, stage="cifar_balanced"):
     """Carry each label's original validation-selected penalty into a shared 2x2 grid."""
     cifar_screen_bank_size(original)
     _, selected = select_variants(rows, original, top=1)
@@ -161,11 +163,11 @@ def balanced_cifar_entries(original, rows):
     entries = []
     for choice in selected:
         config = by_id[choice["task_ids"][0]]["config"]
-        for rate in (.0015, .002):
+        for rate in CIFAR_RATE_GRIDS[stage]:
             for scale in (.001, .003):
                 candidate = {**config, "lr": rate, "posterior_std": scale}
                 for seed in SCREEN_SEEDS:
-                    item = entry(candidate, seed, choice["group"], choice["method_label"], "cifar_balanced")
+                    item = entry(candidate, seed, choice["group"], choice["method_label"], stage)
                     item["penalty_from_validation_variant"] = choice["variant_id"]
                     entries.append(item)
     return entries
@@ -250,11 +252,14 @@ def fashion_finalist_plan(earlier, rows):
 
 
 def prepare_confirmation(args):
+    upper_manifest = getattr(args, "upper_manifest", None)
+    upper_root = getattr(args, "upper_root", None)
     posterior_manifest = getattr(args, "posterior_manifest", None)
     posterior_root = getattr(args, "posterior_root", None)
     finalists_manifest = getattr(args, "finalists_manifest", None)
     finalists_root = getattr(args, "finalists_root", None)
     if (args.eval_draws < 1
+            or (upper_manifest is None) != (upper_root is None)
             or (finalists_manifest is None) != (finalists_root is None)
             or (posterior_manifest is None) != (posterior_root is None)
             or (args.refinement_manifest is None) != (args.refinement_root is None)
@@ -269,6 +274,10 @@ def prepare_confirmation(args):
         dataset = read_manifest(args.screen_manifest)[0]["config"]["dataset"]
         balanced_stage = "moons_balanced" if dataset == "moons" else "cifar_balanced"
         stages.append((balanced_stage, args.balanced_manifest, args.balanced_root))
+    if upper_manifest:
+        if not args.balanced_manifest or balanced_stage != "cifar_balanced":
+            raise ValueError("The upper-rate confirmation requires the earlier CIFAR balanced grid")
+        stages.append(("cifar_upper", upper_manifest, upper_root))
     if posterior_manifest:
         if not args.refinement_manifest or args.balanced_manifest:
             raise ValueError("Fashion posterior selection requires the original screen and refinement")
@@ -292,6 +301,8 @@ def prepare_confirmation(args):
             rows = [row for row in rows if (row["method_label"], row["variant_id"]) in allowed]
         elif stage == "fashion_posterior":
             expected = fashion_posterior_entries(entries, rows)
+        elif stage == "cifar_upper":
+            expected = balanced_cifar_entries(original, original_rows, stage)
         elif stage in {"cifar_balanced", "moons_balanced"}:
             expected = balanced_grid
         else:
@@ -302,7 +313,8 @@ def prepare_confirmation(args):
         stage_rows = validation_rows(root, additional)
         rows.extend(stage_rows)
         if stage == "screen" and args.balanced_manifest:
-            balanced_grid = balanced_entries(additional, stage_rows)
+            original, original_rows = additional, stage_rows
+            balanced_grid = balanced_entries(original, original_rows)
     if getattr(args, "command", None) == "posterior-screen":
         return write_manifest(args.output, fashion_posterior_entries(entries, rows))
     if getattr(args, "command", None) == "finalists-screen":
@@ -318,7 +330,7 @@ def prepare_confirmation(args):
                for group, scores in accuracy.items()}
     stage = "refined_confirm" if args.refinement_manifest else "confirm"
     if args.balanced_manifest:
-        stage = balanced_stage + "_confirm"
+        stage = "cifar_upper_confirm" if upper_manifest else balanced_stage + "_confirm"
     if posterior_manifest:
         stage = "fashion_posterior_confirm"
     if finalists_manifest:
@@ -425,6 +437,7 @@ def main():
     balanced = commands.add_parser("balanced-screen")
     balanced.add_argument("--screen-manifest", type=Path, required=True)
     balanced.add_argument("--screen-root", type=Path, required=True)
+    balanced.add_argument("--upper", action="store_true", help="Use the common .0045/.006 CIFAR rate grid")
     confirm = commands.add_parser("confirm")
     confirm.add_argument("--screen-manifest", type=Path, required=True)
     confirm.add_argument("--screen-root", type=Path, required=True)
@@ -432,6 +445,8 @@ def main():
     confirm.add_argument("--refinement-root", type=Path)
     confirm.add_argument("--balanced-manifest", type=Path)
     confirm.add_argument("--balanced-root", type=Path)
+    confirm.add_argument("--upper-manifest", type=Path)
+    confirm.add_argument("--upper-root", type=Path)
     confirm.add_argument("--posterior-manifest", type=Path)
     confirm.add_argument("--posterior-root", type=Path)
     confirm.add_argument("--finalists-manifest", type=Path)
@@ -470,7 +485,9 @@ def main():
         result = write_manifest(args.output, grid(design, "refine"))
     elif args.command == "balanced-screen":
         original = read_manifest(args.screen_manifest)
-        entries = balanced_entries(original, validation_rows(args.screen_root, original))
+        rows = validation_rows(args.screen_root, original)
+        entries = (balanced_cifar_entries(original, rows, "cifar_upper") if args.upper
+                   else balanced_entries(original, rows))
         result = write_manifest(args.output, entries)
     elif args.command == "task":
         result = run_task(args)
