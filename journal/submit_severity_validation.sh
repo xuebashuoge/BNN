@@ -13,6 +13,7 @@ export JOURNAL_GIT_SHA=${JOURNAL_GIT_SHA:-$(git rev-parse HEAD)}
 py=${DIAGONAL_PYTHON:-python}
 export OMP_WAIT_POLICY=PASSIVE KMP_BLOCKTIME=0
 case $source_selection in
+    erasure_penalty) runner=journal.erasure_bank_comparison; base="$primary/penalty60"; limit=00:08:00; job_label=erasure_penalty ;;
     erasure_common) runner=journal.erasure_bank_comparison; base="$primary/common"; limit=00:06:00; job_label=erasure_common ;;
     erasure) runner=journal.erasure_bank_comparison; base="$primary"; limit=00:10:00; job_label=erasure ;;
     mnist_hard) runner=journal.fading_severity; base="$primary/expansion"; limit=00:08:00; job_label=mnist_hard ;;
@@ -30,7 +31,9 @@ exec 9>"$out/submit.lock"
 flock 9
 manifest="$out/manifest.jsonl"
 selector=journal.severity_validation
-if [[ $source_selection == erasure || $source_selection == mnist_hard || $source_selection == erasure_common ]]; then
+if [[ $source_selection == erasure_penalty ]]; then
+    "$py" -m journal.erasure_penalty_final "$phase" --root "$primary"
+elif [[ $source_selection == erasure || $source_selection == mnist_hard || $source_selection == erasure_common ]]; then
     "$py" -m journal.additional_bank_validation "$source_selection" "$phase" --root "$primary"
 elif [[ $phase == screen ]]; then
     "$py" -m "$selector" screen --source-selection "$source_selection" --primary "$primary/manifest.jsonl" --output "$manifest"
