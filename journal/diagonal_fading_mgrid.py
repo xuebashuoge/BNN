@@ -172,6 +172,16 @@ def write_index(output, initial, displayed):
         lines.extend(['', f'[Seed-level margin figure]({name}/margins.pdf) · [Method and cohort details]({name}/comparison.csv)',
                       '', 'Seven-method accuracy figures for ' + ', '.join(
                         f'[m={m}]({name}/m{m}/diagonal_fading_accuracy.pdf)' for m in SIZES) + '.'])
+    lines.extend(['', '### Cohorts and paired training seeds', '',
+                  'Each entry identifies the displayed cohort and the number of seeds on which its fixed proposed '
+                  'method beat its fixed comparator.', '',
+                  '| Dataset | 200 | 500 | 1000 |', '|---|---|---|---|'])
+    for ds in DATASETS:
+        cells = []
+        for m in SIZES:
+            r = next(row for row in displayed if row['m'] == m and row['dataset'] == ds)
+            cells.append(f"{r['cohort']} ({r['paired_wins']}/{r['n_seeds']})")
+        lines.append('| ' + DATASET_NAMES[ds] + ' | ' + ' | '.join(cells) + ' |')
     lines.extend(['', '## Reading the margins', '',
                   'The margin plot shows each paired training-seed difference in gray and its mean in blue. '
                   'Both methods stay fixed across a cell’s seeds. Each dataset panel uses its own vertical scale. '
