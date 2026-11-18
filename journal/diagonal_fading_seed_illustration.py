@@ -105,6 +105,63 @@ def checked_result(root, item):
                 test_accuracy=risk["accuracy"], evaluation_sha256=file_fingerprint(path)["sha256"])
 
 
+def plot_figure(root):
+    """Draw the three test-accuracy columns directly from the saved seven-method CSV."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output = root / SUBDIR
+    protocol = read_protocol(root)
+    selected = protocol["validation_selected_seed"]
+    other = next(seed for seed in SEEDS if seed != selected)
+    with (output / "seed_illustration.csv").open(newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    if [row["method"] for row in rows] != list(METHODS):
+        raise ValueError("Expected the seven matched/perfect methods in the original report order")
+    columns = (f"test_pct_s{selected}", f"test_pct_s{other}", "test_mean_pct_two_seeds")
+    values = [[float(row[field]) for row in rows] for field in columns]
+    for first, second, average in zip(*values):
+        if not (0 <= first <= 100 and 0 <= second <= 100 and abs(average-(first+second)/2) <= 1e-10):
+            raise ValueError("Unexpected test percentage or two-seed mean")
+    titles = (f"Seed {selected}\nValidation-selected", f"Seed {other}\nOther screening seed",
+              "Two-seed mean\nEqual weight per seed")
+    y = (0, 1, 2, 3, 5.2, 6.2, 7.2)
+    figure, axes = plt.subplots(1, 3, figsize=(8.4, 4.), sharex=True, sharey=True)
+    max_pct = max(max(series) for series in values)
+    upper_axis = 10 * (int((max_pct + 12)/10)+1)
+    for ax, scores, title in zip(axes, values, titles):
+        high = max(scores)
+        for pos, score in zip(y, scores):
+            best = abs(high-score) <= 1e-10
+            color = "#16677A" if best else "#a5b1b7"
+            ax.barh(pos, score, color=color, height=.58, zorder=2)
+            ax.annotate(f"{score:.4f}", (score, pos), xytext=(2, 0),
+                        textcoords="offset points", va="center", fontsize=7.4,
+                        color="#104f5d" if best else "#2a3337", fontweight="bold" if best else "normal")
+        ax.set_title(title, fontsize=9, pad=10)
+        ax.set_xlim(0, upper_axis)
+        ax.set_xticks(range(0, upper_axis+1, 20))
+        ax.grid(axis="x", color=".91", linewidth=.6)
+        ax.spines[["top", "left", "right"]].set_visible(False)
+        ax.spines["bottom"].set_color(".65")
+        ax.tick_params(axis="both", labelsize=8, length=0)
+        ax.axhline(4.0, color=".84", linewidth=.6)
+    axes[0].set_yticks(y, ["ERM", "L2", "T1", "T2", "ERM", "L2", "T1/T2"])
+    axes[0].set_ylim(7.95, -1.25)
+    for pos, label in ((-.87, "Matched"), (4.36, "Perfect")):
+        axes[0].text(-.025, pos, label, transform=axes[0].get_yaxis_transform(), ha="right",
+                     va="center", fontsize=8, fontweight="bold")
+    figure.suptitle(r"CIFAR-10 deployment under correlated diagonal fading ($m=2000,\ \rho_c=0.35$)",
+                    fontsize=11, y=.98)
+    figure.supxlabel("Gibbs deployment accuracy (%, 100 draws)", fontsize=9.5, y=.035)
+    figure.subplots_adjust(top=.79, bottom=.16, left=.09, right=.99, wspace=.12)
+    for suffix in ("png", "pdf"):
+        figure.savefig(output / f"seed_illustration.{suffix}", dpi=260, bbox_inches="tight")
+    plt.close(figure)
+    return {"output": str(output), "validation_selected_seed": selected, "test_percentage_columns": columns}
+
+
 def report(root):
     protocol = read_protocol(root)
     selected = protocol["validation_selected_seed"]
@@ -132,18 +189,21 @@ def report(root):
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+    plot_figure(root)
     return {key: result[key] for key in ("validation_selected_seed", "test_ranking_by_seed", "test_ranking_two_seed_mean")}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("prepare", "evaluate", "report"))
+    parser.add_argument("command", choices=("prepare", "evaluate", "report", "plot"))
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--index", type=int)
     parser.add_argument("--threads", type=int, default=2)
     args = parser.parse_args()
     if args.command == "prepare":
         result = prepare(args.root)
+    elif args.command == "plot":
+        result = plot_figure(args.root)
     elif args.command == "evaluate":
         if args.index is None or args.threads < 1:
             parser.error("Evaluation requires --index and positive --threads")
