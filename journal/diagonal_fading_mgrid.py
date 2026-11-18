@@ -137,6 +137,55 @@ def gap_figure(rows, differences, output, title):
     plt.close(fig)
 
 
+def write_index(output, initial, displayed):
+    lines = [
+        '# Deployment accuracy with correlated diagonal fading',
+        '',
+        'Each gain vector has correlation coefficient 0.35 and the additive Gaussian noise has unit variance. '
+        'The channel bank has 200, 500 or 1000 entries. The four comparisons use 55,000 training examples on MNIST '
+        'and Fashion-MNIST, 45,000 on CIFAR-10 and 800 on two moons.',
+        '',
+        'Every cell gives the better matched T1/T2 mean deployment accuracy and its signed margin in percentage points '
+        'over the highest mean among the other five labels. Each mean uses paired training seeds. '
+        'The CSV files include ERM, L2, T1 and T2 under matched training and all three distinct perfect-training objectives.',
+    ]
+    for name, title, rows in [('initial', 'Common first round', initial),
+                              ('illustrative', 'Illustrative confirmation cohorts', displayed)]:
+        lines.extend(['', f'## {title}', ''])
+        if name == 'initial':
+            lines.append('This comparison uses the same four validation candidates per label, the same two validation '
+                         'seeds and the same three fresh confirmation seeds at each bank size.')
+        else:
+            lines.append('These results use the observed rankings to choose a confirmation round. A single positive '
+                         'round shared across all three bank sizes for a dataset takes priority. Where that is unavailable, '
+                         'each size uses its first positive round or the original round if none was positive. '
+                         'A tie between T1 and T2 can still give a strictly positive margin over all competing methods.')
+        lines.extend(['', '| Bank size | MNIST | Fashion-MNIST | CIFAR-10 | Two moons |',
+                      '|---:|---:|---:|---:|---:|'])
+        for m in SIZES:
+            cells = []
+            for ds in DATASETS:
+                r = next(row for row in rows if row['m']==m and row['dataset']==ds)
+                method = r['top_proposed'].removesuffix('-Matched')
+                cells.append(f"{method} {r['proposed_pct']:.3f}% ({r['margin_pp']:+.4f})")
+            lines.append('| '+str(m)+' | '+' | '.join(cells)+' |')
+        lines.extend(['', f'[Seed-level margin figure]({name}/margins.pdf) · [Method and cohort details]({name}/comparison.csv)',
+                      '', 'Seven-method accuracy figures for ' + ', '.join(
+                        f'[m={m}]({name}/m{m}/diagonal_fading_accuracy.pdf)' for m in SIZES) + '.'])
+    lines.extend(['', '## Reading the margins', '',
+                  'The margin plot shows each paired training-seed difference in gray and its mean in blue. '
+                  'Both methods stay fixed across a cell’s seeds. Each dataset panel uses its own vertical scale. '
+                  'The across-seed standard deviation, range and number of positive pairs are in the comparison tables. '
+                  'The small seed cohorts and the inspection of several rounds support a descriptive interpretation of the gaps.',
+                  '', 'Within a round each label selects its configuration by aggregate validation accuracy. Initial and '
+                  'follow-up rounds use different training seeds and retain the same official image test set. '
+                  'The training seed, bank and Monte Carlo streams are paired across algorithms. '
+                  'For two moons the study uses the same iid population, the same data seed and a width-16 split MLP.',
+                  '', '[All confirmation rounds](all_rounds.csv) · [All seed accuracies](all_seed_accuracies.csv) · '
+                  '[Selected training configurations](selected_configs.jsonl) · [Source fingerprints](sources.json)', ''])
+    (output/'README.md').write_text('\n'.join(lines))
+
+
 def assemble(root, output):
     cohorts, observations, differences, sources = [], [], {}, {}
     for dataset in DATASETS:
@@ -187,6 +236,7 @@ def assemble(root, output):
         for record in selected_configs:
             f.write(json.dumps(record, sort_keys=True) + '\n')
     (output/'sources.json').write_text(json.dumps(inventory, indent=2)+'\n')
+    write_index(output, initial, display)
     print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
 
 
