@@ -70,7 +70,7 @@ class CifarRefinementTests(unittest.TestCase):
                              upper_manifest=root / "cifar_upper.jsonl" if include_upper else None,
                              upper_root=root / "cifar_upper" if include_upper else None,
                              eval_draws=20, output=output)
-            self.assertEqual(prepare_confirmation(args)["tasks"], 21)
+            self.assertEqual(prepare_confirmation(args)["tasks"], 35 if include_upper else 21)
             selection = json.loads(output.with_suffix(".selection.json").read_text())
             self.assertEqual(len(selection["validation_trials"]), 28 * len(stages))
             for choice in selection["selected_variants"]:

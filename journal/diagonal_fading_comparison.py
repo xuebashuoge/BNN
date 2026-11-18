@@ -26,7 +26,7 @@ SCREEN_SEEDS = (122101, 122102)
 CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "refined_confirm": (124101, 124102, 124103),
                  "cifar_balanced_confirm": (151101, 151102, 151103),
-                 "cifar_upper_confirm": (152101, 152102, 152103),
+                 "cifar_upper_confirm": (152101, 152102, 152103, 152104, 152105),
                  "moons_balanced_confirm": (162101, 162102, 162103),
                  "fashion_posterior_confirm": (161101, 161102, 161103),
                  "moons_revalidated_confirm": (163101, 163102, 163103),
