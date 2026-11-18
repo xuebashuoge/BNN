@@ -132,13 +132,19 @@ case $phase in
             fi
             job=$(array "$stage" "$phase" "$compare" "$stage/$phase" "$limit")
             depends="$job"
-            if [[ $phase == refine ]]; then depends+=":$(cat "$stage/screen.job")"; fi
-            if [[ $phase == balanced ]]; then
-                # Completed refinements can age out of Slurm's dependency table.
-                # The controller still validates every expected report.
-                refine_count=$(find "$stage/refine/reports" -name '*.json' | wc -l)
-                if (( refine_count < $(wc -l < "$stage/refine.jsonl") )); then
-                    depends+=":$(cat "$stage/refine.job")"
+            prerequisite=""
+            case $phase in
+                refine) prerequisite=screen ;;
+                balanced) prerequisite=refine ;;
+            esac
+            if [[ -n $prerequisite ]]; then
+                # Slurm can forget a finished array by the time a new grid is submitted.
+                # The confirmation controller validates each expected report before selection.
+                reports="$stage/$prerequisite/reports"
+                done_count=0
+                if [[ -d $reports ]]; then done_count=$(find "$reports" -name '*.json' | wc -l); fi
+                if (( done_count < $(wc -l < "$stage/$prerequisite.jsonl") )); then
+                    depends+=":$(cat "$stage/$prerequisite.job")"
                 fi
             fi
             submit "$stage/$phase-select.job" "select_$dataset" "${cpu[@]}" --time=00:05:00 --dependency="afterok:$depends" \
