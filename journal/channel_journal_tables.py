@@ -119,10 +119,10 @@ def notes(m, rows):
     counts = [tuple(get(d,c)["n_seeds"] for c in CHANNELS) for d in datasets]
     if len(set(counts)) == 1:
         f,e = counts[0]
-        sample = f"{f} paired training seeds per channel." if f == e else f"Paired training seeds: {f} for fading, {e} for erasure."
+        sample = f"{f} paired training seeds per channel." if f == e else f"Fading uses {f} paired training seeds and erasure uses {e}."
     else:
         pairs = ", ".join(f"{DATASETS[d]} {f}/{e}" for d,(f,e) in zip(datasets,counts))
-        sample = f"Paired training seeds (fading/erasure): {pairs}."
+        sample = f"Paired training-seed counts (fading/erasure) are {pairs}."
     return conditions, sample
 
 
@@ -161,8 +161,11 @@ def render(m, rows):
             text(channel_x,yy,c,ha="left",fontsize=10.5)
             for x,k in zip(centers,DISPLAY):
                 r=rows[(m,d,c,k)]
-                label=f"{fmt(r['mean_pct'])} ± {fmt(r['sd_pp'])}"
-                text(x,yy,label,ha="center",fontsize=10.6,fontweight="bold" if r["highest_displayed"] else "normal")
+                mean=fmt(r["mean_pct"])
+                if r["highest_displayed"]:
+                    mean=rf"$\mathbf{{{mean}}}$"
+                label=f"{mean} ± {fmt(r['sd_pp'])}"
+                text(x,yy,label,ha="center",fontsize=10.6)
         y+=.53
         if i < len(datasets)-1:
             rule(y+.0325,lw=.32,color=".45")
@@ -187,10 +190,10 @@ def latex(m, rows):
             cells=[rf"\multirow{{2}}{{*}}{{{DATASETS[d]}}}" if j==0 else "",c]
             for k in DISPLAY:
                 r=rows[(m,d,c,k)]
-                number=rf"{fmt(r['mean_pct'])}\,\pm\,{fmt(r['sd_pp'])}"
+                mean=fmt(r["mean_pct"])
                 if r["highest_displayed"]:
-                    number=r"\mathbf{"+number+"}"
-                cells.append("$"+number+"$")
+                    mean=r"\mathbf{"+mean+"}"
+                cells.append(rf"${mean}\,\pm\,{fmt(r['sd_pp'])}$")
             parts.append(" & ".join(cells) + r" \\")
     conditions,seeds=notes(m,rows)
     parts += [r"\bottomrule",r"\end{tabular*}",r"\par\smallskip\raggedright\footnotesize",
