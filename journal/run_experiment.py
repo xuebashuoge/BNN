@@ -249,8 +249,8 @@ def load_data(config: dict, include_test: bool = False):
 
         def image_dataset(training):
             raw = dataset_class(root=root, train=training, transform=transform, download=config["download"])
-            if config["deployment_channel"]["kind"] == "diagonal_fading":
-                # The diagonal sweep repeatedly evaluates the same images across
+            if config["deployment_channel"]["kind"] in {"diagonal_fading", "outage"}:
+                # The finite-bank sweeps repeatedly evaluate the same images across
                 # epochs and posterior draws. Materialize the exact ToTensor values once.
                 pixels = raw.data.unsqueeze(1).to(torch.float32).div_(255)
                 return TensorDataset(pixels, raw.targets)
