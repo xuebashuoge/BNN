@@ -17,6 +17,7 @@ from .run_experiment import file_fingerprint, save_json
 from .run_task import read_manifest
 
 SEEDS = tuple(range(490101,490109))
+PENALTY60_SEEDS = tuple(range(492201,492209))
 DRAWS = 40
 PROPOSED = ("T1-Matched","T2-Matched")
 OTHER = tuple(label for label in METHODS if label not in PROPOSED)
@@ -29,7 +30,10 @@ def immutable(path,obj):
     write_once(path,json.dumps(obj,indent=2,allow_nan=False)+"\n")
 
 
-def prepare(sources, out):
+def prepare(sources, out, pool_mode="original"):
+    if pool_mode not in ("original","penalty60"):
+        raise ValueError("Unknown seed-pool mode")
+    pool_seeds = PENALTY60_SEEDS if pool_mode=="penalty60" else SEEDS
     dataset=None
     origins={}
     pool=[]
@@ -45,7 +49,21 @@ def prepare(sources, out):
         if m not in (100,200,500,1000,2000) or (m==100 and ds!="cifar10"):
             raise ValueError("Unsupported reference bank size")
         seeds=sorted({e["config"]["seed"] for e in entries})
-        if (len(entries)!=len(METHODS)*len(seeds) or set(SEEDS).intersection(seeds)
+        penalty_stage="diagonal_fading_accuracy_erasure_penalty60"
+        penalty_flags=[e["stage"]==penalty_stage for e in entries]
+        if pool_mode=="penalty60":
+            if (not all(penalty_flags) or ds!="mnist" or seeds!=list(range(451201,451210))
+                    or any(e["config"]["epochs"]!=60 for e in entries)):
+                raise ValueError("The separate seed pool requires genuine nine-seed MNIST penalty60 confirmation manifests")
+            selection_path=path.with_suffix(".selection.json")
+            selected_record=json.loads(selection_path.read_text())
+            if (selected_record.get("stage")!="erasure_penalty60" or selected_record.get("confirmation_seeds")!=seeds
+                    or selected_record.get("screening_seeds")!=[431201,431202,431203]
+                    or len(selected_record.get("selected_variants",[]))!=len(METHODS)):
+                raise ValueError("Unexpected penalty60 frozen validation selection")
+        elif any(penalty_flags):
+            raise ValueError("The penalty60 confirmations require the separate penalty60 pool")
+        if (len(entries)!=len(METHODS)*len(seeds) or set(pool_seeds).intersection(seeds)
                 or {(e["method_label"],e["config"]["seed"]) for e in entries}!={(k,s) for k in METHODS for s in seeds}):
             raise ValueError("Source must be a complete disjoint seven-method confirmation cohort")
         records=[q for q in (path.with_suffix(".selection.json"),path.parent/"selection.json",path.parent/"protocol.json") if q.is_file()]
@@ -74,9 +92,9 @@ def prepare(sources, out):
                     or any(e.get("role") not in ("erasure_confirmation","severity_confirmation") for e in group)):
                 raise ValueError(f"Require exactly one frozen p=.50 {label} configuration at each m")
             variants[label]=group[0]["variant_id"]
-            for seed in SEEDS:
+            for seed in pool_seeds:
                 item=make_entry({**cfg,"eval_draws":DRAWS},seed,f"{ds}_erasure_p050_m{m}",label,
-                                "erasure_seed_validation_pool","seed_illustration_validation")
+                                ("erasure_penalty60_seed_validation_pool" if pool_mode=="penalty60" else "erasure_seed_validation_pool"),"seed_illustration_validation")
                 item["source_confirmation_variant"]=variants[label]
                 pool.append(item)
         origins[m]=dict(path=str(path.resolve()),fingerprint=file_fingerprint(path),source_seeds=seeds,
@@ -84,21 +102,26 @@ def prepare(sources, out):
     out.mkdir(parents=True,exist_ok=True)
     pool.sort(key=lambda e:(e["config"]["m"],tuple(METHODS).index(e["method_label"]),e["config"]["seed"]))
     write_manifest(out/"pool.jsonl",pool)
-    design=dict(dataset=dataset,bank_sizes=sorted(origins),source_confirmations=origins,channel=ERASURE,seeds=SEEDS,
+    design=dict(dataset=dataset,bank_sizes=sorted(origins),source_confirmations=origins,channel=ERASURE,seeds=pool_seeds,
                 test_draws=DRAWS,eval_seed_schedule="training seed + 20000 + 1000003, paired across all methods and sizes",
                 selection_rule=SELECTION_RULE,pool_manifest=file_fingerprint(out/"pool.jsonl"))
+    if pool_mode=="penalty60":
+        design["seed_pool"]="penalty60"
     immutable(out/"design.json",design)
     return {"dataset":dataset,"m":design["bank_sizes"],"models":len(pool)}
 
 
-def rank_triples(scores, sizes):
+def rank_triples(scores, sizes, pool_seeds=SEEDS):
+    pool_seeds=tuple(pool_seeds)
+    if pool_seeds not in (SEEDS,PENALTY60_SEEDS):
+        raise ValueError("Require one of the two prospectively reserved seed pools")
     if not sizes or len(set(sizes))!=len(sizes):
         raise ValueError("Require distinct, nonempty bank sizes")
-    expected={(m,label,s) for m in sizes for label in METHODS for s in SEEDS}
+    expected={(m,label,s) for m in sizes for label in METHODS for s in pool_seeds}
     if set(scores)!=expected:
         raise ValueError("Missing validation observations in the common paired seed pool")
     ranks=[]
-    for triple in combinations(SEEDS,3):
+    for triple in combinations(pool_seeds,3):
         margins={}
         for m in sizes:
             values={label:sum(scores[m,label,s] for s in triple)/3 for label in METHODS}
@@ -112,7 +135,8 @@ def rank_triples(scores, sizes):
 
 def load_pool(out):
     design=json.loads((out/"design.json").read_text())
-    if (design["channel"]!=ERASURE or design["seeds"]!=list(SEEDS) or design["test_draws"]!=DRAWS
+    pool_seeds = PENALTY60_SEEDS if design.get("seed_pool")=="penalty60" else SEEDS
+    if (design["channel"]!=ERASURE or design["seeds"]!=list(pool_seeds) or design["test_draws"]!=DRAWS
             or design["pool_manifest"]!=file_fingerprint(out/"pool.jsonl")):
         raise ValueError("Frozen design or pool manifest changed")
     return design,read_manifest(out/"pool.jsonl")
@@ -138,7 +162,7 @@ def freeze(out):
         checkpoints[entry["task_id"]]=dict(validation_accuracy=row["validation_accuracy"],
                 validation_correct=count,validation_total=denom,
                 source={k:file_fingerprint(cp/name) for k,name in (("weights","weights.pt"),("metadata","metadata.json"))})
-    ranks=rank_triples(scores,design["bank_sizes"])
+    ranks=rank_triples(scores,design["bank_sizes"],design["seeds"])
     result=dict(design=file_fingerprint(out/"design.json"),pool_manifest=design["pool_manifest"],
                 selection_rule=SELECTION_RULE,selected_seeds=ranks[0]["seeds"],all_triples=ranks,checkpoints=checkpoints)
     immutable(out/"frozen_triple.json",result)
@@ -208,7 +232,7 @@ def report(out):
                                  validation_pct=100*row["validation_accuracy"],test_pct=100*row["test_accuracy"],
                                  source_variant=item["source_confirmation_variant"],task_id=item["task_id"]))
     summaries={}
-    for name,seeds in (("full_pool",SEEDS),("validation_selected_triple",frozen["selected_seeds"])):
+    for name,seeds in (("full_pool",design["seeds"]),("validation_selected_triple",frozen["selected_seeds"])):
         groups=group_results([r for r in checked if r["seed"] in seeds],seeds)
         summaries[name]=groups
         cells=[]
@@ -231,7 +255,7 @@ def report(out):
               minimum_validation_margin_pp=r["minimum_validation_margin_pp"],average_validation_margin_pp=r["average_validation_margin_pp"],
               **{f"val_margin_m{m}_pp":v for m,v in r["margins_pp"].items()}) for r in frozen["all_triples"]])
     result=dict(design=file_fingerprint(out/"design.json"),selection=file_fingerprint(frozen_path),
-                dataset=design["dataset"],bank_sizes=design["bank_sizes"],pool_seeds=SEEDS,selected_seeds=frozen["selected_seeds"],
+                dataset=design["dataset"],bank_sizes=design["bank_sizes"],pool_seeds=design["seeds"],selected_seeds=frozen["selected_seeds"],
                 interpretation="Validation-selected training-seed illustration, paired across bank sizes and methods. The full pool describes all eight newly trained seeds.",
                 test_sample="The official test examples (or fixed independent moons test sample) are reused with fresh paired posterior/channel Monte Carlo.",
                 evaluated_models=len(checked),draws=DRAWS,groups=summaries)
@@ -243,6 +267,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest="command",required=True)
     build=sub.add_parser("prepare")
+    build.add_argument("--pool",choices=("original","penalty60"),default="original")
     build.add_argument("--source",action="append",type=Path,required=True,help="Designated p=.50 seven-method confirmation manifest, repeat per m")
     train=sub.add_parser("train")
     train.add_argument("--threads",type=int,default=2)
@@ -253,7 +278,7 @@ def main():
     for p in (build,train,test,sub.add_parser("freeze"),sub.add_parser("report")):
         p.add_argument("--output",type=Path,required=True)
     args=parser.parse_args()
-    if args.command=="prepare": result=prepare(args.source,args.output)
+    if args.command=="prepare": result=prepare(args.source,args.output,args.pool)
     elif args.command=="train":
         load_pool(args.output)
         args.manifest=args.output/"pool.jsonl";args.output_root=args.output/"training"

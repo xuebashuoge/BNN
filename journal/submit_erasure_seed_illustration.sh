@@ -22,14 +22,15 @@ submit(){
     ) 9>"$out/logs/$name.job.lock"
 }
 case "$phase" in
- start)
+ start|start-penalty60)
     [[ $# -ge 1 ]]
-    submit prepare --time=00:05:00 "$worker" bash journal/submit_erasure_seed_illustration.sh dispatch "$out" "$@"
+    submit prepare --time=00:05:00 "$worker" bash journal/submit_erasure_seed_illustration.sh "dispatch${phase#start}" "$out" "$@"
     ;;
- dispatch)
+ dispatch|dispatch-penalty60)
     src=()
+    mode=original; if [[ $phase == dispatch-penalty60 ]]; then mode=penalty60; fi
     for path in "$@"; do src+=(--source "$path"); done
-    python -m "$module" prepare --output "$out" "${src[@]}"
+    python -m "$module" prepare --pool "$mode" --output "$out" "${src[@]}"
     n=$(wc -l < "$out/pool.jsonl")
     export JOURNAL_MANIFEST_SHA256=$(sha256sum "$out/pool.jsonl"|cut -d' ' -f1)
     train=$(submit train --time=00:30:00 --array="0-$((n-1))%56" "$worker" python -m "$module" train --output "$out" --threads 2)
