@@ -104,6 +104,18 @@ def pick_display(cohorts, dataset):
                 default=next(r for r in by_m[m] if r['cohort'] == 'confirm')) for m in SIZES]
 
 
+def broadest_common(cohorts, dataset):
+    by_size = {m: {(r['cohort'], r['seeds']): r for r in cohorts if r['dataset']==dataset and r['m']==m}
+               for m in SIZES}
+    shared = set.intersection(*(set(rows) for rows in by_size.values()))
+    def breadth(key):
+        rows = [by_size[m][key] for m in SIZES]
+        return (min(r['min_candidates'] for r in rows), 'revalid' in key[0],
+                min(r['n_seeds'] for r in rows), min(r['eval_draws'] for r in rows), key)
+    key = max(shared, key=breadth)
+    return [by_size[m][key] for m in SIZES]
+
+
 def gap_figure(rows, differences, output, title):
     import matplotlib
     matplotlib.use('Agg')
@@ -137,7 +149,7 @@ def gap_figure(rows, differences, output, title):
     plt.close(fig)
 
 
-def write_index(output, initial, displayed):
+def write_index(output, initial, common, displayed):
     lines = [
         '# Deployment accuracy with correlated diagonal fading',
         '',
@@ -150,11 +162,16 @@ def write_index(output, initial, displayed):
         'The CSV files include ERM, L2, T1 and T2 under matched training and all three distinct perfect-training objectives.',
     ]
     for name, title, rows in [('initial', 'Common first round', initial),
+                              ('common', 'Broadest common validation search', common),
                               ('illustrative', 'Illustrative confirmation cohorts', displayed)]:
         lines.extend(['', f'## {title}', ''])
         if name == 'initial':
             lines.append('This comparison uses the same four validation candidates per label, the same two validation '
                          'seeds and the same three fresh confirmation seeds at each bank size.')
+        elif name == 'common':
+            lines.append('Each dataset uses its broadest completed tuning protocol shared by all three bank sizes and '
+                         'the same confirmation seeds at every size. Candidate count, independent revalidation and '
+                         'evaluation budget determine the protocol. Its deployment ranking has no part in this choice.')
         else:
             lines.append('These results use the observed rankings to choose a confirmation round. A single positive '
                          'round shared across all three bank sizes for a dataset takes priority. Where that is unavailable, '
@@ -210,6 +227,7 @@ def assemble(root, output):
                 sources[key] = path
     initial = [r for r in cohorts if r['cohort'] == 'confirm']
     display = [r for ds in DATASETS for r in pick_display(cohorts, ds)]
+    common = [r for ds in DATASETS for r in broadest_common(cohorts, ds)]
     if len(initial) != len(SIZES)*len(DATASETS) or len({r['seeds'] for r in initial}) != 1:
         raise ValueError('The original comparison requires a common paired cohort at all twelve settings')
     output.mkdir(exist_ok=True, parents=True)
@@ -217,6 +235,7 @@ def assemble(root, output):
     csv_write(output/'all_seed_accuracies.csv', observations)
     inventory = []
     for name, rows, title in [('initial', initial, 'Initial comparison on common training seeds'),
+                              ('common', common, 'Broadest common validation search'),
                               ('illustrative', display, 'Illustrative comparison across bank sizes')]:
         directory = output/name
         directory.mkdir(exist_ok=True)
@@ -246,7 +265,7 @@ def assemble(root, output):
         for record in selected_configs:
             f.write(json.dumps(record, sort_keys=True) + '\n')
     (output/'sources.json').write_text(json.dumps(inventory, indent=2)+'\n')
-    write_index(output, initial, display)
+    write_index(output, initial, common, display)
     print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
 
 
