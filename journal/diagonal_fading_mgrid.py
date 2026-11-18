@@ -5,6 +5,7 @@ from collections import defaultdict
 import hashlib
 import json
 import math
+import shutil
 from pathlib import Path
 from statistics import fmean, stdev
 
@@ -193,7 +194,7 @@ def gap_figure(rows, differences, output, title):
     plt.close(fig)
 
 
-def write_index(output, initial, common, displayed):
+def write_index(output, initial, common, displayed, locked, precision):
     lines = [
         '# Deployment accuracy with correlated diagonal fading',
         '',
@@ -254,6 +255,30 @@ def write_index(output, initial, common, displayed):
                   'For two moons the study uses the same iid population, the same data seed and a width-16 split MLP.',
                   '', '[All confirmation rounds](all_rounds.csv) · [All seed accuracies](all_seed_accuracies.csv) · '
                   '[Selected training configurations](selected_configs.jsonl) · [Source fingerprints](sources.json)', ''])
+    if locked:
+        lines.extend(['## Nine-seed Fashion-MNIST check', '',
+                      'The proposed method and its comparator were fixed by eight-seed validation accuracy before '
+                      'opening the nine-seed deployment results. The two-sided exact sign test evaluates the direction '
+                      'of the paired differences and omits exact ties. Holm adjustment covers the three bank sizes.',
+                      '', '| m | Validation-selected pair | Mean test gap (pp) | Wins/losses/ties | Sign p | Holm p |',
+                      '|---:|---|---:|---:|---:|---:|'])
+        for r in locked:
+            lines.append(f"| {r['m']} | {r['validation_proposed']} vs {r['validation_comparator']} | "
+                         f"{r['mean_gap_pp']:+.4f} | {r['wins']}/{r['losses']}/{r['ties']} | "
+                         f"{r['exact_sign_p']:.4f} | {r['holm_p_three_sizes']:.4f} |")
+        lines.extend(['','[Full paired test results](fashion_validation_locked_pairs.csv)',''])
+    if precision:
+        lines.extend(['## Two-moons precision check', '',
+                      'The same frozen revalidated classifiers and 10,000 held-out examples were evaluated with '
+                      'exact Gaussian channel integration conditional on weights and input, and 2,048 posterior draws. '
+                      'The margins in percentage points, for 200, 500 and 1000, are ' +
+                      ', '.join(f"{100*precision['ranks'][str(m)]['integrated']['margin']:+.4f}" for m in SIZES)
+                      + '. [Figure](moons_integrated/accuracy.pdf) · [Seven-method means](moons_integrated/accuracy_means.csv)', ''])
+    if (output/'historical_iid_m20.csv').is_file():
+        lines.extend(['## Earlier i.i.d. fading reference', '',
+                      'The prior five-seed study used m=20 and independent gains. Its matched T1/T2 mean led on '
+                      'MNIST and Fashion-MNIST. L2 led on CIFAR-10 and two moons. '
+                      'The new grid uses correlated gains, rho_c=0.35. [Historical results](historical_iid_m20.csv)', ''])
     (output/'README.md').write_text('\n'.join(lines))
 
 
@@ -312,7 +337,20 @@ def assemble(root, output):
         for record in selected_configs:
             f.write(json.dumps(record, sort_keys=True) + '\n')
     (output/'sources.json').write_text(json.dumps(inventory, indent=2)+'\n')
-    write_index(output, initial, common, display)
+    precision = None
+    source = root/'moons_revalidated_integrated'
+    if (source/'accuracy_summary.json').is_file():
+        precision = json.loads((source/'accuracy_summary.json').read_text())
+        if (precision['m_grid'] != list(SIZES) or precision['rho_c'] != .35
+                or precision['posterior_draws'] != 2048 or precision['test_examples'] != 10_000):
+            raise ValueError('Unexpected two-moons verification design')
+        dest = output/'moons_integrated'
+        dest.mkdir(exist_ok=True)
+        for name in ('accuracy.pdf', 'accuracy.png', 'accuracy_means.csv', 'accuracy_by_seed.csv', 'accuracy_summary.json'):
+            shutil.copy2(source/name, dest/name)
+    if (root/'historical_iid_m20.csv').is_file():
+        shutil.copy2(root/'historical_iid_m20.csv', output/'historical_iid_m20.csv')
+    write_index(output, initial, common, display, locked, precision)
     print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
 
 
