@@ -276,8 +276,13 @@ def write_index(output, initial, common, displayed, locked, precision, examples,
         'over the highest mean among the other five labels. Each mean uses paired training seeds. '
         'The CSV files include ERM, L2, T1 and T2 under matched training and all three distinct perfect-training objectives.',
     ]
-    for name, title, rows in [('initial', 'Common first round', initial),
-                              ('common', 'Broadest common validation search', common),
+    wins = [sum(r['strict_win'] for r in common if r['m']==m) for m in SIZES]
+    lines.extend(['', 'Under the broadest common validation protocol, the number of datasets where T1 or T2 '
+                  'had the highest mean out of all seven labels was ' + ', '.join(
+                  f'{w}/4 at m={m}' for m,w in zip(SIZES,wins)) + '. The CIFAR-10 fixed-configuration '
+                  'sensitivity table below covers both seed cohorts.'])
+    for name, title, rows in [('common', 'Broadest common validation search', common),
+                              ('initial', 'Common first round', initial),
                               ('illustrative', 'Illustrative confirmation cohorts', displayed)]:
         lines.extend(['', f'## {title}', ''])
         if name == 'initial':
@@ -373,6 +378,8 @@ def write_index(output, initial, common, displayed, locked, precision, examples,
                       'The prior five-seed study used m=20 and independent gains. Its matched T1/T2 mean led on '
                       'MNIST and Fashion-MNIST. L2 led on CIFAR-10 and two moons. '
                       'The new grid uses correlated gains, rho_c=0.35. [Historical results](historical_iid_m20.csv)', ''])
+    if (output/'comparison_protocol.md').is_file():
+        lines.extend(['[Study design and analysis rules](comparison_protocol.md)', ''])
     (output/'README.md').write_text('\n'.join(lines))
 
 
@@ -445,6 +452,8 @@ def assemble(root, output):
     if (root/'historical_iid_m20.csv').is_file():
         shutil.copy2(root/'historical_iid_m20.csv', output/'historical_iid_m20.csv')
     pooled = pool_identical_cifar_configs(sources, observations, output)
+    if (root/'comparison_protocol.md').is_file():
+        shutil.copy2(root/'comparison_protocol.md', output/'comparison_protocol.md')
     examples = copy_seed_examples(root, output)
     write_index(output, initial, common, display, locked, precision, examples, pooled)
     print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
