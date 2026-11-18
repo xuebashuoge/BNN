@@ -39,6 +39,10 @@ def read_cohort(path, dataset, m):
     selection_file = parent.with_suffix('.selection.json')
     if hashlib.sha256(selection_file.read_bytes()).hexdigest() != summary['selection']['sha256']:
         raise ValueError(f'Changed validation selection for {path}')
+    selection = json.loads(selection_file.read_text())
+    counts = [sum(v['method_label'] == method for v in selection['validation_trials']) for method in METHODS]
+    if min(counts) < 1:
+        raise ValueError(f'Missing validation candidates at {path}')
     manifest = [json.loads(line) for line in manifest_file.read_text().splitlines()]
     expected_n = {'mnist': 55_000, 'fashionmnist': 55_000, 'cifar10': 45_000, 'moons': 800}[dataset]
     fixed_fields = ('train_size','val_size','width','epochs','data_seed','eval_draws')
@@ -71,7 +75,8 @@ def read_cohort(path, dataset, m):
     diffs = [scores[proposed][s] - scores[other][s] for s in seeds]
     wins = group['highest_mean_methods']
     result = dict(dataset=dataset, m=m, cohort=stage, protocol=summary['stage'], seeds=' '.join(map(str, seeds)),
-                  n_seeds=len(seeds), **budget, top_method=' / '.join(wins), top_proposed=proposed, comparator=other,
+                  n_seeds=len(seeds), **budget, min_candidates=min(counts), max_candidates=max(counts),
+                  top_method=' / '.join(wins), top_proposed=proposed, comparator=other,
                   proposed_pct=means[proposed], comparator_pct=means[other],
                   margin_pp=fmean(diffs), paired_sd_pp=stdev(diffs), paired_min_pp=min(diffs),
                   paired_max_pp=max(diffs), paired_wins=sum(d > 1e-10 for d in diffs),
