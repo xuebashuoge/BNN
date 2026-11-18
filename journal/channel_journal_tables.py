@@ -219,7 +219,25 @@ def export(input_file, output, sizes, defaults):
             all_rows.extend(records)
             stem=output/f"channel_accuracy_m{m}"
             write_csv(stem.with_suffix(".csv"),records)
-            stem.with_suffix(".tex").write_text(latex(m,rows))
+            document=latex(m,rows)
+            stem.with_suffix(".tex").write_text(document)
+            start=document.index(r"\begin{tabular*}")
+            end=document.index(r"\end{tabular*}")+len(r"\end{tabular*}")
+            (output/f"channel_accuracy_m{m}_tabular.tex").write_text(document[start:end]+"\n")
+            md=[f"### m = {m}","",
+                "| Dataset | Channel | Matched ERM | Matched L2 | Matched T1 | Matched T2 | Perfect T1/T2 |",
+                "|---|---|---:|---:|---:|---:|---:|"]
+            for ds in datasets_at(m):
+                for channel in CHANNELS:
+                    cells=[]
+                    for k in DISPLAY:
+                        row=rows[m,ds,channel,k]
+                        value=fmt(row["mean_pct"])
+                        if row["highest_displayed"]:
+                            value=f"**{value}**"
+                        cells.append(f"{value} ± {fmt(row['sd_pp'])}")
+                    md.append("| "+" | ".join([DATASETS[ds] if channel=="Fading" else "",channel,*cells])+" |")
+            stem.with_suffix(".md").write_text("\n".join(md)+"\n")
             fig=render(m,rows)
             for ext in ("png","pdf"):
                 fig.savefig(stem.with_suffix("."+ext),dpi=300,facecolor="white")
