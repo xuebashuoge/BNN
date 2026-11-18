@@ -217,6 +217,82 @@ def figures(output, effects, cohorts, means):
         plt.close(fig)
 
 
+def make_index(root, output, effects, comparisons):
+    lines = ['# More severe correlated diagonal fading','',
+             'The mild channel uses adjacent-gain correlation 0.35 and noise standard deviation 1. '
+             'The combined hard channel uses correlation 0.85 and noise standard deviation 2. '
+             'In every condition the gain matrix is diagonal, each gain is Gaussian with mean 0.5 and variance 1, '
+             'and additive white Gaussian noise is independent of the gains. At a fixed transmit power the '
+             'noise-power increase is 6.02 dB.','',
+             '## Frozen models and matched retraining','',
+             'A cell gives the accuracy drop when both changes are applied to the same mild-trained checkpoints, '
+             'followed by the accuracy recovered by retraining on the hard law. Both values are percentage points. '
+             'Four matched-training labels (ERM, L2, T1 and T2) receive equal weight within each paired seed. '
+             'All figures in this comparison use the same 24 posterior and standardized channel streams across conditions.',
+             '', '| Bank size | MNIST | Fashion-MNIST | CIFAR-10 | Two moons |','|---:|---:|---:|---:|---:|']
+    by_case={(r['dataset'],r['m']):r for r in effects}
+    for m in SIZES:
+        values=[]
+        for ds in DATASETS:
+            r=by_case.get((ds,m))
+            values.append(f"{r['combined_change_pp']:+.2f} / {r['recovery_pp']:+.2f}" if r else '—')
+        lines.append('| '+str(m)+' | '+' | '.join(values)+' |')
+    lines.extend(['','[Four-law comparison and recovery figure](channel_severity.pdf) · '
+                  '[All channel means and paired changes](channel_effects.csv) · [Seed-level changes](channel_effects_by_seed.csv)',
+                  '', 'Correlation-only and noise-only evaluations isolate each change on the original classifiers. '
+                  'The CSV also gives the difference between the joint change and the sum of the two separate changes '
+                  'as interaction_pp. The retrained_hard_pct and recovery_pp columns compare freshly trained models '
+                  'with the original models under the same hard deployment channel.',
+                  '', '## Deployment accuracy by training objective', '',
+                  'The primary comparison transfers each mild-law validation-selected configuration and paired training seed. '
+                  'Matched methods retrain with a hard-channel bank. Perfect-trained methods train with the identity channel '
+                  'and use hard-channel validation to select the checkpoint. All seven are evaluated on the hard deployment law. '
+                  'Each cell below gives the more accurate matched T1/T2 algorithm and its mean gap in percentage points '
+                  'over the strongest of the five competing labels. Positive gaps indicate a proposed-method lead.',''])
+    phases=sorted({r['phase'] for r in comparisons}, key=lambda x:(x!='transfer',x))
+    for phase in phases:
+        group={(r['dataset'],r['m']):r for r in comparisons if r['phase']==phase}
+        lines.extend([f'### {phase.capitalize()}','', '| Bank size | MNIST | Fashion-MNIST | CIFAR-10 | Two moons |',
+                      '|---:|---:|---:|---:|---:|'])
+        for m in SIZES:
+            values=[]
+            for ds in DATASETS:
+                r=group.get((ds,m))
+                values.append(f"{r['best_proposed'].removesuffix('-Matched')} {r['proposed_pct']:.3f}% "
+                              f"({r['margin_pp']:+.3f})" if r else '—')
+            if any(v!='—' for v in values):
+                lines.append('| '+str(m)+' | '+' | '.join(values)+' |')
+        lines.append('')
+    lines.extend(['The primary retraining table uses the native Gibbs-draw budget of its original cohort. '
+                  'The fixed-model and recovery tables use 24 fresh paired draws and can differ slightly from '
+                  'the native values. Validation-selected follow-ups, where present, use separate confirmation seeds. '
+                  'All completed cohorts remain in the numerical tables.',
+                  '', '[Rankings, gaps and seed counts](method_comparisons.csv) · [All seven method means](method_means.csv) · '
+                  '[Per-seed accuracies](accuracy_by_seed.csv) · [Mild versus hard retraining, paired by seed](paired_retraining_vs_original.csv)',
+                  '', 'The complete seven-method transferred-configuration figures are available for '
+                  + ', '.join(f'[{NAMES[ds]}]({ds}_transferred_methods.pdf)' for ds in DATASETS)+'.',
+                  '', 'The principal bank sizes are 200, 500 and 1000. The larger 2000 reference includes all four datasets. '
+                  'The earlier 100 reference is available for CIFAR-10. The sources file identifies each original '
+                  'confirmation cohort. Comparisons between datasets and between the core and reference studies can use '
+                  'different hyperparameters, seed cohorts and native Gibbs-draw budgets.',''])
+    (output/'README.md').write_text('\n'.join(lines))
+    shutil.copy2(root/'study_protocol.md',output/'study_protocol.md')
+    for src,name in [(root/'stress','frozen'),(root/'stress/recovery','recovery')]:
+        dest=output/name
+        dest.mkdir(exist_ok=True)
+        for f in src.glob('*.csv'):
+            shutil.copy2(f,dest/f.name)
+        for f in (src/'summary.json',src/'protocol.json'):
+            shutil.copy2(f,dest/f.name)
+        for m in SIZES:
+            source=src/f'm{m}'
+            if source.is_dir():
+                figures=[f for f in source.iterdir() if f.suffix in ('.pdf','.png')]
+                if figures:
+                    (dest/source.name).mkdir(exist_ok=True)
+                    for f in figures: shutil.copy2(f,dest/source.name/f.name)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,required=True)
@@ -227,6 +303,7 @@ def main():
     effects,n=channel_table(root,output)
     cohorts,means=algorithm_tables(root,output)
     figures(output,effects,cohorts,means)
+    make_index(root,output,effects,cohorts)
     print(f'Verified {n} paired models, {len(effects)} bank-size/dataset settings, {len(cohorts)} training cohorts.')
 
 
