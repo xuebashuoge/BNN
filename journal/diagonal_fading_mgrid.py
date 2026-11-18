@@ -167,8 +167,9 @@ def gap_figure(rows, differences, output, title):
     import matplotlib.pyplot as plt
     from matplotlib.lines import Line2D
 
-    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.6), layout='constrained')
-    fig.suptitle(title, fontsize=11)
+    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.8))
+    fig.subplots_adjust(left=.125, right=.985, bottom=.19, top=.86, wspace=.27, hspace=.55)
+    fig.suptitle(title, fontsize=11, y=.985)
     for ax, ds in zip(axes.flat, DATASETS):
         by_size = {r['m']: r for r in rows if r['dataset'] == ds}
         for i, m in enumerate(SIZES):
@@ -184,9 +185,9 @@ def gap_figure(rows, differences, output, title):
         ax.set_axisbelow(True)
         ax.spines[['top','right']].set_visible(False)
         ax.set_title(DATASET_NAMES[ds], fontsize=10)
-    fig.supxlabel('Training channel-bank size', fontsize=9)
-    fig.supylabel('Paired accuracy difference (percentage points)', fontsize=9)
-    fig.legend(loc='outside lower center', ncols=2, handles=[Line2D([],[],linestyle='none',marker='D',color='#135c85',label='Mean',markersize=5),
+    fig.supxlabel('Training channel-bank size', fontsize=9, y=.085)
+    fig.supylabel('Paired accuracy difference (percentage points)', fontsize=9, x=.012)
+    fig.legend(loc='lower center', bbox_to_anchor=(.5, .003), ncols=2, handles=[Line2D([],[],linestyle='none',marker='D',color='#135c85',label='Mean',markersize=5),
                               Line2D([],[],linestyle='none',marker='o',color='#949da5',label='Training seed',markersize=4)],
                      frameon=False, fontsize=7)
     for ext in ('pdf','png'):
