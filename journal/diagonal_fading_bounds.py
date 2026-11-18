@@ -17,7 +17,7 @@ FAMILY_SIZE = len(FAMILIES) * len(REGIMES) * len(WIDTHS)
 
 
 def perfect_shift(deployment, width, model, loss_epsilon):
-    """C1(ii) under the common iid-gain/unit-AWGN reference, or C1(i) for erasures.
+    """C1(ii) under iid reference gains and matched AWGN, or C1(i) for erasures.
 
     Stack the d diagonal gain differences and d noise differences. The requested
     metric is the Euclidean norm of this vector. For ||f||_2 <= R, the operator

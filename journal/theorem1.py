@@ -158,7 +158,16 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
         divergence = 0.
     elif deployment["kind"] == training["kind"] == "diagonal_fading":
         divergence = diagonal_gain_kl(deployment, training, width)
-        divergence += width * normal_kl(0., deployment.get("noise_std", 1.), 0., training.get("noise_std", 1.))
+        p_std, q_std = deployment.get("noise_std", 1.), training.get("noise_std", 1.)
+        if p_std != q_std:
+            if p_std == 0. or q_std == 0.:
+                divergence = math.inf
+            else:
+                log_variance_ratio = 2*(math.log(p_std)-math.log(q_std))
+                try:
+                    divergence += .5*width*(math.expm1(log_variance_ratio)-log_variance_ratio)
+                except OverflowError:
+                    divergence = math.inf
     elif deployment["kind"] == training["kind"] == "full_fading":
         divergence = fading_gain_kl(deployment, training, width, width)
         divergence += width * normal_kl(0., deployment["noise_std"], 0., training["noise_std"])
