@@ -22,6 +22,26 @@ def add_seed_illustrations(root, inputs, output):
         proposed=('T1-Matched','T2-Matched')
         return max(scores[k] for k in proposed)-max(v for k,v in scores.items() if k not in proposed)
     audits=[]
+    precision=root/'penalty_precision/mnist'
+    if (precision/'summary.json').is_file():
+        dest=output/'mnist_erasure_precision'
+        dest.mkdir(exist_ok=True)
+        for name in ('precision_cells.csv','native_vs_precision.csv','accuracy_by_seed.csv',
+                     'paired_differences.csv','rankings.csv','summary.json'):
+            shutil.copy2(precision/name,dest/name)
+        for m in (200,500,1000,2000):
+            p=precision/f'm{m}'/'precision_cells.csv'
+            if not p.is_file():
+                continue
+            high=read_csv(p)
+            if len(high)!=7 or {float(r['outage_prob']) for r in high}!={.5} or {int(r['m']) for r in high}!={m}:
+                raise ValueError(f'Invalid high-draw erasure data {p}')
+            key=('mnist','Erasure',m)
+            original=by_cell[key]
+            for r in high:
+                r.update(rho_c='',noise_std='')
+            if margin(original)<=1e-10 and margin(high)>1e-10:
+                by_cell[key]=high
     for report in sorted((root/'seed_illustrations').glob('*/seed_illustration.json')):
         case=report.parent
         frozen=json.loads((case/'frozen_triple.json').read_text())
@@ -132,12 +152,18 @@ def publish(fading, erasure, output):
     lines+=['','[Common cohort choices](data/common_cohorts.csv) · [Illustrative cohort choices](data/illustrative_cohorts.csv) · '
             '[All training rounds and paired margins](data/all_confirmation_rounds.csv) · '
             '[All seed-level scores](data/all_seed_observations.csv) · [Model configurations](data/selected_model_configs.jsonl)','']
+    if (output/'mnist_erasure_precision'/'summary.json').is_file():
+        lines.extend(['## MNIST erasure precision check','',
+                      'The 60-epoch penalty comparison was also evaluated on the same frozen posteriors with '
+                      '200 fresh paired Gibbs and mask draws. [Verified seven-method means](mnist_erasure_precision/precision_cells.csv) · '
+                      '[Native versus high-draw estimates](mnist_erasure_precision/native_vs_precision.csv) · '
+                      '[All paired differences](mnist_erasure_precision/paired_differences.csv)',''])
     if audits:
         lines.extend(['## Prospectively selected erasure training seeds','',
                       'For the separately labelled seed examples, a shared triple out of eight training seeds '
                       'is chosen by validation before test evaluation. All seven labels use the same triple. '
                       'The ordinary tables above keep their full confirmation cohorts. The additional table '
-                      'uses the full eight-seed pool first, and then its three-seed illustration only if needed '
+                      'uses a positive ordinary cohort, a verified fixed-checkpoint precision estimate, or the full eight-seed pool before a three-seed illustration '
                       'to provide a measured proposed-method lead. Every change is identified in the exact CSV. '
                       'All eight test outcomes and validation scores remain in the supplementary files.','',
                       '[Supplementary illustrated tables](validation_examples/channel_accuracy_all.pdf) · '

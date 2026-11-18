@@ -130,7 +130,9 @@ def notes(m, rows, view="common"):
                      if selected else "Illustrative rounds were chosen using observed rankings.")
     long_mnist = 'mnist' in datasets and any(x in get('mnist','Erasure')['phase'] for x in ('epochs60','penalty60'))
     if long_mnist:
-        extra.append('The MNIST erasure comparison allowed 60 epochs for every method.')
+        extra.append('The MNIST erasure comparison used 60 epochs and 200 deployment draws per seed.'
+                     if get('mnist','Erasure')['phase']=='penalty60_precision200'
+                     else 'The MNIST erasure comparison allowed 60 epochs for every method.')
     return (conditions, sample, "Bold marks the highest unrounded mean in each displayed row.", *extra)
 
 
