@@ -135,6 +135,32 @@ def select_series(case_rows, channel, dataset, mode):
     return chosen
 
 
+def mild_cells(fading, dataset, m):
+    base=fading/'matched'/f'm{m}'/dataset
+    origin=read_json(base/'transfer.json')
+    source=Path(origin['source'])
+    path=source.parent/source.stem/'accuracy_summary.json'
+    if file_fingerprint(path)!=origin['source_summary'] or file_fingerprint(source)!=origin['source_manifest']:
+        raise ValueError(f'Changed original fading source at {source}')
+    summary=read_json(path)
+    group=summary['groups'][0]
+    rows=read_csv(path.parent/'accuracy_by_seed.csv')
+    result=[]
+    for method in METHODS:
+        values=[100*float(r['test_accuracy']) for r in rows if r['method_label']==method]
+        stats=group['methods'][method]['test_accuracy']
+        mean,sd=fmean(values),stdev(values)
+        if (len(values)!=len(summary['confirmation_seeds']) or
+                not math.isclose(mean,100*stats['mean'],rel_tol=0,abs_tol=1e-9) or
+                not math.isclose(sd,100*stats['sd'],rel_tol=0,abs_tol=1e-9)):
+            raise ValueError(f'Mild source mismatch in {path}')
+        result.append(dict(dataset=dataset,channel='Fading',m=m,phase='original_'+source.stem,method=method,
+                           mean_pct=mean,sd_pp=sd,n_seeds=len(values),
+                           seeds=' '.join(map(str,summary['confirmation_seeds'])),source=str(path),
+                           rho_c=.35,noise_std=1.,outage_prob=''))
+    return result
+
+
 def assemble(fading, erasure, output):
     output.mkdir(exist_ok=True,parents=True)
     records, cells, seed_rows=[],{},[]
@@ -161,6 +187,23 @@ def assemble(fading, erasure, output):
         write_csv(output/f'{mode}_cohorts.csv',ordered)
         write_csv(output/f'{mode}_cells.csv',[item for r in ordered
                   for item in cells[r['channel'],r['dataset'],r['m'],r['phase']]])
+    original=[]
+    for row in tables['common']:
+        ds,m,ch=row['dataset'],row['m'],row['channel']
+        original.extend(mild_cells(fading,ds,m) if ch=='Fading' else cells[ch,ds,m,row['phase']])
+    write_csv(output/'milder_fading_cells.csv',original)
+    with (output/'selected_model_configs.jsonl').open('w') as f:
+        for r in records:
+            manifest=Path(r['source']).parent.parent/'manifest.jsonl'
+            seen=set()
+            for item in map(json.loads,manifest.read_text().splitlines()):
+                if item['method_label'] in seen:
+                    continue
+                seen.add(item['method_label'])
+                value=dict(dataset=r['dataset'],m=r['m'],channel=r['channel'],phase=r['phase'],
+                           method=item['method_label'],variant_id=item['variant_id'],config=item['config'],
+                           confirmation_seeds=r['seeds'],manifest=str(manifest))
+                f.write(json.dumps(value,sort_keys=True)+'\n')
     write_csv(output/'all_confirmation_rounds.csv',records)
     write_csv(output/'all_method_means.csv',[item for rows in cells.values() for item in rows])
     write_csv(output/'all_seed_observations.csv',seed_rows)
