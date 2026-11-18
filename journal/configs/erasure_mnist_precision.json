@@ -1,0 +1,15 @@
+{
+  "dataset": "mnist",
+  "bank_sizes": [200, 500, 1000, 2000],
+  "source_cohort": "penalty60/retuned",
+  "seeds": [451201, 451202, 451203, 451204, 451205, 451206, 451207, 451208, 451209],
+  "methods": ["ERM-Matched", "L2-Matched", "T1-Matched", "T2-Matched", "ERM-Perfect", "L2-Perfect", "Proposed-Perfect"],
+  "train_epochs": 60,
+  "channel": {"kind": "outage", "outage_prob": 0.5},
+  "heldout_samples": 10000,
+  "draws": 200,
+  "posterior_seed_offset_from_training_evaluation_seed": 9100027,
+  "channel_seed_offset_from_posterior_seed": 1,
+  "pairing": "One posterior draw per full test pass and independent coordinate erasures per example. The standardized weight and mask streams match across all seven labels and all m for each training seed.",
+  "scope": "Precision check on every frozen checkpoint and original official test example, irrespective of native rank. No retraining, seed selection or resampling of training cohorts."
+}
