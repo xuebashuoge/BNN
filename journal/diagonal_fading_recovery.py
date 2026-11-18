@@ -29,7 +29,7 @@ def prepare(stress, matched):
                 or transfer["deployment_law"] != {"kind":"diagonal_fading","rho_c":.85,"noise_std":2.}):
             raise ValueError(f"Hard-training cohort does not pair with original confirmation: {stage}")
         sources.append(dict(m=m,dataset=dataset,cohort=source["cohort"],manifest=transfer["manifest"],
-                            root=str(stage.resolve()),transfer=file_fingerprint(stage/"transfer.json"),
+                            root=str(stage.absolute()),transfer=file_fingerprint(stage/"transfer.json"),
                             original_manifest=source["manifest"],seeds=source["seeds"]))
         for i,item in enumerate(entries):
             original=group[item["source_task_id"]]
@@ -37,7 +37,7 @@ def prepare(stress, matched):
                     or item["config"]["m"] != m or item["config"]["dataset"] != dataset):
                 raise ValueError("Source identities differ")
             tasks.append(dict(m=m, dataset=dataset, index=i, method=original["method"], seed=original["seed"],
-                              cohort=original["cohort"], hard_root=str(stage.resolve()),hard_id=item["task_id"],
+                              cohort=original["cohort"], hard_root=str(stage.absolute()),hard_id=item["task_id"],
                               source_task_id=original["task_id"],source_checkpoint=original["checkpoint"],
                               eval_seed=item["config"]["eval_seed"]+EVAL_OFFSET,
                               original_checkpoints=original["source"]))

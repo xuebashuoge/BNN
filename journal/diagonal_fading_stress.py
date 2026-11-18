@@ -58,7 +58,7 @@ def prepare(old, grid, output):
                     or {(e["method_label"],e["config"]["seed"]) for e in entries}
                     != {(label,seed) for label in METHODS for seed in seeds}):
                 raise ValueError(f"Mixed or incomplete confirmation cohort at {cohort}")
-            sources.append(dict(m=m, dataset=dataset, cohort=stage, seeds=seeds, source=str(cohort.resolve()),
+            sources.append(dict(m=m, dataset=dataset, cohort=stage, seeds=seeds, source=str(cohort.absolute()),
                                 manifest=summary["manifest"], selection=summary["selection"],
                                 summary=file_fingerprint(summary_path)))
             for item in entries:
@@ -74,7 +74,7 @@ def prepare(old, grid, output):
                         or cfg["dataset"] != dataset or cfg["m"] != m):
                     raise ValueError(f"Unexpected frozen source {checkpoint}")
                 tasks.append(dict(m=m, dataset=dataset, cohort=stage, seed=cfg["seed"], method=item["method_label"],
-                                  task_id=item["task_id"], checkpoint=str(checkpoint.resolve()), source=origin,
+                                  task_id=item["task_id"], checkpoint=str(checkpoint.absolute()), source=origin,
                                   bank_hash=previous["checkpoint_verification"]["saved_channel_bank_hash"]))
     protocol = dict(draws=DRAWS, eval_seed_offset=EVAL_OFFSET, laws=LAWS, gain_mean=.5, gain_variance=1,
                     metric="Held-out Gibbs accuracy; normalized bounded loss is outside this deployment-only study",

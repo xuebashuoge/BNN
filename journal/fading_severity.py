@@ -40,7 +40,7 @@ def transfer(source, output):
     output.mkdir(parents=True,exist_ok=True)
     path = output/'manifest.jsonl'
     result = write_manifest(path,entries)
-    protocol = dict(source=str(source.resolve()), source_manifest=file_fingerprint(source),
+    protocol = dict(source=str(source.absolute()), source_manifest=file_fingerprint(source),
                     source_summary=file_fingerprint(summary_path), manifest=file_fingerprint(path),
                     seeds=summary['confirmation_seeds'], train_law_matched=HARD, deployment_law=HARD,
                     original_law=BASE, selection='Frozen original validation-selected hyperparameters, retrained from initialization')
