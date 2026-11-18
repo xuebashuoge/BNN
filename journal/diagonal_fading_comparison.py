@@ -29,8 +29,10 @@ CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "moons_balanced_confirm": (162101, 162102, 162103),
                  "fashion_posterior_confirm": (161101, 161102, 161103),
                  "moons_revalidated_confirm": (163101, 163102, 163103),
+                 "fashion_finalists_confirm": tuple(range(221501, 221510)),
                  "small_sample_confirm": (141101, 141102, 141103),
                  "small_sample_refined_confirm": (142101, 142102, 142103)}
+FASHION_FINALIST_SCREEN_SEEDS = tuple(range(178301, 178307))
 SMALL_SAMPLE_SCREEN_SEEDS = (140101, 140102)
 
 
@@ -222,10 +224,38 @@ def fashion_posterior_entries(earlier, rows):
     return result
 
 
+def fashion_finalist_plan(earlier, rows):
+    """Freeze the two best preliminary variants per label before collecting more seeds."""
+    variants, choices = select_variants(rows, earlier, top=2)
+    if len(variants) != len(METHODS) * 16 or len(choices) != len(METHODS) * 2:
+        raise ValueError("Expected sixteen preliminary variants and two finalists per method")
+    configs = {item["task_id"]: item["config"] for item in earlier}
+    additional = []
+    for choice in choices:
+        config = configs[choice["task_ids"][0]]
+        for seed in FASHION_FINALIST_SCREEN_SEEDS:
+            item = entry(config, seed, choice["group"], choice["method_label"], "fashion_finalists")
+            if item["variant_id"] != choice["variant_id"]:
+                raise ValueError("The finalist settings changed between preliminary and additional screening")
+            additional.append(item)
+    protocol = dict(preliminary_variants_per_label=16, finalists_per_label=2,
+                    preliminary_screening_seeds=list(SCREEN_SEEDS),
+                    additional_screening_seeds=list(FASHION_FINALIST_SCREEN_SEEDS),
+                    finalist_screening_seeds=[*SCREEN_SEEDS, *FASHION_FINALIST_SCREEN_SEEDS],
+                    confirmation_seeds=list(CONFIRM_SEEDS["fashion_finalists_confirm"]),
+                    preliminary_validation_trials=variants,
+                    finalists=choices,
+                    selection_rule="Rank all 16 variants on 2 paired validation seeds, then rank the top two on 8 paired validation seeds")
+    return additional, protocol
+
+
 def prepare_confirmation(args):
     posterior_manifest = getattr(args, "posterior_manifest", None)
     posterior_root = getattr(args, "posterior_root", None)
+    finalists_manifest = getattr(args, "finalists_manifest", None)
+    finalists_root = getattr(args, "finalists_root", None)
     if (args.eval_draws < 1
+            or (finalists_manifest is None) != (finalists_root is None)
             or (posterior_manifest is None) != (posterior_root is None)
             or (args.refinement_manifest is None) != (args.refinement_root is None)
             or (args.balanced_manifest is None) != (args.balanced_root is None)):
@@ -243,12 +273,24 @@ def prepare_confirmation(args):
         if not args.refinement_manifest or args.balanced_manifest:
             raise ValueError("Fashion posterior selection requires the original screen and refinement")
         stages.append(("fashion_posterior", posterior_manifest, posterior_root))
+    if finalists_manifest:
+        if not posterior_manifest:
+            raise ValueError("Fashion finalists require all three preliminary validation rounds")
+        stages.append(("fashion_finalists", finalists_manifest, finalists_root))
     entries, rows, design = [], [], None
     for stage, manifest, root in stages:
         additional = read_manifest(manifest)
         if design is None:
             design = conditions(additional)
-        if stage == "fashion_posterior":
+        if stage == "fashion_finalists":
+            expected, finalist_protocol = fashion_finalist_plan(entries, rows)
+            recorded = json.loads(manifest.with_suffix(".protocol.json").read_text())
+            if recorded != finalist_protocol:
+                raise ValueError("Frozen finalist protocol differs from preliminary validation")
+            allowed = {(item["method_label"], item["variant_id"]) for item in expected}
+            entries = [item for item in entries if (item["method_label"], item["variant_id"]) in allowed]
+            rows = [row for row in rows if (row["method_label"], row["variant_id"]) in allowed]
+        elif stage == "fashion_posterior":
             expected = fashion_posterior_entries(entries, rows)
         elif stage in {"cifar_balanced", "moons_balanced"}:
             expected = balanced_grid
@@ -263,6 +305,10 @@ def prepare_confirmation(args):
             balanced_grid = balanced_entries(additional, stage_rows)
     if getattr(args, "command", None) == "posterior-screen":
         return write_manifest(args.output, fashion_posterior_entries(entries, rows))
+    if getattr(args, "command", None) == "finalists-screen":
+        additional, protocol = fashion_finalist_plan(entries, rows)
+        write_once(args.output.with_suffix(".protocol.json"), json.dumps(protocol, indent=2, allow_nan=False) + "\n")
+        return write_manifest(args.output, additional)
     variants, selected = select_variants(rows, entries, top=1)
     accuracy = defaultdict(dict)
     for choice in selected:
@@ -275,6 +321,11 @@ def prepare_confirmation(args):
         stage = balanced_stage + "_confirm"
     if posterior_manifest:
         stage = "fashion_posterior_confirm"
+    if finalists_manifest:
+        stage = "fashion_finalists_confirm"
+        full_seeds = sorted((*SCREEN_SEEDS, *FASHION_FINALIST_SCREEN_SEEDS))
+        if len(variants) != 2 * len(METHODS) or any(item["seeds"] != full_seeds for item in variants):
+            raise ValueError("Every finalist requires the same eight training and channel-bank seeds")
     if any(n_moons != 800 for _, _, _, n_moons in design):
         if len(design) != 1:
             raise ValueError("Select a separate confirmation cohort for each small-sample design")
@@ -284,6 +335,9 @@ def prepare_confirmation(args):
                      sources={stage: file_fingerprint(manifest) for stage, manifest, _ in stages},
                      validation_trials=variants, selected_variants=selected, validation_proposed_margins=margins,
                      selection_rule="Highest mean validation accuracy, then lowest mean validation CE, then variant ID")
+    if finalists_manifest:
+        selection["finalist_protocol"] = finalist_protocol
+        selection["finalist_protocol_fingerprint"] = file_fingerprint(finalists_manifest.with_suffix(".protocol.json"))
     write_once(args.output.with_suffix(".selection.json"), json.dumps(selection, indent=2, allow_nan=False) + "\n")
     return {**write_manifest(args.output, confirmation_entries(selection)), "validation_proposed_margins": margins}
 
@@ -344,6 +398,10 @@ def report(manifest, root):
                    validation_proposed_margins=selection["validation_proposed_margins"],
                    all_groups_t1_or_t2_strictly_highest=all(g["t1_or_t2_strictly_highest"] for g in groups),
                    sampling="Fresh training, bank and deployment randomness; fixed official test examples")
+    if "finalist_protocol" in selection:
+        protocol = selection["finalist_protocol"]
+        summary["finalist_protocol"] = {key: value for key, value in protocol.items()
+                                        if key not in {"preliminary_validation_trials", "finalists"}}
     write_csv(root / "accuracy_by_seed.csv", rows,
               ["dataset", "channel", "m", "method_label", "seed", "variant_id", "validation_accuracy",
                "test_accuracy", "test_cross_entropy", "test_bounded_loss", "task_id"])
@@ -376,6 +434,13 @@ def main():
     confirm.add_argument("--balanced-root", type=Path)
     confirm.add_argument("--posterior-manifest", type=Path)
     confirm.add_argument("--posterior-root", type=Path)
+    confirm.add_argument("--finalists-manifest", type=Path)
+    confirm.add_argument("--finalists-root", type=Path)
+    finalists = commands.add_parser("finalists-screen")
+    for tag in ("screen-manifest", "screen-root", "refinement-manifest", "refinement-root",
+                "posterior-manifest", "posterior-root"):
+        finalists.add_argument("--" + tag, type=Path, required=True)
+    finalists.set_defaults(eval_draws=20, balanced_manifest=None, balanced_root=None)
     posterior = commands.add_parser("posterior-screen")
     for tag in ("screen-manifest", "screen-root", "refinement-manifest", "refinement-root"):
         posterior.add_argument("--" + tag, type=Path, required=True)
@@ -383,7 +448,7 @@ def main():
     confirm.add_argument("--eval-draws", type=int, default=20)
     combine = commands.add_parser("combine")
     combine.add_argument("--summary", type=Path, action="append", required=True)
-    for command in (screen, refine, balanced, posterior, confirm, combine):
+    for command in (screen, refine, balanced, posterior, finalists, confirm, combine):
         command.add_argument("--output", type=Path, required=True)
     task = commands.add_parser("task")
     task.add_argument("--index", type=int)
@@ -409,7 +474,7 @@ def main():
         result = write_manifest(args.output, entries)
     elif args.command == "task":
         result = run_task(args)
-    elif args.command in {"confirm", "posterior-screen"}:
+    elif args.command in {"confirm", "posterior-screen", "finalists-screen"}:
         result = prepare_confirmation(args)
     elif args.command == "combine":
         result = combine_reports(args.summary, args.output)
