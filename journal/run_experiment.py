@@ -60,13 +60,14 @@ def digest(value) -> str:
 
 def channel_bank_hash_algorithm(bank_or_state) -> str:
     state = bank_or_state if isinstance(bank_or_state, Mapping) else bank_or_state.state_dict()
-    return TENSOR_BANK_HASH_ALGORITHM if state["gain"].ndim == 3 else LEGACY_BANK_HASH_ALGORITHM
+    diagonal_fading = getattr(bank_or_state, "config", {}).get("kind") == "diagonal_fading"
+    return TENSOR_BANK_HASH_ALGORITHM if diagonal_fading or state["gain"].ndim == 3 else LEGACY_BANK_HASH_ALGORITHM
 
 
 def channel_bank_fingerprint(bank_or_state, algorithm: str | None = None) -> str:
     """Hash actual bank buffers without materializing Python floats for full matrices."""
     state = bank_or_state if isinstance(bank_or_state, Mapping) else bank_or_state.state_dict()
-    algorithm = channel_bank_hash_algorithm(state) if algorithm is None else algorithm
+    algorithm = channel_bank_hash_algorithm(bank_or_state) if algorithm is None else algorithm
     if algorithm == LEGACY_BANK_HASH_ALGORITHM:
         return digest({name: state[name].detach().cpu().tolist() for name in ("gain", "noise")})
     if algorithm != TENSOR_BANK_HASH_ALGORITHM:
@@ -245,8 +246,18 @@ def load_data(config: dict, include_test: bool = False):
         dataset_class = datasets.MNIST if config["dataset"] == "mnist" else datasets.FashionMNIST
         # Fixed transforms avoid estimating normalization using the validation/test data.
         transform = transforms.ToTensor()
-        full = dataset_class(root=root, train=True, transform=transform, download=config["download"])
-        test = dataset_class(root=root, train=False, transform=transform, download=config["download"]) if include_test else None
+
+        def image_dataset(training):
+            raw = dataset_class(root=root, train=training, transform=transform, download=config["download"])
+            if config["deployment_channel"]["kind"] == "diagonal_fading":
+                # The diagonal sweep repeatedly evaluates the same images across
+                # epochs and posterior draws. Materialize the exact ToTensor values once.
+                pixels = raw.data.unsqueeze(1).to(torch.float32).div_(255)
+                return TensorDataset(pixels, raw.targets)
+            return raw
+
+        full = image_dataset(True)
+        test = image_dataset(False) if include_test else None
         input_dim, classes = 784, 10
         transform_description = "ToTensor float32 [0,1]; no fitted normalization"
     if config["train_size"] + config["val_size"] > len(full):
@@ -412,7 +423,7 @@ def evaluate(model, bank, loader, config: dict, draws: int, seed: int,
     weight_generator = torch.Generator(device=config["device"]).manual_seed(seed)
     channel_kind = (config["deployment_channel"]["kind"] if source == "deployment"
                     else bank.config["kind"] if source == "bank" else "perfect")
-    channel_device = config["device"] if channel_kind == "full_fading" else "cpu"
+    channel_device = config["device"] if channel_kind in {"full_fading", "diagonal_fading"} else "cpu"
     channel_generator = torch.Generator(device=channel_device).manual_seed(seed + 1)
     replicates = []
     for _ in range(draws):
@@ -523,7 +534,7 @@ def train(config: dict, output: Path):
         with torch.no_grad():
             model.mu.clamp_(-mean_clip, mean_clip)
     optimizer = make_optimizer(model, config)
-    channel_device = config["device"] if bank.config["kind"] == "full_fading" else "cpu"
+    channel_device = config["device"] if bank.config["kind"] in {"full_fading", "diagonal_fading"} else "cpu"
     channel_generator = torch.Generator(device=channel_device).manual_seed(config["channel_seed"] + 109)
     metadata = provenance(config, split)
     bank_hash_algorithm = channel_bank_hash_algorithm(bank)

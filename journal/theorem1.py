@@ -14,9 +14,11 @@ from torch import nn
 from torch.nn import functional as F
 
 try:
+    from .diagonal_fading import diagonal_gain_kl, draw_diagonal_fading, normalize_diagonal_fading
     from .full_fading import (correlation_factor, draw_full_fading, fading_gain_kl,
                               normalize_full_fading, sample_received, validate_fading_dimensions)
 except ImportError:
+    from diagonal_fading import diagonal_gain_kl, draw_diagonal_fading, normalize_diagonal_fading
     from full_fading import (correlation_factor, draw_full_fading, fading_gain_kl,
                              normalize_full_fading, sample_received, validate_fading_dimensions)
 
@@ -68,7 +70,7 @@ def joint_complexity(kl: torch.Tensor, n: int, m: int, delta: float = .05,
 def validate_channel(config: Mapping) -> dict:
     config = dict(config)
     kind = config.get("kind", "gaussian")
-    if kind not in {"gaussian", "full_fading", "outage", "perfect"}:
+    if kind not in {"gaussian", "diagonal_fading", "full_fading", "outage", "perfect"}:
         raise ValueError(f"Unknown channel kind: {kind}")
     if kind == "gaussian":
         config = {"kind": kind, "gain_mean": float(config.get("gain_mean", 1.)),
@@ -76,6 +78,8 @@ def validate_channel(config: Mapping) -> dict:
                   "noise_std": float(config.get("noise_std", .1))}
         if min(config["gain_std"], config["noise_std"]) < 0:
             raise ValueError("Channel standard deviations must be nonnegative")
+    elif kind == "diagonal_fading":
+        config = normalize_diagonal_fading(config)
     elif kind == "full_fading":
         config = normalize_full_fading(config)
     elif kind == "outage":
@@ -144,6 +148,8 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
             for k in range(width + 1)))
     elif deployment == training:
         divergence = 0.
+    elif deployment["kind"] == training["kind"] == "diagonal_fading":
+        divergence = diagonal_gain_kl(deployment, training, width)
     elif deployment["kind"] == training["kind"] == "full_fading":
         divergence = fading_gain_kl(deployment, training, width, width)
         divergence += width * normal_kl(0., deployment["noise_std"], 0., training["noise_std"])
@@ -254,6 +260,13 @@ class ChannelBank(nn.Module):
 
     def draw(self, count: int, config: Mapping, generator: torch.Generator):
         config = validate_channel(config)
+        if config["kind"] == "diagonal_fading":
+            rho = config["rho_c"]
+            key = ("diagonal", rho, generator.device, torch.get_default_dtype())
+            if key not in self._fading_factors:
+                self._fading_factors[key] = (correlation_factor(rho, self.width).to(
+                    device=generator.device, dtype=torch.get_default_dtype()) if rho else None)
+            return draw_diagonal_fading(count, self.width, self._fading_factors[key], generator)
         if config["kind"] == "full_fading":
             reference = torch.empty(0, device=generator.device)
             rx, tx = self._factors(config, reference)

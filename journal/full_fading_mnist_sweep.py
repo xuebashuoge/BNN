@@ -28,13 +28,14 @@ METHODS = {
 LAW = dict(kind="full_fading", rx_correlation=.25, tx_correlation=.25, noise_std=1.)
 
 
-def build_manifest(path, *, pilot=False, extended=False):
+def build_manifest(path, *, pilot=False, extended=False, law=LAW):
     sizes = (BANK_SIZES[-1],) if pilot else EXTENDED_BANK_SIZES if extended else BANK_SIZES
     seeds = SEEDS[:1] if pilot else SEEDS
     methods = ("T1",) if pilot else METHODS
-    stage = "full_fading_pilot" if pilot else "full_fading_m_sweep"
+    channel = law["kind"]
+    stage = f"{channel}_pilot" if pilot else f"{channel}_m_sweep"
     base = base_config("mnist", "analog")
-    base.update(train_channel=LAW, deployment_channel=LAW, train_size=10000, val_size=5000,
+    base.update(train_channel=law, deployment_channel=law, train_size=10000, val_size=5000,
                 epochs=2 if pilot else 30, eval_draws=2 if pilot else 10,
                 val_draws=2 if pilot else 5)
     rows = []
@@ -42,8 +43,8 @@ def build_manifest(path, *, pilot=False, extended=False):
         for method in methods:
             for seed in seeds:
                 config = {**base, **METHODS[method], "m": m}
-                item = entry(config, seed, "mnist", "full_fading", method, stage, "matched",
-                             "m_sweep", "m", m, f"mnist_full_fading_m{m}")
+                item = entry(config, seed, "mnist", channel, method, stage, "matched",
+                             "m_sweep", "m", m, f"mnist_{channel}_m{m}")
                 item.update(evaluation_draws=base["eval_draws"], scientific_result=not pilot)
                 rows.append(item)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -68,12 +69,14 @@ def run_task(manifest, output, index, device, threads):
         raise SystemExit(1)
 
 
-def read_observations(manifests, outputs):
+def read_observations(manifests, outputs, *, law=LAW):
     expected, observations = set(), []
     for manifest, output in zip(manifests, outputs, strict=True):
         for item in read_manifest(manifest):
             if not item["scientific_result"]:
                 raise ValueError("Resource pilot trials cannot enter the MNIST figure")
+            if any(item["config"][name] != law for name in ("train_channel", "deployment_channel")):
+                raise ValueError("Expected matched training and deployment under the requested channel law")
             key = (item["method_label"], item["sweep_value"], item["config"]["seed"])
             if key in expected:
                 raise ValueError(f"Duplicate scientific trial {key}")
@@ -87,8 +90,11 @@ def read_observations(manifests, outputs):
                 raise ValueError(f"Training report has different settings for {key}")
             report_path = output / "runs" / item["task_id"] / "test_full" / "evaluation.json"
             report = json.loads(report_path.read_text())
-            if report["evaluation_config"]["eval_draws"] != item["evaluation_draws"]:
-                raise ValueError(f"Evaluation report has different draw count for {key}")
+            evaluation = report["evaluation_config"]
+            expected_eval = {**config, "eval_draws": item["evaluation_draws"],
+                             "eval_seed": config["eval_seed"] + 1000003}
+            if report["split"] != "test" or report["risk_scope"] != "full" or evaluation != expected_eval:
+                raise ValueError(f"Evaluation report has different settings for {key}")
             accuracy = float(report["heldout_gibbs_mc"]["accuracy"])
             gap = float(report["bounded_gap_mc"])
             if not (0 <= accuracy <= 1 and math.isfinite(gap) and abs(gap) <= 1):
@@ -103,7 +109,7 @@ def read_observations(manifests, outputs):
     return sizes, observations
 
 
-def plot(sizes, observations, output):
+def plot(sizes, observations, output, *, law=LAW):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -153,7 +159,7 @@ def plot(sizes, observations, output):
     gap.xaxis.set_minor_locator(NullLocator())
     fig.align_ylabels()
     for suffix in ("pdf", "png"):
-        fig.savefig(output / f"mnist_full_fading_finite_channel_generalization.{suffix}", dpi=450)
+        fig.savefig(output / f"mnist_{law['kind']}_finite_channel_generalization.{suffix}", dpi=450)
     plt.close(fig)
 
     # Use the last three grid points to describe saturation in percentage points.
@@ -166,8 +172,8 @@ def plot(sizes, observations, output):
     save_json(output / "tail_summary.json", tail)
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+def main(law=LAW):
+    parser = argparse.ArgumentParser(description=f"Matched MNIST finite-channel sweep for {law['kind']}")
     commands = parser.add_subparsers(dest="command", required=True)
     build = commands.add_parser("build")
     build.add_argument("--output", type=Path, required=True)
@@ -186,13 +192,13 @@ def main():
     report.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "build":
-        build_manifest(args.output, pilot=args.pilot, extended=args.extended)
+        build_manifest(args.output, pilot=args.pilot, extended=args.extended, law=law)
     elif args.command == "task":
         index = args.index if args.index is not None else int(os.environ["SLURM_ARRAY_TASK_ID"])
         run_task(args.manifest, args.output_root, index, args.device, args.threads)
     else:
-        sizes, rows = read_observations(args.manifest, args.stage_root)
-        plot(sizes, rows, args.output)
+        sizes, rows = read_observations(args.manifest, args.stage_root, law=law)
+        plot(sizes, rows, args.output, law=law)
 
 
 if __name__ == "__main__":
