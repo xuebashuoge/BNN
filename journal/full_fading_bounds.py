@@ -23,11 +23,15 @@ FAMILIES = {"fading": "Correlated Gaussian fading", "erasure": "Feature erasure"
 REGIMES = ("perfect", "matched", "mismatch")
 FAMILY_SIZE = (len(DATASETS) + 1) * len(FAMILIES) * len(REGIMES)
 SEED = 85101
+COMPACT_PROFILES = ("certificate", "validation")
+COMPACT_PROTOCOL = Path(__file__).with_name("configs") / "full_fading_compact_validation.json"
 
 
 def design(args):
     if args.fallback and args.dataset != "moons":
         raise ValueError("The compact fallback is a two-moons experiment")
+    if not args.fallback and args.fallback_profile != "certificate":
+        raise ValueError("The validation profile applies to the compact fallback")
     deploy = (dict(kind="full_fading", rx_correlation=.25, tx_correlation=.25, noise_std=1.)
               if args.family == "fading" else dict(kind="outage", outage_prob=.5))
     training = deploy.copy()
@@ -55,13 +59,19 @@ def design(args):
                       bounded_feature_norm=1., bounded_receiver_norm=.14,
                       prior_std=.2, posterior_std=.1, posterior_mean_clip=.15, rho_lr_scale=0.,
                       eta_data=1., eta_channel=1.)
+        if args.fallback_profile == "validation":
+            protocol = json.loads(COMPACT_PROTOCOL.read_text())
+            config.update(protocol["pilot"]["fixed_overrides"], **protocol["confirmation"])
     if args.epochs is not None:
         config["epochs"] = args.epochs
     return normalize_config(config)
 
 
-def case_path(root, dataset, family, regime, fallback):
-    return root / ("compact" if fallback else "paper") / dataset / family / regime
+def case_path(root, dataset, family, regime, fallback, profile="certificate"):
+    cohort = "paper"
+    if fallback:
+        cohort = "compact_validation" if profile == "validation" else "compact"
+    return root / cohort / dataset / family / regime
 
 
 @torch.no_grad()
@@ -97,10 +107,9 @@ def empirical_mc(model, bank, train_data, config, draws, compact):
                 examples_per_observation=cluster_size, total_evaluations=len(indices), seed=seed)
 
 
-def risk_decomposition(config, model, empirical):
-    # One simultaneous 95% family over the predetermined 24 paper cells and
-    # six compact fallback cells, including separate empirical MC events.
-    failure = config["delta"] / (2 * FAMILY_SIZE)
+def risk_decomposition(config, model, empirical, family_size=FAMILY_SIZE):
+    # Allocate a theorem and an empirical MC event to each declared cell.
+    failure = config["delta"] / (2 * family_size)
     radius = math.sqrt(math.log(1 / failure) / (2 * empirical["iid_observations"]))
     kl = gaussian_kl(model.mu.double(), model.rho.double(), config["prior_std"]).item()
     perfect = config["train_channel"]["kind"] == "perfect"
@@ -122,7 +131,7 @@ def risk_decomposition(config, model, empirical):
                       channel=terms["channel_complexity"].item(), shift=shift["upper"])
     uncapped = sum(components.values())
     return dict(theory="Corollary 1" if perfect else "Theorem 1", posterior_kl=kl,
-                confidence=dict(family_failure=config["delta"], family_size=FAMILY_SIZE,
+                confidence=dict(family_failure=config["delta"], family_size=family_size,
                                 failure_each_theorem_and_mc=failure),
                 empirical_mc_radius=radius, components=components, channel_shift=shift,
                 uncapped_risk_upper=uncapped, nonvacuous=uncapped < 1.)
@@ -130,14 +139,18 @@ def risk_decomposition(config, model, empirical):
 
 def run(args):
     config = design(args)
-    case = case_path(args.output, args.dataset, args.family, args.regime, args.fallback)
+    profile = args.fallback_profile
+    supplemental = profile == "validation"
+    protocol_fingerprint = file_fingerprint(COMPACT_PROTOCOL) if supplemental else None
+    case = case_path(args.output, args.dataset, args.family, args.regime, args.fallback, profile)
     checkpoint = case / "checkpoint"
     report_path = case / "bound.json"
     draws = args.empirical_draws or (10000 if args.fallback else 128)
     if report_path.is_file():
         cached = json.loads(report_path.read_text())
         if (cached["config"] != config or cached["empirical"]["iid_observations"] != draws
-                or cached["test"]["draws"] != args.test_draws):
+                or cached["test"]["draws"] != args.test_draws
+                or cached.get("compact_selection_protocol") != protocol_fingerprint):
             raise ValueError("Output already contains a different experiment")
         if cached["checkpoint_weights"] != file_fingerprint(checkpoint / "weights.pt"):
             raise ValueError("Saved model changed after evaluation")
@@ -161,14 +174,17 @@ def run(args):
     if bank_hash != metadata["training_channel_bank_hash"]:
         raise ValueError("Saved bank differs from checkpoint metadata")
     empirical = empirical_mc(model, bank, train_data, config, draws, args.fallback)
-    decomposition = risk_decomposition(config, model, empirical)
+    family_size = len(FAMILIES) * len(REGIMES) if supplemental else FAMILY_SIZE
+    decomposition = risk_decomposition(config, model, empirical, family_size)
     test = evaluate(model, bank, make_loader(test, config), config, args.test_draws,
                     config["eval_seed"] + 97557)
     if file_fingerprint(path) != weight_fingerprint:
         raise ValueError("Saved weights changed during evaluation")
     report = dict(dataset=args.dataset, family=args.family, regime=args.regime, fallback=args.fallback,
                   config=config, checkpoint_weights=weight_fingerprint, saved_bank_hash=bank_hash,
-                  selected_epoch=metadata["selected_epoch"], empirical=empirical, test=test, **decomposition)
+                  selected_epoch=metadata["selected_epoch"], empirical=empirical, test=test,
+                  fallback_profile=profile, compact_selection_protocol=protocol_fingerprint,
+                  **decomposition)
     save_json(report_path, report)
     return report
 
@@ -225,29 +241,38 @@ def draw_figure(rows, output, families):
     plt.close(figure)
 
 
-def aggregate(output):
+def aggregate(output, compact_only=False, profile="certificate"):
+    if not compact_only and profile != "certificate":
+        raise ValueError("Use --compact-only for the independent validation-selected confirmation")
     rows = []
-    for fallback, datasets in ((False, DATASETS), (True, ("moons",))):
+    cohorts = [(True, ("moons",))] if compact_only else [(False, DATASETS), (True, ("moons",))]
+    for fallback, datasets in cohorts:
         for dataset in datasets:
             for family in FAMILIES:
                 for regime in REGIMES:
-                    path = case_path(output, dataset, family, regime, fallback) / "bound.json"
+                    path = case_path(output, dataset, family, regime, fallback, profile) / "bound.json"
                     row = json.loads(path.read_text())
-                    if (row["dataset"], row["family"], row["regime"], row["fallback"]) != (
-                            dataset, family, regime, fallback):
+                    if (row["dataset"], row["family"], row["regime"], row["fallback"],
+                            row.get("fallback_profile", "certificate")) != (
+                            dataset, family, regime, fallback, profile):
                         raise ValueError(f"Case dimensions differ from the report at {path}")
                     rows.append(row)
     if len({r["config"]["m"] for r in rows}) != 1:
         raise ValueError("Use the same m in each case in this decomposition")
-    for family in FAMILIES:
-        draw_figure([r for r in rows if not r["fallback"] and r["family"] == family],
-                    output / f"{family}_bound_decomposition", (family,))
-    draw_figure([r for r in rows if r["fallback"]], output / "compact_bound_decomposition", FAMILIES)
-    report = dict(cases=len(rows), seed=SEED, m=rows[0]["config"]["m"],
-                  paper_nonvacuous=sum(r["nonvacuous"] for r in rows if not r["fallback"]),
+    stem = "compact_validation" if profile == "validation" else "compact"
+    if not compact_only:
+        for family in FAMILIES:
+            draw_figure([r for r in rows if not r["fallback"] and r["family"] == family],
+                        output / f"{family}_bound_decomposition", (family,))
+    draw_figure([r for r in rows if r["fallback"]], output / f"{stem}_bound_decomposition", FAMILIES)
+    report = dict(cases=len(rows), seed=rows[0]["config"]["seed"], m=rows[0]["config"]["m"],
+                  compact_profile=profile,
+                  paper_nonvacuous=(None if compact_only else
+                                     sum(r["nonvacuous"] for r in rows if not r["fallback"])),
                   compact_nonvacuous=sum(r["nonvacuous"] for r in rows if r["fallback"]),
                   rows=rows)
-    save_json(output / "bound_decomposition.json", report)
+    filename = f"{stem}_bound_decomposition.json" if compact_only else "bound_decomposition.json"
+    save_json(output / filename, report)
     return report
 
 
@@ -260,6 +285,7 @@ def main():
     cell.add_argument("--regime", choices=REGIMES, required=True)
     cell.add_argument("--output", type=Path, required=True)
     cell.add_argument("--fallback", action="store_true")
+    cell.add_argument("--fallback-profile", choices=COMPACT_PROFILES, default="certificate")
     cell.add_argument("--m", type=int, default=2000)
     cell.add_argument("--device", default="cpu")
     cell.add_argument("--threads", type=int, default=2)
@@ -268,9 +294,11 @@ def main():
     cell.add_argument("--test-draws", type=int, default=8)
     all_cells = subparsers.add_parser("aggregate")
     all_cells.add_argument("--output", type=Path, required=True)
+    all_cells.add_argument("--compact-only", action="store_true")
+    all_cells.add_argument("--fallback-profile", choices=COMPACT_PROFILES, default="certificate")
     args = parser.parse_args()
     if args.command == "aggregate":
-        result = aggregate(args.output)
+        result = aggregate(args.output, args.compact_only, args.fallback_profile)
         print(json.dumps({key: val for key, val in result.items() if key != "rows"}))
     else:
         if args.test_draws < 1 or (args.empirical_draws is not None and args.empirical_draws < 1):

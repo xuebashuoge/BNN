@@ -1,0 +1,35 @@
+{
+  "pilot": {
+    "base": "Compact certificate configuration at m=2000",
+    "fixed_overrides": {
+      "epochs": 120,
+      "eta_data": 0.02,
+      "eta_channel": 0.02,
+      "lr": 0.006,
+      "selection_metric": "accuracy",
+      "val_draws": 8
+    },
+    "seeds": {"seed": 85101, "channel_seed": 85102, "eval_seed": 85103, "data_seed": 20261110},
+    "trials": [
+      {"posterior_std": 0.06, "posterior_mean_clip": 0.35, "fading_matched": 0.74625, "erasure_matched": 0.7975, "fading_perfect": 0.545},
+      {"posterior_std": 0.06, "posterior_mean_clip": 0.5, "fading_matched": 0.791875, "erasure_matched": 0.78875, "fading_perfect": 0.5375},
+      {"posterior_std": 0.03, "posterior_mean_clip": 0.35, "fading_matched": 0.80375, "erasure_matched": 0.8325, "fading_perfect": 0.54375},
+      {"posterior_std": 0.1, "posterior_mean_clip": 0.35, "fading_matched": 0.706875, "erasure_matched": 0.74, "fading_perfect": 0.53875}
+    ],
+    "selection": "Highest mean matched validation accuracy across fading and erasure. Apply the selected settings to all regimes.",
+    "selected_additional_validation": {
+      "fading_mismatch": 0.803125,
+      "erasure_perfect": 0.85875,
+      "erasure_mismatch": 0.831875
+    },
+    "test_evaluated": false
+  },
+  "confirmation": {
+    "seed": 85201,
+    "channel_seed": 85202,
+    "eval_seed": 85203,
+    "data_seed": 97103,
+    "posterior_std": 0.03,
+    "posterior_mean_clip": 0.35
+  }
+}

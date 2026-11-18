@@ -37,35 +37,45 @@ METHODS = {
 }
 SCREEN_SEEDS = (92101, 92102)
 CONFIRM_SEEDS = (93101, 93102, 93103)
+REFINED_CONFIRM_SEEDS = (94101, 94102, 94103)
 PILOT_SEEDS = (92000,)
 STAGES = {"pilot": "full_fading_accuracy_pilot", "screen": "full_fading_accuracy_screen",
-          "confirm": "full_fading_accuracy_confirm"}
+          "confirm": "full_fading_accuracy_confirm", "refine": "full_fading_accuracy_refine",
+          "refined_confirm": "full_fading_accuracy_refined_confirm"}
+CONFIRMATION_COHORTS = {"confirm": CONFIRM_SEEDS, "refined_confirm": REFINED_CONFIRM_SEEDS}
 TEST_SEED_OFFSET = 1000003
 EXECUTION_SETTINGS = {"device", "threads"}
 GAUSSIAN_BASE_CHANNEL = {"full_fading": "analog", "outage": "outage"}
 
 
-def variants(config, method, perfect):
+def variants(config, method, perfect, refinement=False):
     """Four candidates per algorithm and training regime."""
     config = {**config, "method": method}
     if method == "erm":
-        for lr in (.0003, .001, .003, .01):
+        learning_rates = (.0006, .002, .006, .02) if refinement else (.0003, .001, .003, .01)
+        for lr in learning_rates:
             yield dict(config, lr=lr)
         return
-    for lr in (.001, .003):
-        for strength in (0, 1):
+    if method == "l2":
+        strengths = (1e-8, 1e-4) if refinement else (1e-7, 1e-5)
+    elif perfect:
+        strengths = (.001, .3) if refinement else (.01, .1)
+    else:
+        strengths = (.0001, .03) if refinement else (.001, .01)
+    learning_rates = (.006, .01) if refinement else (.001, .003)
+    for lr in learning_rates:
+        for strength in strengths:
             candidate = dict(config, lr=lr)
             if method == "l2":
-                candidate["l2"] = (1e-7, 1e-5)[strength]
+                candidate["l2"] = strength
             elif perfect:
-                candidate.update(eta_channel=0., eta_data=(.01, .1)[strength])
+                candidate.update(eta_channel=0., eta_data=strength)
             else:
-                scale = (.001, .01)[strength]
                 ratio = math.sqrt((config["train_size"] - 1) / (config["m"] - 1))
                 if method == "proposed":
-                    candidate.update(eta_channel=scale, eta_data=scale * ratio)
+                    candidate.update(eta_channel=strength, eta_data=strength * ratio)
                 else:
-                    candidate.update(eta_channel=0., eta_data=2 * scale / math.sqrt(1 + 1 / ratio**2))
+                    candidate.update(eta_channel=0., eta_data=2 * strength / math.sqrt(1 + 1 / ratio**2))
             yield candidate
 
 
@@ -75,10 +85,13 @@ def entry(config, seed, group, label, stage):
     return item
 
 
-def screening_entries(datasets, channels, m, pilot):
+def screening_entries(datasets, channels, m, pilot, refinement=False):
     if m < 2:
         raise ValueError("A matched training bank requires m >= 2")
-    stage, seeds = ("pilot", PILOT_SEEDS) if pilot else ("screen", SCREEN_SEEDS)
+    if pilot:
+        stage, seeds = "pilot", PILOT_SEEDS
+    else:
+        stage, seeds = "refine" if refinement else "screen", SCREEN_SEEDS
     entries = []
     for dataset in datasets:
         for channel in channels:
@@ -89,7 +102,7 @@ def screening_entries(datasets, channels, m, pilot):
                         deployment_channel=deployment)
             for label, (method, perfect) in METHODS.items():
                 training = {"kind": "perfect"} if perfect else deployment
-                candidates = list(variants(dict(base, train_channel=training), method, perfect))
+                candidates = list(variants(dict(base, train_channel=training), method, perfect, refinement))
                 for config in candidates[:1] if pilot else candidates:
                     entries.extend(entry(config, seed, group, label, stage) for seed in seeds)
     return entries
@@ -152,7 +165,7 @@ def run_task(manifest, root, index, device, threads):
         save_json(result_path, row)
         if row["status"] != "complete":
             raise RuntimeError(f"{item['task_id']}: {row['error']}")
-        if item["stage"] == STAGES["confirm"]:
+        if item["stage"] in {STAGES[stage] for stage in CONFIRMATION_COHORTS}:
             row = evaluate_trial(row, item["config"]["eval_draws"], full_risks=False, resume=True)
             save_json(result_path, row)
             if row["test_status"] != "complete":
@@ -174,33 +187,58 @@ def read_results(root, entries):
     return rows
 
 
+def variant_grid(entries, expected):
+    if len(entries) != len(expected):
+        return False
+    return {item["task_id"]: item for item in entries} == {item["task_id"]: item for item in expected}
+
+
 def screen_scope(entries):
     """Recover scope from the manifest, then regenerate the complete design."""
     groups = defaultdict(list)
     for item in entries:
         groups[item["group"]].append(item)
+    conditions = []
     for group, items in groups.items():
         sample = items[0]["config"]
-        expected = screening_entries((sample["dataset"],), (sample["deployment_channel"]["kind"],),
-                                     sample["m"], pilot=False)
-        if (len(items) != len(expected)
-                or {item["task_id"]: item for item in items} != {item["task_id"]: item for item in expected}):
+        condition = (sample["dataset"], sample["deployment_channel"]["kind"], sample["m"])
+        dataset, channel, m = condition
+        expected = screening_entries((dataset,), (channel,), m, pilot=False)
+        if not variant_grid(items, expected):
             raise ValueError(f"Incomplete or altered comparison validation grid: {group}")
+        conditions.append(condition)
+    return conditions
 
 
-def confirmation_entries(selected, eval_draws):
+def refinement_entries(conditions):
+    return [item for dataset, channel, m in conditions
+            for item in screening_entries((dataset,), (channel,), m, pilot=False, refinement=True)]
+
+
+def confirmation_entries(selected, eval_draws, stage="confirm"):
     final = []
     for choice in selected:
         config = {**choice["config"], "eval_draws": eval_draws}
-        final.extend({**entry(config, seed, choice["group"], choice["method_label"], "confirm"),
-                      "selected_from_validation_variant": choice["variant_id"]} for seed in CONFIRM_SEEDS)
+        final.extend({**entry(config, seed, choice["group"], choice["method_label"], stage),
+                      "selected_from_validation_variant": choice["variant_id"]} for seed in CONFIRMATION_COHORTS[stage])
     return final
 
 
-def prepare_confirmation(screen_manifest, screen_root, output, eval_draws):
+def prepare_confirmation(screen_manifest, screen_root, output, eval_draws,
+                         refinement_manifest=None, refinement_root=None):
+    if (refinement_manifest is None) != (refinement_root is None):
+        raise ValueError("Specify both the refinement manifest and its results root")
     entries = stage_entries(screen_manifest, "screen")
-    screen_scope(entries)
+    conditions = screen_scope(entries)
     rows = read_results(screen_root, entries)
+    stage = "confirm"
+    if refinement_manifest is not None:
+        additional = stage_entries(refinement_manifest, "refine")
+        if not variant_grid(additional, refinement_entries(conditions)):
+            raise ValueError("Refinement must cover every initial validation group and candidate")
+        rows.extend(read_results(refinement_root, additional))
+        entries.extend(additional)
+        stage = "refined_confirm"
     for row in rows:
         if any(metric in row for metric in ("test_accuracy", "test_cross_entropy", "test_status")):
             raise ValueError("Confirmation selection requires validation-only training results")
@@ -208,12 +246,18 @@ def prepare_confirmation(screen_manifest, screen_root, output, eval_draws):
                 or not 0 <= row["validation_accuracy"] <= 1 or row["validation_cross_entropy"] < 0):
             raise ValueError(f"Invalid validation metric: {row['task_id']}")
     summaries, selected = select_variants(rows, entries, top=1)
-    final = confirmation_entries(selected, eval_draws)
+    final = confirmation_entries(selected, eval_draws, stage)
     selection = dict(screen_manifest=file_fingerprint(screen_manifest), screening_seeds=SCREEN_SEEDS,
-                     confirmation_seeds=CONFIRM_SEEDS, eval_draws=eval_draws,
+                     confirmation_seeds=CONFIRMATION_COHORTS[stage], eval_draws=eval_draws,
                      rule="Highest mean validation accuracy, then lowest mean validation CE, then variant ID",
                      validation_trials=sorted(summaries, key=lambda row: (row["group"], row["method_label"], row["variant_id"])),
                      selected_variants=selected)
+    if refinement_manifest is not None:
+        fields = ("task_id", "stage", "variant_id", "seed", "validation_accuracy", "validation_cross_entropy")
+        selection.update(refinement_manifest=file_fingerprint(refinement_manifest),
+                         validation_candidates_per_method=8,
+                         validation_by_seed=[{key: row[key] for key in fields} for row in rows],
+                         confirmation_sampling="Fresh initialization, bank, posterior and channel seeds on the same official test examples")
     write_once(output.with_suffix(".selection.json"), json.dumps(selection, indent=2, allow_nan=False) + "\n")
     return write_manifest(output, final)
 
@@ -241,7 +285,7 @@ def validate_test(item, row, root):
             "m": trained["m"], "test_bounded_loss": risk["bounded_loss"]}
 
 
-def group_results(rows):
+def group_results(rows, seeds=CONFIRM_SEEDS):
     groups = defaultdict(lambda: defaultdict(dict))
     fields = ("test_accuracy", "test_cross_entropy", "test_bounded_loss")
     for row in rows:
@@ -252,7 +296,7 @@ def group_results(rows):
         runs[row["seed"]] = row
     summaries = []
     for group, methods in sorted(groups.items()):
-        if set(methods) != set(METHODS) or any(set(runs) != set(CONFIRM_SEEDS) for runs in methods.values()):
+        if set(methods) != set(METHODS) or any(set(runs) != set(seeds) for runs in methods.values()):
             raise ValueError(f"Incomplete paired confirmation cohort: {group}")
         results = {}
         for method, runs in methods.items():
@@ -263,10 +307,10 @@ def group_results(rows):
         best = max(means.values())
         winners = sorted(label for label, mean in means.items() if abs(mean - best) <= 1e-12)
         paired = {method: {baseline: describe(methods[method][seed]["test_accuracy"] -
-                                             methods[baseline][seed]["test_accuracy"] for seed in CONFIRM_SEEDS)
+                                             methods[baseline][seed]["test_accuracy"] for seed in seeds)
                            for baseline in ("ERM-Matched", "L2-Matched")}
                   for method in ("T1-Matched", "T2-Matched")}
-        sample = methods["ERM-Matched"][CONFIRM_SEEDS[0]]
+        sample = methods["ERM-Matched"][seeds[0]]
         summaries.append(dict(group=group, dataset=sample["dataset"], channel=sample["channel"], m=sample["m"],
                               methods=results, highest_mean_methods=winners,
                               t1_or_t2_strictly_highest=len(winners) == 1 and winners[0] in paired,
@@ -314,16 +358,22 @@ def plot_accuracy(groups, root):
 
 
 def report(manifest, root):
-    entries = stage_entries(manifest, "confirm")
+    entries = stage_entries(manifest)
+    stage = next((stage for stage in CONFIRMATION_COHORTS if entries[0]["stage"] == STAGES[stage]), None)
+    if stage is None:
+        raise ValueError("An accuracy report requires a confirmation manifest")
+    seeds = CONFIRMATION_COHORTS[stage]
     selection_path = manifest.with_suffix(".selection.json")
     selection = json.loads(selection_path.read_text())
-    if entries != confirmation_entries(selection["selected_variants"], selection["eval_draws"]):
+    if entries != confirmation_entries(selection["selected_variants"], selection["eval_draws"], stage):
         raise ValueError("Confirmation manifest does not match the frozen validation selection")
     rows = [validate_test(item, row, root) for item, row in zip(entries, read_results(root, entries))]
-    groups = group_results(rows)
-    summary = dict(manifest=file_fingerprint(manifest), selection=file_fingerprint(selection_path), confirmation_seeds=CONFIRM_SEEDS,
+    groups = group_results(rows, seeds)
+    summary = dict(manifest=file_fingerprint(manifest), selection=file_fingerprint(selection_path), confirmation_seeds=seeds,
                    trials=len(rows), groups=groups,
                    all_groups_t1_or_t2_strictly_highest=all(group["t1_or_t2_strictly_highest"] for group in groups))
+    if stage == "refined_confirm":
+        summary["confirmation_sampling"] = selection["confirmation_sampling"]
     save_json(root / "accuracy_summary.json", summary)
     write_csv(root / "accuracy_by_seed.csv", rows,
               ["dataset", "channel", "m", "method_label", "seed", "variant_id", "validation_accuracy",
@@ -355,6 +405,9 @@ def main():
     screen.add_argument("--channels", default="full_fading")
     screen.add_argument("--m", type=int, default=2000)
     screen.add_argument("--pilot", action="store_true")
+    refine = commands.add_parser("refine-screen")
+    refine.add_argument("--screen-manifest", type=Path, required=True)
+    refine.add_argument("--output", type=Path, required=True)
     for name in ("task", "report"):
         command = commands.add_parser(name)
         command.add_argument("--manifest", type=Path, required=True)
@@ -366,6 +419,8 @@ def main():
     confirm = commands.add_parser("confirm")
     confirm.add_argument("--screen-manifest", type=Path, required=True)
     confirm.add_argument("--screen-root", type=Path, required=True)
+    confirm.add_argument("--refinement-manifest", type=Path)
+    confirm.add_argument("--refinement-root", type=Path)
     confirm.add_argument("--output", type=Path, required=True)
     confirm.add_argument("--eval-draws", type=int, default=20)
     args = parser.parse_args()
@@ -373,6 +428,9 @@ def main():
     if args.command == "screen":
         entries = screening_entries(scope(args.datasets, DATASETS), scope(args.channels, CHANNELS), args.m, args.pilot)
         result = write_manifest(args.output, entries)
+    elif args.command == "refine-screen":
+        entries = stage_entries(args.screen_manifest, "screen")
+        result = write_manifest(args.output, refinement_entries(screen_scope(entries)))
     elif args.command == "task":
         if args.threads < 1:
             parser.error("--threads must be positive")
@@ -381,7 +439,8 @@ def main():
     elif args.command == "confirm":
         if args.eval_draws < 1:
             parser.error("--eval-draws must be positive")
-        result = prepare_confirmation(args.screen_manifest, args.screen_root, args.output, args.eval_draws)
+        result = prepare_confirmation(args.screen_manifest, args.screen_root, args.output, args.eval_draws,
+                                      args.refinement_manifest, args.refinement_root)
     else:
         result = report(args.manifest, args.output_root)
     print(json.dumps(result, allow_nan=False), flush=True)

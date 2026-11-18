@@ -2,7 +2,7 @@
 # Submit independently backfillable Spartan jobs from the pinned Git checkout.
 set -euo pipefail
 
-phase=${1:?Use pilot, sweep, sweep-extended, bounds, comparison, or all}
+phase=${1:?Use pilot, sweep, sweep-extended, bounds, bounds-compact, comparison, comparison-refine, or all}
 : "${FULL_FADING_OUTPUT:?Set an absolute results directory on project storage}"
 : "${DATASET:?Set the prepared dataset root}"
 : "${JOURNAL_GIT_SHA:?Export the committed Git revision}"
@@ -115,19 +115,33 @@ run_bounds() {
     printf 'Bound arrays %s %s\n' "$moon_job" "$image_job"
 }
 
+run_compact_bounds() {
+    local stage="$root/bounds" job
+    mkdir -p "$stage"
+    job=$(submit "$stage/compact_validation.job" fading_bounds_compact "${cpu[@]}" --time=00:05:00 \
+        --array=0-5%6 -- bash journal/submit_full_fading.sh bound-task compact)
+    submit "$stage/compact_validation_report.job" fading_compact_plot "${cpu[@]}" --time=00:05:00 \
+        --dependency="afterok:$job" -- python -u -m journal.full_fading_bounds aggregate --output "$stage" \
+        --compact-only --fallback-profile validation
+    printf 'Validation-selected compact bound array %s\n' "$job"
+}
+
 run_bound_task() {
     local regime=(perfect matched mismatch) family=(fading erasure)
     local datasets=(mnist fashionmnist cifar10) index="$SLURM_ARRAY_TASK_ID"
     local device="$image_device" dataset extra=()
-    if [[ "$1" == moons ]]; then
-        dataset=moons
-        device=cpu
-        if (( index >= 6 )); then
-            extra=(--fallback)
-        fi
-    else
-        dataset=${datasets[index / 6]}
-    fi
+    case "$1" in
+        moons)
+            dataset=moons
+            device=cpu
+            if (( index >= 6 )); then
+                extra=(--fallback)
+            fi
+            ;;
+        compact) dataset=moons; device=cpu; extra=(--fallback --fallback-profile validation) ;;
+        images) dataset=${datasets[index / 6]} ;;
+        *) echo "Unknown bound task group $1" >&2; exit 2 ;;
+    esac
     exec python -u -m journal.full_fading_bounds run --output "$root/bounds" \
         --dataset "$dataset" --family "${family[(index % 6) / 3]}" --regime "${regime[index % 3]}" \
         --device "$device" --threads "$threads" --m 2000 "${extra[@]}"
@@ -141,24 +155,41 @@ run_comparison() {
         device=cpu
         time_limit=00:08:00
     fi
-    if [[ "$dataset" == cifar10 ]]; then
-        time_limit=00:35:00
+    if [[ "$dataset" == cifar10 && "$device" == cuda ]]; then
+        time_limit=00:04:00
+    elif [[ "$dataset" == cifar10 ]]; then
+        time_limit=00:25:00
     fi
-    local manifest="$stage/screen.jsonl"
+    local segment=screen controller=confirm
+    if [[ "$phase" == comparison-refine ]]; then
+        segment=refine
+        controller=confirm-refinement
+    fi
+    local manifest="$stage/$segment.jsonl"
     mkdir -p "$stage"
     if [[ ! -f "$manifest" ]]; then
-        "$python_bin" -m journal.full_fading_comparison screen --output "$manifest" \
-            --datasets "$dataset" --m 2000
+        if [[ "$segment" == refine ]]; then
+            "$python_bin" -m journal.full_fading_comparison refine-screen --output "$manifest" \
+                --screen-manifest "$stage/screen.jsonl"
+        else
+            "$python_bin" -m journal.full_fading_comparison screen --output "$manifest" \
+                --datasets "$dataset" --m 2000
+        fi
     fi
     local last screen_job
     last=$(($(wc -l < "$manifest") - 1))
-    screen_job=$(manifest_submit "$manifest" "$stage/screen.job" "fading_screen_$dataset" \
+    screen_job=$(manifest_submit "$manifest" "$stage/$segment.job" "fading_${segment}_$dataset" \
         "${resources[@]}" --time="$time_limit" --array="0-$last%$array_parallelism" -- \
         python -u -m journal.full_fading_comparison task --manifest "$manifest" \
-        --output-root "$stage/screen" --device "$device" --threads "$threads")
-    submit "$stage/select.job" "fading_select_$dataset" "${cpu[@]}" --time=00:05:00 \
-        --dependency="afterok:$screen_job" -- bash journal/submit_full_fading.sh confirm "$dataset"
-    printf '%s comparison screen array %s\n' "$dataset" "$screen_job"
+        --output-root "$stage/$segment" --device "$device" --threads "$threads")
+    local select_job="$stage/select.job" dependency="$screen_job"
+    if [[ "$segment" == refine ]]; then
+        select_job="$stage/refined-select.job"
+        dependency="$screen_job:$(cat "$stage/screen.job")"
+    fi
+    submit "$select_job" "fading_${segment}_select_$dataset" "${cpu[@]}" --time=00:05:00 \
+        --dependency="afterok:$dependency" -- bash journal/submit_full_fading.sh "$controller" "$dataset"
+    printf '%s comparison %s array %s\n' "$dataset" "$segment" "$screen_job"
 }
 
 run_confirmation() {
@@ -169,23 +200,31 @@ run_confirmation() {
         device=cpu
         time_limit=00:08:00
     fi
-    if [[ "$dataset" == cifar10 ]]; then
-        time_limit=00:40:00
+    if [[ "$dataset" == cifar10 && "$device" == cuda ]]; then
+        time_limit=00:05:00
+    elif [[ "$dataset" == cifar10 ]]; then
+        time_limit=00:30:00
     fi
-    local manifest="$stage/confirm.jsonl"
+    local cohort=confirm refine_args=() report_job="$stage/report.job"
+    if [[ "$phase" == confirm-refinement ]]; then
+        cohort=refined-confirm
+        refine_args=(--refinement-manifest "$stage/refine.jsonl" --refinement-root "$stage/refine")
+        report_job="$stage/refined-report.job"
+    fi
+    local manifest="$stage/$cohort.jsonl"
     if [[ ! -f "$manifest" ]]; then
         "$python_bin" -m journal.full_fading_comparison confirm --screen-manifest "$stage/screen.jsonl" \
-            --screen-root "$stage/screen" --output "$manifest"
+            --screen-root "$stage/screen" --output "$manifest" "${refine_args[@]}"
     fi
     local last confirm_job
     last=$(($(wc -l < "$manifest") - 1))
-    confirm_job=$(manifest_submit "$manifest" "$stage/confirm.job" "fading_confirm_$dataset" \
+    confirm_job=$(manifest_submit "$manifest" "$stage/$cohort.job" "fading_${cohort}_$dataset" \
         "${resources[@]}" --time="$time_limit" --array="0-$last%$array_parallelism" -- \
         python -u -m journal.full_fading_comparison task --manifest "$manifest" \
-        --output-root "$stage/confirm" --device "$device" --threads "$threads")
-    submit "$stage/report.job" "fading_accuracy_$dataset" "${cpu[@]}" --time=00:05:00 \
+        --output-root "$stage/$cohort" --device "$device" --threads "$threads")
+    submit "$report_job" "fading_${cohort}_report_$dataset" "${cpu[@]}" --time=00:05:00 \
         --dependency="afterok:$confirm_job" -- python -u -m journal.full_fading_comparison report \
-        --manifest "$manifest" --output-root "$stage/confirm"
+        --manifest "$manifest" --output-root "$stage/$cohort"
     printf '%s comparison confirmation array %s\n' "$dataset" "$confirm_job"
 }
 
@@ -193,9 +232,10 @@ case "$phase" in
     pilot) run_pilot ;;
     sweep|sweep-extended) run_sweep "$phase" ;;
     bounds) run_bounds ;;
+    bounds-compact) run_compact_bounds ;;
     bound-task) run_bound_task "$2" ;;
-    confirm) run_confirmation "$2" ;;
-    comparison|all)
+    confirm|confirm-refinement) run_confirmation "$2" ;;
+    comparison|comparison-refine|all)
         if [[ "$phase" == all ]]; then
             run_sweep sweep
             run_bounds
