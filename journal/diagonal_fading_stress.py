@@ -1,7 +1,6 @@
 """Measure paired deployment-law changes at the same frozen diagonal-fading checkpoints."""
 import argparse
 import csv
-import hashlib
 import json
 import math
 import os
