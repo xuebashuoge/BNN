@@ -5,6 +5,7 @@ import argparse
 from collections import defaultdict
 import fcntl
 import json
+from itertools import product
 import math
 import os
 from pathlib import Path
@@ -26,6 +27,7 @@ CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "refined_confirm": (124101, 124102, 124103),
                  "cifar_balanced_confirm": (151101, 151102, 151103),
                  "moons_balanced_confirm": (162101, 162102, 162103),
+                 "fashion_posterior_confirm": (161101, 161102, 161103),
                  "small_sample_confirm": (141101, 141102, 141103),
                  "small_sample_refined_confirm": (142101, 142102, 142103)}
 SMALL_SAMPLE_SCREEN_SEEDS = (140101, 140102)
@@ -198,8 +200,32 @@ def balanced_entries(original, rows):
     return entries
 
 
+def fashion_posterior_entries(earlier, rows):
+    """Cross learning rate, initial scale and scale learning rate for all seven labels."""
+    if len(conditions(earlier)) != 1:
+        raise ValueError("Select a single Fashion-MNIST bank size")
+    dataset, m, rho, _ = conditions(earlier)[0]
+    if dataset != "fashionmnist" or m not in (200, 500, 1000) or rho != .35:
+        raise ValueError("Unexpected Fashion-MNIST bank-size comparison")
+    _, selected = select_variants(rows, earlier, top=1)
+    inputs = {item["task_id"]: item["config"] for item in earlier}
+    result = []
+    for choice in selected:
+        source = inputs[choice["task_ids"][0]]
+        for rate, std, scale_lr in product((.0008, .0012), (.001, .01), (0., .3)):
+            config = {**source, "lr": rate, "posterior_std": std, "rho_lr_scale": scale_lr}
+            for seed in SCREEN_SEEDS:
+                item = entry(config, seed, choice["group"], choice["method_label"], "fashion_posterior")
+                item["penalty_from_validation_variant"] = choice["variant_id"]
+                result.append(item)
+    return result
+
+
 def prepare_confirmation(args):
+    posterior_manifest = getattr(args, "posterior_manifest", None)
+    posterior_root = getattr(args, "posterior_root", None)
     if (args.eval_draws < 1
+            or (posterior_manifest is None) != (posterior_root is None)
             or (args.refinement_manifest is None) != (args.refinement_root is None)
             or (args.balanced_manifest is None) != (args.balanced_root is None)):
         raise ValueError("Require positive draws and a results root for every manifest")
@@ -212,12 +238,21 @@ def prepare_confirmation(args):
         dataset = read_manifest(args.screen_manifest)[0]["config"]["dataset"]
         balanced_stage = "moons_balanced" if dataset == "moons" else "cifar_balanced"
         stages.append((balanced_stage, args.balanced_manifest, args.balanced_root))
+    if posterior_manifest:
+        if not args.refinement_manifest or args.balanced_manifest:
+            raise ValueError("Fashion posterior selection requires the original screen and refinement")
+        stages.append(("fashion_posterior", posterior_manifest, posterior_root))
     entries, rows, design = [], [], None
     for stage, manifest, root in stages:
         additional = read_manifest(manifest)
         if design is None:
             design = conditions(additional)
-        expected = balanced_grid if stage in {"moons_balanced", "cifar_balanced"} else grid(design, stage)
+        if stage == "fashion_posterior":
+            expected = fashion_posterior_entries(entries, rows)
+        elif stage in {"cifar_balanced", "moons_balanced"}:
+            expected = balanced_grid
+        else:
+            expected = grid(design, stage)
         if not variant_grid(additional, expected):
             raise ValueError(f"Incomplete or altered {stage} tuning grid")
         entries.extend(additional)
@@ -225,6 +260,8 @@ def prepare_confirmation(args):
         rows.extend(stage_rows)
         if stage == "screen" and args.balanced_manifest:
             balanced_grid = balanced_entries(additional, stage_rows)
+    if getattr(args, "command", None) == "posterior-screen":
+        return write_manifest(args.output, fashion_posterior_entries(entries, rows))
     variants, selected = select_variants(rows, entries, top=1)
     accuracy = defaultdict(dict)
     for choice in selected:
@@ -235,6 +272,8 @@ def prepare_confirmation(args):
     stage = "refined_confirm" if args.refinement_manifest else "confirm"
     if args.balanced_manifest:
         stage = balanced_stage + "_confirm"
+    if posterior_manifest:
+        stage = "fashion_posterior_confirm"
     if any(n_moons != 800 for _, _, _, n_moons in design):
         if len(design) != 1:
             raise ValueError("Select a separate confirmation cohort for each small-sample design")
@@ -334,10 +373,16 @@ def main():
     confirm.add_argument("--refinement-root", type=Path)
     confirm.add_argument("--balanced-manifest", type=Path)
     confirm.add_argument("--balanced-root", type=Path)
+    confirm.add_argument("--posterior-manifest", type=Path)
+    confirm.add_argument("--posterior-root", type=Path)
+    posterior = commands.add_parser("posterior-screen")
+    for tag in ("screen-manifest", "screen-root", "refinement-manifest", "refinement-root"):
+        posterior.add_argument("--" + tag, type=Path, required=True)
+    posterior.set_defaults(eval_draws=20, balanced_manifest=None, balanced_root=None)
     confirm.add_argument("--eval-draws", type=int, default=20)
     combine = commands.add_parser("combine")
     combine.add_argument("--summary", type=Path, action="append", required=True)
-    for command in (screen, refine, balanced, confirm, combine):
+    for command in (screen, refine, balanced, posterior, confirm, combine):
         command.add_argument("--output", type=Path, required=True)
     task = commands.add_parser("task")
     task.add_argument("--index", type=int)
@@ -363,7 +408,7 @@ def main():
         result = write_manifest(args.output, entries)
     elif args.command == "task":
         result = run_task(args)
-    elif args.command == "confirm":
+    elif args.command in {"confirm", "posterior-screen"}:
         result = prepare_confirmation(args)
     elif args.command == "combine":
         result = combine_reports(args.summary, args.output)

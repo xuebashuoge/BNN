@@ -97,7 +97,7 @@ case $phase in
         python -u -m "$bounds" aggregate --output "$root/bounds" --width 16
         python -u -m "$bounds" fallback --output "$root/bounds"
         ;;
-    screen|refine|balanced|confirm|confirm-refine|confirm-balanced)
+    screen|refine|balanced|posterior|confirm|confirm-refine|confirm-balanced|confirm-posterior)
         case $dataset in mnist|fashionmnist|cifar10|moons) ;; *) echo "Supply comparison dataset" >&2; exit 2;; esac
         stage="$root/comparison/$dataset"
         mkdir -p "$stage"
@@ -106,7 +106,10 @@ case $phase in
         if [[ $phase == *balanced && $dataset != cifar10 && $dataset != moons ]]; then
             echo "Balanced refinement supports CIFAR-10 and two moons" >&2; exit 2
         fi
-        if [[ $phase == screen || $phase == refine || $phase == balanced ]]; then
+        if [[ $phase == *posterior && $dataset != fashionmnist ]]; then
+            echo "Posterior refinement requires Fashion-MNIST" >&2; exit 2
+        fi
+        if [[ $phase == screen || $phase == refine || $phase == balanced || $phase == posterior ]]; then
             if [[ $phase == screen ]]; then
                 options=()
                 if [[ $dataset == moons && -n ${DIAGONAL_MOONS_TRAIN_SIZE:-} ]]; then
@@ -119,6 +122,10 @@ case $phase in
                 "$py" -m "$compare" balanced-screen --screen-manifest "$stage/screen.jsonl" \
                     --screen-root "$stage/screen" --output "$stage/balanced.jsonl"
                 next=confirm-balanced
+            elif [[ $phase == posterior ]]; then
+                "$py" -m "$compare" posterior-screen --screen-manifest "$stage/screen.jsonl" --screen-root "$stage/screen" \
+                    --refinement-manifest "$stage/refine.jsonl" --refinement-root "$stage/refine" --output "$stage/posterior.jsonl"
+                next=confirm-posterior
             else
                 "$py" -m "$compare" refine-screen --screen-manifest "$stage/screen.jsonl" --output "$stage/refine.jsonl"
                 next=confirm-refine
@@ -138,12 +145,15 @@ case $phase in
                 "$worker" bash "$launcher" "$next" "$dataset"
         else
             extra=()
-            if [[ $phase == confirm-refine || $phase == confirm-balanced ]]; then
+            if [[ $phase == confirm-refine || $phase == confirm-balanced || $phase == confirm-posterior ]]; then
                 extra=(--refinement-manifest "$stage/refine.jsonl" --refinement-root "$stage/refine")
             fi
             if [[ $phase == confirm-balanced ]]; then
                 extra+=(--balanced-manifest "$stage/balanced.jsonl" --balanced-root "$stage/balanced")
                 if [[ $dataset == moons ]]; then extra+=(--eval-draws 100); fi
+            fi
+            if [[ $phase == confirm-posterior ]]; then
+                extra+=(--posterior-manifest "$stage/posterior.jsonl" --posterior-root "$stage/posterior")
             fi
             python -m "$compare" confirm --screen-manifest "$stage/screen.jsonl" --screen-root "$stage/screen" \
                 "${extra[@]}" --output "$stage/$phase.jsonl"
