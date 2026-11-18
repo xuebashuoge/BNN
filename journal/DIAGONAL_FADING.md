@@ -114,3 +114,30 @@ study, set `DIAGONAL_M=100` and a fresh `DIAGONAL_OUTPUT`, then run
 
 The CIFAR-10 sensitivity study at $m=100$ gave T2 52.2288%, ERM 49.7885%, L2 49.3832%
 and T1 48.6338% for matched training. T2 led by 2.4403 percentage points over ERM.
+
+## Bank-size comparison for the journal
+
+The [three-size performance report](../results/correlated_diagonal_fading/mgrid_20261119/README.md) compares all seven
+training objectives at $m=200,500,1000$ with $\rho_c=0.35$. The initial search uses the same hyperparameter budget
+and paired seeds across sizes. The broader common search uses all three sizes for each dataset and retains the
+reported rankings. A separate illustrative table selects confirmation rounds using observed outcomes.
+The archive includes per-seed values, full-precision margins, and the older $m=20$ i.i.d. fading results.
+
+On Spartan, set `DATASET`, `DIAGONAL_PYTHON`, and the optional CPU bootstrap as above. Set `DIAGONAL_THREADS=1` for the
+single-thread CPU configuration used in this grid. From a clean checkout, submit the original comparisons as follows.
+Each screen schedules its dependent validation selection, retraining and deployment evaluation.
+
+```bash
+for m in 200 500 1000; do
+    export DIAGONAL_M=$m DIAGONAL_OUTPUT="$GRID_ROOT/m$m"
+    for dataset in mnist fashionmnist cifar10 moons; do
+        bash journal/submit_diagonal_fading.sh screen "$dataset"
+    done
+done
+```
+
+The dataset-specific follow-ups are recorded in each confirmation's selection file.
+The root `/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119` retains the Slurm
+identifiers, complete manifests, frozen protocols, checkpoints and logs. After the confirmations finish,
+`python -m journal.diagonal_fading_mgrid --root "$GRID_ROOT" --output "$GRID_ROOT/final"` recreates the
+three comparison tables, the paired-seed plots, and the seven-method accuracy panels.
