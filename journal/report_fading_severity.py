@@ -144,8 +144,12 @@ def algorithm_tables(root, output):
                         or mild[src]['method_label']!=method or int(mild[src]['seed'])!=seed):
                         raise ValueError(f'Unpaired transfer {src}')
                     mild_pct=100*float(mild[src]['test_accuracy'])
+                    before=load_json(mild_root/src/'test_deployment/evaluation.json')['heldout_gibbs_mc']
+                    after=load_json(parent/r['task_id']/'test_deployment/evaluation.json')['heldout_gibbs_mc']
                     changes.append(dict(dataset=ds,m=m,method=method,seed=seed,original_native_pct=mild_pct,
-                                        hard_native_pct=score,change_pp=score-mild_pct))
+                                        hard_native_pct=score,change_pp=score-mild_pct,
+                                        original_transmit_power=before['feature_power_per_coordinate'],
+                                        retrained_transmit_power=after['feature_power_per_coordinate']))
             avg = {k:fmean(v.values()) for k,v in scores.items()}
             for k,v in avg.items():
                 stat=summary['groups'][0]['methods'][k]['test_accuracy']
@@ -164,6 +168,15 @@ def algorithm_tables(root, output):
     for name, rows in [('method_comparisons',cohorts),('method_means',means),('accuracy_by_seed',seeds),
                        ('paired_retraining_vs_original',changes)]:
         csv_write(output/(name+'.csv'),rows)
+    powers=[]
+    for ds,m in cells():
+        cohort=[r for r in changes if (r['dataset'],r['m'])==(ds,m) and r['method'] in MATCHED]
+        original=fmean(r['original_transmit_power'] for r in cohort)
+        trained=fmean(r['retrained_transmit_power'] for r in cohort)
+        powers.append(dict(dataset=ds,m=m,original_power_per_coordinate=original,
+                           retrained_power_per_coordinate=trained,
+                           retrained_over_original_db=10*math.log10(trained/original) if original>0 and trained>0 else ''))
+    csv_write(output/'matched_transmit_power.csv',powers)
     (output/'sources.json').write_text(json.dumps(sources,indent=2)+'\n')
     return cohorts, means
 
@@ -240,7 +253,9 @@ def make_index(root, output, effects, comparisons):
     lines.extend(['','[Four-law comparison and recovery figure](channel_severity.pdf) · '
                   '[All channel means and paired changes](channel_effects.csv) · [Seed-level changes](channel_effects_by_seed.csv)',
                   '', 'Correlation-only and noise-only evaluations isolate each change on the original classifiers. '
-                  'The CSV also gives the difference between the joint change and the sum of the two separate changes '
+                  'The trainable transmitter can change its feature power during retraining. The measured mean squared output '
+                  'per coordinate is recorded in the [transmit-power table](matched_transmit_power.csv). '
+                  'The effects CSV also gives the difference between the joint change and the sum of the two separate changes '
                   'as interaction_pp. The retrained_hard_pct and recovery_pp columns compare freshly trained models '
                   'with the original models under the same hard deployment channel.',
                   '', '## Deployment accuracy by training objective', '',
