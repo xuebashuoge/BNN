@@ -36,6 +36,9 @@ def read_cohort(path, dataset, m):
     manifest_file = parent.with_suffix('.jsonl')
     if hashlib.sha256(manifest_file.read_bytes()).hexdigest() != summary['manifest']['sha256']:
         raise ValueError(f'Changed confirmation manifest for {path}')
+    selection_file = parent.with_suffix('.selection.json')
+    if hashlib.sha256(selection_file.read_bytes()).hexdigest() != summary['selection']['sha256']:
+        raise ValueError(f'Changed validation selection for {path}')
     manifest = [json.loads(line) for line in manifest_file.read_text().splitlines()]
     expected_n = {'mnist': 55_000, 'fashionmnist': 55_000, 'cifar10': 45_000, 'moons': 800}[dataset]
     fixed_fields = ('train_size','val_size','width','epochs','data_seed','eval_draws')
@@ -72,7 +75,7 @@ def read_cohort(path, dataset, m):
                   proposed_pct=means[proposed], comparator_pct=means[other],
                   margin_pp=fmean(diffs), paired_sd_pp=stdev(diffs), paired_min_pp=min(diffs),
                   paired_max_pp=max(diffs), paired_wins=sum(d > 1e-10 for d in diffs),
-                  strict_win=len(wins) == 1 and wins[0] in PROPOSED)
+                  strict_win=bool(wins) and all(label in PROPOSED for label in wins))
     for k in METHODS:
         result[k + '_pct'] = means[k]
     observations = [dict(dataset=dataset, m=m, cohort=stage, seed=s, method=k,
@@ -163,9 +166,21 @@ def assemble(root, output):
             method_rows,_ = collect(paths)
             plot(method_rows, plot_dir)
             csv_write(plot_dir/'accuracy.csv', method_rows)
-    for (dataset,m,cohort),path in sources.items():
-        inventory.append(dict(dataset=dataset,m=m,cohort=cohort,source=str(path),
-                              sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
+    selected_configs = []
+    for (dataset, m, cohort), path in sources.items():
+        selection = json.loads(path.parent.with_suffix('.selection.json').read_text())
+        for choice in selection['selected_variants']:
+            selected_configs.append(dict(dataset=dataset, m=m, cohort=cohort,
+                                         method=choice['method_label'], validation_variant=choice['variant_id'],
+                                         config=choice['config'], validation_seeds=choice['seeds'],
+                                         validation_accuracy=choice['validation_accuracy']))
+        inventory.append(dict(dataset=dataset, m=m, cohort=cohort, source=str(path),
+                              sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                              confirmation_manifest=json.loads(path.read_text())['manifest'],
+                              validation_sources=selection['sources']))
+    with (output/'selected_configs.jsonl').open('w') as f:
+        for record in selected_configs:
+            f.write(json.dumps(record, sort_keys=True) + '\n')
     (output/'sources.json').write_text(json.dumps(inventory, indent=2)+'\n')
     print(f'Verified {len(cohorts)} confirmations and {len(observations)} paired method/seed results')
 
