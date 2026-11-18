@@ -124,7 +124,8 @@ reported rankings. A separate illustrative table selects confirmation rounds usi
 The archive includes per-seed values, full-precision margins, and the older $m=20$ i.i.d. fading results.
 
 On Spartan, set `DATASET`, `DIAGONAL_PYTHON`, and the optional CPU bootstrap as above. Set `DIAGONAL_THREADS=1` for the
-single-thread CPU configuration used in this grid. From a clean checkout, submit the original comparisons as follows.
+single-thread CPU configuration used in this grid. Set `GRID_ROOT` to a fresh absolute directory on shared project
+storage. From a clean checkout, submit the original comparisons as follows.
 Each screen schedules its dependent validation selection, retraining and deployment evaluation.
 
 ```bash
@@ -136,7 +137,14 @@ for m in 200 500 1000; do
 done
 ```
 
-The dataset-specific follow-ups are recorded in each confirmation's selection file.
+For each bank size, keep its `DIAGONAL_OUTPUT` and `DIAGONAL_M` in the environment when submitting later phases.
+The CIFAR-10 search adds `refine`, `balanced` and `upper`. Its last round confirms on five paired seeds.
+Fashion-MNIST adds `refine`, `posterior` and `finalists`. Its last round chooses among two finalists per
+method using eight validation seeds and confirms on nine new seeds. Two moons adds `refine` and `balanced`,
+then runs `bash journal/submit_moons_revalidation.sh start "$DIAGONAL_OUTPUT/comparison/moons"` for the
+independent validation sweep and frozen-model confirmation. Supply completed earlier validation stages when
+submitting a phase that uses their results. MNIST uses its original screen. The selected training
+configurations and exact evaluation budgets are in the output files.
 The root `/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119` retains the Slurm
 identifiers, complete manifests, frozen protocols, checkpoints and logs. After the confirmations finish,
 `python -m journal.diagonal_fading_mgrid --root "$GRID_ROOT" --output "$GRID_ROOT/final"` recreates the
