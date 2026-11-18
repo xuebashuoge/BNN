@@ -44,9 +44,9 @@ DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", predicto
                 m=100, seed=0, data_seed=20261110, channel_seed=1, eval_seed=2,
                 eval_draws=10, val_draws=1, clip_ce=10., delta=.05, l2=1e-4,
                 device="cpu", threads=1, cpu_flush_denormal=False, rho_lr_scale=1., download=False, moon_noise=.3, moons_sampler="iid",
-                bounded_feature_norm=1., bounded_receiver_norm=.3, posterior_mean_clip=0.,
                 train_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1},
                 deployment_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1})
+BOUNDED_MODEL_DEFAULTS = dict(bounded_feature_norm=1., bounded_receiver_norm=.3, posterior_mean_clip=0.)
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
 CNN_ARCHITECTURES = {"cnn", "cnn_mid", "cnn_mid_relu", "cnn_rxconv", "cnn_spatial3"}
 _CPU_FLUSH_DENORMAL_SUPPORTED: bool | None = None
@@ -121,7 +121,7 @@ def read_config(path: str | None) -> dict:
 
 
 def normalize_config(supplied: dict) -> dict:
-    unknown = set(supplied) - set(DEFAULTS)
+    unknown = set(supplied) - set(DEFAULTS) - set(BOUNDED_MODEL_DEFAULTS)
     if unknown:
         raise ValueError(f"Unknown config fields: {sorted(unknown)}")
     config = {**DEFAULTS, **supplied}
@@ -130,11 +130,12 @@ def normalize_config(supplied: dict) -> dict:
     if (not isinstance(config["rho_lr_scale"], (int, float)) or isinstance(config["rho_lr_scale"], bool)
             or not math.isfinite(config["rho_lr_scale"]) or config["rho_lr_scale"] < 0):
         raise ValueError("rho_lr_scale must be a finite nonnegative number")
-    for key in ("bounded_feature_norm", "bounded_receiver_norm", "posterior_mean_clip"):
-        value = config[key]
-        if (not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value)
-                or value < 0 or (key != "posterior_mean_clip" and value == 0)):
-            raise ValueError(f"{key} requires a finite {'nonnegative' if key == 'posterior_mean_clip' else 'positive'} number")
+    if config["architecture"] == "bounded_mlp" or BOUNDED_MODEL_DEFAULTS.keys() & supplied.keys():
+        for key, default in BOUNDED_MODEL_DEFAULTS.items():
+            value = config.setdefault(key, default)
+            if (not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value)
+                    or value < 0 or (key != "posterior_mean_clip" and value == 0)):
+                raise ValueError(f"{key} requires a finite {'nonnegative' if key == 'posterior_mean_clip' else 'positive'} number")
     config["train_channel"] = validate_channel(config["train_channel"])
     config["deployment_channel"] = validate_channel(config["deployment_channel"])
     if config["method"] not in METHODS or config["dataset"] not in {"moons", "mnist", "fashionmnist", "cifar10"}:
@@ -517,7 +518,7 @@ def train(config: dict, output: Path):
     train_data, val_data, _, input_dim, classes, split = load_data(config, include_test=False)
     train_loader, val_loader = make_loader(train_data, config, True), make_loader(val_data, config)
     model, bank = make_models(config, input_dim, classes)
-    mean_clip = config["posterior_mean_clip"]
+    mean_clip = config.get("posterior_mean_clip", 0.)
     if mean_clip:
         with torch.no_grad():
             model.mu.clamp_(-mean_clip, mean_clip)
