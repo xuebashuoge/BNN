@@ -137,10 +137,19 @@ def validation_rows(root, entries):
     return rows
 
 
+def cifar_screen_bank_size(original):
+    """Validate every configuration and seed in one complete CIFAR screen."""
+    if not original:
+        raise ValueError("Empty CIFAR screen")
+    m = original[0]["config"]["m"]
+    if not variant_grid(original, screening_entries(("cifar10",), m, .35)):
+        raise ValueError("Require one complete CIFAR screen at a common m and rho=.35")
+    return m
+
+
 def balanced_cifar_entries(original, rows):
     """Carry each label's original validation-selected penalty into a shared 2x2 grid."""
-    if not variant_grid(original, screening_entries(("cifar10",), 2000, .35)):
-        raise ValueError("Balanced follow-up requires the complete m=2000, rho=.35 CIFAR screen")
+    cifar_screen_bank_size(original)
     _, selected = select_variants(rows, original, top=1)
     by_id = {item["task_id"]: item for item in original}
     entries = []

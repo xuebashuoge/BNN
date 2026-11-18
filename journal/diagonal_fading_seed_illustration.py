@@ -6,7 +6,7 @@ from pathlib import Path
 import statistics
 
 from .campaign import completed_trial
-from .diagonal_fading_comparison import ranking
+from .diagonal_fading_comparison import cifar_screen_bank_size, ranking, validation_rows
 from .full_fading_comparison import METHODS, write_once
 from .run_experiment import evaluate_checkpoint, file_fingerprint, save_json
 from .run_task import read_manifest
@@ -30,17 +30,19 @@ def prepare(root):
         raise ValueError("Require seven original selected variants")
     scores = {seed: {} for seed in SEEDS}
     tasks = []
-    for item in read_manifest(screen_path):
+    entries = read_manifest(screen_path)
+    m = cifar_screen_bank_size(entries)
+    for item, row in zip(entries, validation_rows(root / "screen", entries)):
         label, config = item["method_label"], item["config"]
         if item["variant_id"] != selected[label]:
             continue
         seed = config["seed"]
         if (seed not in SEEDS or label in scores[seed] or config["dataset"] != "cifar10"
-                or config["m"] != 2000 or config["deployment_channel"] != DEPLOYMENT
+                or config["m"] != m or config["deployment_channel"] != DEPLOYMENT
                 or config["train_channel"] != ({"kind": "perfect"} if METHODS[label][1] else DEPLOYMENT)):
             raise ValueError(f"Unexpected or duplicate screening case: {item['task_id']}")
         checkpoint = root / "screen" / item["task_id"]
-        validation = completed_trial(checkpoint, config)
+        validation = completed_trial(checkpoint, row["config"])
         if not validation or not 0 <= validation["validation_accuracy"] <= 1:
             raise ValueError(f"Missing completed validation checkpoint: {checkpoint}")
         scores[seed][label] = validation["validation_accuracy"]
@@ -53,7 +55,7 @@ def prepare(root):
         raise ValueError("Incomplete common screening cohort")
     ranks = {seed: ranking(scores[seed]) for seed in SEEDS}
     winner = max(SEEDS, key=lambda s: (ranks[s]["margin"], -s))
-    protocol = dict(dataset="cifar10", m=2000, deployment_channel=DEPLOYMENT, eval_draws=DRAWS,
+    protocol = dict(dataset="cifar10", m=m, deployment_channel=DEPLOYMENT, eval_draws=DRAWS,
                     selection_rule="Maximize validation accuracy of the better matched T1/T2 minus the best of the other five methods; smaller seed breaks a tie.",
                     validation_selected_seed=winner, validation_ranking=ranks, validation_accuracy=scores,
                     screen=file_fingerprint(screen_path), original_selection=file_fingerprint(selection_path),
@@ -86,10 +88,10 @@ def evaluate(root, index, threads):
         write_once(overrides, json.dumps(dict(eval_draws=DRAWS, eval_seed=item["eval_seed"],
                                               device="cpu", threads=threads))+"\n")
         evaluate_checkpoint(checkpoint, str(overrides), case, "test", "deployment")
-    return checked_result(root, item)
+    return checked_result(root, item, protocol["m"])
 
 
-def checked_result(root, item):
+def checked_result(root, item, m):
     path = root / SUBDIR / "trials" / item["task_id"] / "evaluation.json"
     r = json.loads(path.read_text())
     config, risk = r["evaluation_config"], r["heldout_gibbs_mc"]
@@ -97,7 +99,7 @@ def checked_result(root, item):
             or r["checkpoint_source_fingerprints"] != item["source"]
             or r["checkpoint_verification"]["bank_hash_matches_metadata"] is not True
             or config["seed"] != item["seed"] or config["eval_seed"] != item["eval_seed"]
-            or config["deployment_channel"] != DEPLOYMENT or config["m"] != 2000
+            or config["deployment_channel"] != DEPLOYMENT or config["m"] != m
             or risk["examples"] != 10000 or risk["draws"] != DRAWS or not risk["predictor"]["stochastic"]
             or not 0 <= risk["accuracy"] <= 1):
         raise ValueError(f"Frozen test evaluation differs from protocol: {path}")
@@ -152,7 +154,7 @@ def plot_figure(root):
     for pos, label in ((-.87, "Matched"), (4.36, "Perfect")):
         axes[0].text(-.025, pos, label, transform=axes[0].get_yaxis_transform(), ha="right",
                      va="center", fontsize=8, fontweight="bold")
-    figure.suptitle(r"CIFAR-10 deployment under correlated diagonal fading ($m=2000,\ \rho_c=0.35$)",
+    figure.suptitle(rf"CIFAR-10 deployment under correlated diagonal fading ($m={protocol['m']},\ \rho_c=0.35$)",
                     fontsize=11, y=.98)
     figure.supxlabel("Gibbs deployment accuracy (%, 100 draws)", fontsize=9.5, y=.035)
     figure.subplots_adjust(top=.79, bottom=.16, left=.09, right=.99, wspace=.12)
@@ -165,7 +167,7 @@ def plot_figure(root):
 def report(root):
     protocol = read_protocol(root)
     selected = protocol["validation_selected_seed"]
-    cells = [checked_result(root, item) for item in protocol["tasks"]]
+    cells = [checked_result(root, item, protocol["m"]) for item in protocol["tasks"]]
     by_seed = {seed: {r["method"]: r["test_accuracy"] for r in cells if r["seed"] == seed} for seed in SEEDS}
     means = {label: statistics.fmean(by_seed[s][label] for s in SEEDS) for label in METHODS}
     rankings = {seed: ranking(by_seed[seed]) for seed in SEEDS}
@@ -182,7 +184,7 @@ def report(root):
                   units="CSV accuracies are percentages; JSON accuracy scores and margins are fractions.",
                   validation_selected_seed=selected, validation_ranking=protocol["validation_ranking"],
                   test_ranking_by_seed=rankings, test_ranking_two_seed_mean=ranking(means),
-                  m=2000, deployment_channel=DEPLOYMENT, seeds=SEEDS, test_draws=DRAWS, test_examples=10000,
+                  m=protocol["m"], deployment_channel=DEPLOYMENT, seeds=SEEDS, test_draws=DRAWS, test_examples=10000,
                   protocol=file_fingerprint(output / "protocol.json"), rows=rows, evaluations=cells)
     save_json(output / "seed_illustration.json", result)
     with (output / "seed_illustration.csv").open("w", newline="") as stream:

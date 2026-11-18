@@ -6,13 +6,22 @@ import unittest
 from argparse import Namespace
 
 from journal.diagonal_fading_comparison import (
-    CONFIRM_SEEDS, METHODS, SCREEN_SEEDS, balanced_cifar_entries, confirmation_entries,
+    CONFIRM_SEEDS, METHODS, SCREEN_SEEDS, balanced_cifar_entries, cifar_screen_bank_size, confirmation_entries,
     prepare_confirmation, screening_entries, validation_rows,
 )
 from journal.full_fading_comparison import report_file, write_manifest
 
 
 class CifarRefinementTests(unittest.TestCase):
+    def test_bank_size_comes_from_a_complete_single_size_screen(self):
+        for m in (200, 500, 1000, 2000):
+            entries = screening_entries(("cifar10",), m, .35)
+            self.assertEqual(cifar_screen_bank_size(entries), m)
+        mixed = entries[:-1] + screening_entries(("cifar10",), 200, .35)[-1:]
+        for wrong in ([], entries[:-1], mixed):
+            with self.assertRaises(ValueError):
+                cifar_screen_bank_size(wrong)
+
     def test_shared_grid_and_freeze_across_all_three_rounds(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
