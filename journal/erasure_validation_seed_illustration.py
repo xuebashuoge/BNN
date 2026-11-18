@@ -6,7 +6,6 @@ from itertools import combinations
 import json
 import os
 from pathlib import Path
-import statistics
 
 from .build_campaign import make_entry
 from .campaign import completed_trial, evaluate_trial
@@ -51,6 +50,16 @@ def prepare(sources, out):
         records=[q for q in (path.with_suffix(".selection.json"),path.parent/"selection.json",path.parent/"protocol.json") if q.is_file()]
         if not records:
             raise ValueError("Missing frozen selection or erasure-transfer protocol beside the source manifest")
+        for record in records:
+            declaration=json.loads(record.read_text())
+            if "manifest" in declaration and declaration["manifest"] != file_fingerprint(path):
+                raise ValueError(f"Source manifest differs from its frozen protocol: {path}")
+            if "selected_variants" in declaration:
+                confirmed={r["method_label"]:r["variant_id"] for r in declaration["selected_variants"]}
+                if (set(confirmed)!=set(METHODS) or any(
+                        e.get("selected_from_validation_variant",e["variant_id"])!=confirmed[e["method_label"]]
+                        for e in entries)):
+                    raise ValueError(f"Source confirmation differs from its frozen validation choices: {path}")
         variants={}
         for label,(method,perfect) in METHODS.items():
             group=[e for e in entries if e["method_label"]==label]
@@ -61,7 +70,7 @@ def prepare(sources, out):
                     or len({e["variant_id"] for e in group})!=1
                     or any({k:v for k,v in e["config"].items() if k not in ("seed","channel_seed","eval_seed")}
                            !={k:v for k,v in cfg.items() if k not in ("seed","channel_seed","eval_seed")} for e in group)
-                    or any(e.get("role")!="erasure_confirmation" for e in group)):
+                    or any(e.get("role") not in ("erasure_confirmation","severity_confirmation") for e in group)):
                 raise ValueError(f"Require exactly one frozen p=.50 {label} configuration at each m")
             variants[label]=group[0]["variant_id"]
             for seed in SEEDS:
@@ -114,6 +123,8 @@ def freeze(out):
     for entry, row in zip(entries,validation_rows(out/"training",entries),strict=True):
         cfg=entry["config"]
         cp=out/"training"/entry["task_id"]
+        if not (out/"frozen_triple.json").exists() and (cp/"test_deployment"/"evaluation.json").exists():
+            raise ValueError("Test scores predate the frozen validation seed choice")
         status=completed_trial(cp,row["config"])
         if not status or status["validation_accuracy"]!=row["validation_accuracy"]:
             raise ValueError(f"Validation record differs from the frozen checkpoint at {cp}")
