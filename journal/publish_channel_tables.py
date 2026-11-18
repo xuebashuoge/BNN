@@ -24,7 +24,6 @@ def add_seed_illustrations(root, inputs, output):
     audits=[]
     for report in sorted((root/'seed_illustrations').glob('*/seed_illustration.json')):
         case=report.parent
-        planned=json.loads((case/'design.json').read_text())
         frozen=json.loads((case/'frozen_triple.json').read_text())
         result=json.loads(report.read_text())
         if (result['selection']!=file_fingerprint(case/'frozen_triple.json') or
@@ -32,7 +31,7 @@ def add_seed_illustrations(root, inputs, output):
                 frozen['selected_seeds']!=result['selected_seeds']):
             raise ValueError(f'Changed illustration inputs at {case}')
         obs=read_csv(case/'accuracy_by_seed.csv')
-        ds=result['dataset']; dest=output/'erasure_seed_illustrations'/ds
+        ds=result['dataset']; dest=output/'erasure_seed_illustrations'/case.name
         dest.mkdir(parents=True,exist_ok=True)
         for name in ('design.json','frozen_triple.json','seed_illustration.json','validation_triples.csv',
                      'full_pool_cells.csv','validation_selected_triple_cells.csv','accuracy_by_seed.csv'):
@@ -60,7 +59,7 @@ def add_seed_illustrations(root, inputs, output):
                         use=new[name]
                         break
             by_cell[key]=use
-            audits.append(dict(dataset=ds,m=m,ordinary_margin_pp=old_margin,
+            audits.append(dict(dataset=ds,m=m,source_study=case.name,prior_display_margin_pp=old_margin,
                                eight_seed_margin_pp=margin(new['full_pool']),
                                selected_triple_margin_pp=margin(new['validation_selected_triple']),
                                displayed_phase=use[0]['phase'],source=str(report)))
