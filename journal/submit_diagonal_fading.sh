@@ -32,11 +32,16 @@ fi
 submit() {
     local record=$1 job=$2
     shift 2
-    if [[ -s $record ]]; then cat "$record"; return; fi
     local id
+    if [[ -s $record ]]; then
+        id=$(cat "$record")
+        if [[ $id =~ ^[0-9]+$ ]]; then printf '%s\n' "$id"; return; fi
+        if [[ -n $id ]]; then echo "Invalid Slurm ID in $record" >&2; return 1; fi
+    fi
     id=$(sbatch --parsable --chdir="$PWD" --job-name="diag_$job" --kill-on-invalid-dep=yes \
-        --output="$root/logs/%x_%A_%a.out" --error="$root/logs/%x_%A_%a.err" "$@")
+        --output="$root/logs/%x_%A_%a.out" --error="$root/logs/%x_%A_%a.err" "$@") || return 1
     id=${id%%;*}
+    [[ $id =~ ^[0-9]+$ ]] || { echo "Invalid sbatch job ID: $id" >&2; return 1; }
     printf '%s\n' "$id" | tee "$record"
 }
 
@@ -121,7 +126,14 @@ case $phase in
             job=$(array "$stage" "$phase" "$compare" "$stage/$phase" "$limit")
             depends="$job"
             if [[ $phase == refine ]]; then depends+=":$(cat "$stage/screen.job")"; fi
-            if [[ $phase == balanced ]]; then depends+=":$(cat "$stage/refine.job")"; fi
+            if [[ $phase == balanced ]]; then
+                # Completed refinements can age out of Slurm's dependency table.
+                # The controller still validates every expected report.
+                refine_count=$(find "$stage/refine/reports" -name '*.json' | wc -l)
+                if (( refine_count < $(wc -l < "$stage/refine.jsonl") )); then
+                    depends+=":$(cat "$stage/refine.job")"
+                fi
+            fi
             submit "$stage/$phase-select.job" "select_$dataset" "${cpu[@]}" --time=00:05:00 --dependency="afterok:$depends" \
                 "$worker" bash "$launcher" "$next" "$dataset"
         else
