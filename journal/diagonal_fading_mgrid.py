@@ -85,8 +85,9 @@ def read_cohort(path, dataset, m):
                   strict_win=bool(wins) and all(label in PROPOSED for label in wins))
     for k in METHODS:
         result[k + '_pct'] = means[k]
-    observations = [dict(dataset=dataset, m=m, cohort=stage, seed=s, method=k,
-                         accuracy_pct=scores[k][s]) for k in METHODS for s in seeds]
+    observations = [dict(dataset=dataset, m=m, cohort=stage, seed=int(r['seed']), method=r['method_label'],
+                         accuracy_pct=100*float(r['test_accuracy']), validation_pct=100*float(r['validation_accuracy']),
+                         variant_id=r['variant_id'], task_id=r['task_id']) for r in rows]
     return result, observations, diffs
 
 
