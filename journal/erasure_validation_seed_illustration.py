@@ -220,7 +220,13 @@ def report(out):
                                   seeds=" ".join(map(str,seeds)),phase=name,source=str((out/"seed_illustration.json").resolve()),
                                   outage_prob=.5))
         csv_write(out/(name+"_cells.csv"),cells)
+        for m in design["bank_sizes"]:
+            per_size=out/f"m{m}"
+            per_size.mkdir(exist_ok=True)
+            csv_write(per_size/(name+"_cells.csv"),[r for r in cells if r["m"]==m])
     csv_write(out/"accuracy_by_seed.csv",observations)
+    for m in design["bank_sizes"]:
+        csv_write(out/f"m{m}"/"accuracy_by_seed.csv",[r for r in observations if r["m"]==m])
     csv_write(out/"validation_triples.csv",[dict(seeds=" ".join(map(str,r["seeds"])),
               minimum_validation_margin_pp=r["minimum_validation_margin_pp"],average_validation_margin_pp=r["average_validation_margin_pp"],
               **{f"val_margin_m{m}_pp":v for m,v in r["margins_pp"].items()}) for r in frozen["all_triples"]])
