@@ -28,6 +28,7 @@ CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "cifar_balanced_confirm": (151101, 151102, 151103),
                  "moons_balanced_confirm": (162101, 162102, 162103),
                  "fashion_posterior_confirm": (161101, 161102, 161103),
+                 "moons_revalidated_confirm": (163101, 163102, 163103),
                  "small_sample_confirm": (141101, 141102, 141103),
                  "small_sample_refined_confirm": (142101, 142102, 142103)}
 SMALL_SAMPLE_SCREEN_SEEDS = (140101, 140102)
