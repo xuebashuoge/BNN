@@ -1,6 +1,7 @@
 """Prospectively select one common seed triple using only p=0.50 erasure validation results."""
 import argparse
 import csv
+import fcntl
 from fractions import Fraction
 from itertools import combinations
 import json
@@ -146,10 +147,20 @@ def freeze(out):
 
 def evaluate(out,index):
     design,entries=load_pool(out)
+    if not 0 <= index < len(entries):
+        raise ValueError("Pool index out of range")
+    item=entries[index]
+    path=report_file(out/"tests",item)
+    path.parent.mkdir(parents=True,exist_ok=True)
+    with path.with_suffix(".evaluate.lock").open("a") as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX)
+        return evaluate_one(out,design,item,path)
+
+
+def evaluate_one(out,design,item,path):
     selection=json.loads((out/"frozen_triple.json").read_text())
     if selection["design"]!=file_fingerprint(out/"design.json") or selection["pool_manifest"]!=design["pool_manifest"]:
         raise ValueError("Test inference requires the original frozen triple and design")
-    item=entries[index]
     train=out/"training"
     record=json.loads(report_file(train,item).read_text())
     if any(k.startswith("test_") for k in record):
@@ -158,6 +169,12 @@ def evaluate(out,index):
     frozen=selection["checkpoints"][item["task_id"]]["source"]
     if any(file_fingerprint(cp/name)!=frozen[k] for k,name in (("weights","weights.pt"),("metadata","metadata.json"))):
         raise ValueError("Checkpoint changed after the validation-only triple was frozen")
+    if path.is_file():
+        previous=json.loads(path.read_text())
+        if previous["frozen_selection"]!=file_fingerprint(out/"frozen_triple.json"):
+            raise ValueError("Existing test score belongs to a different selection")
+        result=validate_test(item,previous,train)
+        return {"task_id":item["task_id"],"test_accuracy":result["test_accuracy"]}
     result=evaluate_trial(record,DRAWS,full_risks=False,resume=True)
     result=validate_test(item,result,train)
     if not 0<=result["test_accuracy"]<=1:
@@ -210,6 +227,7 @@ def report(out):
     result=dict(design=file_fingerprint(out/"design.json"),selection=file_fingerprint(frozen_path),
                 dataset=design["dataset"],bank_sizes=design["bank_sizes"],pool_seeds=SEEDS,selected_seeds=frozen["selected_seeds"],
                 interpretation="Validation-selected training-seed illustration, paired across bank sizes and methods. The full pool describes all eight newly trained seeds.",
+                test_sample="The official test examples (or fixed independent moons test sample) are reused with fresh paired posterior/channel Monte Carlo.",
                 evaluated_models=len(checked),draws=DRAWS,groups=summaries)
     save_json(out/"seed_illustration.json",result)
     return {"selected":frozen["selected_seeds"],"models":len(checked)}
