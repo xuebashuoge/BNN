@@ -25,6 +25,7 @@ SCREEN_SEEDS = (122101, 122102)
 CONFIRM_SEEDS = {"confirm": (123101, 123102, 123103),
                  "refined_confirm": (124101, 124102, 124103),
                  "cifar_balanced_confirm": (151101, 151102, 151103),
+                 "moons_balanced_confirm": (162101, 162102, 162103),
                  "small_sample_confirm": (141101, 141102, 141103),
                  "small_sample_refined_confirm": (142101, 142102, 142103)}
 SMALL_SAMPLE_SCREEN_SEEDS = (140101, 140102)
@@ -165,6 +166,38 @@ def balanced_cifar_entries(original, rows):
     return entries
 
 
+def balanced_entries(original, rows):
+    """Use an equal-budget scale/penalty grid for n=800 moons at each bank size."""
+    design = conditions(original)
+    if len(design) != 1 or design[0][0] != "moons":
+        return balanced_cifar_entries(original, rows)
+    dataset, m, rho, n = design[0]
+    if n != 800 or rho != .35 or not variant_grid(original, grid(design, "screen")):
+        raise ValueError("Require the original n=800, d=16, rho=.35 moons screen")
+    ratio = math.sqrt((n-1)/(m-1))
+    entries = []
+    for label, (method, perfect) in METHODS.items():
+        source = next(item for item in original if item["method_label"] == label)
+        for rate in (.015, .04):
+            for scale in (.003, .03, .1):
+                for index in (0, 1):
+                    config = dict(source["config"], lr=rate, posterior_std=scale)
+                    strength = (.10, .60)[index]
+                    if method == "erm":
+                        config["rho_lr_scale"] = (.1, 1.)[index]
+                    elif method == "l2":
+                        config["l2"] = (1e-4, 1e-3)[index]
+                    elif perfect:
+                        config.update(eta_channel=0., eta_data=strength)
+                    elif method == "proposed":
+                        config.update(eta_channel=strength, eta_data=strength*ratio)
+                    else:
+                        config.update(eta_channel=0., eta_data=2*strength/math.sqrt(1+1/ratio**2))
+                    entries.extend(entry(config, seed, source["group"], label, "moons_balanced")
+                                   for seed in SCREEN_SEEDS)
+    return entries
+
+
 def prepare_confirmation(args):
     if (args.eval_draws < 1
             or (args.refinement_manifest is None) != (args.refinement_root is None)
@@ -176,20 +209,22 @@ def prepare_confirmation(args):
     if args.balanced_manifest:
         if not args.refinement_manifest:
             raise ValueError("Balanced confirmation includes the original screen and both refinements")
-        stages.append(("cifar_balanced", args.balanced_manifest, args.balanced_root))
+        dataset = read_manifest(args.screen_manifest)[0]["config"]["dataset"]
+        balanced_stage = "moons_balanced" if dataset == "moons" else "cifar_balanced"
+        stages.append((balanced_stage, args.balanced_manifest, args.balanced_root))
     entries, rows, design = [], [], None
     for stage, manifest, root in stages:
         additional = read_manifest(manifest)
         if design is None:
             design = conditions(additional)
-        expected = balanced_grid if stage == "cifar_balanced" else grid(design, stage)
+        expected = balanced_grid if stage in {"moons_balanced", "cifar_balanced"} else grid(design, stage)
         if not variant_grid(additional, expected):
             raise ValueError(f"Incomplete or altered {stage} tuning grid")
         entries.extend(additional)
         stage_rows = validation_rows(root, additional)
         rows.extend(stage_rows)
         if stage == "screen" and args.balanced_manifest:
-            balanced_grid = balanced_cifar_entries(additional, stage_rows)
+            balanced_grid = balanced_entries(additional, stage_rows)
     variants, selected = select_variants(rows, entries, top=1)
     accuracy = defaultdict(dict)
     for choice in selected:
@@ -199,7 +234,7 @@ def prepare_confirmation(args):
                for group, scores in accuracy.items()}
     stage = "refined_confirm" if args.refinement_manifest else "confirm"
     if args.balanced_manifest:
-        stage = "cifar_balanced_confirm"
+        stage = balanced_stage + "_confirm"
     if any(n_moons != 800 for _, _, _, n_moons in design):
         if len(design) != 1:
             raise ValueError("Select a separate confirmation cohort for each small-sample design")
@@ -324,7 +359,7 @@ def main():
         result = write_manifest(args.output, grid(design, "refine"))
     elif args.command == "balanced-screen":
         original = read_manifest(args.screen_manifest)
-        entries = balanced_cifar_entries(original, validation_rows(args.screen_root, original))
+        entries = balanced_entries(original, validation_rows(args.screen_root, original))
         result = write_manifest(args.output, entries)
     elif args.command == "task":
         result = run_task(args)

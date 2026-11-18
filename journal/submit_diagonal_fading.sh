@@ -103,8 +103,8 @@ case $phase in
         mkdir -p "$stage"
         limit=00:12:00
         if [[ $dataset == cifar10 ]]; then limit=00:30:00; fi
-        if [[ $phase == *balanced && $dataset != cifar10 ]]; then
-            echo "Balanced refinement requires CIFAR-10" >&2; exit 2
+        if [[ $phase == *balanced && $dataset != cifar10 && $dataset != moons ]]; then
+            echo "Balanced refinement supports CIFAR-10 and two moons" >&2; exit 2
         fi
         if [[ $phase == screen || $phase == refine || $phase == balanced ]]; then
             if [[ $phase == screen ]]; then
@@ -143,6 +143,7 @@ case $phase in
             fi
             if [[ $phase == confirm-balanced ]]; then
                 extra+=(--balanced-manifest "$stage/balanced.jsonl" --balanced-root "$stage/balanced")
+                if [[ $dataset == moons ]]; then extra+=(--eval-draws 100); fi
             fi
             python -m "$compare" confirm --screen-manifest "$stage/screen.jsonl" --screen-root "$stage/screen" \
                 "${extra[@]}" --output "$stage/$phase.jsonl"
