@@ -27,4 +27,12 @@ export MKL_NUM_THREADS="$OMP_NUM_THREADS" OPENBLAS_NUM_THREADS="$OMP_NUM_THREADS
 export ATEN_CPU_CAPABILITY=avx2
 export MPLCONFIGDIR="${TMPDIR:-/tmp}/bnn-fading-${SLURM_JOB_ID}"
 
-exec srun --ntasks=1 --cpus-per-task="$SLURM_CPUS_PER_TASK" --cpu-bind=cores "$@"
+bootstrap=()
+if [[ -n "${FULL_FADING_FTZ_LIBRARY:-}" ]]; then
+    : "${FULL_FADING_FTZ_SHA256:?Set the verified floating-point bootstrap SHA-256}"
+    checksum=$(sha256sum "$FULL_FADING_FTZ_LIBRARY")
+    test "${checksum%% *}" = "$FULL_FADING_FTZ_SHA256"
+    bootstrap=(env "LD_PRELOAD=$FULL_FADING_FTZ_LIBRARY${LD_PRELOAD:+:$LD_PRELOAD}")
+fi
+
+exec srun --ntasks=1 --cpus-per-task="$SLURM_CPUS_PER_TASK" --cpu-bind=cores "${bootstrap[@]}" "$@"

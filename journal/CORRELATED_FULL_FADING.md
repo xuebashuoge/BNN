@@ -116,3 +116,10 @@ method to the original grid at the same bank size. It freezes the complete
 combined validation grid and evaluates on a new three-seed training and
 channel cohort. The official test examples are reused across comparison
 rounds.
+
+An optional CPU bootstrap sets flush-to-zero and denormals-are-zero before
+PyTorch initializes its worker threads. For CPU campaigns that specify
+`cpu_flush_denormal=True`, compile `journal/cpu_flush_bootstrap.c` as a shared
+library on Spartan and export its path as `FULL_FADING_FTZ_LIBRARY` and its
+SHA-256 as `FULL_FADING_FTZ_SHA256`. The Slurm script checks the fingerprint
+before loading the library.

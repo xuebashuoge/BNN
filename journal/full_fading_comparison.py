@@ -51,8 +51,11 @@ GAUSSIAN_BASE_CHANNEL = {"full_fading": "analog", "outage": "outage"}
 def variants(config, method, perfect, refinement=False):
     """Four candidates per algorithm and training regime."""
     config = {**config, "method": method}
+    cifar_refinement = refinement and config["dataset"] == "cifar10"
     if method == "erm":
         learning_rates = (.0006, .002, .006, .02) if refinement else (.0003, .001, .003, .01)
+        if cifar_refinement:
+            learning_rates = (.00012, .0002, .0004, .0006)
         for lr in learning_rates:
             yield dict(config, lr=lr)
         return
@@ -63,6 +66,9 @@ def variants(config, method, perfect, refinement=False):
     else:
         strengths = (.0001, .03) if refinement else (.001, .01)
     learning_rates = (.006, .01) if refinement else (.001, .003)
+    if cifar_refinement:
+        learning_rates = (.0002, .0003)
+        strengths = {"l2": (5e-7, 5e-6)}.get(method, (.003, .03) if perfect else (.0003, .003))
     for lr in learning_rates:
         for strength in strengths:
             candidate = dict(config, lr=lr)
@@ -378,6 +384,11 @@ def report(manifest, root):
     write_csv(root / "accuracy_by_seed.csv", rows,
               ["dataset", "channel", "m", "method_label", "seed", "variant_id", "validation_accuracy",
                "test_accuracy", "test_cross_entropy", "test_bounded_loss", "task_id"])
+    export_accuracy_means(groups, root)
+    return summary
+
+
+def export_accuracy_means(groups, root):
     means = [dict(dataset=group["dataset"], channel=group["channel"], m=group["m"], method=method,
                   mean_accuracy=metrics["test_accuracy"]["mean"], sd_accuracy=metrics["test_accuracy"]["sd"],
                   mean_bounded_loss=metrics["test_bounded_loss"]["mean"],
@@ -386,6 +397,26 @@ def report(manifest, root):
     write_csv(root / "accuracy_means.csv", means,
               ["dataset", "channel", "m", "method", "mean_accuracy", "sd_accuracy", "mean_bounded_loss", "mean_cross_entropy"])
     plot_accuracy(groups, root)
+
+
+def combine_reports(paths, output):
+    """Plot dataset-level reports from a single confirmation cohort."""
+    reports = [json.loads(path.read_text()) for path in paths]
+    cohorts = {tuple(report["confirmation_seeds"]) for report in reports}
+    if len(cohorts) != 1:
+        raise ValueError("Use a common confirmation cohort in a combined figure")
+    groups = [group for report in reports for group in report["groups"]]
+    identities = {(group["dataset"], group["channel"]) for group in groups}
+    if len(identities) != len(groups) or len({group["m"] for group in groups}) != 1:
+        raise ValueError("Require distinct dataset/channel pairs at a common bank size")
+    groups.sort(key=lambda group: (group["channel"], DATASETS.index(group["dataset"])))
+    summary = dict(confirmation_seeds=sorted(next(iter(cohorts))),
+                   trials=sum(report["trials"] for report in reports),
+                   sources=[dict(path=str(path.resolve()), **file_fingerprint(path)) for path in paths],
+                   groups=groups,
+                   all_groups_t1_or_t2_strictly_highest=all(group["t1_or_t2_strictly_highest"] for group in groups))
+    save_json(output / "accuracy_summary.json", summary)
+    export_accuracy_means(groups, output)
     return summary
 
 
@@ -408,6 +439,9 @@ def main():
     refine = commands.add_parser("refine-screen")
     refine.add_argument("--screen-manifest", type=Path, required=True)
     refine.add_argument("--output", type=Path, required=True)
+    combine = commands.add_parser("combine")
+    combine.add_argument("--summary", type=Path, action="append", required=True)
+    combine.add_argument("--output", type=Path, required=True)
     for name in ("task", "report"):
         command = commands.add_parser(name)
         command.add_argument("--manifest", type=Path, required=True)
@@ -441,6 +475,8 @@ def main():
             parser.error("--eval-draws must be positive")
         result = prepare_confirmation(args.screen_manifest, args.screen_root, args.output, args.eval_draws,
                                       args.refinement_manifest, args.refinement_root)
+    elif args.command == "combine":
+        result = combine_reports(args.summary, args.output)
     else:
         result = report(args.manifest, args.output_root)
     print(json.dumps(result, allow_nan=False), flush=True)

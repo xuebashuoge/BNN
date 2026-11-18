@@ -185,7 +185,7 @@ run_comparison() {
     local select_job="$stage/select.job" dependency="$screen_job"
     if [[ "$segment" == refine ]]; then
         select_job="$stage/refined-select.job"
-        dependency="$screen_job:$(cat "$stage/screen.job")"
+        dependency="$screen_job:$(cat "$stage/select.job")"
     fi
     submit "$select_job" "fading_${segment}_select_$dataset" "${cpu[@]}" --time=00:05:00 \
         --dependency="afterok:$dependency" -- bash journal/submit_full_fading.sh "$controller" "$dataset"
