@@ -126,15 +126,18 @@ def notes(m, rows, view="common"):
     extra = []
     if view in ("illustrative","validation_examples"):
         selected = [DATASETS[d] for d in datasets if get(d,"Erasure")["phase"]=="validation_selected_triple"]
-        extra.append(("Erasure seed triples selected on validation: "+", ".join(selected)+".")
+        extra.append(("Erasure seed triples selected on validation for "+", ".join(selected)+".")
                      if selected else "Illustrative rounds were chosen using observed rankings.")
+    long_mnist = 'mnist' in datasets and any(x in get('mnist','Erasure')['phase'] for x in ('epochs60','penalty60'))
+    if long_mnist:
+        extra.append('The MNIST erasure comparison allowed 60 epochs for every method.')
     return (conditions, sample, *extra)
 
 
 def render(m, rows, view="common"):
     datasets=datasets_at(m)
     width=8.35
-    height=1.74 + .53*len(datasets) + .065*(len(datasets)-1)
+    height=1.74 + .53*len(datasets) + .065*(len(datasets)-1) + .19*max(0,len(notes(m,rows,view))-3)
     fig=plt.figure(figsize=(width,height),facecolor="white")
     ax=fig.add_axes([0,0,1,1],xlim=(0,width),ylim=(height,0))
     ax.set_axis_off()

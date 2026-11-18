@@ -35,8 +35,13 @@ def write_csv(path, rows):
 
 
 def case_order(r):
-    # A new protocol can add stronger independent verification after retuning.
-    return (r['phase']!='transfer',r['candidates_per_label'],r['n_seeds'],r['phase'])
+    # Each follow-up consumes the validation-selected configurations from the preceding stage.
+    # The final local grid may have fewer candidates after shortlisting.
+    order={'transfer':0, 'retuned':1, 'common/retuned':2, 'expansion/retuned':2,
+           'epochs60':3, 'penalty60/retuned':4}
+    if r['phase'] not in order:
+        raise ValueError(f"Unregistered confirmation phase {r['phase']}")
+    return (order[r['phase']],r['candidates_per_label'],r['n_seeds'],r['phase'])
 
 
 def read_record(path, folder, channel, dataset, m, seed_rows):
@@ -90,7 +95,12 @@ def read_record(path, folder, channel, dataset, m, seed_rows):
             break
     winners=[k for k in METHODS if max(means.values())-means[k]<1e-10]
     if set(winners)!=set(group['highest_mean_methods']): raise ValueError(f'Rank disagrees with seed rows at {path}')
-    record=dict(**tag,seeds=' '.join(map(str,seeds)),n_seeds=len(seeds),candidates_per_label=budget,
+    epochs={e['config']['epochs'] for e in entries}
+    draws={e['config']['eval_draws'] for e in entries}
+    if len(epochs)!=1 or len(draws)!=1:
+        raise ValueError(f'Mixed training or evaluation budgets within {path}')
+    record=dict(**tag,seeds=' '.join(map(str,seeds)),n_seeds=len(seeds),epochs=epochs.pop(),
+                eval_draws=draws.pop(),candidates_per_label=budget,
                 top_labels='/'.join(winners),best_proposed=proposed,proposed_pct=means[proposed],
                 best_other=other,other_pct=means[other],margin_pp=fmean(gaps),paired_seed_sd_pp=stdev(gaps),
                 paired_wins=sum(d>1e-10 for d in gaps),leads=set(winners)<=TARGET,
