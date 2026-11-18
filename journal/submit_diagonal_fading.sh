@@ -12,6 +12,8 @@ export JOURNAL_GIT_SHA=${JOURNAL_GIT_SHA:-$(git rev-parse HEAD)}
 root=$DIAGONAL_OUTPUT
 mkdir -p "$root/logs"
 py=${DIAGONAL_PYTHON:-python}
+# Let OpenMP workers sleep between small tensor operations on shared nodes.
+export OMP_WAIT_POLICY=${OMP_WAIT_POLICY:-PASSIVE} KMP_BLOCKTIME=${KMP_BLOCKTIME:-0}
 threads=${DIAGONAL_THREADS:-2}
 parallelism=${DIAGONAL_PARALLELISM:-64}
 worker=journal/full_fading_spartan.slurm
@@ -52,7 +54,7 @@ case $phase in
     all)
         bash "$launcher" sweep
         bash "$launcher" bounds
-        for ds in mnist fashionmnist cifar10; do bash "$launcher" screen "$ds"; done
+        for ds in mnist fashionmnist cifar10 moons; do bash "$launcher" screen "$ds"; done
         ;;
     sweep|extended)
         stage="$root/$phase"
