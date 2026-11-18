@@ -1,0 +1,5 @@
+dataset,m,rho_c,n_seeds,proposed,proposed_pct,strongest_other,other_pct,margin_pp,source,source_sha256
+cifar10,20,0.0,5,T2-Matched,37.789500000000004,L2-Matched,39.314400000000006,-1.5249000000000013,/home/yangshuo/Git/bnn_bayesian_reports_20261117/results/journal_bayesian_final/20261117/accuracy_outcome.json,1bc86fcbff8925beaf5d42fc14c36612239150f40d0d58a3aa850423b550d367
+fashionmnist,20,0.0,5,T2-Matched,53.070699999999995,L2-Matched,52.8957,0.17499999999999183,/home/yangshuo/Git/bnn_bayesian_reports_20261117/results/journal_bayesian_final/20261117/accuracy_outcome.json,1bc86fcbff8925beaf5d42fc14c36612239150f40d0d58a3aa850423b550d367
+mnist,20,0.0,5,T2-Matched,61.9499,ERM-Matched,61.44909999999999,0.5008000000000123,/home/yangshuo/Git/bnn_bayesian_reports_20261117/results/journal_bayesian_final/20261117/accuracy_outcome.json,1bc86fcbff8925beaf5d42fc14c36612239150f40d0d58a3aa850423b550d367
+moons,20,0.0,5,T1-Matched,66.31660000000001,L2-Matched,66.6892,-0.3726000000000007,/home/yangshuo/Git/bnn_bayesian_reports_20261117/results/journal_bayesian_final/20261117/accuracy_outcome.json,1bc86fcbff8925beaf5d42fc14c36612239150f40d0d58a3aa850423b550d367

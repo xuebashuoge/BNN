@@ -1,0 +1,869 @@
+[
+  {
+    "dataset": "mnist",
+    "m": 200,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/mnist/confirm/accuracy_summary.json",
+    "sha256": "092d586c3cf991afc5b0cd574f2a3758d683db4eaded1b85366751b345f38065",
+    "confirmation_manifest": {
+      "sha256": "a3c6bea5263da10cabcd34e01755f323dc3653390ecc067c6a5d37e6c7e3f282",
+      "bytes": 25626
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "a94d093bab6bcdd153e4f3ccfe77dfa3716544e524e942c85b8895729bb9e4fe",
+        "bytes": 64248
+      }
+    }
+  },
+  {
+    "dataset": "mnist",
+    "m": 500,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/mnist/confirm/accuracy_summary.json",
+    "sha256": "2014fe947634f1f5b6076be33797c5ff7c76f696328994b9bbde7ab3404064aa",
+    "confirmation_manifest": {
+      "sha256": "36edb5d948ea3103a93a3eb982ccc4dd098e3a1d58517229f39f71c3fce40af7",
+      "bytes": 25626
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "e11425c6d34ceedfdcccef73561144f73cc596f4bb392e6928239d2cedb70e02",
+        "bytes": 64252
+      }
+    }
+  },
+  {
+    "dataset": "mnist",
+    "m": 1000,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/mnist/confirm/accuracy_summary.json",
+    "sha256": "92c5150bbfef19b035fcdf293d8533336d2eca54ed95bedbb5a530f1a0105f41",
+    "confirmation_manifest": {
+      "sha256": "046c6e6697d6a1a46cf96f545bbb156ecaf3d83e00deedfdf95e1c37725338dd",
+      "bytes": 25695
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "86d39bb906ff432a0106580bddfaf002a8b1993c8406cc171492419be5c0b59a",
+        "bytes": 64416
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 200,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/fashionmnist/confirm/accuracy_summary.json",
+    "sha256": "4332025f84e2665ea652b61efabee5a1e45f6f59c1432f53a3632b35d14f4972",
+    "confirmation_manifest": {
+      "sha256": "12d62c58075e01b8d61dc4c997e9ddb87519b53da318f32ca9b246034b2bffc9",
+      "bytes": 26073
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "65e5c037cf1c414b668712f10cc2242a370519a03530ead2861f9a029a207fa2",
+        "bytes": 65452
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 200,
+    "cohort": "confirm-finalists",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/fashionmnist/confirm-finalists/accuracy_summary.json",
+    "sha256": "47a8fd6b35e92f6d00e03f117767f1eac6f106b1adc1822d3319b3bea2476bfc",
+    "confirmation_manifest": {
+      "sha256": "2127f3cb8310341688e2b67a6500f033ac4a362dddcc3211396ed503512a4fd6",
+      "bytes": 80487
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "65e5c037cf1c414b668712f10cc2242a370519a03530ead2861f9a029a207fa2",
+        "bytes": 65452
+      },
+      "refine": {
+        "sha256": "b2af95bdf6361caf2e0a5608518b9213f5e5f0cab782bf30e91a61e32fc7d2c8",
+        "bytes": 65496
+      },
+      "fashion_posterior": {
+        "sha256": "91f959c9fb6c2ed25d6a4408636f48dffd36694e4953e5ff41e63abb2201e068",
+        "bytes": 139112
+      },
+      "fashion_finalists": {
+        "sha256": "4ca0999b3fdd298477eb7153e67a435448e4a2bef72752a5192729308228e6db",
+        "bytes": 100008
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 200,
+    "cohort": "confirm-posterior",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/fashionmnist/confirm-posterior/accuracy_summary.json",
+    "sha256": "b519eadf43cf7907c1935978c977ad4a33acd53bdd71d10040e4904c18654a65",
+    "confirmation_manifest": {
+      "sha256": "c6a9a49fbc79375d1bccc5e9119043958924cb6e5fa14959c58bae85ebef3631",
+      "bytes": 26829
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "65e5c037cf1c414b668712f10cc2242a370519a03530ead2861f9a029a207fa2",
+        "bytes": 65452
+      },
+      "refine": {
+        "sha256": "b2af95bdf6361caf2e0a5608518b9213f5e5f0cab782bf30e91a61e32fc7d2c8",
+        "bytes": 65496
+      },
+      "fashion_posterior": {
+        "sha256": "91f959c9fb6c2ed25d6a4408636f48dffd36694e4953e5ff41e63abb2201e068",
+        "bytes": 139112
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 200,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/fashionmnist/confirm-refine/accuracy_summary.json",
+    "sha256": "adc09cb70e698783c22b2fab13c276ec8d06712aec459590af7836da4132da93",
+    "confirmation_manifest": {
+      "sha256": "c2faaa435ea0dcf589a68729e050863a1fc70b3eef376d508978c224eadc0464",
+      "bytes": 26409
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "65e5c037cf1c414b668712f10cc2242a370519a03530ead2861f9a029a207fa2",
+        "bytes": 65452
+      },
+      "refine": {
+        "sha256": "b2af95bdf6361caf2e0a5608518b9213f5e5f0cab782bf30e91a61e32fc7d2c8",
+        "bytes": 65496
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 500,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/fashionmnist/confirm/accuracy_summary.json",
+    "sha256": "5b4240140a5ed7eca77d0a6cec17eda9994bc05d8b2906933de6dec8f16407f0",
+    "confirmation_manifest": {
+      "sha256": "4707e9c98b78c96e185657f33341c6ec4e3c6a96874cb47fdb22efac518b516b",
+      "bytes": 26073
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "84716e8b98c18ec1d0b7960a9970ad23ef0e368aa9c657b4f22ca1625268def8",
+        "bytes": 65456
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 500,
+    "cohort": "confirm-finalists",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/fashionmnist/confirm-finalists/accuracy_summary.json",
+    "sha256": "a100e43b2eca21fe33efe990bae3ef05a3e6f3903e226e28b3283282cd514d24",
+    "confirmation_manifest": {
+      "sha256": "8eb579be53ce9769f96d080d3b34026d857aebd552ebf5fb92e76b384b7e174d",
+      "bytes": 80487
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "84716e8b98c18ec1d0b7960a9970ad23ef0e368aa9c657b4f22ca1625268def8",
+        "bytes": 65456
+      },
+      "refine": {
+        "sha256": "598b2d4824b90f906faea36bea5d091e26f3c183d4de66ba3796c024cb6a4637",
+        "bytes": 65492
+      },
+      "fashion_posterior": {
+        "sha256": "15f736a0f2aa8fe54385189701d47bcf187937a3eb4ee1b0c1fa55811ebb5d38",
+        "bytes": 139112
+      },
+      "fashion_finalists": {
+        "sha256": "316f3855179ea1666b4e167d75d990c680b65a5cc5e1bb67cfe42805c260c673",
+        "bytes": 100014
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 500,
+    "cohort": "confirm-posterior",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/fashionmnist/confirm-posterior/accuracy_summary.json",
+    "sha256": "bfcb014bbd4b63ec98c4f38a97b29d9ff266f5e54caa177a97c9ccafedf0d81b",
+    "confirmation_manifest": {
+      "sha256": "0caccb7c1012889de9a840f382555dd17d95d820d92c49aa5509db4c544e8117",
+      "bytes": 26829
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "84716e8b98c18ec1d0b7960a9970ad23ef0e368aa9c657b4f22ca1625268def8",
+        "bytes": 65456
+      },
+      "refine": {
+        "sha256": "598b2d4824b90f906faea36bea5d091e26f3c183d4de66ba3796c024cb6a4637",
+        "bytes": 65492
+      },
+      "fashion_posterior": {
+        "sha256": "15f736a0f2aa8fe54385189701d47bcf187937a3eb4ee1b0c1fa55811ebb5d38",
+        "bytes": 139112
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 500,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/fashionmnist/confirm-refine/accuracy_summary.json",
+    "sha256": "1806af8bff8a1f2589c05f5e3c71781588b3ea842eb131a3988b2508ed84ef4b",
+    "confirmation_manifest": {
+      "sha256": "5ae8983a1749bb919373ce46ef9eb659baee2923b8d5905097021f1ba008f2c2",
+      "bytes": 26409
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "84716e8b98c18ec1d0b7960a9970ad23ef0e368aa9c657b4f22ca1625268def8",
+        "bytes": 65456
+      },
+      "refine": {
+        "sha256": "598b2d4824b90f906faea36bea5d091e26f3c183d4de66ba3796c024cb6a4637",
+        "bytes": 65492
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 1000,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/fashionmnist/confirm/accuracy_summary.json",
+    "sha256": "f72019a6453e2ac4aebe733b13ad811e75d7271b2d2c0b0968692268d160fca1",
+    "confirmation_manifest": {
+      "sha256": "c740e4d8fb62d5db46a340f375e98edab27f84978bcd89a2e6e4a7fa133cea9a",
+      "bytes": 26133
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c5d90f14f7566d54d7b5617f067232cb1e67b288881d36ddce870c5c13448172",
+        "bytes": 65620
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 1000,
+    "cohort": "confirm-finalists",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/fashionmnist/confirm-finalists/accuracy_summary.json",
+    "sha256": "f9830879c788a49039e6c650439b7fe93189c462d42cc794b43cff5355f3e71b",
+    "confirmation_manifest": {
+      "sha256": "53e0ddd9fba406620171b6dcf1420d32b8a52a347684eb6635654d0dfb07ae1a",
+      "bytes": 80694
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c5d90f14f7566d54d7b5617f067232cb1e67b288881d36ddce870c5c13448172",
+        "bytes": 65620
+      },
+      "refine": {
+        "sha256": "9bf74d242791957433e6b0c1c6ef88e8a6a8265dc4ddc0dbaf20d063a87f6b88",
+        "bytes": 65660
+      },
+      "fashion_posterior": {
+        "sha256": "cc902be3f91dc6ea7e8b5488cb2345abfccf385ca480efaac310615659063806",
+        "bytes": 139432
+      },
+      "fashion_finalists": {
+        "sha256": "ce9271050e0bce05092c7972e68ea1a7fd5b244bb70d8179e5c27a92eae0b885",
+        "bytes": 100284
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 1000,
+    "cohort": "confirm-posterior",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/fashionmnist/confirm-posterior/accuracy_summary.json",
+    "sha256": "eda24e7c5f648a885980f6521c91f97f0952bcf91b7e485ed22627e281662eea",
+    "confirmation_manifest": {
+      "sha256": "b344da3cc183e193934fe9bc5b335c1ebe53b7afeba595260365d1bb3e86d450",
+      "bytes": 26895
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c5d90f14f7566d54d7b5617f067232cb1e67b288881d36ddce870c5c13448172",
+        "bytes": 65620
+      },
+      "refine": {
+        "sha256": "9bf74d242791957433e6b0c1c6ef88e8a6a8265dc4ddc0dbaf20d063a87f6b88",
+        "bytes": 65660
+      },
+      "fashion_posterior": {
+        "sha256": "cc902be3f91dc6ea7e8b5488cb2345abfccf385ca480efaac310615659063806",
+        "bytes": 139432
+      }
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 1000,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/fashionmnist/confirm-refine/accuracy_summary.json",
+    "sha256": "97176532203d531987c609d5f4d43448c15c62d0853e85d9bed8a900d9c1b0d6",
+    "confirmation_manifest": {
+      "sha256": "23168226dafef1613d30275b2a325401bbc4e121e6653be78a48da9ef2b107f9",
+      "bytes": 26478
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c5d90f14f7566d54d7b5617f067232cb1e67b288881d36ddce870c5c13448172",
+        "bytes": 65620
+      },
+      "refine": {
+        "sha256": "9bf74d242791957433e6b0c1c6ef88e8a6a8265dc4ddc0dbaf20d063a87f6b88",
+        "bytes": 65660
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 200,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/cifar10/confirm/accuracy_summary.json",
+    "sha256": "65eb266ed04679c7961743d0740ee95e9e39f9552c6bc4816b5ad19d76c4cda8",
+    "confirmation_manifest": {
+      "sha256": "f073c3a93132fc4805c287c585ee773644bebc4b9054e03cfdd0093c2ad8e1bd",
+      "bytes": 25950
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "fe6098d0287adbc8e13fdc456ff4b3afb3af10785bedcdd0aad5369df8e35b03",
+        "bytes": 65116
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 200,
+    "cohort": "confirm-balanced",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/cifar10/confirm-balanced/accuracy_summary.json",
+    "sha256": "a07510013cbce48f406521ca0ad81401cb1f35e8466973412bf6e7f860cf72b4",
+    "confirmation_manifest": {
+      "sha256": "46a96f52c7bacb99145048dc81eadd2d792ef1e6bd8f5e538a8331fd22a3aeb1",
+      "bytes": 26583
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "fe6098d0287adbc8e13fdc456ff4b3afb3af10785bedcdd0aad5369df8e35b03",
+        "bytes": 65116
+      },
+      "refine": {
+        "sha256": "505d4b26d91be157b4452b7cb160d1d90919895248a31e2c55c3f1d42c5b6eda",
+        "bytes": 65172
+      },
+      "cifar_balanced": {
+        "sha256": "27223a86584bc55e605b4a71bac9f2bbae3e5d5a048e99fce986eeb4452d35ec",
+        "bytes": 68892
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 200,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/cifar10/confirm-refine/accuracy_summary.json",
+    "sha256": "b5ffb7f340ce7a97068d78bf2d8121b20603123af834ec3506fdd470f4a65ca3",
+    "confirmation_manifest": {
+      "sha256": "68ee8d8abf63ad842f9b870f62b6aabc199c55bd55e945426bf9b879d8f2cb95",
+      "bytes": 26286
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "fe6098d0287adbc8e13fdc456ff4b3afb3af10785bedcdd0aad5369df8e35b03",
+        "bytes": 65116
+      },
+      "refine": {
+        "sha256": "505d4b26d91be157b4452b7cb160d1d90919895248a31e2c55c3f1d42c5b6eda",
+        "bytes": 65172
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 200,
+    "cohort": "confirm-upper",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/cifar10/confirm-upper/accuracy_summary.json",
+    "sha256": "e76ca59a8613dd41ad94ec1200e28ad821069c6a3333f064af451a059fc63312",
+    "confirmation_manifest": {
+      "sha256": "d03f232b0c5c9d19fe86fcb288a453e76e618464e917ff188c3f5d15f6e42f33",
+      "bytes": 44095
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "fe6098d0287adbc8e13fdc456ff4b3afb3af10785bedcdd0aad5369df8e35b03",
+        "bytes": 65116
+      },
+      "refine": {
+        "sha256": "505d4b26d91be157b4452b7cb160d1d90919895248a31e2c55c3f1d42c5b6eda",
+        "bytes": 65172
+      },
+      "cifar_balanced": {
+        "sha256": "27223a86584bc55e605b4a71bac9f2bbae3e5d5a048e99fce986eeb4452d35ec",
+        "bytes": 68892
+      },
+      "cifar_upper": {
+        "sha256": "838073fc68804a9c5915a36eeceaa1140aab199cfe17812345a104b757084cf6",
+        "bytes": 68556
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 500,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/cifar10/confirm/accuracy_summary.json",
+    "sha256": "b4b44ddedf334f67f04e2dc94a2a93e7f4af01625c49564af28c5ed97a8b71d5",
+    "confirmation_manifest": {
+      "sha256": "d928a4a9fa70207db98ffe5a02d6d9a5217451142620f647cc2a1a6dab7145bb",
+      "bytes": 25950
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c07cbe54caa78da5c00116590cdbbe0ea7cbc6039fad98609f31d5aba06888cc",
+        "bytes": 65120
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 500,
+    "cohort": "confirm-balanced",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/cifar10/confirm-balanced/accuracy_summary.json",
+    "sha256": "7f059ac3162de29065492e8c8d6af9de5068be6e59c377e2a1f4d35e1e42df59",
+    "confirmation_manifest": {
+      "sha256": "4425d0978d794838ec0ad8f9a61be96cc914cde724c667c81f630d1cd57c6707",
+      "bytes": 26583
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c07cbe54caa78da5c00116590cdbbe0ea7cbc6039fad98609f31d5aba06888cc",
+        "bytes": 65120
+      },
+      "refine": {
+        "sha256": "f90f9cb9bd3d245b036ffc36d95973ce2af8860b05647d36ab2cfc03fae170af",
+        "bytes": 65180
+      },
+      "cifar_balanced": {
+        "sha256": "b19e29733692b40baee63ca0b1f677d3291c20980a6a7ef0ec139bb2ff7dfe9b",
+        "bytes": 68892
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 500,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/cifar10/confirm-refine/accuracy_summary.json",
+    "sha256": "3920e1ebbe2b8a7f9090d6a4ba9771918fdfa6e6239a45d01d446688ab3499de",
+    "confirmation_manifest": {
+      "sha256": "06ef7b957ec5e3dde72e6dbe38a03dc7735665020246ff80b56b59ca5951e2e6",
+      "bytes": 26286
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c07cbe54caa78da5c00116590cdbbe0ea7cbc6039fad98609f31d5aba06888cc",
+        "bytes": 65120
+      },
+      "refine": {
+        "sha256": "f90f9cb9bd3d245b036ffc36d95973ce2af8860b05647d36ab2cfc03fae170af",
+        "bytes": 65180
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 500,
+    "cohort": "confirm-upper",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/cifar10/confirm-upper/accuracy_summary.json",
+    "sha256": "69549d5c463b4f7fae3b7f3d49080b180bb05a24b63e5af0cbf1c5a81420140c",
+    "confirmation_manifest": {
+      "sha256": "77af49c4a4102ff7b70009b45430a591da440a66dd91fff561b7c72c1a8e1247",
+      "bytes": 44095
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c07cbe54caa78da5c00116590cdbbe0ea7cbc6039fad98609f31d5aba06888cc",
+        "bytes": 65120
+      },
+      "refine": {
+        "sha256": "f90f9cb9bd3d245b036ffc36d95973ce2af8860b05647d36ab2cfc03fae170af",
+        "bytes": 65180
+      },
+      "cifar_balanced": {
+        "sha256": "b19e29733692b40baee63ca0b1f677d3291c20980a6a7ef0ec139bb2ff7dfe9b",
+        "bytes": 68892
+      },
+      "cifar_upper": {
+        "sha256": "e42d00814e5206457f54919742240efa40188ed8a0640c308778b9b42e67357d",
+        "bytes": 68556
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 1000,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/cifar10/confirm/accuracy_summary.json",
+    "sha256": "5a565586aa55e1cbd80cc818fc2beaa25a47fd90ddea932ae2debf2500d52d0b",
+    "confirmation_manifest": {
+      "sha256": "2bac399e035b8ec0e3e2c6c5207f10f8636e482331fdabb182faacd3f272faa8",
+      "bytes": 26019
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "64a37edd24a3021be9090f7d4c02003e54fb136e38ed18f4f7d4b3db31a30d28",
+        "bytes": 65288
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 1000,
+    "cohort": "confirm-balanced",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/cifar10/confirm-balanced/accuracy_summary.json",
+    "sha256": "779312b7b07a46d6c4aa31614b2e15a08cd08d7d2241611fabc3ab4cc7aeab2b",
+    "confirmation_manifest": {
+      "sha256": "ae5a25a1cbcd097da510f78a03bc884f61be1db86b8085f73f929836a9a75a48",
+      "bytes": 26652
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "64a37edd24a3021be9090f7d4c02003e54fb136e38ed18f4f7d4b3db31a30d28",
+        "bytes": 65288
+      },
+      "refine": {
+        "sha256": "e7f402d031abf95bfc59b05119f636a4a223be9a8bcc4f66af7fe61b04c460c3",
+        "bytes": 65348
+      },
+      "cifar_balanced": {
+        "sha256": "5408f4a89717e74fe872f6398212de627a7f1ad829c075f9f614d8e67286db1c",
+        "bytes": 69076
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 1000,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/cifar10/confirm-refine/accuracy_summary.json",
+    "sha256": "9cc800c7d59a5b8fe802d2ed66e3d3e5b62cddcfe99731de878acbff1aa26fa1",
+    "confirmation_manifest": {
+      "sha256": "86616deaca4a84241d9da12037979e70928939eddc6a2218e415d2ec8ff888a4",
+      "bytes": 26355
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "64a37edd24a3021be9090f7d4c02003e54fb136e38ed18f4f7d4b3db31a30d28",
+        "bytes": 65288
+      },
+      "refine": {
+        "sha256": "e7f402d031abf95bfc59b05119f636a4a223be9a8bcc4f66af7fe61b04c460c3",
+        "bytes": 65348
+      }
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "m": 1000,
+    "cohort": "confirm-upper",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/cifar10/confirm-upper/accuracy_summary.json",
+    "sha256": "6694055e986750cf57aa7e7774e226c49d102a668401e11eb5ecc04f3d752fb2",
+    "confirmation_manifest": {
+      "sha256": "86c9b323676be2567e10bf36756fa74841db0d314f0e6c99d0fc951334ad8982",
+      "bytes": 44210
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "64a37edd24a3021be9090f7d4c02003e54fb136e38ed18f4f7d4b3db31a30d28",
+        "bytes": 65288
+      },
+      "refine": {
+        "sha256": "e7f402d031abf95bfc59b05119f636a4a223be9a8bcc4f66af7fe61b04c460c3",
+        "bytes": 65348
+      },
+      "cifar_balanced": {
+        "sha256": "5408f4a89717e74fe872f6398212de627a7f1ad829c075f9f614d8e67286db1c",
+        "bytes": 69076
+      },
+      "cifar_upper": {
+        "sha256": "69372bfc781d003268842cd15a7a94eaa3a569ec178ba3bc8d3804b99b4ebd89",
+        "bytes": 68740
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 200,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/moons/confirm/accuracy_summary.json",
+    "sha256": "362ee273092458b0170582ed7208999c4502750bf9c42254b7c100e5ec7563fc",
+    "confirmation_manifest": {
+      "sha256": "a21d14e529f7167530904058b0321940f820fa651276c758d16a36c148e08e74",
+      "bytes": 25557
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c9740c38580693b270ef7b5bbc24530b13862dbe01aa84e4dd8494e798a964d0",
+        "bytes": 64064
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 200,
+    "cohort": "confirm-balanced",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/moons/confirm-balanced/accuracy_summary.json",
+    "sha256": "41f03bee4e4d935ce0cb04f686dd429441018fc47d3015224b99cc3209e5e23f",
+    "confirmation_manifest": {
+      "sha256": "009d88972bba15ddfe6bd3fbfb71231d8b7dba2212c39478c8853f2d622ba678",
+      "bytes": 26196
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c9740c38580693b270ef7b5bbc24530b13862dbe01aa84e4dd8494e798a964d0",
+        "bytes": 64064
+      },
+      "refine": {
+        "sha256": "ea0ad58e6ccb21ee4596b764ebfff1782c4beb0a80c42661e31de7ba5ca9b1c2",
+        "bytes": 64092
+      },
+      "moons_balanced": {
+        "sha256": "b0a19e22642d380751cd8b019b092ab5f80bcb65f8edf566d4c8f0c48d83bbe3",
+        "bytes": 194652
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 200,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/moons/confirm-refine/accuracy_summary.json",
+    "sha256": "31d87df659147985a05aacc248f10a7bf050b78697cfe8de9e0e43df3c4bb52e",
+    "confirmation_manifest": {
+      "sha256": "d4e86435b4ae81cb2ed1a29fbfe962609e844cbbb02142629e6a049f41e9aa33",
+      "bytes": 25908
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c9740c38580693b270ef7b5bbc24530b13862dbe01aa84e4dd8494e798a964d0",
+        "bytes": 64064
+      },
+      "refine": {
+        "sha256": "ea0ad58e6ccb21ee4596b764ebfff1782c4beb0a80c42661e31de7ba5ca9b1c2",
+        "bytes": 64092
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 200,
+    "cohort": "confirm-revalidated",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/moons/confirm-revalidated/accuracy_summary.json",
+    "sha256": "641a14562ba5f8bae6b2eb82b1f11dc294e0a7d913d510052b8ef4f5f900c13a",
+    "confirmation_manifest": {
+      "sha256": "f95206755b5dee09f689f87aa4d15618cc40ec0e355e6293eea47fb1b9e9bb84",
+      "bytes": 25938
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "c9740c38580693b270ef7b5bbc24530b13862dbe01aa84e4dd8494e798a964d0",
+        "bytes": 64064
+      },
+      "refine": {
+        "sha256": "ea0ad58e6ccb21ee4596b764ebfff1782c4beb0a80c42661e31de7ba5ca9b1c2",
+        "bytes": 64092
+      },
+      "balanced": {
+        "sha256": "b0a19e22642d380751cd8b019b092ab5f80bcb65f8edf566d4c8f0c48d83bbe3",
+        "bytes": 194652
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 500,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/moons/confirm/accuracy_summary.json",
+    "sha256": "ea24452d6503fb67622a79f809aba5cda354e740e9420f420542e585f975f88f",
+    "confirmation_manifest": {
+      "sha256": "424a91d2c81519cbc0912fa5d3afc35b600df9372c686f9e9363fc441b4ece33",
+      "bytes": 25560
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "4460ace22763259783976e4e4c5264fb01a4bb52b1d3049bc7cd2ce2ee1e11b5",
+        "bytes": 64064
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 500,
+    "cohort": "confirm-balanced",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/moons/confirm-balanced/accuracy_summary.json",
+    "sha256": "a31d44cfe71941fcb624fb139952e8893e4656a6a145dbcbf94233430863423e",
+    "confirmation_manifest": {
+      "sha256": "2c4ca87b61e2fbd648e664dedb60008a2057e59e1953f4beb840fea9b1a00e17",
+      "bytes": 26196
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "4460ace22763259783976e4e4c5264fb01a4bb52b1d3049bc7cd2ce2ee1e11b5",
+        "bytes": 64064
+      },
+      "refine": {
+        "sha256": "8a37c0395548a1d57b8805c6e9c7b2ab26e5d21071c413bf6512713efde77217",
+        "bytes": 64112
+      },
+      "moons_balanced": {
+        "sha256": "46fdbadf907039e19258e083fbe25c320ed80204df90e5bb4ff8c24098c613ee",
+        "bytes": 194652
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 500,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/moons/confirm-refine/accuracy_summary.json",
+    "sha256": "0a0a44c9231d6907249cd2c1856eba36ce0996703e2d3925e617cb7ffb92259c",
+    "confirmation_manifest": {
+      "sha256": "fdd1544f7829ee8b8ab5a6078ca0a9e2157da104fd4dd0154617969dfcb57e80",
+      "bytes": 25908
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "4460ace22763259783976e4e4c5264fb01a4bb52b1d3049bc7cd2ce2ee1e11b5",
+        "bytes": 64064
+      },
+      "refine": {
+        "sha256": "8a37c0395548a1d57b8805c6e9c7b2ab26e5d21071c413bf6512713efde77217",
+        "bytes": 64112
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 500,
+    "cohort": "confirm-revalidated",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/moons/confirm-revalidated/accuracy_summary.json",
+    "sha256": "5463d9eacc2505e69cae501e1f7fff89313f893ca01d843b7c883fcf791cc63f",
+    "confirmation_manifest": {
+      "sha256": "ed05aa4510b98ddb93d9f2e5d8f6e876fc9f55286867a6943af919da667c340b",
+      "bytes": 25926
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "4460ace22763259783976e4e4c5264fb01a4bb52b1d3049bc7cd2ce2ee1e11b5",
+        "bytes": 64064
+      },
+      "refine": {
+        "sha256": "8a37c0395548a1d57b8805c6e9c7b2ab26e5d21071c413bf6512713efde77217",
+        "bytes": 64112
+      },
+      "balanced": {
+        "sha256": "46fdbadf907039e19258e083fbe25c320ed80204df90e5bb4ff8c24098c613ee",
+        "bytes": 194652
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 1000,
+    "cohort": "confirm",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/moons/confirm/accuracy_summary.json",
+    "sha256": "0845bea6d4989437a8a3861d2e498e31ea0414971c4c50e67d5625bf2125e71e",
+    "confirmation_manifest": {
+      "sha256": "d60311da35713388a4781dee597b1b12d610ab3d60f960281e7dadbe8302c281",
+      "bytes": 25614
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "a1737bc4ae022e3c3aae2f2feac9a3d794ae2cd006cb7b290754211419628dfc",
+        "bytes": 64232
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 1000,
+    "cohort": "confirm-balanced",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/moons/confirm-balanced/accuracy_summary.json",
+    "sha256": "415f16e1a764de32ae7b0fa7604b504f81dac63f2a7a509dfd7ceb80e40f7018",
+    "confirmation_manifest": {
+      "sha256": "9e881fc1034cabedd1dc423f9851ec2a281832bc5ce7582745ff3e795bf23cdd",
+      "bytes": 26238
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "a1737bc4ae022e3c3aae2f2feac9a3d794ae2cd006cb7b290754211419628dfc",
+        "bytes": 64232
+      },
+      "refine": {
+        "sha256": "73c566ce00d35a66967d01596f7d0a9cfe8c7fc948e008de0b6933aa27a69766",
+        "bytes": 64280
+      },
+      "moons_balanced": {
+        "sha256": "6b2dbddd79774aa22a5a7688d69dd28d6bdeaa77caa5145a658b87d6b3bedd6b",
+        "bytes": 195144
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 1000,
+    "cohort": "confirm-refine",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/moons/confirm-refine/accuracy_summary.json",
+    "sha256": "47b0ba873abfeffbd27cc2e8962b3efa27ab1ff69f3bb7c9ebf2229b5578de1c",
+    "confirmation_manifest": {
+      "sha256": "669c7834f118fcc90c85532c9c57a55e3e6bcc2dea3395bcf3d7df52289880b2",
+      "bytes": 25980
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "a1737bc4ae022e3c3aae2f2feac9a3d794ae2cd006cb7b290754211419628dfc",
+        "bytes": 64232
+      },
+      "refine": {
+        "sha256": "73c566ce00d35a66967d01596f7d0a9cfe8c7fc948e008de0b6933aa27a69766",
+        "bytes": 64280
+      }
+    }
+  },
+  {
+    "dataset": "moons",
+    "m": 1000,
+    "cohort": "confirm-revalidated",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/moons/confirm-revalidated/accuracy_summary.json",
+    "sha256": "c0cf3bc55bd7410eb081628c396b20403c8c7c7e42b04ccae4647c8f92668f62",
+    "confirmation_manifest": {
+      "sha256": "93cc88a0a9ab4c4541065554de9cd32c274a70959e37b621370d046ebbe55e2a",
+      "bytes": 25998
+    },
+    "validation_sources": {
+      "screen": {
+        "sha256": "a1737bc4ae022e3c3aae2f2feac9a3d794ae2cd006cb7b290754211419628dfc",
+        "bytes": 64232
+      },
+      "refine": {
+        "sha256": "73c566ce00d35a66967d01596f7d0a9cfe8c7fc948e008de0b6933aa27a69766",
+        "bytes": 64280
+      },
+      "balanced": {
+        "sha256": "6b2dbddd79774aa22a5a7688d69dd28d6bdeaa77caa5145a658b87d6b3bedd6b",
+        "bytes": 195144
+      }
+    }
+  }
+]

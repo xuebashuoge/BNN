@@ -1,0 +1,3 @@
+Verified 39 confirmations and 987 paired method/seed results
+Verified 39 completed confirmation cohorts and 987 method/seed observations.
+Checked 16 PDFs, 16 PNGs, source hashes, score units, common seed cohorts, and the three paired sign tests.

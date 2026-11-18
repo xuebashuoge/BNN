@@ -1,0 +1,342 @@
+{
+  "method": "Gaussian channel integrated exactly conditional on input/label and posterior draw",
+  "cohort": "confirm-revalidated",
+  "m_grid": [
+    200,
+    500,
+    1000
+  ],
+  "train_size": 800,
+  "width": 16,
+  "rho_c": 0.35,
+  "test_examples": 10000,
+  "test_data_seed": 20261119,
+  "posterior_draws": 2048,
+  "posterior_seed_offset": 24111903,
+  "uncertainty": "Conditional MC SE covers posterior-draw averaging for the observed three posteriors; training-seed SD describes their paired differences.",
+  "ranking_units": "The integrated and mc_100 ranking margins are fractional accuracies; *_pp are percentage points.",
+  "ranks": {
+    "200": {
+      "integrated": {
+        "best_matched_proposed": [
+          "T2-Matched"
+        ],
+        "best_other_methods": [
+          "ERM-Matched"
+        ],
+        "margin": 0.00011220274725609602,
+        "above_all_other_methods": true
+      },
+      "mc_100": {
+        "best_matched_proposed": [
+          "T2-Matched"
+        ],
+        "best_other_methods": [
+          "ERM-Matched"
+        ],
+        "margin": 0.0003500000000001835,
+        "above_all_other_methods": true
+      },
+      "paired_difference_pct_points_by_seed": [
+        -0.5451529438149342,
+        0.31392741651439837,
+        0.2648863514773377
+      ],
+      "training_seed_sd_pp": 0.48245686361254886,
+      "conditional_posterior_mc_se_pp": 0.0002963791231490877
+    },
+    "500": {
+      "integrated": {
+        "best_matched_proposed": [
+          "T1-Matched"
+        ],
+        "best_other_methods": [
+          "ERM-Matched"
+        ],
+        "margin": 0.00027346956131246714,
+        "above_all_other_methods": true
+      },
+      "mc_100": {
+        "best_matched_proposed": [
+          "T2-Matched"
+        ],
+        "best_other_methods": [
+          "ERM-Matched"
+        ],
+        "margin": 0.00022133333333329563,
+        "above_all_other_methods": true
+      },
+      "paired_difference_pct_points_by_seed": [
+        -0.10313163501588017,
+        -0.10475710929164803,
+        0.28992961270126344
+      ],
+      "training_seed_sd_pp": 0.22740470353574804,
+      "conditional_posterior_mc_se_pp": 0.00013358301102679598
+    },
+    "1000": {
+      "integrated": {
+        "best_matched_proposed": [
+          "T1-Matched"
+        ],
+        "best_other_methods": [
+          "ERM-Matched"
+        ],
+        "margin": -7.828340366211606e-05,
+        "above_all_other_methods": false
+      },
+      "mc_100": {
+        "best_matched_proposed": [
+          "T1-Matched"
+        ],
+        "best_other_methods": [
+          "ERM-Matched"
+        ],
+        "margin": -6.366666666668408e-05,
+        "above_all_other_methods": false
+      },
+      "paired_difference_pct_points_by_seed": [
+        -0.006261199247369043,
+        -0.007495650224063405,
+        -0.009728171627193976
+      ],
+      "training_seed_sd_pp": 0.0017572667465777037,
+      "conditional_posterior_mc_se_pp": 7.633935096833271e-06
+    }
+  },
+  "means": [
+    {
+      "m": 200,
+      "method": "ERM-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 73.59917377431135,
+      "sd_across_seeds_pp": 0.9503762940766491,
+      "accuracy_mc100_pct": 73.57496666666665
+    },
+    {
+      "m": 200,
+      "method": "L2-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 73.45950811949533,
+      "sd_across_seeds_pp": 1.1028386492267066,
+      "accuracy_mc100_pct": 73.45573333333334
+    },
+    {
+      "m": 200,
+      "method": "T1-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 73.61002425212243,
+      "sd_across_seeds_pp": 1.1424684408611525,
+      "accuracy_mc100_pct": 73.6086
+    },
+    {
+      "m": 200,
+      "method": "T2-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 73.61039404903697,
+      "sd_across_seeds_pp": 1.142131652243598,
+      "accuracy_mc100_pct": 73.60996666666666
+    },
+    {
+      "m": 200,
+      "method": "ERM-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.56859549705614,
+      "sd_across_seeds_pp": 0.6662956863382504,
+      "accuracy_mc100_pct": 63.56463333333333
+    },
+    {
+      "m": 200,
+      "method": "L2-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.461921233504356,
+      "sd_across_seeds_pp": 0.8552694736353537,
+      "accuracy_mc100_pct": 63.450700000000005
+    },
+    {
+      "m": 200,
+      "method": "Proposed-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.46752110298145,
+      "sd_across_seeds_pp": 1.1711375177999546,
+      "accuracy_mc100_pct": 63.443266666666666
+    },
+    {
+      "m": 500,
+      "method": "ERM-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 74.43212723196434,
+      "sd_across_seeds_pp": 0.9373664813142313,
+      "accuracy_mc100_pct": 74.4624
+    },
+    {
+      "m": 500,
+      "method": "L2-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 74.3403438923727,
+      "sd_across_seeds_pp": 1.0216437801045706,
+      "accuracy_mc100_pct": 74.37650000000001
+    },
+    {
+      "m": 500,
+      "method": "T1-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 74.45947418809558,
+      "sd_across_seeds_pp": 1.1169471114945153,
+      "accuracy_mc100_pct": 74.48413333333332
+    },
+    {
+      "m": 500,
+      "method": "T2-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 74.45838572748865,
+      "sd_across_seeds_pp": 1.1147029250845082,
+      "accuracy_mc100_pct": 74.48453333333333
+    },
+    {
+      "m": 500,
+      "method": "ERM-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.56859549705614,
+      "sd_across_seeds_pp": 0.6662956863382504,
+      "accuracy_mc100_pct": 63.56463333333333
+    },
+    {
+      "m": 500,
+      "method": "L2-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.461921233504356,
+      "sd_across_seeds_pp": 0.8552694736353537,
+      "accuracy_mc100_pct": 63.450700000000005
+    },
+    {
+      "m": 500,
+      "method": "Proposed-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.46752110298145,
+      "sd_across_seeds_pp": 1.1711375177999546,
+      "accuracy_mc100_pct": 63.443266666666666
+    },
+    {
+      "m": 1000,
+      "method": "ERM-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 74.32097242292515,
+      "sd_across_seeds_pp": 0.9827612681030048,
+      "accuracy_mc100_pct": 74.34433333333334
+    },
+    {
+      "m": 1000,
+      "method": "L2-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 73.94819696125019,
+      "sd_across_seeds_pp": 1.552501040000628,
+      "accuracy_mc100_pct": 73.98166666666665
+    },
+    {
+      "m": 1000,
+      "method": "T1-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 74.31314408255895,
+      "sd_across_seeds_pp": 0.9820987044974278,
+      "accuracy_mc100_pct": 74.33796666666666
+    },
+    {
+      "m": 1000,
+      "method": "T2-Matched",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 74.313143313339,
+      "sd_across_seeds_pp": 0.9821282654694702,
+      "accuracy_mc100_pct": 74.33783333333332
+    },
+    {
+      "m": 1000,
+      "method": "ERM-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.56859549705614,
+      "sd_across_seeds_pp": 0.6662956863382504,
+      "accuracy_mc100_pct": 63.56463333333333
+    },
+    {
+      "m": 1000,
+      "method": "L2-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.461921233504356,
+      "sd_across_seeds_pp": 0.8552694736353537,
+      "accuracy_mc100_pct": 63.450700000000005
+    },
+    {
+      "m": 1000,
+      "method": "Proposed-Perfect",
+      "n_seeds": 3,
+      "seeds": "163101 163102 163103",
+      "accuracy_integrated_pct": 63.46752110298145,
+      "sd_across_seeds_pp": 1.1711375177999546,
+      "accuracy_mc100_pct": 63.443266666666666
+    }
+  ],
+  "sources": {
+    "200": {
+      "manifest": {
+        "sha256": "f95206755b5dee09f689f87aa4d15618cc40ec0e355e6293eea47fb1b9e9bb84",
+        "bytes": 25938
+      },
+      "selection": {
+        "sha256": "b8e11d055f6e671f92251857d9d2c0483b332077683ce1902a174e4348f8532d",
+        "bytes": 311117
+      },
+      "original_summary": {
+        "sha256": "641a14562ba5f8bae6b2eb82b1f11dc294e0a7d913d510052b8ef4f5f900c13a",
+        "bytes": 8239
+      }
+    },
+    "500": {
+      "manifest": {
+        "sha256": "ed05aa4510b98ddb93d9f2e5d8f6e876fc9f55286867a6943af919da667c340b",
+        "bytes": 25926
+      },
+      "selection": {
+        "sha256": "b6d5bfc2cdcaf1b09212d4f29516fa6ab407bae8888ed5ac5b5cea1116886d17",
+        "bytes": 311125
+      },
+      "original_summary": {
+        "sha256": "5463d9eacc2505e69cae501e1f7fff89313f893ca01d843b7c883fcf791cc63f",
+        "bytes": 8215
+      }
+    },
+    "1000": {
+      "manifest": {
+        "sha256": "93cc88a0a9ab4c4541065554de9cd32c274a70959e37b621370d046ebbe55e2a",
+        "bytes": 25998
+      },
+      "selection": {
+        "sha256": "07c24f1a278bfbccc08759f03ba1f3dbd68207a8833213b245204d1a0e6109d6",
+        "bytes": 311698
+      },
+      "original_summary": {
+        "sha256": "c0cf3bc55bd7410eb081628c396b20403c8c7c7e42b04ccae4647c8f92668f62",
+        "bytes": 8259
+      }
+    }
+  }
+}

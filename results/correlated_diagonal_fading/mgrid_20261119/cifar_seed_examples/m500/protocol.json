@@ -1,0 +1,329 @@
+{
+  "dataset": "cifar10",
+  "m": 500,
+  "deployment_channel": {
+    "kind": "diagonal_fading",
+    "rho_c": 0.35
+  },
+  "eval_draws": 100,
+  "selection_rule": "Maximize validation accuracy of the better matched T1/T2 minus the best of the other five methods; smaller seed breaks a tie.",
+  "validation_selected_seed": 122102,
+  "validation_ranking": {
+    "122101": {
+      "best_matched_proposed": [
+        "T1-Matched"
+      ],
+      "best_other_methods": [
+        "L2-Matched"
+      ],
+      "margin": -0.03913333333333335,
+      "above_all_other_methods": false
+    },
+    "122102": {
+      "best_matched_proposed": [
+        "T1-Matched"
+      ],
+      "best_other_methods": [
+        "L2-Matched"
+      ],
+      "margin": 0.012466666666666737,
+      "above_all_other_methods": true
+    }
+  },
+  "validation_accuracy": {
+    "122101": {
+      "ERM-Matched": 0.5700666666666666,
+      "L2-Matched": 0.6048666666666667,
+      "T1-Matched": 0.5657333333333333,
+      "T2-Matched": 0.5593333333333333,
+      "ERM-Perfect": 0.18406666666666668,
+      "L2-Perfect": 0.18599999999999997,
+      "Proposed-Perfect": 0.19386666666666666
+    },
+    "122102": {
+      "ERM-Matched": 0.5661999999999999,
+      "L2-Matched": 0.5811999999999999,
+      "T1-Matched": 0.5936666666666667,
+      "T2-Matched": 0.5766666666666667,
+      "ERM-Perfect": 0.2014,
+      "L2-Perfect": 0.1828,
+      "Proposed-Perfect": 0.18393333333333337
+    }
+  },
+  "screen": {
+    "sha256": "c07cbe54caa78da5c00116590cdbbe0ea7cbc6039fad98609f31d5aba06888cc",
+    "bytes": 65120
+  },
+  "original_selection": {
+    "sha256": "0d2027d7cb18c78dd1c3bafad1c0cc1df29c99f40834ac86802e00c284993e42",
+    "bytes": 75614
+  },
+  "selected_variants": {
+    "ERM-Matched": "1a8fe9d3336b",
+    "ERM-Perfect": "8466684e6996",
+    "L2-Matched": "9b4a1642acc1",
+    "L2-Perfect": "4aeabe472c97",
+    "Proposed-Perfect": "a89c6402dad2",
+    "T1-Matched": "7b98df50410d",
+    "T2-Matched": "8ebe89912e70"
+  },
+  "seeds": [
+    122101,
+    122102
+  ],
+  "fresh_evaluation_seed_offset": 3000019,
+  "tasks": [
+    {
+      "seed": 122101,
+      "method": "ERM-Matched",
+      "variant_id": "1a8fe9d3336b",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_ERM_Matched_1a8fe9d3336b_s122101",
+      "validation_accuracy": 0.5700666666666666,
+      "eval_seed": 3142120,
+      "source": {
+        "weights": {
+          "sha256": "34887f56d60f0b4eb2d7e1c028600bf3ca04ed3e11110495fec5b34aa91065f0",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "e8c2ffc02fddbe33ceb4028b769bab9cffe275c8763c5c256dbc50ee3684e235",
+          "bytes": 4478
+        }
+      }
+    },
+    {
+      "seed": 122101,
+      "method": "L2-Matched",
+      "variant_id": "9b4a1642acc1",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_L2_Matched_9b4a1642acc1_s122101",
+      "validation_accuracy": 0.6048666666666667,
+      "eval_seed": 3142120,
+      "source": {
+        "weights": {
+          "sha256": "7c77a2f825b544086f958fa722ab6e0f55e545e20d59591d0e39e5bfd969b03e",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "0bd76b851cc82fdfc5e25bedc5b9cf8e0ac6168def3b7cc7157bbe94a5a59471",
+          "bytes": 4549
+        }
+      }
+    },
+    {
+      "seed": 122101,
+      "method": "T1-Matched",
+      "variant_id": "7b98df50410d",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_T1_Matched_7b98df50410d_s122101",
+      "validation_accuracy": 0.5657333333333333,
+      "eval_seed": 3142120,
+      "source": {
+        "weights": {
+          "sha256": "9f025abc2b7801effd62382e46ea01a96f5f4441eb29f7bb584d2c693e8c2540",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "21503a6fe9c029be1b66d26be13ca958dc0047e7dc9fe067403f686d4d34ecb5",
+          "bytes": 4632
+        }
+      }
+    },
+    {
+      "seed": 122101,
+      "method": "T2-Matched",
+      "variant_id": "8ebe89912e70",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_T2_Matched_8ebe89912e70_s122101",
+      "validation_accuracy": 0.5593333333333333,
+      "eval_seed": 3142120,
+      "source": {
+        "weights": {
+          "sha256": "653923cc09045c70be92bcbaee335dc21ca2757a5afb89afb4523f153f146e3d",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "94b68439bfcd0327b2ddd7a0040a695ad947a81aca3e6ac08693b9f6f49905fb",
+          "bytes": 4629
+        }
+      }
+    },
+    {
+      "seed": 122101,
+      "method": "ERM-Perfect",
+      "variant_id": "8466684e6996",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_ERM_Perfect_8466684e6996_s122101",
+      "validation_accuracy": 0.18406666666666668,
+      "eval_seed": 3142120,
+      "source": {
+        "weights": {
+          "sha256": "73dbbfcb50ca725d243c6a42102f2455c34df3f92034768aaafc125422bcd04b",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "e389757329bece408375d1d1a225417759c5dd832ff79c362454d1524fb080f4",
+          "bytes": 4443
+        }
+      }
+    },
+    {
+      "seed": 122101,
+      "method": "L2-Perfect",
+      "variant_id": "4aeabe472c97",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_L2_Perfect_4aeabe472c97_s122101",
+      "validation_accuracy": 0.18599999999999997,
+      "eval_seed": 3142120,
+      "source": {
+        "weights": {
+          "sha256": "e9607ab6cbabb133cdd228cf02dec870954886d31e7bb34987a98de52fe2cef1",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "90249f9c77ad753c5f4bc750491366496c59f685fd7324951235dd12724b9237",
+          "bytes": 4516
+        }
+      }
+    },
+    {
+      "seed": 122101,
+      "method": "Proposed-Perfect",
+      "variant_id": "a89c6402dad2",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_Proposed_Perfect_a89c6402dad2_s122101",
+      "validation_accuracy": 0.19386666666666666,
+      "eval_seed": 3142120,
+      "source": {
+        "weights": {
+          "sha256": "5e040638b30a53d6e7cd75a7e42acdebc5b57b5c22fa8223bf6ba2fc139cea35",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "29ea8d37e2c2117256619dc2e3b1763eed95412aa3acbe2ce920144445c5ae12",
+          "bytes": 4584
+        }
+      }
+    },
+    {
+      "seed": 122102,
+      "method": "ERM-Matched",
+      "variant_id": "1a8fe9d3336b",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_ERM_Matched_1a8fe9d3336b_s122102",
+      "validation_accuracy": 0.5661999999999999,
+      "eval_seed": 3142121,
+      "source": {
+        "weights": {
+          "sha256": "61268131757549307c0783bf8ce4c11bb6a264b44e511294a241a4cec7b26eac",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "5db7c4c98268de42d419d2d1f4d5bba563b79b03a16d4981e67b44a00155918b",
+          "bytes": 4479
+        }
+      }
+    },
+    {
+      "seed": 122102,
+      "method": "L2-Matched",
+      "variant_id": "9b4a1642acc1",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_L2_Matched_9b4a1642acc1_s122102",
+      "validation_accuracy": 0.5811999999999999,
+      "eval_seed": 3142121,
+      "source": {
+        "weights": {
+          "sha256": "0e59b970ddb7128a9a965e9e4cf61b485c043a9fe2c249f852cfd62b682bb64c",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "4366abf48a42a106771463dadef177584d9095357cf23514be305e3380ce3358",
+          "bytes": 4548
+        }
+      }
+    },
+    {
+      "seed": 122102,
+      "method": "T1-Matched",
+      "variant_id": "7b98df50410d",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_T1_Matched_7b98df50410d_s122102",
+      "validation_accuracy": 0.5936666666666667,
+      "eval_seed": 3142121,
+      "source": {
+        "weights": {
+          "sha256": "3eae570e3828abaafa035055df90b25b9fb09d5717d1bc204e4feaa44f531a62",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "b5ddd09995ecd3675e55e260412ec0cddd2fcc83e8f5dffdcaeeb4cc67714b3d",
+          "bytes": 4634
+        }
+      }
+    },
+    {
+      "seed": 122102,
+      "method": "T2-Matched",
+      "variant_id": "8ebe89912e70",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_T2_Matched_8ebe89912e70_s122102",
+      "validation_accuracy": 0.5766666666666667,
+      "eval_seed": 3142121,
+      "source": {
+        "weights": {
+          "sha256": "4aa58d497d3a579a3089524a41eab7d5e70d382a88bc68c6d67357374f909915",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "bd3aa6fd581fe8f6a02c2fccdd90411cde849ab8f76350be2da9ce501e2291b7",
+          "bytes": 4628
+        }
+      }
+    },
+    {
+      "seed": 122102,
+      "method": "ERM-Perfect",
+      "variant_id": "8466684e6996",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_ERM_Perfect_8466684e6996_s122102",
+      "validation_accuracy": 0.2014,
+      "eval_seed": 3142121,
+      "source": {
+        "weights": {
+          "sha256": "9a7399d003e4867c7cd9addd2bf30fdaab09e0e66963b52e15eb3899edb09e5f",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "5fb0c388e992953bf4f53f085eb9e712c60f6bc2e611bf16afee9bccf9fd9ef8",
+          "bytes": 4431
+        }
+      }
+    },
+    {
+      "seed": 122102,
+      "method": "L2-Perfect",
+      "variant_id": "4aeabe472c97",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_L2_Perfect_4aeabe472c97_s122102",
+      "validation_accuracy": 0.1828,
+      "eval_seed": 3142121,
+      "source": {
+        "weights": {
+          "sha256": "aa12502d4d5e432af32fbad2be1ae9eff1e58b99c599e5cce37c4558aaf4c36a",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "48b0f3d5a81c2b7f7bbb89818c8615349feca1828d595bfb983aca3a8cdbf64c",
+          "bytes": 4505
+        }
+      }
+    },
+    {
+      "seed": 122102,
+      "method": "Proposed-Perfect",
+      "variant_id": "a89c6402dad2",
+      "task_id": "diagonal_fading_accuracy_screen_cifar10_diagonal_fading_r0p35_m500_Proposed_Perfect_a89c6402dad2_s122102",
+      "validation_accuracy": 0.18393333333333337,
+      "eval_seed": 3142121,
+      "source": {
+        "weights": {
+          "sha256": "84c79b96ee0ff062272c10ee4ac8b8c41190107e8d3b5d76c844c0d03c88fd0e",
+          "bytes": 1804603
+        },
+        "metadata": {
+          "sha256": "ae2a2fb86b41ce6752cba81f5f2e550106df3ca1ed65cb8693c68a1fd5d3b667",
+          "bytes": 4579
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+dataset,m,cohort,validation_proposed,validation_comparator,proposed_test_pct,comparator_test_pct,mean_gap_pp,paired_sd_pp,wins,losses,ties,exact_sign_p,holm_p_three_sizes
+fashionmnist,200,confirm-finalists,T1-Matched,ERM-Matched,68.83022222222222,68.56016666666667,0.27005555555555183,0.2992509862603311,7,2,0,0.1796875,0.5390625
+fashionmnist,500,confirm-finalists,T2-Matched,L2-Matched,72.52433333333333,72.29227777777777,0.23205555555555357,0.3927688127611121,7,2,0,0.1796875,0.5390625
+fashionmnist,1000,confirm-finalists,T2-Matched,L2-Matched,73.98794444444444,73.85077777777778,0.1371666666666632,0.310396419921358,6,3,0,0.5078125,0.5390625
