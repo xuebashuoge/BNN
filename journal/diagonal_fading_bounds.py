@@ -24,7 +24,7 @@ def perfect_shift(deployment, width, model, loss_epsilon):
     [diag(f), I] has norm <= sqrt(R^2 + 1). Multiplying the receiver/loss
     Lipschitz constant by this factor gives a uniform product-metric constant K.
 
-    Under Q=P_iid, X=(h-1,N) is a standard-covariance Gaussian translated by
+    Under the reference, X=(h-1,N) has covariance diag(I, noise_std² I) and mean
     (-1/2,...,-1/2,0,...,0). For 0<a<1, use
     K||X|| <= K^2/(2a) + a||X||^2/2 and the noncentral chi-square MGF.
     The specified a is analytic, common to every posterior with these caps.
@@ -36,12 +36,13 @@ def perfect_shift(deployment, width, model, loss_epsilon):
     k = model.channel_lipschitz_constant(loss_epsilon) * math.hypot(model.feature_norm, 1.)
     noncentrality_sq = width / 4.
     dimension = 2 * width
-    a = min(.5, k / math.sqrt(dimension + noncentrality_sq))
-    log_moment_upper = (k*k/(2*a) - dimension/2*math.log1p(-a)
+    noise_variance = deployment.get("noise_std", 1.)**2
+    a = min(.5/max(1., noise_variance), k/math.sqrt(width*(1+noise_variance)+noncentrality_sq))
+    log_moment_upper = (k*k/(2*a) - width/2*(math.log1p(-a)+math.log1p(-a*noise_variance))
                         + a*noncentrality_sq/(2*(1-a))) if k else 0.
-    reference_kl = diagonal_gain_kl(deployment, dict(kind="diagonal_fading", rho_c=0.), width)
+    reference_kl = diagonal_gain_kl(deployment, dict(deployment, rho_c=0.), width)
     return dict(method="C1 second", metric="sqrt(||H-H'||_F^2 + ||N-N'||_2^2)",
-                reference="P_iid", reference_kl=reference_kl, uniform_lipschitz=k,
+                reference="P_iid" if noise_variance == 1. else "iid gains with matched noise", reference_kl=reference_kl, uniform_lipschitz=k,
                 feature_norm_limit=model.feature_norm, receiver_norm_limit=model.receiver_norm,
                 quadratic_parameter=a, noncentrality_squared=noncentrality_sq,
                 reference_dimension=dimension, reference_log_mgf_upper=log_moment_upper,

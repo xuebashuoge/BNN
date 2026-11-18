@@ -1,4 +1,5 @@
 """Regression tests for the correlated diagonal Gaussian channel and its iid limit."""
+import math
 import unittest
 
 import torch
@@ -67,8 +68,18 @@ class DiagonalFadingTests(unittest.TestCase):
         for rho in (-.01, 1, 1.2, float("nan"), True, float("inf"), "0.5"):
             with self.subTest(rho=rho), self.assertRaises(ValueError):
                 validate_channel(law(rho))
-        with self.assertRaises(ValueError):
-            validate_channel({**law(.5), "noise_std": .4})
+        for invalid in (-1., float("inf"), float("nan"), True, "2"):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                validate_channel({**law(.5), "noise_std": invalid})
+
+    def test_noise_scaling_preserves_paired_gains_and_changes_joint_kl(self):
+        self.assertEqual(validate_channel({**law(.85), "noise_std": 1.}), law(.85))
+        loud = {**law(.85), "noise_std": 2.}
+        base, severe = [ChannelBank(16, 100, c, 17) for c in (law(.85), loud)]
+        self.assertTrue(torch.equal(base.gain, severe.gain))
+        self.assertTrue(torch.equal(base.noise * 2., severe.noise))
+        expected_kl = 8 * (4 - 1 - math.log(4))
+        self.assertAlmostEqual(channel_shift_diagnostic(loud, law(.85), 16)["channel_kl_deployment_to_training"], expected_kl)
 
 
 if __name__ == "__main__":

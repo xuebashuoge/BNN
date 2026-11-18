@@ -113,11 +113,12 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
     deployment, training = validate_channel(deployment), validate_channel(training)
     # The historical iid analog law is precisely the rho_c=0 endpoint.
     if "diagonal_fading" in (deployment["kind"], training["kind"]):
-        iid = dict(kind="gaussian", gain_mean=.5, gain_std=1., noise_std=1.)
-        if deployment == iid:
-            deployment = dict(kind="diagonal_fading", rho_c=0.)
-        if training == iid:
-            training = dict(kind="diagonal_fading", rho_c=0.)
+        def canonical_iid(channel):
+            if channel["kind"] == "gaussian" and channel["gain_mean"] == .5 and channel["gain_std"] == 1.:
+                return normalize_diagonal_fading(dict(kind="diagonal_fading", rho_c=0.,
+                                                      noise_std=channel["noise_std"]))
+            return channel
+        deployment, training = canonical_iid(deployment), canonical_iid(training)
     for config in (deployment, training):
         if config["kind"] == "full_fading":
             validate_fading_dimensions(config, width, width)
@@ -157,6 +158,7 @@ def channel_shift_diagnostic(deployment: Mapping, training: Mapping, width: int)
         divergence = 0.
     elif deployment["kind"] == training["kind"] == "diagonal_fading":
         divergence = diagonal_gain_kl(deployment, training, width)
+        divergence += width * normal_kl(0., deployment.get("noise_std", 1.), 0., training.get("noise_std", 1.))
     elif deployment["kind"] == training["kind"] == "full_fading":
         divergence = fading_gain_kl(deployment, training, width, width)
         divergence += width * normal_kl(0., deployment["noise_std"], 0., training["noise_std"])
@@ -273,7 +275,8 @@ class ChannelBank(nn.Module):
             if key not in self._fading_factors:
                 self._fading_factors[key] = (correlation_factor(rho, self.width).to(
                     device=generator.device, dtype=torch.get_default_dtype()) if rho else None)
-            return draw_diagonal_fading(count, self.width, self._fading_factors[key], generator)
+            return draw_diagonal_fading(count, self.width, self._fading_factors[key], generator,
+                                        config.get("noise_std", 1.))
         if config["kind"] == "full_fading":
             reference = torch.empty(0, device=generator.device)
             rx, tx = self._factors(config, reference)
