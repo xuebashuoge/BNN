@@ -21,7 +21,7 @@ mkdir -p "$dest/logs"
 exec 9>"$dest/submit.lock"
 flock 9
 worker=journal/full_fading_spartan.slurm
-common=(--partition=sapphire --chdir="$PWD" --cpus-per-task="$threads" --mem=4G --output="$dest/logs/%x_%A_%a.out" --error="$dest/logs/%x_%A_%a.err")
+common=(--partition=sapphire --chdir="$PWD" --cpus-per-task="$threads" --mem="${CIFAR_JOB_MEMORY:-3G}" --output="$dest/logs/%x_%A_%a.out" --error="$dest/logs/%x_%A_%a.err")
 submit() {
     local record=$1
     shift
@@ -47,7 +47,7 @@ fi
 count=$(wc -l < "$manifest")
 export JOURNAL_MANIFEST_SHA256
 JOURNAL_MANIFEST_SHA256=$(sha256sum "$manifest" | cut -d' ' -f1)
-job=$(submit "$dest/$phase.job" --job-name="${law}_cf_$phase" --time=00:35:00 --array="0-$((count-1))%${DIAGONAL_PARALLELISM:-96}" \
+job=$(submit "$dest/$phase.job" --job-name="${law}_cf_$phase" --time=00:35:00 --time-min="${CIFAR_BACKFILL_TIME:-00:20:00}" --array="0-$((count-1))%${DIAGONAL_PARALLELISM:-96}" \
       "$worker" python -u -m "$module" task --manifest "$manifest" --output-root "$runs" --threads "$threads" --device cpu)
 if [[ $phase == screen ]]; then
     submit "$dest/select.job" --job-name="${law}_cf_select" --time=00:05:00 --kill-on-invalid-dep=yes --dependency="afterok:$job" \
