@@ -96,28 +96,34 @@ class _GaussianSearchCNN(nn.Module):
                             dtype=self.mu.dtype, generator=generator)
         return self.mu + F.softplus(self.rho) * noise
 
-    def forward(self, x: torch.Tensor, theta: torch.Tensor,
-                bank: ChannelBank, source: str = "bank", channel: Mapping | None = None,
-                generator: torch.Generator | None = None) -> torch.Tensor:
+    def transmit(self, x, weights):
         if x.ndim != 4 or tuple(x.shape[1:]) != (3, 32, 32):
             raise ValueError("CIFAR search CNN input must have shape [batch,3,32,32]")
-        if bank.width != self.width:
-            raise ValueError("Channel-bank width must equal the CNN feature width")
-        w1, b1, w2, b2, w3, b3, wl, bl, wr, br, wf, bf, wo, bo = self.split(theta)
+        w1, b1, w2, b2, w3, b3, wl, bl = weights[:8]
         hidden = F.max_pool2d(F.relu(F.conv2d(x, w1, b1, padding=1)), 2)
         hidden = F.max_pool2d(F.relu(F.conv2d(hidden, w2, b2, padding=1)), 2)
         hidden = F.adaptive_avg_pool2d(F.relu(F.conv2d(hidden, w3, b3, padding=1)), (4, 4))
         if self.bottleneck_kind == "affine_relu":
-            transmitted = F.relu(F.linear(hidden.flatten(1), wl, bl))
-        else:
-            transmitted = F.relu(F.conv2d(hidden, wl, bl)).flatten(1)
-        if not self.training:
-            self.last_feature_power = transmitted.detach().square().mean().item()
-        recovered = bank.apply(transmitted, source, channel, generator)
-        recovered = recovered.reshape(x.shape[0], *self.transmitted_shape)
+            return F.relu(F.linear(hidden.flatten(1), wl, bl))
+        return F.relu(F.conv2d(hidden, wl, bl)).flatten(1)
+
+    def receive(self, recovered, weights):
+        wr, br, wf, bf, wo, bo = weights[8:]
+        recovered = recovered.reshape(-1, *self.transmitted_shape)
         hidden = F.relu(F.conv2d(recovered, wr, br, padding=1)).flatten(1)
         hidden = F.relu(F.linear(hidden, wf, bf))
         return F.linear(hidden, wo, bo)
+
+    def forward(self, x: torch.Tensor, theta: torch.Tensor,
+                bank: ChannelBank, source: str = "bank", channel: Mapping | None = None,
+                generator: torch.Generator | None = None) -> torch.Tensor:
+        if bank.width != self.width:
+            raise ValueError("Channel-bank width must equal the CNN feature width")
+        weights = self.split(theta)
+        transmitted = self.transmit(x, weights)
+        if not self.training:
+            self.last_feature_power = transmitted.detach().square().mean().item()
+        return self.receive(bank.apply(transmitted, source, channel, generator), weights)
 
 
 class GaussianReceiverConvCNN(_GaussianSearchCNN):

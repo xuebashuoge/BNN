@@ -228,14 +228,22 @@ class GaussianMLP(nn.Module):
                             dtype=self.mu.dtype, generator=generator)
         return self.mu + F.softplus(self.rho) * noise
 
+    def transmit(self, x, weights):
+        w1, b1 = weights[:2]
+        return F.relu(x.flatten(1) @ w1 + b1)
+
+    def receive(self, hidden, weights):
+        w2, b2 = weights[2:]
+        return hidden @ w2 + b2
+
     def forward(self, x: torch.Tensor, theta: torch.Tensor,
                 bank: "ChannelBank", source: str = "bank", channel: Mapping | None = None,
                 generator: torch.Generator | None = None) -> torch.Tensor:
-        w1, b1, w2, b2 = self.split(theta)
-        hidden = F.relu(x.flatten(1) @ w1 + b1)
+        weights = self.split(theta)
+        hidden = self.transmit(x, weights)
         if not self.training:
             self.last_feature_power = hidden.detach().square().mean().item()
-        return bank.apply(hidden, source, channel, generator) @ w2 + b2
+        return self.receive(bank.apply(hidden, source, channel, generator), weights)
 
 
 class ChannelBank(nn.Module):
