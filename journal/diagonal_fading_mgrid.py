@@ -186,7 +186,7 @@ def gap_figure(rows, differences, output, title):
         ax.set_title(DATASET_NAMES[ds], fontsize=10)
     fig.supxlabel('Training channel-bank size', fontsize=9)
     fig.supylabel('Paired accuracy difference (percentage points)', fontsize=9)
-    axes[0,0].legend(handles=[Line2D([],[],linestyle='none',marker='D',color='#135c85',label='Mean',markersize=5),
+    fig.legend(loc='outside lower center', ncols=2, handles=[Line2D([],[],linestyle='none',marker='D',color='#135c85',label='Mean',markersize=5),
                               Line2D([],[],linestyle='none',marker='o',color='#949da5',label='Training seed',markersize=4)],
                      frameon=False, fontsize=7)
     for ext in ('pdf','png'):
