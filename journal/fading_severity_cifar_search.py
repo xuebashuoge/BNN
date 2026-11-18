@@ -1,4 +1,4 @@
-"""Tune seven harsher-link CIFAR learners on validation and freeze an independent cohort."""
+"""Tune seven CIFAR learners on matched-channel validation and freeze an independent cohort."""
 import argparse
 from itertools import product
 import json
@@ -8,6 +8,7 @@ from .build_campaign import make_entry
 from .campaign import select_variants
 from .diagonal_fading_comparison import validation_rows
 from .fading_severity import HARD
+from .erasure_bank_comparison import ERASURE
 from .full_fading_comparison import METHODS, variant_grid, write_manifest, write_once
 from .run_experiment import file_fingerprint
 from .run_task import read_manifest
@@ -20,12 +21,20 @@ PENALTY_FACTORS = (.1, 1., 10.)
 POSTERIOR_SCALE_FACTORS = (1/3, 1., 3.)
 
 
-def anchors(transfer_dir):
+def anchors(transfer_dir, law="severity"):
     manifest = transfer_dir / "manifest.jsonl"
-    protocol = json.loads((transfer_dir / "transfer.json").read_text())
-    if (protocol["manifest"] != file_fingerprint(manifest)
-            or protocol["deployment_law"] != HARD or protocol["train_law_matched"] != HARD):
-        raise ValueError("Expected a frozen severe-channel transfer")
+    if law == "severity":
+        protocol = json.loads((transfer_dir / "transfer.json").read_text())
+        expected_channel = HARD
+        valid_law = protocol["deployment_law"] == HARD and protocol["train_law_matched"] == HARD
+    elif law == "erasure":
+        protocol = json.loads((transfer_dir / "protocol.json").read_text())
+        expected_channel = ERASURE
+        valid_law = protocol["law"] == ERASURE and protocol["dataset"] == "cifar10"
+    else:
+        raise ValueError("Unknown comparison channel")
+    if protocol["manifest"] != file_fingerprint(manifest) or not valid_law:
+        raise ValueError("Expected a frozen transfer under the requested channel")
     rows = read_manifest(manifest)
     seeds = set(protocol["seeds"])
     pairs = [(r["method_label"], r["config"]["seed"]) for r in rows]
@@ -39,8 +48,8 @@ def anchors(transfer_dir):
         cfg = row["config"]
         expected_method, perfect = METHODS[label]
         if (cfg["dataset"] != "cifar10" or cfg["method"] != expected_method
-                or cfg["deployment_channel"] != HARD
-                or cfg["train_channel"] != ({"kind":"perfect"} if perfect else HARD)):
+                or cfg["deployment_channel"] != expected_channel
+                or cfg["train_channel"] != ({"kind":"perfect"} if perfect else expected_channel)):
             raise ValueError(f"Unexpected CIFAR model/channel configuration in {row['task_id']}")
         original = first.setdefault(label, row)
         if original["variant_id"] != row["variant_id"]:
@@ -48,9 +57,9 @@ def anchors(transfer_dir):
     return [first[label] for label in METHODS]
 
 
-def screening(transfer_dir):
+def screening(transfer_dir, law="severity"):
     candidates = []
-    for base in anchors(transfer_dir):
+    for base in anchors(transfer_dir, law):
         config = base["config"]
         method = config["method"]
         factors = POSTERIOR_SCALE_FACTORS if method == "erm" else PENALTY_FACTORS
@@ -65,17 +74,17 @@ def screening(transfer_dir):
                     candidate[key] = config[key] * second_factor
             for seed in SCREEN_SEEDS:
                 row = make_entry(candidate, seed, base["group"], base["method_label"],
-                                 "severity_cifar_screen", "severity_validation")
+                                 f"{law}_cifar_screen", f"{law}_validation")
                 row.update(family=base["family"], transfer_variant=base["variant_id"])
                 candidates.append(row)
     return candidates
 
 
-def select(transfer_dir, root):
+def select(transfer_dir, root, law="severity"):
     path = root / "screen.jsonl"
     declared = read_manifest(path)
-    if not variant_grid(declared, screening(transfer_dir)):
-        raise ValueError("Incomplete or altered severe-law validation screen")
+    if not variant_grid(declared, screening(transfer_dir, law)):
+        raise ValueError("Incomplete or altered matched-channel validation screen")
     rows = validation_rows(root / "screen-runs", declared)
     variants, choices = select_variants(rows, declared, 1)
     source = {r["task_id"]: r for r in declared}
@@ -84,7 +93,7 @@ def select(transfer_dir, root):
         original = source[best["task_ids"][0]]
         for seed in CONFIRM_SEEDS:
             row = make_entry(original["config"], seed, original["group"], original["method_label"],
-                             "severity_cifar_retuned", "severity_confirmation")
+                             f"{law}_cifar_retuned", f"{law}_confirmation")
             row.update(family=original["family"], transfer_variant=original["transfer_variant"],
                        selected_from_validation_variant=best["variant_id"])
             confirmation.append(row)
@@ -92,6 +101,15 @@ def select(transfer_dir, root):
                     selection_rule="Highest mean severe validation accuracy across all screening seeds, then lowest mean validation cross-entropy, then variant ID",
                     candidates_per_method=9, validation_trials=variants, selected_variants=choices,
                     transfer=file_fingerprint(transfer_dir/"manifest.jsonl"), screen=file_fingerprint(path))
+    if law == "erasure":
+        primary = json.loads((transfer_dir / "protocol.json").read_text())
+        sources = read_manifest(transfer_dir / "manifest.jsonl")
+        protocol.update(deployment_law=ERASURE, source_bank_size=primary["source_bank_size"],
+                        source=primary["source"], source_manifest=primary["source_manifest"],
+                        original_variants={r["method_label"]:r["source_variant"] for r in sources},
+                        original_tasks={label:[r["source_task_id"] for r in sources if r["method_label"]==label]
+                                        for label in METHODS},
+                        selection_rule="Highest mean erasure validation accuracy across all screening seeds, then lowest mean validation cross-entropy, then variant ID")
     write_once(root/"selection.json",json.dumps(protocol, indent=2,allow_nan=False)+"\n")
     return write_manifest(root/"manifest.jsonl", confirmation)
 
@@ -101,9 +119,10 @@ def main():
     parser.add_argument("phase",choices=("screen","select"))
     parser.add_argument("--transfer-dir",type=Path,required=True)
     parser.add_argument("--root",type=Path,required=True)
+    parser.add_argument("--law", choices=("severity","erasure"), default="severity")
     args=parser.parse_args()
-    result=(write_manifest(args.root/"screen.jsonl",screening(args.transfer_dir))
-            if args.phase=="screen" else select(args.transfer_dir,args.root))
+    result=(write_manifest(args.root/"screen.jsonl",screening(args.transfer_dir,args.law))
+            if args.phase=="screen" else select(args.transfer_dir,args.root,args.law))
     print(json.dumps(result))
 
 
