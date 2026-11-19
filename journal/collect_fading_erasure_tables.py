@@ -104,7 +104,7 @@ def read_record(path, folder, channel, dataset, m, seed_rows):
                 top_labels='/'.join(winners),best_proposed=proposed,proposed_pct=means[proposed],
                 best_other=other,other_pct=means[other],margin_pp=fmean(gaps),paired_seed_sd_pp=stdev(gaps),
                 paired_wins=sum(d>1e-10 for d in gaps),leads=set(winners)<=TARGET,
-                source=str(path.resolve()),source_sha256=file_fingerprint(path)['sha256'],
+                source=str(path.absolute()),source_sha256=file_fingerprint(path)['sha256'],
                 selection_sha256=file_fingerprint(selection_path)['sha256'] if selection_path else '')
     cells=[]
     for k in METHODS:
