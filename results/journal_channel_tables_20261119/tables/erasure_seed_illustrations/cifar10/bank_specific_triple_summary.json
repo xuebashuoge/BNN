@@ -1,0 +1,438 @@
+{
+  "dataset": "cifar10",
+  "channel": "Erasure",
+  "outage_prob": 0.5,
+  "interpretation": "Additional bank-specific validation-selected illustration; triples may differ. The shared-triple and full-pool outputs are the primary seed comparisons.",
+  "selection": {
+    "sha256": "b3ba1c80057c7a0d5790581d7288d9fe1c1ada22680367e143dfa5cc33112931",
+    "bytes": 37098
+  },
+  "original_seed_scores": {
+    "sha256": "4890aa3b741af53ad002d607d098633008b23a037ebdfac2f27c134ad197238b",
+    "bytes": 38643
+  },
+  "original_report": {
+    "sha256": "09c189af2c65832e3f21d9346668772c2d02a978c5720cc645fbb82bcebdf676",
+    "bytes": 55643
+  },
+  "results": {
+    "200": {
+      "seeds": [
+        490101,
+        490105,
+        490108
+      ],
+      "best_proposed": "T2-Matched",
+      "best_other": "L2-Matched",
+      "test_margin_pp": 0.18291666666667084,
+      "highest_methods": [
+        "T2-Matched"
+      ]
+    },
+    "500": {
+      "seeds": [
+        490103,
+        490104,
+        490108
+      ],
+      "best_proposed": "T1-Matched",
+      "best_other": "ERM-Matched",
+      "test_margin_pp": 0.6335000000000051,
+      "highest_methods": [
+        "T1-Matched"
+      ]
+    },
+    "1000": {
+      "seeds": [
+        490101,
+        490104,
+        490108
+      ],
+      "best_proposed": "T1-Matched",
+      "best_other": "ERM-Matched",
+      "test_margin_pp": 0.35608333333334485,
+      "highest_methods": [
+        "T1-Matched"
+      ]
+    },
+    "2000": {
+      "seeds": [
+        490102,
+        490103,
+        490108
+      ],
+      "best_proposed": "T2-Matched",
+      "best_other": "ERM-Matched",
+      "test_margin_pp": 0.04083333333333883,
+      "highest_methods": [
+        "T2-Matched"
+      ]
+    }
+  },
+  "cells": [
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 200,
+      "method": "ERM-Matched",
+      "mean_pct": 63.57041666666667,
+      "sd_pp": 0.6570435836634614,
+      "n_seeds": 3,
+      "seeds": "490101 490105 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 200,
+      "method": "L2-Matched",
+      "mean_pct": 64.06491666666666,
+      "sd_pp": 0.7304444851139137,
+      "n_seeds": 3,
+      "seeds": "490101 490105 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 200,
+      "method": "T1-Matched",
+      "mean_pct": 63.485166666666665,
+      "sd_pp": 1.1289362895369022,
+      "n_seeds": 3,
+      "seeds": "490101 490105 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 200,
+      "method": "T2-Matched",
+      "mean_pct": 64.24783333333333,
+      "sd_pp": 0.5101353578544938,
+      "n_seeds": 3,
+      "seeds": "490101 490105 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 200,
+      "method": "ERM-Perfect",
+      "mean_pct": 27.582666666666668,
+      "sd_pp": 15.43021041320673,
+      "n_seeds": 3,
+      "seeds": "490101 490105 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 200,
+      "method": "L2-Perfect",
+      "mean_pct": 34.61416666666667,
+      "sd_pp": 5.3018764504497184,
+      "n_seeds": 3,
+      "seeds": "490101 490105 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 200,
+      "method": "Proposed-Perfect",
+      "mean_pct": 35.83233333333333,
+      "sd_pp": 3.2771342791123703,
+      "n_seeds": 3,
+      "seeds": "490101 490105 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 500,
+      "method": "ERM-Matched",
+      "mean_pct": 63.68516666666667,
+      "sd_pp": 1.5701497805411129,
+      "n_seeds": 3,
+      "seeds": "490103 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 500,
+      "method": "L2-Matched",
+      "mean_pct": 62.95166666666666,
+      "sd_pp": 1.3412012417356773,
+      "n_seeds": 3,
+      "seeds": "490103 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 500,
+      "method": "T1-Matched",
+      "mean_pct": 64.31866666666667,
+      "sd_pp": 1.0219805628451626,
+      "n_seeds": 3,
+      "seeds": "490103 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 500,
+      "method": "T2-Matched",
+      "mean_pct": 61.94991666666667,
+      "sd_pp": 1.9007217762821933,
+      "n_seeds": 3,
+      "seeds": "490103 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 500,
+      "method": "ERM-Perfect",
+      "mean_pct": 29.097250000000003,
+      "sd_pp": 17.212174944279997,
+      "n_seeds": 3,
+      "seeds": "490103 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 500,
+      "method": "L2-Perfect",
+      "mean_pct": 30.28925,
+      "sd_pp": 17.707220594647257,
+      "n_seeds": 3,
+      "seeds": "490103 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 500,
+      "method": "Proposed-Perfect",
+      "mean_pct": 29.10858333333333,
+      "sd_pp": 16.942158098094623,
+      "n_seeds": 3,
+      "seeds": "490103 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 1000,
+      "method": "ERM-Matched",
+      "mean_pct": 64.55799999999999,
+      "sd_pp": 0.5608646784207378,
+      "n_seeds": 3,
+      "seeds": "490101 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 1000,
+      "method": "L2-Matched",
+      "mean_pct": 64.20141666666666,
+      "sd_pp": 0.7753916080493306,
+      "n_seeds": 3,
+      "seeds": "490101 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 1000,
+      "method": "T1-Matched",
+      "mean_pct": 64.91408333333334,
+      "sd_pp": 1.2455152130075815,
+      "n_seeds": 3,
+      "seeds": "490101 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 1000,
+      "method": "T2-Matched",
+      "mean_pct": 64.04383333333334,
+      "sd_pp": 1.201051995474525,
+      "n_seeds": 3,
+      "seeds": "490101 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 1000,
+      "method": "ERM-Perfect",
+      "mean_pct": 38.72050000000001,
+      "sd_pp": 4.769376774013563,
+      "n_seeds": 3,
+      "seeds": "490101 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 1000,
+      "method": "L2-Perfect",
+      "mean_pct": 39.312999999999995,
+      "sd_pp": 2.928223747000901,
+      "n_seeds": 3,
+      "seeds": "490101 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 1000,
+      "method": "Proposed-Perfect",
+      "mean_pct": 38.92041666666666,
+      "sd_pp": 3.658173915471121,
+      "n_seeds": 3,
+      "seeds": "490101 490104 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 2000,
+      "method": "ERM-Matched",
+      "mean_pct": 64.15308333333333,
+      "sd_pp": 1.0294214495692868,
+      "n_seeds": 3,
+      "seeds": "490102 490103 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 2000,
+      "method": "L2-Matched",
+      "mean_pct": 63.91133333333334,
+      "sd_pp": 0.863114286078811,
+      "n_seeds": 3,
+      "seeds": "490102 490103 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 2000,
+      "method": "T1-Matched",
+      "mean_pct": 62.439083333333336,
+      "sd_pp": 1.938931895615032,
+      "n_seeds": 3,
+      "seeds": "490102 490103 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 2000,
+      "method": "T2-Matched",
+      "mean_pct": 64.19391666666667,
+      "sd_pp": 0.6123969981420013,
+      "n_seeds": 3,
+      "seeds": "490102 490103 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 2000,
+      "method": "ERM-Perfect",
+      "mean_pct": 25.234416666666664,
+      "sd_pp": 13.233274246037274,
+      "n_seeds": 3,
+      "seeds": "490102 490103 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 2000,
+      "method": "L2-Perfect",
+      "mean_pct": 29.51658333333333,
+      "sd_pp": 16.933402375802487,
+      "n_seeds": 3,
+      "seeds": "490102 490103 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "m": 2000,
+      "method": "Proposed-Perfect",
+      "mean_pct": 25.977666666666664,
+      "sd_pp": 13.87802811401293,
+      "n_seeds": 3,
+      "seeds": "490102 490103 490108",
+      "phase": "bank_specific_validation_triple",
+      "source": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/seed_illustrations/cifar10/bank_specific_triple_summary.json",
+      "outage_prob": 0.5
+    }
+  ]
+}

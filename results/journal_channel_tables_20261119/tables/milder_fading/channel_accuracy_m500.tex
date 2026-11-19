@@ -1,0 +1,32 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{booktabs,multirow}
+\begin{document}
+\begin{minipage}{7.8in}
+\centering
+Deployment accuracy at $m=500$ (mean $\pm$ sample SD, \%)\\[4pt]
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+\multirow{2}{*}{Dataset} & \multirow{2}{*}{Channel} & \multicolumn{4}{c}{Matched training} & Perfect training \\
+\cmidrule(lr){3-6}\cmidrule(l){7-7}
+ & & ERM & L2 & T1 & T2 & T1/T2 \\
+\midrule
+\multirow{2}{*}{Two-moon} & Fading & $74.46\,\pm\,0.97$ & $74.38\,\pm\,1.05$ & $74.48\,\pm\,1.13$ & $\mathbf{74.48}\,\pm\,1.13$ & $63.44\,\pm\,1.23$ \\
+ & Erasure & $86.91\,\pm\,0.39$ & $86.87\,\pm\,0.26$ & $87.00\,\pm\,0.39$ & $\mathbf{87.03}\,\pm\,0.43$ & $82.68\,\pm\,0.47$ \\
+\midrule[0.25pt]
+\multirow{2}{*}{MNIST} & Fading & $81.50\,\pm\,0.34$ & $80.92\,\pm\,0.45$ & $\mathbf{81.60}\,\pm\,0.28$ & $81.33\,\pm\,0.51$ & $57.41\,\pm\,0.44$ \\
+ & Erasure & $\mathbf{96.15}\,\pm\,0.07$ & $96.15\,\pm\,0.07$ & $96.15\,\pm\,0.09$ & $96.11\,\pm\,0.09$ & $87.25\,\pm\,0.46$ \\
+\midrule[0.25pt]
+\multirow{2}{*}{Fashion-MNIST} & Fading & $72.04\,\pm\,0.35$ & $72.29\,\pm\,0.28$ & $72.28\,\pm\,0.37$ & $\mathbf{72.52}\,\pm\,0.29$ & $50.76\,\pm\,0.43$ \\
+ & Erasure & $\mathbf{86.18}\,\pm\,0.14$ & $86.14\,\pm\,0.15$ & $86.17\,\pm\,0.13$ & $86.13\,\pm\,0.21$ & $77.81\,\pm\,0.58$ \\
+\midrule[0.25pt]
+\multirow{2}{*}{CIFAR-10} & Fading & $46.18\,\pm\,20.33$ & $54.07\,\pm\,5.43$ & $54.52\,\pm\,3.18$ & $\mathbf{55.56}\,\pm\,4.61$ & $18.19\,\pm\,0.81$ \\
+ & Erasure & $\mathbf{64.36}\,\pm\,0.53$ & $61.13\,\pm\,9.38$ & $53.94\,\pm\,24.57$ & $63.57\,\pm\,3.14$ & $37.07\,\pm\,1.94$ \\
+\bottomrule
+\end{tabular*}
+\par\smallskip\raggedright\footnotesize
+Fading $\rho_c=0.35$, $\sigma_N=1$. Erasure $p=0.5$.\\
+Paired training-seed counts (fading/erasure) are Two-moon 3/5, MNIST 3/9, Fashion-MNIST 9/9, CIFAR-10 5/5.\\
+Bold marks the highest unrounded mean in each displayed row.\\
+The MNIST erasure comparison allowed 60 epochs for every method.
+\end{minipage}
+\end{document}

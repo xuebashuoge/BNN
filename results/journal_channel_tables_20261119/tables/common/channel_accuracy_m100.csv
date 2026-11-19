@@ -1,0 +1,15 @@
+dataset,channel,m,method,mean_pct,sd_pp,n_seeds,phase,source,rho_c,noise_std,outage_prob,displayed,highest_displayed
+cifar10,Fading,100,ERM-Matched,43.930499999999995,1.836101100157612,3,transfer,/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json,0.85,2.0,,True,False
+cifar10,Fading,100,L2-Matched,45.54966666666667,0.7774651653504041,3,transfer,/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json,0.85,2.0,,True,False
+cifar10,Fading,100,T1-Matched,42.261,1.477541116179175,3,transfer,/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json,0.85,2.0,,True,False
+cifar10,Fading,100,T2-Matched,46.877833333333335,3.1773078357838314,3,transfer,/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json,0.85,2.0,,True,True
+cifar10,Fading,100,Proposed-Perfect,16.33816666666667,1.2959677207914306,3,transfer,/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json,0.85,2.0,,True,False
+cifar10,Fading,100,ERM-Perfect,16.252333333333333,0.8111581740532063,3,transfer,/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json,0.85,2.0,,False,False
+cifar10,Fading,100,L2-Perfect,17.54716666666667,1.2470056468730721,3,transfer,/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json,0.85,2.0,,False,False
+cifar10,Erasure,100,ERM-Matched,60.938,1.301102128966065,5,transfer,/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m100/cifar10/runs/accuracy_summary.json,,,0.5,True,False
+cifar10,Erasure,100,L2-Matched,62.0828,2.1892216824707393,5,transfer,/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m100/cifar10/runs/accuracy_summary.json,,,0.5,True,False
+cifar10,Erasure,100,T1-Matched,62.8279,2.03561720984079,5,transfer,/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m100/cifar10/runs/accuracy_summary.json,,,0.5,True,False
+cifar10,Erasure,100,T2-Matched,62.88860000000001,1.3402686484432917,5,transfer,/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m100/cifar10/runs/accuracy_summary.json,,,0.5,True,True
+cifar10,Erasure,100,Proposed-Perfect,34.4065,2.611004045381777,5,transfer,/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m100/cifar10/runs/accuracy_summary.json,,,0.5,True,False
+cifar10,Erasure,100,ERM-Perfect,36.853899999999996,5.37180369382575,5,transfer,/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m100/cifar10/runs/accuracy_summary.json,,,0.5,False,False
+cifar10,Erasure,100,L2-Perfect,33.5674,2.813043556363818,5,transfer,/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m100/cifar10/runs/accuracy_summary.json,,,0.5,False,False

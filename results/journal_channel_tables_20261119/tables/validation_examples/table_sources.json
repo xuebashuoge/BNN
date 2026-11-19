@@ -1,0 +1,64 @@
+{
+  "input": "/data/gpfs/projects/punim2792/yangshuo/journal_channel_tables_20261119/final/tables/data/validation_examples_cells.csv",
+  "input_sha256": "1467454dc591ead944d6d8c15c686fc8f9511fa0706d650d39428a5a6d9feb3c",
+  "renderer_sha256": "268f2a56a8f937ecf6a33116c1b48575bcb1b479ea4ec2ed577c50d0b2c47c83",
+  "m_in_pdf_order": [
+    200,
+    500,
+    1000,
+    100,
+    2000
+  ],
+  "displayed_methods": [
+    "ERM-Matched",
+    "L2-Matched",
+    "T1-Matched",
+    "T2-Matched",
+    "Proposed-Perfect"
+  ],
+  "within_row_bold_tolerance_pp": "1E-10",
+  "units": "Mean deployment accuracy in percent; sample SD across paired training seeds in percentage points",
+  "view": "validation_examples",
+  "footnotes": {
+    "200": [
+      "Fading $\\rho_c=0.85$, $\\sigma_N=2$. Erasure $p=0.5$.",
+      "Paired training-seed counts (fading/erasure) are Two-moon 9/5, MNIST 3/8, Fashion-MNIST 9/5, CIFAR-10 5/5.",
+      "Bold marks the highest unrounded mean in each displayed row.",
+      "Illustrative rounds were chosen using observed rankings.",
+      "The MNIST erasure comparison allowed 60 epochs for every method."
+    ],
+    "500": [
+      "Fading $\\rho_c=0.85$, $\\sigma_N=2$. Erasure $p=0.5$.",
+      "Paired training-seed counts (fading/erasure) are Two-moon 9/5, MNIST 9/9, Fashion-MNIST 9/8, CIFAR-10 5/8.",
+      "Bold marks the highest unrounded mean in each displayed row.",
+      "Illustrative rounds were chosen using observed rankings."
+    ],
+    "1000": [
+      "Fading $\\rho_c=0.85$, $\\sigma_N=2$. Erasure $p=0.5$.",
+      "Paired training-seed counts (fading/erasure) are Two-moon 3/5, MNIST 3/8, Fashion-MNIST 9/5, CIFAR-10 5/3.",
+      "Bold marks the highest unrounded mean in each displayed row.",
+      "Erasure seed triples selected on validation for CIFAR-10.",
+      "The CIFAR-10 seed triple in this table was selected separately for this bank size.",
+      "The MNIST erasure comparison allowed 60 epochs for every method."
+    ],
+    "100": [
+      "Fading $\\rho_c=0.85$, $\\sigma_N=2$. Erasure $p=0.5$.",
+      "Fading uses 3 paired training seeds and erasure uses 5.",
+      "Bold marks the highest unrounded mean in each displayed row.",
+      "Illustrative rounds were chosen using observed rankings."
+    ],
+    "2000": [
+      "Fading $\\rho_c=0.85$, $\\sigma_N=2$. Erasure $p=0.5$.",
+      "Paired training-seed counts (fading/erasure) are Two-moon 3/5, MNIST 3/5, Fashion-MNIST 3/9, CIFAR-10 3/5.",
+      "Bold marks the highest unrounded mean in each displayed row.",
+      "Illustrative rounds were chosen using observed rankings.",
+      "The MNIST erasure comparison allowed 60 epochs for every method."
+    ]
+  },
+  "globally_defaulted_parameters": {
+    "rho_c": ".85",
+    "noise_std": "2",
+    "outage_prob": ".5"
+  },
+  "source_mapping": "The exact CSV lists the selected phase, source, deployment parameters and n_seeds for every input method."
+}

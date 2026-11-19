@@ -1,0 +1,130 @@
+{
+  "dataset": "mnist",
+  "bank_sizes": [
+    200,
+    500,
+    1000
+  ],
+  "source_confirmations": {
+    "200": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m200/mnist/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "eead62cf94d67e075f472a17a418e0dd072fcc59206c84b132fd4cb820491523",
+        "bytes": 77346
+      },
+      "source_seeds": [
+        391201,
+        391202,
+        391203,
+        391204,
+        391205,
+        391206,
+        391207,
+        391208,
+        391209
+      ],
+      "choices": {
+        "ERM-Matched": "093f49bbb1cb",
+        "L2-Matched": "b7f10e348bc1",
+        "T1-Matched": "138d3eb0826d",
+        "T2-Matched": "efa132dfd5b7",
+        "ERM-Perfect": "6600b7e620eb",
+        "L2-Perfect": "7ee8954a5615",
+        "Proposed-Perfect": "2dad3c8a74c8"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m200/mnist/retuned/manifest.selection.json": {
+          "sha256": "f59cc8e1d1672d4206b845c75e5c61a7e7a691d28622c86338d0ed4fa62c1ed9",
+          "bytes": 113536
+        }
+      }
+    },
+    "500": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m500/mnist/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "a81c0cb9349be5a9b6b02c5f09723d26f42d0b179b05e0b7f1710e02e3724294",
+        "bytes": 77328
+      },
+      "source_seeds": [
+        391201,
+        391202,
+        391203,
+        391204,
+        391205,
+        391206,
+        391207,
+        391208,
+        391209
+      ],
+      "choices": {
+        "ERM-Matched": "10df613755ee",
+        "L2-Matched": "6e6e4e01c1c5",
+        "T1-Matched": "f7f3182dd9be",
+        "T2-Matched": "8aa717b12caa",
+        "ERM-Perfect": "a51ac177f499",
+        "L2-Perfect": "03fc244a2e34",
+        "Proposed-Perfect": "82bc05143de9"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m500/mnist/retuned/manifest.selection.json": {
+          "sha256": "d15da2720d3e46236da65e950e508665f97ae0a12b6eb5cd45c1abbb42d4d836",
+          "bytes": 113500
+        }
+      }
+    },
+    "1000": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m1000/mnist/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "655e5ab7dddb7ed763a5644fe943c84bc608e64ff36b7c18e22ae357c58a6fd6",
+        "bytes": 77526
+      },
+      "source_seeds": [
+        391201,
+        391202,
+        391203,
+        391204,
+        391205,
+        391206,
+        391207,
+        391208,
+        391209
+      ],
+      "choices": {
+        "ERM-Matched": "7ce230ba17c7",
+        "L2-Matched": "a740867655c7",
+        "T1-Matched": "96d59947fe10",
+        "T2-Matched": "181cba42a60f",
+        "ERM-Perfect": "edfb04b3f45d",
+        "L2-Perfect": "e777b034ac8d",
+        "Proposed-Perfect": "8d93ddb98b1e"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m1000/mnist/retuned/manifest.selection.json": {
+          "sha256": "9e5792d6ce8fda20afba4ebe559a1aade57e650f82ded53971f9953ac88fce31",
+          "bytes": 113756
+        }
+      }
+    }
+  },
+  "channel": {
+    "kind": "outage",
+    "outage_prob": 0.5
+  },
+  "seeds": [
+    490101,
+    490102,
+    490103,
+    490104,
+    490105,
+    490106,
+    490107,
+    490108
+  ],
+  "test_draws": 40,
+  "eval_seed_schedule": "training seed + 20000 + 1000003, paired across all methods and sizes",
+  "selection_rule": "Among all 56 triples use the largest minimum over the declared bank sizes of best matched T1/T2 mean validation accuracy minus best other mean validation accuracy. Break ties by larger average margin across sizes, then lexicographically smaller triple. All seven methods use the same seeds.",
+  "pool_manifest": {
+    "sha256": "b93eada98108eb51d317dff8a6f7b1b7cbe102b6f73f08feac8d5e5121e2ae3f",
+    "bytes": 202872
+  }
+}

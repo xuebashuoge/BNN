@@ -1,0 +1,8 @@
+Verified 81 confirmation cohorts and 3745 model/seed accuracies
+Rendered 5 tables from 238 designated method rows to /data/gpfs/projects/punim2792/yangshuo/journal_channel_tables_20261119/final/tables/common
+Rendered 5 tables from 238 designated method rows to /data/gpfs/projects/punim2792/yangshuo/journal_channel_tables_20261119/final/tables/illustrative
+Rendered 5 tables from 238 designated method rows to /data/gpfs/projects/punim2792/yangshuo/journal_channel_tables_20261119/final/tables/initial
+Rendered 5 tables from 238 designated method rows to /data/gpfs/projects/punim2792/yangshuo/journal_channel_tables_20261119/final/tables/milder_fading
+Rendered 5 tables from 238 designated method rows to /data/gpfs/projects/punim2792/yangshuo/journal_channel_tables_20261119/final/tables/validation_examples
+Verified 81 seven-method confirmations, 3745 seed-/method-level scores, and every displayed mean, sample SD, bold winner and channel setting in 5 table sets.
+Compiled all five common and supplementary standalone LaTeX tables without horizontal overflow.

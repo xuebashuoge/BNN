@@ -1,0 +1,1 @@
+Reproduced all 34 scientific input manifests and their protocols byte for byte from the original sources.

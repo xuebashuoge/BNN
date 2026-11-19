@@ -1,0 +1,13 @@
+/data/gpfs/projects/punim2792/anaconda3/envs/torch28/lib/python3.12/site-packages/numpy/_core/getlimits.py:559: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/data/gpfs/projects/punim2792/anaconda3/envs/torch28/lib/python3.12/site-packages/numpy/_core/getlimits.py:91: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/data/gpfs/projects/punim2792/anaconda3/envs/torch28/lib/python3.12/site-packages/numpy/_core/getlimits.py:559: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/data/gpfs/projects/punim2792/anaconda3/envs/torch28/lib/python3.12/site-packages/numpy/_core/getlimits.py:91: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+.........................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 265 tests in 90.658s
+
+OK

@@ -1,0 +1,131 @@
+{
+  "dataset": "mnist",
+  "bank_sizes": [
+    200,
+    1000,
+    2000
+  ],
+  "source_confirmations": {
+    "200": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m200/mnist/penalty60/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "1d4c4d187b528868b4e722f4000f6b9371e8600032fd56cc9fa5cce91c4070f7",
+        "bytes": 77652
+      },
+      "source_seeds": [
+        451201,
+        451202,
+        451203,
+        451204,
+        451205,
+        451206,
+        451207,
+        451208,
+        451209
+      ],
+      "choices": {
+        "ERM-Matched": "16a8ad840eb5",
+        "L2-Matched": "46b7d7c09a6c",
+        "T1-Matched": "0c2716c14d69",
+        "T2-Matched": "fe1352793c6a",
+        "ERM-Perfect": "764d7c2b20f1",
+        "L2-Perfect": "019d2a84aa1c",
+        "Proposed-Perfect": "65f5ba8d00c8"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m200/mnist/penalty60/retuned/manifest.selection.json": {
+          "sha256": "d9b39508521c65df25f857f1ebeb4f8160b4f8552a27e586806ba413d66aa011",
+          "bytes": 94827
+        }
+      }
+    },
+    "1000": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m1000/mnist/penalty60/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "32e96b5f4f5e73c6b61dae15610c5eeea6b795f8f2dc6adc9ea3584b1e7b9e78",
+        "bytes": 77841
+      },
+      "source_seeds": [
+        451201,
+        451202,
+        451203,
+        451204,
+        451205,
+        451206,
+        451207,
+        451208,
+        451209
+      ],
+      "choices": {
+        "ERM-Matched": "182f73a7b2a6",
+        "L2-Matched": "956e7376c858",
+        "T1-Matched": "49e7dc525a19",
+        "T2-Matched": "ba2d42f27921",
+        "ERM-Perfect": "1bfbb8bf515d",
+        "L2-Perfect": "21492df6c8cf",
+        "Proposed-Perfect": "91a913014f4d"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m1000/mnist/penalty60/retuned/manifest.selection.json": {
+          "sha256": "54a899c1d5949279df9e1e3180e72cc82fb75f261d855974b29a44e72349e3de",
+          "bytes": 95068
+        }
+      }
+    },
+    "2000": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m2000/mnist/penalty60/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "f458dd084e54b9c2876f5c0bd67b7d6bb78527598232f7dd37729dd7902ae340",
+        "bytes": 77985
+      },
+      "source_seeds": [
+        451201,
+        451202,
+        451203,
+        451204,
+        451205,
+        451206,
+        451207,
+        451208,
+        451209
+      ],
+      "choices": {
+        "ERM-Matched": "20dc2ed889fc",
+        "L2-Matched": "883824ae6f53",
+        "T1-Matched": "8c86c275722b",
+        "T2-Matched": "db1ac6ca920e",
+        "ERM-Perfect": "4ec1ff290e58",
+        "L2-Perfect": "4ec4d0b521aa",
+        "Proposed-Perfect": "53e398ad669b"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m2000/mnist/penalty60/retuned/manifest.selection.json": {
+          "sha256": "f41e1e00e0f2f17fdcfd4f0d376500ef054ca0c7df1dc0a020ceab037dab078a",
+          "bytes": 95025
+        }
+      }
+    }
+  },
+  "channel": {
+    "kind": "outage",
+    "outage_prob": 0.5
+  },
+  "seeds": [
+    492201,
+    492202,
+    492203,
+    492204,
+    492205,
+    492206,
+    492207,
+    492208
+  ],
+  "test_draws": 40,
+  "eval_seed_schedule": "training seed + 20000 + 1000003, paired across all methods and sizes",
+  "selection_rule": "Among all 56 triples use the largest minimum over the declared bank sizes of best matched T1/T2 mean validation accuracy minus best other mean validation accuracy. Break ties by larger average margin across sizes, then lexicographically smaller triple. All seven methods use the same seeds.",
+  "pool_manifest": {
+    "sha256": "c4a0fff4c5285af075c2a6eb757a11a4ce0622781ff9a93f31eaf11297c396ae",
+    "bytes": 206696
+  },
+  "seed_pool": "penalty60"
+}

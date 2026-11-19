@@ -1,0 +1,198 @@
+{
+  "declaration": {
+    "sha256": "07aa25cd60cc0a415edfd25f85a7c6ef9cd7b05a9d777272866b6bc7129c7af7",
+    "bytes": 939
+  },
+  "models": 252,
+  "bank_sizes": [
+    200,
+    500,
+    1000,
+    2000
+  ],
+  "seeds": [
+    451201,
+    451202,
+    451203,
+    451204,
+    451205,
+    451206,
+    451207,
+    451208,
+    451209
+  ],
+  "draws": 200,
+  "interpretation": "Paired Monte Carlo precision check on the same original training posteriors and held-out examples. Conditional MC SE quantifies simulation error; training-seed SD describes between-run variation.",
+  "rankings": [
+    {
+      "m": 200,
+      "stage": "native",
+      "n_seeds": 9,
+      "draws": 20,
+      "highest_methods": "L2-Matched",
+      "highest_accuracy_pct": 95.98,
+      "best_proposed": "T2-Matched",
+      "competitor": "L2-Matched",
+      "gap_pp": -0.020666666666656397,
+      "conditional_mc_se_pp": 0.010074172614470484,
+      "paired_training_seed_sd_pp": 0.06163856341609589
+    },
+    {
+      "m": 200,
+      "stage": "precision",
+      "n_seeds": 9,
+      "draws": 200,
+      "highest_methods": "L2-Matched",
+      "highest_accuracy_pct": 95.97838888888887,
+      "best_proposed": "T2-Matched",
+      "competitor": "L2-Matched",
+      "gap_pp": -0.014333333333340192,
+      "conditional_mc_se_pp": 0.0032349749564976257,
+      "paired_training_seed_sd_pp": 0.06188260054328689
+    },
+    {
+      "m": 500,
+      "stage": "native",
+      "n_seeds": 9,
+      "draws": 20,
+      "highest_methods": "ERM-Matched",
+      "highest_accuracy_pct": 96.1511666666667,
+      "best_proposed": "T1-Matched",
+      "competitor": "ERM-Matched",
+      "gap_pp": -0.002222222222215464,
+      "conditional_mc_se_pp": 0.011139481324753639,
+      "paired_training_seed_sd_pp": 0.06570203150926478
+    },
+    {
+      "m": 500,
+      "stage": "precision",
+      "n_seeds": 9,
+      "draws": 200,
+      "highest_methods": "T1-Matched",
+      "highest_accuracy_pct": 96.16059444444444,
+      "best_proposed": "T1-Matched",
+      "competitor": "ERM-Matched",
+      "gap_pp": 0.011455555555556884,
+      "conditional_mc_se_pp": 0.003530676585470275,
+      "paired_training_seed_sd_pp": 0.05566830586408901
+    },
+    {
+      "m": 1000,
+      "stage": "native",
+      "n_seeds": 9,
+      "draws": 20,
+      "highest_methods": "L2-Matched",
+      "highest_accuracy_pct": 96.21427777777778,
+      "best_proposed": "T1-Matched",
+      "competitor": "L2-Matched",
+      "gap_pp": -0.025944444444448322,
+      "conditional_mc_se_pp": 0.009540149759825355,
+      "paired_training_seed_sd_pp": 0.0644260450266642
+    },
+    {
+      "m": 1000,
+      "stage": "precision",
+      "n_seeds": 9,
+      "draws": 200,
+      "highest_methods": "L2-Matched",
+      "highest_accuracy_pct": 96.20917777777777,
+      "best_proposed": "T1-Matched",
+      "competitor": "L2-Matched",
+      "gap_pp": -0.020555555555560545,
+      "conditional_mc_se_pp": 0.00330885662533267,
+      "paired_training_seed_sd_pp": 0.07753856477764962
+    },
+    {
+      "m": 2000,
+      "stage": "native",
+      "n_seeds": 9,
+      "draws": 20,
+      "highest_methods": "L2-Matched",
+      "highest_accuracy_pct": 96.24761111111111,
+      "best_proposed": "T2-Matched",
+      "competitor": "L2-Matched",
+      "gap_pp": -0.0046666666666652645,
+      "conditional_mc_se_pp": 0.010709723648945227,
+      "paired_training_seed_sd_pp": 0.058867966671186954
+    },
+    {
+      "m": 2000,
+      "stage": "precision",
+      "n_seeds": 9,
+      "draws": 200,
+      "highest_methods": "L2-Matched",
+      "highest_accuracy_pct": 96.24491111111112,
+      "best_proposed": "T2-Matched",
+      "competitor": "L2-Matched",
+      "gap_pp": -0.005199999999987881,
+      "conditional_mc_se_pp": 0.0033728216564066823,
+      "paired_training_seed_sd_pp": 0.05221480872319618
+    }
+  ],
+  "sources": {
+    "200": {
+      "manifest": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m200/mnist/penalty60/retuned/manifest.jsonl",
+      "manifest_sha256": "1d4c4d187b528868b4e722f4000f6b9371e8600032fd56cc9fa5cce91c4070f7",
+      "selection": {
+        "sha256": "d9b39508521c65df25f857f1ebeb4f8160b4f8552a27e586806ba413d66aa011",
+        "bytes": 94827
+      },
+      "native_summary": {
+        "sha256": "ba896794304135310840c53328fc2571d98c68853103d94839c02bf9effd506f",
+        "bytes": 7203
+      },
+      "measured_summary": {
+        "sha256": "53e083a2a9a8adadb6ffdbcc6ff00f0660928591a148dbf9ea5b95d7b2d0d6fe",
+        "bytes": 1617
+      }
+    },
+    "500": {
+      "manifest": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m500/mnist/penalty60/retuned/manifest.jsonl",
+      "manifest_sha256": "2f83e3ecc9bb89913d3e3dee42b9aa8f48de116bf7b4b0a36043585557210283",
+      "selection": {
+        "sha256": "be3f16cb7389a2f3ed8833378f34ed9b03cd79101ba3581fbde6a3774def0528",
+        "bytes": 94862
+      },
+      "native_summary": {
+        "sha256": "a1d7c828084deaf008ed3791d0006a47c31538685fbbce5ab062df62cbacc083",
+        "bytes": 7199
+      },
+      "measured_summary": {
+        "sha256": "4ae3ddfa646f9d6482a25093697b2fd4eec23b085a373fb73d48a7cf0537f736",
+        "bytes": 1618
+      }
+    },
+    "1000": {
+      "manifest": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m1000/mnist/penalty60/retuned/manifest.jsonl",
+      "manifest_sha256": "32e96b5f4f5e73c6b61dae15610c5eeea6b795f8f2dc6adc9ea3584b1e7b9e78",
+      "selection": {
+        "sha256": "54a899c1d5949279df9e1e3180e72cc82fb75f261d855974b29a44e72349e3de",
+        "bytes": 95068
+      },
+      "native_summary": {
+        "sha256": "0b3933afd51340f2e9c020176fbab068fc435f281ec9afe659c5a5a6ac385c4f",
+        "bytes": 7208
+      },
+      "measured_summary": {
+        "sha256": "e6e68dc5fe6407e6d7d63c6d50a17c1dabfb96f6a0319ee9c4557f80eb12e6c8",
+        "bytes": 1615
+      }
+    },
+    "2000": {
+      "manifest": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m2000/mnist/penalty60/retuned/manifest.jsonl",
+      "manifest_sha256": "f458dd084e54b9c2876f5c0bd67b7d6bb78527598232f7dd37729dd7902ae340",
+      "selection": {
+        "sha256": "f41e1e00e0f2f17fdcfd4f0d376500ef054ca0c7df1dc0a020ceab037dab078a",
+        "bytes": 95025
+      },
+      "native_summary": {
+        "sha256": "e01d8d13e0c230d99a851c4672e449f20695ff0092d18ebd06174b40c56a1829",
+        "bytes": 7211
+      },
+      "measured_summary": {
+        "sha256": "e87bcbc3a455d1313805e74e9c80892e1bf2c71493074fea5d9bb7081b86510a",
+        "bytes": 1620
+      }
+    }
+  }
+}

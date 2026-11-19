@@ -1,0 +1,23 @@
+% Fading $\rho_c=0.85$, $\sigma_N=2$. Erasure $p=0.5$.
+% Paired training-seed counts (fading/erasure) are Two-moon 9/5, MNIST 9/9, Fashion-MNIST 9/9, CIFAR-10 5/5.
+% Bold marks the highest unrounded mean in each displayed row.
+% The MNIST erasure comparison allowed 60 epochs for every method.
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+\multirow{2}{*}{Dataset} & \multirow{2}{*}{Channel} & \multicolumn{4}{c}{Matched training} & Perfect training \\
+\cmidrule(lr){3-6}\cmidrule(l){7-7}
+ & & ERM & L2 & T1 & T2 & T1/T2 \\
+\midrule
+\multirow{2}{*}{Two-moon} & Fading & $\mathbf{65.54}\,\pm\,0.25$ & $65.03\,\pm\,0.61$ & $65.51\,\pm\,0.88$ & $65.51\,\pm\,0.88$ & $56.96\,\pm\,1.18$ \\
+ & Erasure & $86.98\,\pm\,0.21$ & $86.87\,\pm\,0.24$ & $87.00\,\pm\,0.35$ & $\mathbf{87.04}\,\pm\,0.32$ & $82.68\,\pm\,0.47$ \\
+\midrule[0.25pt]
+\multirow{2}{*}{MNIST} & Fading & $\mathbf{77.63}\,\pm\,0.44$ & $76.58\,\pm\,0.52$ & $77.56\,\pm\,0.59$ & $77.52\,\pm\,0.35$ & $53.87\,\pm\,0.79$ \\
+ & Erasure & $96.18\,\pm\,0.07$ & $\mathbf{96.21}\,\pm\,0.06$ & $96.19\,\pm\,0.06$ & $96.09\,\pm\,0.04$ & $87.25\,\pm\,0.46$ \\
+\midrule[0.25pt]
+\multirow{2}{*}{Fashion-MNIST} & Fading & $67.28\,\pm\,0.36$ & $67.63\,\pm\,0.21$ & $\mathbf{67.80}\,\pm\,0.24$ & $67.52\,\pm\,0.17$ & $40.82\,\pm\,0.40$ \\
+ & Erasure & $\mathbf{86.30}\,\pm\,0.15$ & $86.20\,\pm\,0.13$ & $86.30\,\pm\,0.16$ & $86.20\,\pm\,0.16$ & $77.81\,\pm\,0.58$ \\
+\midrule[0.25pt]
+\multirow{2}{*}{CIFAR-10} & Fading & $51.89\,\pm\,2.66$ & $53.33\,\pm\,0.63$ & $51.64\,\pm\,2.87$ & $\mathbf{53.79}\,\pm\,1.62$ & $18.72\,\pm\,0.61$ \\
+ & Erasure & $64.80\,\pm\,1.09$ & $\mathbf{64.94}\,\pm\,0.78$ & $63.47\,\pm\,1.95$ & $64.47\,\pm\,0.48$ & $37.07\,\pm\,1.94$ \\
+\bottomrule
+\end{tabular*}

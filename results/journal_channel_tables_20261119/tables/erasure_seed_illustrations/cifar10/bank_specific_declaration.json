@@ -1,0 +1,11 @@
+{
+  "dataset": "cifar10",
+  "channel": {"kind": "outage", "outage_prob": 0.5},
+  "bank_sizes": [200, 500, 1000, 2000],
+  "pool_seeds": [490101, 490102, 490103, 490104, 490105, 490106, 490107, 490108],
+  "triple_size": 3,
+  "primary_analysis": "Retain the predeclared one shared maximin triple across all four bank sizes and the whole eight-seed pool.",
+  "sensitivity": "Separately at each bank size enumerate all 56 equal-weight triples of the same eight newly trained seeds. Select the triple maximizing the higher of the two matched T1/T2 mean validation accuracies minus the highest of the other five method means on the same triple. Use exact validation counts; break ties by the lexicographically smallest ordered triple.",
+  "gate": "Freeze all four bank-specific triples before any new-pool test inference. Reuse exactly the 40 fresh Gibbs draws from each planned eight-seed pool model; no new training, evaluation streams or rolling selection.",
+  "interpretation": "Supplementary bank-specific validation-selected illustration. Triples may differ across bank sizes and do not support a common training-seed comparison."
+}

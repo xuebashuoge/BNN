@@ -1,0 +1,96 @@
+{
+  "dataset": "fashionmnist",
+  "bank_sizes": [
+    500,
+    2000
+  ],
+  "source_confirmations": {
+    "500": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m500/fashionmnist/common/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "b9462165080c6970b7c8742ecb91b3e29bc6ba95e780e362e16bf098b7ed020f",
+        "bytes": 79551
+      },
+      "source_seeds": [
+        411201,
+        411202,
+        411203,
+        411204,
+        411205,
+        411206,
+        411207,
+        411208,
+        411209
+      ],
+      "choices": {
+        "ERM-Matched": "a790da74c1d9",
+        "L2-Matched": "25ce9e1ea07e",
+        "T1-Matched": "3d1e44bd7a16",
+        "T2-Matched": "d0240aa9dc57",
+        "ERM-Perfect": "cda1bd829c3c",
+        "L2-Perfect": "bb08e981d120",
+        "Proposed-Perfect": "f9bd947f6fdd"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m500/fashionmnist/common/retuned/manifest.selection.json": {
+          "sha256": "d93dd2f9cba759887b56bebd0eb7b8b65ce5bca115d4be44a204c2bb6d613d3c",
+          "bytes": 181084
+        }
+      }
+    },
+    "2000": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m2000/fashionmnist/common/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "d983f230061d5054ea29c688ab2e4a7ec318d46f40ba7e9367785fdeb57c9fd8",
+        "bytes": 79749
+      },
+      "source_seeds": [
+        411201,
+        411202,
+        411203,
+        411204,
+        411205,
+        411206,
+        411207,
+        411208,
+        411209
+      ],
+      "choices": {
+        "ERM-Matched": "bfc72d6d694c",
+        "L2-Matched": "7e492050a11a",
+        "T1-Matched": "5b496d53f8f1",
+        "T2-Matched": "0235a48c90a5",
+        "ERM-Perfect": "fc59b6c3adbf",
+        "L2-Perfect": "f17667368396",
+        "Proposed-Perfect": "7e35da9f564c"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m2000/fashionmnist/common/retuned/manifest.selection.json": {
+          "sha256": "8914232dd8a46eef7f0b5a8932d8df6a76319ad9ae3e7a041476c233d0b2694d",
+          "bytes": 181488
+        }
+      }
+    }
+  },
+  "channel": {
+    "kind": "outage",
+    "outage_prob": 0.5
+  },
+  "seeds": [
+    490101,
+    490102,
+    490103,
+    490104,
+    490105,
+    490106,
+    490107,
+    490108
+  ],
+  "test_draws": 40,
+  "eval_seed_schedule": "training seed + 20000 + 1000003, paired across all methods and sizes",
+  "selection_rule": "Among all 56 triples use the largest minimum over the declared bank sizes of best matched T1/T2 mean validation accuracy minus best other mean validation accuracy. Break ties by larger average margin across sizes, then lexicographically smaller triple. All seven methods use the same seeds.",
+  "pool_manifest": {
+    "sha256": "36d0455bc02071db77130780377d28443ace667d6170de8ad6f69ced63d34cad",
+    "bytes": 137680
+  }
+}

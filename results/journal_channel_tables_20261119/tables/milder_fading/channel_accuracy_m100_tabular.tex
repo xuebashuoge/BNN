@@ -1,0 +1,13 @@
+% Fading $\rho_c=0.35$, $\sigma_N=1$. Erasure $p=0.5$.
+% Fading uses 3 paired training seeds and erasure uses 5.
+% Bold marks the highest unrounded mean in each displayed row.
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+\multirow{2}{*}{Dataset} & \multirow{2}{*}{Channel} & \multicolumn{4}{c}{Matched training} & Perfect training \\
+\cmidrule(lr){3-6}\cmidrule(l){7-7}
+ & & ERM & L2 & T1 & T2 & T1/T2 \\
+\midrule
+\multirow{2}{*}{CIFAR-10} & Fading & $49.79\,\pm\,0.82$ & $49.38\,\pm\,1.19$ & $48.63\,\pm\,0.87$ & $\mathbf{52.23}\,\pm\,2.36$ & $17.85\,\pm\,1.98$ \\
+ & Erasure & $60.94\,\pm\,1.30$ & $62.08\,\pm\,2.19$ & $62.83\,\pm\,2.04$ & $\mathbf{62.89}\,\pm\,1.34$ & $34.41\,\pm\,2.61$ \\
+\bottomrule
+\end{tabular*}

@@ -1,0 +1,17 @@
+### m = 500
+
+| Dataset | Channel | Matched ERM | Matched L2 | Matched T1 | Matched T2 | Perfect T1/T2 |
+|---|---|---:|---:|---:|---:|---:|
+| Two-moon | Fading | 65.48 ± 0.63 | 65.55 ± 0.43 | 65.55 ± 0.41 | **65.57** ± 0.43 | 56.96 ± 1.18 |
+|  | Erasure | 86.91 ± 0.39 | 86.87 ± 0.26 | 87.00 ± 0.39 | **87.03** ± 0.43 | 82.68 ± 0.47 |
+| MNIST | Fading | 76.09 ± 0.41 | 75.60 ± 0.50 | **76.30** ± 0.53 | 76.15 ± 0.42 | 53.87 ± 0.79 |
+|  | Erasure | **96.15** ± 0.07 | 96.15 ± 0.07 | 96.15 ± 0.09 | 96.11 ± 0.09 | 87.25 ± 0.46 |
+| Fashion-MNIST | Fading | 66.14 ± 0.15 | 66.13 ± 0.21 | **66.23** ± 0.18 | 66.08 ± 0.30 | 40.82 ± 0.40 |
+|  | Erasure | **86.18** ± 0.14 | 86.14 ± 0.15 | 86.17 ± 0.13 | 86.13 ± 0.21 | 77.81 ± 0.58 |
+| CIFAR-10 | Fading | 49.35 ± 2.44 | 52.47 ± 0.94 | 50.53 ± 1.54 | **52.63** ± 3.14 | 18.72 ± 0.61 |
+|  | Erasure | **64.36** ± 0.53 | 61.13 ± 9.38 | 53.94 ± 24.57 | 63.57 ± 3.14 | 37.07 ± 1.94 |
+
+Fading $\rho_c=0.85$, $\sigma_N=2$. Erasure $p=0.5$.
+Paired training-seed counts (fading/erasure) are Two-moon 9/5, MNIST 9/9, Fashion-MNIST 9/9, CIFAR-10 5/5.
+Bold marks the highest unrounded mean in each displayed row.
+The MNIST erasure comparison allowed 60 epochs for every method.

@@ -1,0 +1,148 @@
+{
+  "dataset": "cifar10",
+  "bank_sizes": [
+    200,
+    500,
+    1000,
+    2000
+  ],
+  "source_confirmations": {
+    "200": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m200/cifar10/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "23f9a08988aae1a7c8e1f3b590fd3570d47d7835c3f067dd86796a499bebca79",
+        "bytes": 43405
+      },
+      "source_seeds": [
+        174101,
+        174102,
+        174103,
+        174104,
+        174105
+      ],
+      "choices": {
+        "ERM-Matched": "38528c697bcd",
+        "L2-Matched": "4c29c18e86b8",
+        "T1-Matched": "013020c28095",
+        "T2-Matched": "b86f4c6754bc",
+        "ERM-Perfect": "8befd88e1217",
+        "L2-Perfect": "9114be50ccfc",
+        "Proposed-Perfect": "4f1f4335e5d9"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m200/cifar10/retuned/selection.json": {
+          "sha256": "a5a29c57a2fde93d74975913ebea7c18ed54885594f10e3f373318f8d4bc8aa6",
+          "bytes": 158247
+        }
+      }
+    },
+    "500": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m500/cifar10/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "2474b851c984b0bdfae7c3bc185fd7e61df65ecdbec175b27fd34a96bf6eb2fc",
+        "bytes": 43340
+      },
+      "source_seeds": [
+        174101,
+        174102,
+        174103,
+        174104,
+        174105
+      ],
+      "choices": {
+        "ERM-Matched": "b0b581e6dd38",
+        "L2-Matched": "709246b3e984",
+        "T1-Matched": "a357c72d12d5",
+        "T2-Matched": "392724c88c20",
+        "ERM-Perfect": "17f1a139e978",
+        "L2-Perfect": "c26552330336",
+        "Proposed-Perfect": "8af60126b06c"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m500/cifar10/retuned/selection.json": {
+          "sha256": "00ca9c83f430ab22c9c9251ad5ed88e94ab4701dae44500dbf5b494cb6c12fcf",
+          "bytes": 158319
+        }
+      }
+    },
+    "1000": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m1000/cifar10/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "609a4c7348300ce53ee3d76c92b748c7e711f0f12c333d020583948200701b37",
+        "bytes": 43445
+      },
+      "source_seeds": [
+        174101,
+        174102,
+        174103,
+        174104,
+        174105
+      ],
+      "choices": {
+        "ERM-Matched": "dde43c22b7c5",
+        "L2-Matched": "468e7101613a",
+        "T1-Matched": "39c5b4467147",
+        "T2-Matched": "185f1261f5da",
+        "ERM-Perfect": "fc8ad6245e26",
+        "L2-Perfect": "bc9d84b1ef50",
+        "Proposed-Perfect": "f70c8072b35a"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m1000/cifar10/retuned/selection.json": {
+          "sha256": "113a636ad25b4f2f86ee7cee6e2d367e589b2c07aa8aa75f7b89455896dcf98b",
+          "bytes": 158671
+        }
+      }
+    },
+    "2000": {
+      "path": "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m2000/cifar10/retuned/manifest.jsonl",
+      "fingerprint": {
+        "sha256": "aec7d8e2980cc29b4742f2ccc4df3b76f326f8ee669bed0ff79a5f467385ec2f",
+        "bytes": 43430
+      },
+      "source_seeds": [
+        174101,
+        174102,
+        174103,
+        174104,
+        174105
+      ],
+      "choices": {
+        "ERM-Matched": "9595939dada0",
+        "L2-Matched": "220e44514488",
+        "T1-Matched": "d084f9114b28",
+        "T2-Matched": "c44f46c1b345",
+        "ERM-Perfect": "1a5b876ba7b0",
+        "L2-Perfect": "99b35e3b8d3d",
+        "Proposed-Perfect": "e79286aa2633"
+      },
+      "selection_records": {
+        "/data/gpfs/projects/punim2792/yangshuo/erasure_mgrid_20261119/p050/m2000/cifar10/retuned/selection.json": {
+          "sha256": "295caf545b06f97ff6ed92cd803bbed70818fb301a9046e0e7a76f19f519a708",
+          "bytes": 158607
+        }
+      }
+    }
+  },
+  "channel": {
+    "kind": "outage",
+    "outage_prob": 0.5
+  },
+  "seeds": [
+    490101,
+    490102,
+    490103,
+    490104,
+    490105,
+    490106,
+    490107,
+    490108
+  ],
+  "test_draws": 40,
+  "eval_seed_schedule": "training seed + 20000 + 1000003, paired across all methods and sizes",
+  "selection_rule": "Among all 56 triples use the largest minimum over the declared bank sizes of best matched T1/T2 mean validation accuracy minus best other mean validation accuracy. Break ties by larger average margin across sizes, then lexicographically smaller triple. All seven methods use the same seeds.",
+  "pool_manifest": {
+    "sha256": "91ac92d5e56e4fd52f2b8eff366ddc7127fac940f50433cdb6a08f8182eac994",
+    "bytes": 273536
+  }
+}
