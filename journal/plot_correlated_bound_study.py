@@ -1,4 +1,4 @@
-"""Plot and export the objective-specific two-moons correlated fading certificates."""
+"""Plot and export the objective-specific two-moons fading and erasure certificates."""
 
 import argparse
 import csv
@@ -9,10 +9,10 @@ from pathlib import Path
 import torch
 
 from .correlated_bound_study import CASES, FAMILY_SIZE, learner_config
-from .diagonal_fading import DEPLOYMENT_RHO, diagonal_gain_kl
-from .diagonal_fading_bounds import WIDTHS
-from .run_experiment import file_fingerprint, save_json
-from .theorem1 import joint_complexity, theorem1_terms
+from .diagonal_fading import diagonal_gain_kl
+from .diagonal_fading_bounds import FAMILIES, MISMATCH_RHO, WIDTHS
+from .run_experiment import channel_bank_fingerprint, checkpoint_bank_state, file_fingerprint, save_json
+from .theorem1 import gaussian_kl, joint_complexity, theorem1_terms
 
 
 COMPONENTS = {
@@ -27,31 +27,32 @@ THEORIES = {"C1": "Corollary 1", "T1": "Theorem 1", "T2": "Theorem 2"}
 STEM = "correlated_bound_decomposition"
 
 
-def verify_case(report, width, case):
+def check(label, actual, expected):
+    if not math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-11):
+        raise ValueError(f"{label} differs: {actual} vs {expected}")
+
+
+def verify_case(report, width, case, family="fading", family_size=FAMILY_SIZE):
     """Recompute the component identities on the fitted posterior's declared KL."""
     cfg = report["config"]
     regime, method, certificate = CASES[case]
-    expected_cfg = (learner_config(width, case, cfg["train_channel"]["rho_c"]) if regime == "mismatch"
-                    else learner_config(width, case))
+    mismatch_rho = cfg["train_channel"].get("rho_c", MISMATCH_RHO) if regime == "mismatch" else MISMATCH_RHO
+    expected_cfg = learner_config(width, case, mismatch_rho, family=family)
     if (cfg != expected_cfg
             or (report["dataset"], report["family"], report["regime"], cfg["method"],
                 report["certificate"], report["theory"]) !=
-            ("moons", "fading", regime, method, certificate, THEORIES[certificate])):
+            ("moons", family, regime, method, certificate, THEORIES[certificate])):
         raise ValueError("Unexpected training configuration or certificate")
-    if regime == "mismatch" and not 0 < cfg["train_channel"]["rho_c"] < 1:
+    if family == "fading" and regime == "mismatch" and not 0 < cfg["train_channel"]["rho_c"] < 1:
         raise ValueError("Expected positively correlated mismatch training")
-    failure = cfg["delta"] / (2 * FAMILY_SIZE)
-    if report["confidence"] != dict(family_failure=cfg["delta"], family_size=FAMILY_SIZE,
+    failure = cfg["delta"] / (2 * family_size)
+    if report["confidence"] != dict(family_failure=cfg["delta"], family_size=family_size,
                                     failure_each_theorem_and_mc=failure):
         raise ValueError("Unexpected confidence allocation")
     test = report["test"]
     if (test["channel_source"] != "deployment" or not test["predictor"]["stochastic"]
             or not 0 <= test["accuracy"] <= 1 or not 0 <= test["bounded_loss"] <= 1):
         raise ValueError("Expected held-out deployment measurements for a Gibbs predictor")
-
-    def check(label, actual, expected):
-        if not math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-11):
-            raise ValueError(f"{label} differs: {actual} vs {expected}")
 
     empirical = report["empirical"]
     mc_radius = math.sqrt(math.log(1 / failure) / (2 * empirical["iid_observations"]))
@@ -69,14 +70,40 @@ def verify_case(report, width, case):
     deployment = cfg["deployment_channel"]
     if not shift["analytic"]:
         raise ValueError("Expected an analytic channel-shift bound")
-    if regime == "perfect":
+    if regime == "perfect" and family == "erasure":
+        if (shift["method"], shift["metric"]) != ("C1 first", "Frobenius mask distance"):
+            raise ValueError("Expected Corollary 1(i) for the erasure mask")
+        p = deployment["outage_prob"]
+        distance = math.fsum(math.sqrt(k) * math.comb(width, k) * p**k * (1 - p)**(width-k)
+                             for k in range(1, width + 1))
+        lipschitz = (cfg["bounded_feature_norm"] * math.sqrt(2) * cfg["bounded_receiver_norm"]
+                     / -math.log(cfg["loss_epsilon"]))
+        check("Mean mask distance", shift["expectation"], distance)
+        check("Erasure Lipschitz constant", shift["uniform_lipschitz"], lipschitz)
+        expected_shift = lipschitz * distance
+    elif regime == "perfect":
         if (shift["method"], shift["reference"]) != ("C1 second", "P_iid"):
             raise ValueError("Expected Corollary 1(ii) with the independent-gain reference")
         reference_kl = diagonal_gain_kl(deployment, dict(deployment, rho_c=0.), width)
         check("Deployment-to-reference KL", shift["reference_kl"], reference_kl)
-        expected_shift = reference_kl + shift["reference_log_mgf_upper"]
+        k = (math.sqrt(2) * cfg["bounded_receiver_norm"] / -math.log(cfg["loss_epsilon"])
+             * math.hypot(1., cfg["bounded_feature_norm"]))
+        a = shift["quadratic_parameter"]
+        if not 0 < a < 1:
+            raise ValueError("Invalid Gaussian quadratic moment parameter")
+        # The iid reference has 2d coordinates, unit variance and squared mean norm d/4.
+        log_moment = k*k/(2*a) - width * math.log1p(-a) + a * width / (8*(1-a))
+        check("Fading Lipschitz constant", shift["uniform_lipschitz"], k)
+        check("Reference log-MGF upper bound", shift["reference_log_mgf_upper"], log_moment)
+        expected_shift = reference_kl + log_moment
     else:
-        channel_kl = diagonal_gain_kl(deployment, cfg["train_channel"], width)
+        if shift["method"] != f"{certificate} channel KL":
+            raise ValueError("Unexpected channel KL certificate")
+        if family == "erasure":
+            p, q = deployment["outage_prob"], cfg["train_channel"]["outage_prob"]
+            channel_kl = width * (p * math.log(p / q) + (1 - p) * math.log((1 - p) / (1 - q)))
+        else:
+            channel_kl = diagonal_gain_kl(deployment, cfg["train_channel"], width)
         check("Deployment-to-training KL", shift["channel_kl"], channel_kl)
         expected_shift = math.sqrt(channel_kl / 2)
     check("Channel shift", shift["upper"], expected_shift)
@@ -93,29 +120,40 @@ def verify_case(report, width, case):
         raise ValueError("Nonvacuity flag disagrees with the bound")
 
 
-def read_case(root, width, case):
-    path = root / f"d{width}" / case / "bound.json"
+def read_case(root, width, case, family="fading", family_size=FAMILY_SIZE, *, combined=False):
+    family_dir = root / family if combined else root
+    path = family_dir / f"d{width}" / case / "bound.json"
     report = json.loads(path.read_text())
     try:
-        verify_case(report, width, case)
+        verify_case(report, width, case, family, family_size)
     except (KeyError, ValueError) as error:
         raise ValueError(f"{path}: {error}") from error
     cfg, test, shift = report["config"], report["test"], report["channel_shift"]
     train, deploy = cfg["train_channel"], cfg["deployment_channel"]
     metadata_path = path.parent / "checkpoint" / "metadata.json"
     training_revision = None
-    if metadata_path.is_file():
+    if combined or metadata_path.is_file():
         metadata = json.loads(metadata_path.read_text())
-        weights = file_fingerprint(metadata_path.with_name("weights.pt"))
+        weights_path = metadata_path.with_name("weights.pt")
+        weights = file_fingerprint(weights_path)
         if (metadata["config"] != cfg or weights != report["checkpoint_weights"]
                 or metadata["training_channel_bank_hash"] != report["saved_bank_hash"]
                 or metadata["selected_epoch"] != report["selected_epoch"]):
             raise ValueError(f"Certificate and checkpoint disagree: {path}")
+        state = torch.load(weights_path, map_location="cpu", weights_only=True)
+        bank = checkpoint_bank_state(state, cfg)
+        algorithm = metadata.get("training_channel_bank_hash_algorithm")
+        if channel_bank_fingerprint(bank, algorithm) != report["saved_bank_hash"]:
+            raise ValueError(f"Saved channel bank differs from report: {path}")
+        model = state["model"]
+        kl = gaussian_kl(model["mu"].double(), model["rho"].double(), cfg["prior_std"]).item()
+        check("Posterior KL from checkpoint", report["posterior_kl"], kl)
         training_revision = metadata["git_sha"]
     row = dict(width=width, case=case, dataset=report["dataset"], family=report["family"],
                regime=report["regime"], training_method=cfg["method"], certificate=report["certificate"],
                n=cfg["train_size"], m=cfg["m"], train_rho_c=train.get("rho_c"),
-               test_rho_c=deploy["rho_c"], test_noise_std=deploy.get("noise_std", 1.),
+               test_rho_c=deploy.get("rho_c"), test_noise_std=deploy.get("noise_std", 1.) if family == "fading" else None,
+               train_erasure_probability=train.get("outage_prob"), test_erasure_probability=deploy.get("outage_prob"),
                **{name: report["components"].get(name) for name in COMPONENTS},
                uncapped_risk_upper=report["uncapped_risk_upper"], nonvacuous=report["nonvacuous"],
                heldout_gibbs_loss=test["bounded_loss"], heldout_accuracy_pct=100 * test["accuracy"],
@@ -125,14 +163,19 @@ def read_case(root, width, case):
                selected_epoch=report["selected_epoch"], test_draws=test["draws"],
                test_examples=test["examples"], empirical_draws=report["empirical"]["iid_observations"],
                failure_each_theorem_and_mc=report["confidence"]["failure_each_theorem_and_mc"],
-               family_failure=report["confidence"]["family_failure"], seed=cfg["seed"],
+               family_failure=report["confidence"]["family_failure"], family_size=family_size, seed=cfg["seed"],
                source_report=str(path.relative_to(root)), source_sha256=file_fingerprint(path)["sha256"],
                training_git_sha=training_revision,
                weights_sha256=report["checkpoint_weights"]["sha256"], bank_sha256=report["saved_bank_hash"])
     return row
 
 
-def draw_figure(rows, output, mismatch_rho):
+FAMILY_STEMS = {"fading": STEM, "erasure": "erasure_bound_decomposition"}
+JOINT_STEM = "fading_erasure_bound_decomposition"
+FAMILY_LABELS = {"fading": "Correlated fading", "erasure": "Feature erasure"}
+
+
+def draw_figure(rows, output, families, stem):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -142,63 +185,102 @@ def draw_figure(rows, output, mismatch_rho):
     style = {"font.size": 8.5, "font.family": "DejaVu Sans", "pdf.fonttype": 42,
              "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": .65}
     with plt.rc_context(style):
-        fig, axes = plt.subplots(1, 2, sharey=True, figsize=(7.45, 4.0))
-        fig.subplots_adjust(left=.095, right=.992, bottom=.32, top=.85, wspace=.12)
+        nrows = len(families)
+        fig, axes = plt.subplots(nrows, len(WIDTHS), squeeze=False, sharey=True,
+                                 figsize=(7.45, 4.15 if nrows == 1 else 6.9))
+        if nrows == 1:
+            fig.subplots_adjust(left=.10, right=.99, bottom=.34, top=.84, wspace=.15)
+        else:
+            fig.subplots_adjust(left=.10, right=.99, bottom=.19, top=.91, wspace=.15, hspace=.55)
         positions = [0., 1.08, 1.75, 2.86, 3.53]
         ymax = max(1., max(row["uncapped_risk_upper"] for row in rows)) * 1.13
-        groups = [(positions[0], "Perfect"), (1.415, "Matched"), (3.195, "Mismatch")]
-        for ax, width in zip(axes, WIDTHS):
-            cells = [row for row in rows if row["width"] == width]
-            bottom = [0.] * len(cells)
-            for field, (_, color) in COMPONENTS.items():
-                heights = [row[field] or 0. for row in cells]
-                ax.bar(positions, heights, bottom=bottom, width=.54, color=color, zorder=2)
-                bottom = [base + height for base, height in zip(bottom, heights)]
-            ax.axhline(1, ls=(0, (4, 2)), color="#333333", linewidth=.85, zorder=1.8)
-            ax.scatter(positions, [r["heldout_gibbs_loss"] for r in cells], marker="D", s=20,
-                       color="#111111", edgecolors="white", linewidths=.55, zorder=4)
-            for x, total in zip(positions, bottom):
-                ax.annotate(f"{total:.3f}", (x, total), xytext=(0, 3), textcoords="offset points",
-                            ha="center", va="bottom", fontsize=7.6, zorder=5,
-                            bbox=dict(facecolor="white", edgecolor="none", pad=.4))
-            ax.set_xticks(positions, [r["certificate"] for r in cells], fontsize=8)
-            for x, label in groups:
-                ax.text(x, -.13, label, ha="center", va="top", transform=ax.get_xaxis_transform())
-            ax.set(xlim=(-.50, 4.03), ylim=(0., ymax), title=rf"$d={width}$")
-            ax.tick_params(axis="x", length=0)
-            ax.grid(axis="y", linewidth=.45, color="#DADDE0")
-            ax.set_axisbelow(True)
-        axes[0].set_ylabel("Bounded Gibbs risk")
-        fig.suptitle(rf"Two moons   $n={rows[0]['n']}$   $m={rows[0]['m']}$   "
-                     rf"$\rho_{{\rm test}}={DEPLOYMENT_RHO}$   $\rho_{{\rm mismatch}}={mismatch_rho:g}$",
-                     y=.985, fontsize=10)
+        for i, family in enumerate(families):
+            for j, width in enumerate(WIDTHS):
+                ax = axes[i, j]
+                cells = [r for r in rows if r["family"] == family and r["width"] == width]
+                bottom = [0.] * len(cells)
+                for field, (_, color) in COMPONENTS.items():
+                    heights = [row[field] or 0. for row in cells]
+                    ax.bar(positions, heights, bottom=bottom, width=.54, color=color, zorder=2)
+                    bottom = [base + height for base, height in zip(bottom, heights)]
+                ax.axhline(1, ls=(0, (4, 2)), color="#333333", linewidth=.85, zorder=1.8)
+                ax.scatter(positions, [r["heldout_gibbs_loss"] for r in cells], marker="D", s=20,
+                           color="#111111", edgecolors="white", linewidths=.55, zorder=4)
+                for x, total in zip(positions, bottom):
+                    ax.annotate(f"{total:.3f}", (x, total), xytext=(0, 3), textcoords="offset points",
+                                ha="center", va="bottom", fontsize=7.6, zorder=5,
+                                bbox=dict(facecolor="white", edgecolor="none", pad=.4))
+                ax.set_xticks(positions, [r["certificate"] for r in cells], fontsize=8)
+                if family == "erasure":
+                    param, key = "p", "erasure_probability"
+                else:
+                    param, key = r"\rho_c", "rho_c"
+                test, mismatch = cells[0]["test_" + key], cells[-1]["train_" + key]
+                for x, label in [(0., "Perfect"), (1.415, "Matched\n" + rf"${param}={test:g}$"),
+                                 (3.195, "Mismatch\n" + rf"${param}={mismatch:g}$")]:
+                    ax.text(x, -.14, label, ha="center", va="top", transform=ax.get_xaxis_transform(),
+                            linespacing=1.18)
+                ax.set(xlim=(-.50, 4.03), ylim=(0., ymax),
+                       title=FAMILY_LABELS[family] + rf", $d={width}$")
+                ax.tick_params(axis="x", length=0)
+                ax.grid(axis="y", linewidth=.45, color="#DADDE0")
+                ax.set_axisbelow(True)
+            axes[i, 0].set_ylabel("Bounded Gibbs risk")
+        fig.suptitle(rf"Two moons    $n={rows[0]['n']}$    $m={rows[0]['m']}$", y=.985, fontsize=10)
         handles = [Patch(facecolor=color, label=label) for label, color in COMPONENTS.values()]
-        handles += [Line2D([], [], marker="D", color="#111111", ls="none", markersize=4,
-                           label="Held-out Gibbs loss"),
-                    Line2D([], [], ls=(0, (4, 2)), color="#333333", lw=.85, label="Risk ceiling (1)")]
+        handles.extend([Line2D([], [], marker="D", color="#111111", ls="none", markersize=4,
+                               label="Held-out Gibbs loss"),
+                        Line2D([], [], ls=(0, (4, 2)), color="#333333", lw=.85, label="Risk ceiling (1)")])
         fig.legend(handles=handles, ncol=4, loc="lower center", frameon=False, fontsize=7.6,
-                   handlelength=1.3, columnspacing=1.3, bbox_to_anchor=(.5, .025))
+                   handlelength=1.3, columnspacing=1.3, bbox_to_anchor=(.53, .014))
         for suffix in (".png", ".pdf"):
-            fig.savefig(output / (STEM + suffix), dpi=300, facecolor="white")
+            fig.savefig(output / (stem + suffix), dpi=300, facecolor="white")
         plt.close(fig)
 
 
-def export(root, output):
-    rows = [read_case(root, width, case) for width in WIDTHS for case in CASES]
-    mismatch_correlations = {row["train_rho_c"] for row in rows if row["regime"] == "mismatch"}
-    if len(mismatch_correlations) != 1:
-        raise ValueError("All mismatch training cases must share the same gain correlation")
-    mismatch_rho, = mismatch_correlations
+def export(root, output, *, family="fading", both_channels=False):
+    families = FAMILIES if both_channels else (family,)
+    if both_channels:
+        family_size = len(FAMILIES) * FAMILY_SIZE
+    else:
+        first_path = root / f"d{WIDTHS[0]}" / next(iter(CASES)) / "bound.json"
+        family_size = json.loads(first_path.read_text())["confidence"]["family_size"]
+        if family_size not in (FAMILY_SIZE, len(FAMILIES) * FAMILY_SIZE):
+            raise ValueError("Unrecognized confidence family size")
+
+    rows = [read_case(root, width, case, law, family_size, combined=both_channels)
+            for law in families for width in WIDTHS for case in CASES]
+    if len({(r["n"], r["m"], r["test_draws"], r["test_examples"], r["empirical_draws"],
+             r["family_failure"]) for r in rows}) != 1:
+        raise ValueError("All fitted predictors must share training, evaluation and confidence budgets")
+    laws = {}
     output.mkdir(parents=True, exist_ok=True)
-    draw_figure(rows, output, mismatch_rho)
-    with (output / (STEM + ".csv")).open("w", newline="") as stream:
+    for law in families:
+        selected = [r for r in rows if r["family"] == law]
+        for width in WIDTHS:
+            for regime in ("matched", "mismatch"):
+                t1, t2 = [r for r in selected if r["width"] == width and r["regime"] == regime]
+                if t1["bank_sha256"] != t2["bank_sha256"]:
+                    raise ValueError(f"The {law} {regime} T1 and T2 banks differ at width {width}")
+        key = "rho_c" if law == "fading" else "erasure_probability"
+        values = {r["train_" + key] for r in selected if r["regime"] == "mismatch"}
+        if len(values) != 1:
+            raise ValueError(f"All {law} mismatch training cases must share the same channel law")
+        laws.update({"mismatch_train_" + key: values.pop(), "test_" + key: selected[0]["test_" + key]})
+    for law in families:
+        draw_figure([r for r in rows if r["family"] == law], output, (law,), FAMILY_STEMS[law])
+
+    stem = JOINT_STEM if both_channels else FAMILY_STEMS[family]
+    if both_channels:
+        draw_figure(rows, output, families, stem)
+    with (output / (stem + ".csv")).open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=rows[0])
         writer.writeheader()
         writer.writerows(rows)
-    summary = dict(source_root=str(root.resolve()), family_size=FAMILY_SIZE, family_confidence=1. - rows[0]["family_failure"],
-                   mismatch_train_rho_c=mismatch_rho, test_rho_c=DEPLOYMENT_RHO,
+    summary = dict(source_root=str(root.resolve()), family_size=family_size,
+                   family_confidence=1. - rows[0]["family_failure"], **laws,
                    nonvacuous=sum(row["nonvacuous"] for row in rows), rows=rows)
-    save_json(output / (STEM + ".json"), summary)
+    save_json(output / (stem + ".json"), summary)
     return summary
 
 
@@ -206,6 +288,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--family", choices=FAMILIES, default="fading", help="Single channel in ROOT/d*/CASE")
+    selection.add_argument("--both-channels", action="store_true", help="Both channels in ROOT/FAMILY/d*/CASE")
     args = parser.parse_args()
-    summary = export(args.root, args.output)
-    print(f"{summary['nonvacuous']} nonvacuous certificates out of {summary['family_size']}")
+    summary = export(args.root, args.output, family=args.family, both_channels=args.both_channels)
+    print(f"{summary['nonvacuous']} nonvacuous certificates out of {len(summary['rows'])} evaluated")
