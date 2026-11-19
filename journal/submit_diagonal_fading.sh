@@ -79,7 +79,7 @@ case $phase in
             "$worker" python -u -m "$mnist" report "${inputs[@]}" --manifest "$manifest" --stage-root "$stage" --output "$stage/figures"
         ;;
     bounds|bounds-by-method)
-        bash journal/submit_correlated_bounds.sh "$root/bounds-by-method" "${DIAGONAL_MISMATCH_RHO:-0.15}"
+        bash journal/submit_correlated_bounds.sh "$root/bounds-by-method" "${DIAGONAL_MISMATCH_RHO:-0.15}" both
         ;;
     bounds-legacy)
         stage="$root/bounds"
