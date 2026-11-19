@@ -50,7 +50,7 @@ class CorrelatedCertificateTests(unittest.TestCase):
                     cfg = learner_config(width, case, family="erasure")
                     self.assertEqual(cfg["deployment_channel"], {"kind": "outage", "outage_prob": .5})
                     expected_train = ({"kind": "perfect"} if regime == "perfect" else
-                                      {"kind": "outage", "outage_prob": .5 if regime == "matched" else .45})
+                                      {"kind": "outage", "outage_prob": .5 if regime == "matched" else .25})
                     self.assertEqual(cfg["train_channel"], expected_train)
                     self.assertEqual(cfg["method"], method)
                     with tempfile.TemporaryDirectory() as folder, patch(
@@ -71,8 +71,14 @@ class CorrelatedCertificateTests(unittest.TestCase):
                         distance = sum(math.comb(width,k)*math.sqrt(k) for k in range(width+1))/2**width
                         shift = math.sqrt(2)*.075/math.log(100)*distance
                     else:
-                        shift = math.sqrt(-width*math.log(.99)/4) if regime == "mismatch" else 0.
+                        shift = math.sqrt(-width*math.log(.75)/4) if regime == "mismatch" else 0.
                     self.assertAlmostEqual(result["components"]["shift"], shift)
+
+    def test_historical_and_invalid_erasure_mismatch_settings(self):
+        self.assertEqual(learner_config(8, "t2_mismatch", family="erasure", mismatch_p=.45)["train_channel"]["outage_prob"], .45)
+        for p in (0., .5, 1., True, float("nan")):
+            with self.subTest(p=p), self.assertRaises(ValueError):
+                learner_config(8, "t1_mismatch", family="erasure", mismatch_p=p)
 
     def test_mismatch_is_a_correlated_alternative(self):
         for rho in (0, .35, 1., float("nan")):

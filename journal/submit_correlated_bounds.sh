@@ -4,6 +4,7 @@ set -euo pipefail
 root=${1:?Supply an absolute output directory}
 rho=${2:-0.15}
 scope=${3:-fading}
+export BOUND_ERASURE_TRAIN_P=${4:-0.25}
 case $scope in
     fading|erasure) last=9; plot_args=(--family "$scope") ;;
     both) last=19; plot_args=(--both-channels) ;;
@@ -31,7 +32,7 @@ id=$(sbatch --parsable --partition=sapphire --cpus-per-task=1 --mem=3G --time=00
             args=(--both-channels)
         fi
         exec python -u -m journal.correlated_bound_study --width "${widths[(i%10)/5]}" --case "${cases[i%5]}" \
-            --output "$CORR_BOUNDS_OUTPUT" --mismatch-rho "$CORR_BOUNDS_TRAIN_RHO" --family "$family" "${args[@]}"')
+            --output "$CORR_BOUNDS_OUTPUT" --mismatch-rho "$CORR_BOUNDS_TRAIN_RHO" --family "$family" --mismatch-p "$BOUND_ERASURE_TRAIN_P" "${args[@]}"')
 printf '%s\n' "${id%%;*}" | tee "$root/train.job"
 report=$(sbatch --parsable --partition=sapphire --cpus-per-task=1 --mem=3G --time=00:04:00 \
     --chdir="$PWD" --job-name=corr_bound_report --dependency="afterok:${id%%;*}" --kill-on-invalid-dep=yes \

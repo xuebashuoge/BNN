@@ -8,6 +8,7 @@ from pathlib import Path
 
 import torch
 
+from .diagonal_fading_bounds import ERASURE_MISMATCH_P
 from .correlated_bound_study import CASES, FAMILY_SIZE, JOINT_FAMILY_SIZE, learner_config
 from .diagonal_fading import diagonal_gain_kl
 from .diagonal_fading_bounds import FAMILIES, MISMATCH_RHO, WIDTHS
@@ -37,7 +38,8 @@ def verify_case(report, width, case, family="fading", family_size=FAMILY_SIZE):
     cfg = report["config"]
     regime, method, certificate = CASES[case]
     mismatch_rho = cfg["train_channel"].get("rho_c", MISMATCH_RHO) if regime == "mismatch" else MISMATCH_RHO
-    expected_cfg = learner_config(width, case, mismatch_rho, family=family)
+    mismatch_p = cfg["train_channel"].get("outage_prob", ERASURE_MISMATCH_P) if regime == "mismatch" else ERASURE_MISMATCH_P
+    expected_cfg = learner_config(width, case, mismatch_rho, family=family, mismatch_p=mismatch_p)
     if (cfg != expected_cfg
             or (report["dataset"], report["family"], report["regime"], cfg["method"],
                 report["certificate"], report["theory"]) !=

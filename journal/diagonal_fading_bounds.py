@@ -14,6 +14,7 @@ from .run_experiment import normalize_config, save_json
 FAMILIES = ("fading", "erasure")
 WIDTHS = (16, 8)
 MISMATCH_RHO = .15
+ERASURE_MISMATCH_P = .25
 FAMILY_SIZE = len(FAMILIES) * len(REGIMES) * len(WIDTHS)
 
 
@@ -50,9 +51,13 @@ def perfect_shift(deployment, width, model, loss_epsilon):
                 analytic=True, upper=reference_kl + log_moment_upper)
 
 
-def design(width, family, regime, m, threads, epochs, mismatch_rho=MISMATCH_RHO):
+def design(width, family, regime, m, threads, epochs, mismatch_rho=MISMATCH_RHO, *, mismatch_p=ERASURE_MISMATCH_P):
     if family == "fading" and regime == "mismatch" and mismatch_rho == DEPLOYMENT_RHO:
         raise ValueError("Mismatch training correlation must differ from deployment")
+    if family == "erasure" and regime == "mismatch" and (
+            isinstance(mismatch_p, bool) or not isinstance(mismatch_p, (float, int))
+            or not 0 < mismatch_p < 1 or mismatch_p == .5):
+        raise ValueError("Erasure mismatch requires an interior training probability different from 0.50")
     deploy = (dict(kind="diagonal_fading", rho_c=DEPLOYMENT_RHO) if family == "fading"
               else dict(kind="outage", outage_prob=.5))
     if regime == "matched":
@@ -61,7 +66,7 @@ def design(width, family, regime, m, threads, epochs, mismatch_rho=MISMATCH_RHO)
         training = dict(kind="perfect")
     else:
         training = (dict(kind="diagonal_fading", rho_c=mismatch_rho) if family == "fading"
-                    else dict(kind="outage", outage_prob=.45))
+                    else dict(kind="outage", outage_prob=mismatch_p))
     return normalize_config(dict(
         dataset="moons", architecture="bounded_mlp", width=width, train_size=800, val_size=200,
         moons_sampler="iid", train_channel=training, deployment_channel=deploy, m=m,
@@ -74,18 +79,21 @@ def design(width, family, regime, m, threads, epochs, mismatch_rho=MISMATCH_RHO)
 
 
 def run(args, width, family, regime):
-    config = design(width, family, regime, args.m, args.threads, args.epochs, args.mismatch_rho)
+    config = design(width, family, regime, args.m, args.threads, args.epochs, args.mismatch_rho, mismatch_p=args.mismatch_p)
     labels = dict(dataset="moons", family=family, regime=regime, fallback=width == 8)
     case = args.output / f"d{width}" / family / regime
     return evaluate_case(config, case, args.empirical_draws, args.test_draws, True, FAMILY_SIZE,
                          labels, perfect_shift_fn=perfect_shift)
 
 
-def aggregate(output, width, mismatch_rho=None):
+def aggregate(output, width, mismatch_rho=None, mismatch_p=None):
     root = output / f"d{width}"
     if mismatch_rho is None:
         mismatch = json.loads((root / "fading" / "mismatch" / "bound.json").read_text())
         mismatch_rho = mismatch["config"]["train_channel"]["rho_c"]
+    if mismatch_p is None:
+        mismatch = json.loads((root / "erasure" / "mismatch" / "bound.json").read_text())
+        mismatch_p = mismatch["config"]["train_channel"]["outage_prob"]
     rows = []
     for family in FAMILIES:
         for regime in REGIMES:
@@ -93,7 +101,7 @@ def aggregate(output, width, mismatch_rho=None):
             row = json.loads(path.read_text())
             config = row["config"]
             if (row["dataset"] != "moons" or row["family"] != family or row["regime"] != regime
-                    or config != design(width, family, regime, config["m"], config["threads"], config["epochs"], mismatch_rho)
+                    or config != design(width, family, regime, config["m"], config["threads"], config["epochs"], mismatch_rho, mismatch_p=mismatch_p)
                     or row["confidence"]["family_size"] != FAMILY_SIZE):
                 raise ValueError(f"Case does not match the bound design: {path}")
             rows.append(row)
@@ -105,7 +113,7 @@ def aggregate(output, width, mismatch_rho=None):
     panel_labels = {
         "fading": (rf"Diagonal fading ($\rho_c={DEPLOYMENT_RHO}$)",
                    ["Perfect", "Matched", "Mismatch\n" + rf"($\rho_{{\rm tr}}={mismatch_rho:g}$)"]),
-        "erasure": (r"Feature erasure ($p=0.50$)", ["Perfect", "Matched", "Mismatch\n($p_{tr}=0.45$)"]),
+        "erasure": (r"Feature erasure ($p=0.50$)", ["Perfect", "Matched", "Mismatch\n" + rf"($p_{{tr}}={mismatch_p:g}$)"]),
     }
     draw_figure(rows, root / "bound_decomposition", FAMILIES, moons_only=True, panel_labels=panel_labels)
     save_json(root / "bound_decomposition.json", report)
@@ -121,11 +129,13 @@ def main():
     summary = sub.add_parser("aggregate")
     fallback = sub.add_parser("fallback", help="Run width eight if any width-sixteen bound is vacuous")
     summary.add_argument("--mismatch-rho", type=float, help="Verify the expected fading mismatch correlation")
+    summary.add_argument("--mismatch-p", type=float, help="Verify the expected erasure training probability")
     for command in (cell, summary, fallback):
         command.add_argument("--output", type=Path, required=True)
     for command in (cell, summary):
         command.add_argument("--width", type=int, choices=WIDTHS, default=16)
     for command in (cell, fallback):
+        command.add_argument("--mismatch-p", type=float, default=ERASURE_MISMATCH_P)
         command.add_argument("--mismatch-rho", type=float, default=MISMATCH_RHO,
                              help="Training gain correlation for the fading mismatch case")
         command.add_argument("--m", type=int, default=2000)
@@ -140,7 +150,7 @@ def main():
         row = run(args, args.width, args.family, args.regime)
         print(json.dumps({key: row[key] for key in ("family", "regime", "uncapped_risk_upper", "nonvacuous")}))
         return
-    report = aggregate(args.output, args.width if args.command == "aggregate" else 16, args.mismatch_rho)
+    report = aggregate(args.output, args.width if args.command == "aggregate" else 16, args.mismatch_rho, args.mismatch_p)
     if args.command == "fallback" and report["nonvacuous"] < report["cases"]:
         first = report["rows"][0]
         if (args.m, args.epochs, args.empirical_draws, args.test_draws) != (
@@ -150,7 +160,7 @@ def main():
         for family in FAMILIES:
             for regime in REGIMES:
                 run(args, 8, family, regime)
-        report = aggregate(args.output, 8, args.mismatch_rho)
+        report = aggregate(args.output, 8, args.mismatch_rho, args.mismatch_p)
     print(json.dumps({key: value for key, value in report.items() if key != "rows"}))
 
 
