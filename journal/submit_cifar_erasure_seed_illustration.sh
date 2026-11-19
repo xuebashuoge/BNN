@@ -13,7 +13,7 @@ export FULL_FADING_FTZ_SHA256=5c2a8753f9eb46cdf1d039266ee3463c4bcff4534ba1a4d652
 [[ -L $out && $(readlink -f "$out") == /home/yangshuo/Git/bnn_task_inode_recovery_20261119/new_seed_runs/cifar10 ]]
 mkdir -p "$out/logs"
 limit=${CIFAR_SEED_ARRAY_CAP:-56}
-[[ $limit =~ ^[0-9]+$ ]] && (( limit >= 1 && limit <= 96 ))
+[[ $limit =~ ^[0-9]+$ ]] && (( limit >= 1 && limit <= 168 ))
 worker=journal/full_fading_spartan.slurm
 module=journal.erasure_validation_seed_illustration
 submit(){
