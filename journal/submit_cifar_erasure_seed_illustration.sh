@@ -27,6 +27,20 @@ submit(){
         id=${id%%;*}; [[ $id =~ ^[0-9]+$ ]]; echo "$id" | tee "$path"
     ) 9>"$out/logs/$name.job.lock"
 }
+# Use native confirmation only for the optional-work stopping condition.
+# Configurations, the eight seeds and all four sizes are fixed independently.
+all_confirmations_lead=true
+for size in 200 500 1000 2000; do
+    prior=$base/p050/m$size/cifar10/retuned/runs/accuracy_summary.json
+    if [[ ! -s $prior ]] || ! jq -e '.confirmation_seeds==[174101,174102,174103,174104,174105]
+            and (.groups|length)==1 and ( .groups[0].mean_ranking.margin > 1e-12 )' "$prior" >/dev/null; then
+        all_confirmations_lead=false
+    fi
+done
+if [[ $all_confirmations_lead == true ]] && [[ ! -s $out/logs/train.job ]]; then
+    echo "Skipped unstarted illustration: all four five-seed confirmations already led."
+    exit 0
+fi
 case "$phase" in
  start)
     for m in 200 500 1000 2000; do
