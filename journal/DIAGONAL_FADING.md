@@ -33,6 +33,11 @@ correlated mismatch. Deployment uses $\rho_c=0.35$, mismatch training uses $\rho
 and all gains have the same marginals and independent unit-variance AWGN. At $m=2000$ the
 mismatched T1/T2 bounds are 0.8955/0.8202 for width 16 and 0.6881/0.6433 for width 8.
 
+The [jointly certified fading and erasure decomposition](../results/correlated_diagonal_fading/bounds_fading_erasure/README.md)
+uses separate trained posteriors for each T1/T2 learner. Every erasure predictor is tested at probability 0.50.
+The dedicated two-channel job is `bash journal/submit_correlated_bounds.sh "$OUT" 0.15 both` for an absolute,
+shared output path. `bash journal/submit_diagonal_fading.sh bounds` runs the same two-channel design.
+
 ## Accuracy protocol
 
 Every method uses a diagonal Gaussian weight posterior. The four matched methods are

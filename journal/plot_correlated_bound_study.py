@@ -221,7 +221,7 @@ def draw_figure(rows, output, families, stem):
                     ax.text(x, -.14, label, ha="center", va="top", transform=ax.get_xaxis_transform(),
                             linespacing=1.18)
                 ax.set(xlim=(-.50, 4.03), ylim=(0., ymax),
-                       title=FAMILY_LABELS[family] + rf", $d={width}$")
+                       title=FAMILY_LABELS[family] + rf", $d={width}$, ${test_param}={test:g}$")
                 ax.tick_params(axis="x", length=0)
                 ax.grid(axis="y", linewidth=.45, color="#DADDE0")
                 ax.set_axisbelow(True)
