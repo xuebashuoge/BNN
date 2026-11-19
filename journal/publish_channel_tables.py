@@ -110,13 +110,28 @@ def publish(fading, erasure, output):
     audits=add_seed_illustrations(erasure, inputs, output)
     modes=['common','illustrative','initial','milder_fading']
     if audits: modes.append('validation_examples')
+    table_ranks=[]
     for name in modes:
+        designated=read_csv(inputs/(name+'_cells.csv'))
+        by_case={}
+        for row in designated:
+            by_case.setdefault((row['dataset'],row['channel'],int(row['m'])),[]).append(row)
+        for (ds,ch,m),sample in by_case.items():
+            scores={r['method']:float(r['mean_pct']) for r in sample}
+            proposed=max(('T1-Matched','T2-Matched'),key=scores.get)
+            other=max((k for k in scores if k not in ('T1-Matched','T2-Matched')),key=scores.get)
+            table_ranks.append(dict(view=name,dataset=ds,channel=ch,m=m,phase=sample[0]['phase'],
+                                    n_seeds=sample[0]['n_seeds'],seeds=sample[0]['seeds'],
+                                    proposed=proposed,proposed_pct=scores[proposed],strongest_other=other,
+                                    other_pct=scores[other],margin_pp=scores[proposed]-scores[other],
+                                    leads=scores[proposed]-scores[other]>1e-10,source=sample[0]['source']))
         dest=output/name
         export(inputs/(name+'_cells.csv'),dest,SIZES,
                {'rho_c':'.35' if name=='milder_fading' else '.85',
                 'noise_std':'1' if name=='milder_fading' else '2','outage_prob':'.5'},view=name)
         (dest/'all_tables.md').write_text('\n'.join((dest/f'channel_accuracy_m{m}.md').read_text() for m in SIZES))
 
+    write_csv(inputs/'table_rankings.csv',table_ranks)
     lines=['# Deployment accuracy by training channel and bank size','',
            'Each table follows the same layout. For each dataset it pairs a fading row with a 50% feature-erasure row. '
            'Matched ERM, L2, T1 and T2 appear under matched training. The last column is the shared perfect-training '
@@ -164,7 +179,13 @@ def publish(fading, erasure, output):
                 cases=[r for r in sets[view] if (int(r['m']),r['channel'])==(m,channel)]
                 counts.append(f"{sum(r['leads']=='True' for r in cases)}/{len(cases)}")
         lines.append('| '+str(m)+' | '+' | '.join(counts)+' |')
-    lines+=['','[Common cohort choices](data/common_cohorts.csv) · [Illustrative cohort choices](data/illustrative_cohorts.csv) · '
+    if audits:
+        lines.extend(['', 'Including the separately labelled erasure seed-pool examples, the counts of datasets with '
+                      'a strict T1/T2 lead are '+', '.join(
+                      f"{sum(r['leads'] for r in table_ranks if r['m']==m and r['channel']=='Erasure' and r['view']=='validation_examples')}/"
+                      f"{sum(1 for r in table_ranks if r['m']==m and r['channel']=='Erasure' and r['view']=='validation_examples')} at m={m}"
+                      for m in SIZES)+'. The row phase distinguishes a full pool from a selected triple.'])
+    lines+=['','[Rankings for every displayed table](data/table_rankings.csv) · [Common cohort choices](data/common_cohorts.csv) · [Illustrative cohort choices](data/illustrative_cohorts.csv) · '
             '[All training rounds and paired margins](data/all_confirmation_rounds.csv) · '
             '[All seed-level scores](data/all_seed_observations.csv) · [Model configurations](data/selected_model_configs.jsonl)','']
     if (output/'mnist_erasure_precision'/'summary.json').is_file():
