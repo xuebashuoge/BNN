@@ -23,6 +23,6 @@ For perfect-trained erasure, C1(i) uses the exact finite-binomial expectation of
 
 ## Reproduction
 
-Run `bash journal/submit_correlated_bounds.sh /absolute/shared/output 0.15 both` from the repository on Spartan. Set DATASET to the prepared data directory. The Slurm worker uses the torch28 environment. The joint run trained ten new erasure models. It restored byte-verified fading checkpoints from the preceding fading study and recomputed their certificates with the joint confidence budget. This changes the fading confidence terms. The weights, selected epochs, empirical losses and held-out scores match the original fading study.
+Run `bash journal/submit_correlated_bounds.sh /absolute/shared/output 0.15 both 0.45` from the repository on Spartan. Set DATASET to the prepared data directory. The Slurm worker uses the torch28 environment. The joint run trained ten new erasure models. It restored byte-verified fading checkpoints from the preceding fading study and recomputed their certificates with the joint confidence budget. This changes the fading confidence terms. The weights, selected epochs, empirical losses and held-out scores match the original fading study.
 
 Spartan job array 35404116 evaluated the 20 cases. Audit job 35404171 checked parameters, checkpoint fingerprints, paired stochastic banks, independently fitted means, numerical components and confidence. The outputs are stored in `/data/gpfs/projects/punim2792/yangshuo/erasure_fading_bound_decomposition_20261119`.
