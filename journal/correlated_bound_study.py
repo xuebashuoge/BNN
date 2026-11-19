@@ -1,8 +1,10 @@
 """Train each two-moons fading predictor with its designated objective and certify its own posterior."""
 import argparse
+import fcntl
 import json
 from pathlib import Path
 
+from .diagonal_fading import DEPLOYMENT_RHO
 from .diagonal_fading_bounds import MISMATCH_RHO, WIDTHS, design, perfect_shift
 from .full_fading_bounds import evaluate_case
 
@@ -18,6 +20,9 @@ FAMILY_SIZE = len(WIDTHS) * len(CASES)
 
 
 def learner_config(width, case, mismatch_rho=MISMATCH_RHO):
+    if (isinstance(mismatch_rho, bool) or not isinstance(mismatch_rho, (int, float))
+            or not 0 < mismatch_rho < 1 or mismatch_rho == DEPLOYMENT_RHO):
+        raise ValueError("The training mismatch must have a nonzero correlation distinct from deployment")
     regime, method, certificate = CASES[case]
     cfg = design(width, "fading", regime, 2000, 1, 120, mismatch_rho)
     cfg["method"] = method
@@ -30,8 +35,12 @@ def run(output, width, case, mismatch_rho=MISMATCH_RHO):
     regime, _, certificate = CASES[case]
     cfg = learner_config(width, case, mismatch_rho)
     labels = dict(dataset="moons", family="fading", regime=regime, certificate=certificate, fallback=width == 8)
-    return evaluate_case(cfg, output/f"d{width}"/case, 20000, 20, True, FAMILY_SIZE, labels,
-                         perfect_shift_fn=perfect_shift, stochastic_theorem="T2" if certificate == "T2" else "T1")
+    directory = output / f"d{width}" / case
+    directory.mkdir(parents=True, exist_ok=True)
+    with (directory / ".run.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        return evaluate_case(cfg, directory, 20000, 20, True, FAMILY_SIZE, labels,
+                             perfect_shift_fn=perfect_shift, stochastic_theorem="T2" if certificate == "T2" else "T1")
 
 
 if __name__ == "__main__":

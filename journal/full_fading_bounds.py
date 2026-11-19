@@ -166,7 +166,10 @@ def evaluate_case(config, case, draws, test_draws, iid_weights, family_size, lab
     report_path = case / "bound.json"
     if report_path.is_file():
         cached = json.loads(report_path.read_text())
-        if (cached["config"] != config or cached["empirical"]["iid_observations"] != draws
+        expected_theory = ("Corollary 1" if config["train_channel"]["kind"] == "perfect"
+                           else {"T1": "Theorem 1", "T2": "Theorem 2"}[stochastic_theorem])
+        if (cached["config"] != config or cached["theory"] != expected_theory
+                or cached["empirical"]["iid_observations"] != draws
                 or cached["test"]["draws"] != test_draws
                 or cached["confidence"]["family_size"] != family_size
                 or any(cached.get(key) != value for key, value in labels.items())):
