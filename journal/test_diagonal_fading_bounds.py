@@ -9,6 +9,20 @@ from journal.run_experiment import make_models
 
 
 class DiagonalFadingBoundTests(unittest.TestCase):
+    def test_correlated_mismatch_uses_deployment_to_training_kl(self):
+        from journal.diagonal_fading import diagonal_gain_kl
+
+        for width in (8, 16):
+            cfg = design(width, "fading", "mismatch", 2000, 1, 120)
+            train, deploy = cfg["train_channel"], cfg["deployment_channel"]
+            self.assertEqual(train, {"kind": "diagonal_fading", "rho_c": .15})
+            self.assertEqual(deploy, {"kind": "diagonal_fading", "rho_c": .35})
+            p, q = deploy["rho_c"], train["rho_c"]
+            expected = (width - 1) * (.5 * math.log((1-q*q)/(1-p*p)) + q*(q-p)/(1-q*q))
+            self.assertAlmostEqual(diagonal_gain_kl(deploy, train, width), expected)
+            with self.assertRaisesRegex(ValueError, "differ from deployment"):
+                design(width, "fading", "mismatch", 2000, 1, 120, mismatch_rho=p)
+
     def test_second_inequality_uses_the_joint_metric_and_iid_reference(self):
         for width in (8, 16):
             config = design(width, "fading", "perfect", 2000, 1, 1)
