@@ -49,6 +49,19 @@ case "$phase" in
         src+=(--source "$path/manifest.jsonl")
     done
     python -m "$module" prepare --pool original --output "$out" "${src[@]}"
+    python - "$out" "$limit" <<'PY'
+import json, os, sys
+from pathlib import Path
+from journal.full_fading_comparison import write_once
+from journal.run_experiment import file_fingerprint
+out=Path(sys.argv[1]); library=Path(os.environ["FULL_FADING_FTZ_LIBRARY"])
+runtime=dict(code=os.environ["JOURNAL_GIT_SHA"], backend="cpu", cores_per_task=1, array_cap=int(sys.argv[2]),
+             verified_ftz_library=str(library), ftz_library=file_fingerprint(library),
+             partition="sapphire", cpu_capability="avx2", OMP_WAIT_POLICY=os.environ["OMP_WAIT_POLICY"],
+             KMP_BLOCKTIME=os.environ["KMP_BLOCKTIME"], train_time="00:35:00", train_backfill_floor="00:25:00",
+             test_time="00:12:00")
+write_once(out/"runtime.json",json.dumps(runtime,indent=2)+"\n")
+PY
     test "$(wc -l < "$out/pool.jsonl")" = 224
     export JOURNAL_MANIFEST_SHA256=$(sha256sum "$out/pool.jsonl"|cut -d' ' -f1)
     # The flush-to-zero bootstrap checksum is also enforced by the worker at each start.
