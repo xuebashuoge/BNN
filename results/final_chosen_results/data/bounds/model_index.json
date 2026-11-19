@@ -1,0 +1,66 @@
+{
+  "archive": "models/bounds/checkpoints.tar",
+  "archive_sha256": "44b7609e114613a2da0cce5d4c4edca6b9ccbded62e58521e667bdfb7d9f0fbb",
+  "runs": [
+    {
+      "report": "data/bounds/fading/perfect/bound.json",
+      "weight_member": "fading/perfect/weights.pt",
+      "weights_sha256": "ead6efb716006faa7a8d94a76a4e4c84a61c29815f0307391638d305b063b29b",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/fading/t1_matched/bound.json",
+      "weight_member": "fading/t1_matched/weights.pt",
+      "weights_sha256": "d5166b6572ee55fa25495b55f1161b4c2beec298526f11fa4d046fb94023855d",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/fading/t2_matched/bound.json",
+      "weight_member": "fading/t2_matched/weights.pt",
+      "weights_sha256": "9d5c4962a5d3771f115e46b434b79975f67d0b8d2e3aad77f403b02af3d114b3",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/fading/t1_mismatch/bound.json",
+      "weight_member": "fading/t1_mismatch/weights.pt",
+      "weights_sha256": "6939ef86566e6acf0bd677a518d94c57d2e31252f861869244410293c754e6aa",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/fading/t2_mismatch/bound.json",
+      "weight_member": "fading/t2_mismatch/weights.pt",
+      "weights_sha256": "8435d8b8ed69f7c5b9ff29d87c99c8ad8ed459f429e4f82179a69f89d0bb98e7",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/erasure/perfect/bound.json",
+      "weight_member": "erasure/perfect/weights.pt",
+      "weights_sha256": "1055ded0c95e4c919a51ed04e8cb458f233523fa78ff7b39b7871a5d82be7321",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/erasure/t1_matched/bound.json",
+      "weight_member": "erasure/t1_matched/weights.pt",
+      "weights_sha256": "ca6e2d3aae7e9d680db64705734b59d834931cb191185d5279d9630206958210",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/erasure/t2_matched/bound.json",
+      "weight_member": "erasure/t2_matched/weights.pt",
+      "weights_sha256": "680e1da47f29dd42a1ccfe00d44d0080dba619b20976ce10153e441b356172ad",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/erasure/t1_mismatch/bound.json",
+      "weight_member": "erasure/t1_mismatch/weights.pt",
+      "weights_sha256": "96dc2b2f750d899738f93d284f91c2e4a39afb574de08362d5f403c786dbf65a",
+      "bytes": 130747
+    },
+    {
+      "report": "data/bounds/erasure/t2_mismatch/bound.json",
+      "weight_member": "erasure/t2_mismatch/weights.pt",
+      "weights_sha256": "b0233d8d4708c3e6294ec8879d62c8d296ae4ed90a7f644e731f59d126efe3b5",
+      "bytes": 130747
+    }
+  ]
+}

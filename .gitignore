@@ -4,3 +4,10 @@ results
 logs
 data
 __pycache__
+
+# Journal figures, their portable inputs, and the selected table.
+!/results/
+/results/*
+!/results/final_chosen_results/
+!/results/final_chosen_results/data/
+/results/final_chosen_results/models/

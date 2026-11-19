@@ -1,5 +1,7 @@
 # Spatially correlated diagonal fading
 
+The [selected journal results](../results/final_chosen_results/README.md) collect the three figures, the deployment accuracy table, their inputs and reproduction scripts.
+
 Each transmitted feature uses one channel coordinate. At deployment the received vector is
 $h\odot f+N$, where $h\sim\mathcal N(0.5\mathbf 1,R)$,
 $R_{ij}=\rho_c^{|i-j|}$ and $N\sim\mathcal N(0,I)$ is independent of $h$.

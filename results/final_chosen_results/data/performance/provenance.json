@@ -1,0 +1,347 @@
+{
+  "bank_size": 2000,
+  "mean_unit": "percent",
+  "sd": "sample SD across paired training seeds",
+  "original_table_series": "milder_fading",
+  "cohorts": [
+    {
+      "channel": "Fading",
+      "dataset": "moons",
+      "phase": "original_confirm",
+      "archive_directory": "fading/moons",
+      "confirmation_seeds": [
+        123101,
+        123102,
+        123103
+      ],
+      "original_project_summary": "diagonal_fading_20261118/comparison/moons/confirm/accuracy_summary.json",
+      "summary_sha256": "9eb3ac49e7c025f61790e6c2a8bdf0ad5753bb9df208ca099814190f68c295ce",
+      "manifest_sha256": "31f77ee96593b6527aef5636bbd9efdacae18988ca66fd995234cebd6a513a9f",
+      "cohort_files": [
+        "confirm.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "confirm.selection.json"
+      ]
+    },
+    {
+      "channel": "Erasure",
+      "dataset": "moons",
+      "phase": "transfer",
+      "archive_directory": "erasure/moons",
+      "confirmation_seeds": [
+        73101,
+        73102,
+        73103,
+        73104,
+        73105
+      ],
+      "original_project_summary": "erasure_mgrid_20261119/p050/m2000/moons/runs/accuracy_summary.json",
+      "summary_sha256": "0a16cb43e1abd4abf6b46f586e1aa25289487ae70ba2f92eca6115ea835575b0",
+      "manifest_sha256": "81be8c57a324587d382e5fde5fc61015a788634e019d8b9fcaad78205881275f",
+      "cohort_files": [
+        "manifest.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "protocol.json"
+      ]
+    },
+    {
+      "channel": "Fading",
+      "dataset": "mnist",
+      "phase": "original_confirm",
+      "archive_directory": "fading/mnist",
+      "confirmation_seeds": [
+        123101,
+        123102,
+        123103
+      ],
+      "original_project_summary": "diagonal_fading_20261118/comparison/mnist/confirm/accuracy_summary.json",
+      "summary_sha256": "19bab440035e27d0d2e54462e80bab228f3313dfe601bc477d98232b26cb7fea",
+      "manifest_sha256": "16b20f9919b65321fe4932ad80d866d48095f4eba1d48617c2114c9b9d56309e",
+      "cohort_files": [
+        "confirm.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "confirm.selection.json"
+      ]
+    },
+    {
+      "channel": "Erasure",
+      "dataset": "mnist",
+      "phase": "prior_width_reference/confirmation",
+      "archive_directory": "erasure/mnist",
+      "confirmation_seeds": [
+        541401,
+        541402,
+        541403,
+        541404,
+        541405
+      ],
+      "original_project_summary": "erasure_mgrid_20261119/p050/m2000/mnist/prior_width_reference/confirmation/runs/accuracy_summary.json",
+      "summary_sha256": "d031824330de77b4147b4f935d08fa5348012744790096818d45e3e8870f9f11",
+      "manifest_sha256": "c4875ac70fc43f4b40e5ec0c3ffbf45dd3e14f74d3ef154a310e457b981628b4",
+      "cohort_files": [
+        "manifest.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "manifest.selection.json"
+      ]
+    },
+    {
+      "channel": "Fading",
+      "dataset": "fashionmnist",
+      "phase": "original_confirm-refine",
+      "archive_directory": "fading/fashionmnist",
+      "confirmation_seeds": [
+        124101,
+        124102,
+        124103
+      ],
+      "original_project_summary": "diagonal_fading_20261118/comparison/fashionmnist/confirm-refine/accuracy_summary.json",
+      "summary_sha256": "520d9c5385c99f679131a6b7fb31a31ab7a899df2c2b02aed2aad4a8639e14a5",
+      "manifest_sha256": "c7d032d801793170866a95cd7d48b0fedb30c0a1af92a0e235cdda305ede38f3",
+      "cohort_files": [
+        "confirm-refine.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "confirm-refine.selection.json"
+      ]
+    },
+    {
+      "channel": "Erasure",
+      "dataset": "fashionmnist",
+      "phase": "common/retuned",
+      "archive_directory": "erasure/fashionmnist",
+      "confirmation_seeds": [
+        411201,
+        411202,
+        411203,
+        411204,
+        411205,
+        411206,
+        411207,
+        411208,
+        411209
+      ],
+      "original_project_summary": "erasure_mgrid_20261119/p050/m2000/fashionmnist/common/retuned/runs/accuracy_summary.json",
+      "summary_sha256": "4165f66d7f488438f411916462f4081122c5b5d57bbe3c50d962aa6f879212d5",
+      "manifest_sha256": "d983f230061d5054ea29c688ab2e4a7ec318d46f40ba7e9367785fdeb57c9fd8",
+      "cohort_files": [
+        "manifest.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "manifest.selection.json"
+      ]
+    },
+    {
+      "channel": "Fading",
+      "dataset": "cifar10",
+      "phase": "original_confirm-balanced",
+      "archive_directory": "fading/cifar10",
+      "confirmation_seeds": [
+        151101,
+        151102,
+        151103
+      ],
+      "original_project_summary": "diagonal_fading_20261118/comparison/cifar10/confirm-balanced/accuracy_summary.json",
+      "summary_sha256": "f3def2414f698951b8bbc773859e67aad9e3a3283311643b7a401ff09aced60c",
+      "manifest_sha256": "352aecc47471ab730e3efaa418d7f234f05ff6df7affbc5459c0d2336276a85d",
+      "cohort_files": [
+        "confirm-balanced.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "confirm-balanced.selection.json"
+      ]
+    },
+    {
+      "channel": "Erasure",
+      "dataset": "cifar10",
+      "phase": "scale-grid",
+      "archive_directory": "erasure/cifar10",
+      "confirmation_seeds": [
+        175101,
+        175102,
+        175103,
+        175104,
+        175105
+      ],
+      "original_project_summary": "erasure_mgrid_20261119/p050/m2000/cifar10/scale-grid/runs/accuracy_summary.json",
+      "summary_sha256": "20f5b97a8290dd5520381eb952531897ff47cc69740bbd258da5fdf954c80b73",
+      "manifest_sha256": "d15316336bd0919baa3538099a95f35f4dee7983b7e738b035662f7cb1abbd95",
+      "cohort_files": [
+        "manifest.jsonl",
+        "accuracy_summary.json",
+        "accuracy_by_seed.csv",
+        "selection.json"
+      ]
+    }
+  ],
+  "files": {
+    "data/performance/selected_trials.tar.gz": {
+      "sha256": "fdaa9d12a42106ff24f99ea6f30ea7da20eac4495358e36addf732633f5c5d62",
+      "bytes": 367885
+    },
+    "data/performance/training_source.tar.gz": {
+      "sha256": "6514b5e8cf7aca470c443c43e7743c7c83a8e968d303c2a41b15014a81315b18",
+      "bytes": 371662
+    },
+    "models/performance/weights.tar": {
+      "sha256": "1e9cd6bf832c034b9c9f9f428b649c709d5acb1c2bfbae51c18705f583d53323",
+      "bytes": 430581760
+    }
+  },
+  "training_snapshots": [
+    {
+      "revision": "18473742e39c1a5ddcfda8be74f9fabe65e3d5ba",
+      "files": [
+        "journal/bounded_mlp.py",
+        "journal/build_bayesian_campaign.py",
+        "journal/build_campaign.py",
+        "journal/campaign.py",
+        "journal/cifar_models.py",
+        "journal/cifar_search_models.py",
+        "journal/cpu_flush_bootstrap.c",
+        "journal/diagonal_fading.py",
+        "journal/diagonal_fading_comparison.py",
+        "journal/erasure_bank_comparison.py",
+        "journal/fading_severity.py",
+        "journal/full_fading.py",
+        "journal/full_fading_comparison.py",
+        "journal/full_fading_spartan.slurm",
+        "journal/run_experiment.py",
+        "journal/run_task.py",
+        "journal/theorem1.py"
+      ]
+    },
+    {
+      "revision": "20f5fc96642a1dc50bc234b03940d9cc95712e13",
+      "files": [
+        "journal/bounded_mlp.py",
+        "journal/build_bayesian_campaign.py",
+        "journal/build_campaign.py",
+        "journal/campaign.py",
+        "journal/cifar_models.py",
+        "journal/cifar_search_models.py",
+        "journal/cpu_flush_bootstrap.c",
+        "journal/diagonal_fading.py",
+        "journal/diagonal_fading_comparison.py",
+        "journal/full_fading.py",
+        "journal/full_fading_comparison.py",
+        "journal/full_fading_spartan.slurm",
+        "journal/run_experiment.py",
+        "journal/run_task.py",
+        "journal/theorem1.py"
+      ]
+    },
+    {
+      "revision": "3cab492c2c9cf71470bbb6450ff7586eb2bdb515",
+      "files": [
+        "journal/bounded_mlp.py",
+        "journal/build_bayesian_campaign.py",
+        "journal/build_campaign.py",
+        "journal/campaign.py",
+        "journal/cifar_models.py",
+        "journal/cifar_search_models.py",
+        "journal/cpu_flush_bootstrap.c",
+        "journal/diagonal_fading.py",
+        "journal/diagonal_fading_comparison.py",
+        "journal/full_fading.py",
+        "journal/full_fading_comparison.py",
+        "journal/full_fading_spartan.slurm",
+        "journal/run_experiment.py",
+        "journal/run_task.py",
+        "journal/theorem1.py"
+      ]
+    },
+    {
+      "revision": "3d03f9ae567f21e2cf4610544187e6b38fa75b7e",
+      "files": [
+        "journal/bounded_mlp.py",
+        "journal/build_bayesian_campaign.py",
+        "journal/build_campaign.py",
+        "journal/campaign.py",
+        "journal/cifar_models.py",
+        "journal/cifar_search_models.py",
+        "journal/cpu_flush_bootstrap.c",
+        "journal/diagonal_fading.py",
+        "journal/diagonal_fading_comparison.py",
+        "journal/erasure_bank_comparison.py",
+        "journal/erasure_prior_reference.py",
+        "journal/fading_severity.py",
+        "journal/full_fading.py",
+        "journal/full_fading_comparison.py",
+        "journal/full_fading_spartan.slurm",
+        "journal/run_experiment.py",
+        "journal/run_task.py",
+        "journal/theorem1.py"
+      ]
+    },
+    {
+      "revision": "527fc7a3e3b41c6640cc8c4ec1056b12f71c876b",
+      "files": [
+        "journal/bounded_mlp.py",
+        "journal/build_bayesian_campaign.py",
+        "journal/build_campaign.py",
+        "journal/campaign.py",
+        "journal/cifar_models.py",
+        "journal/cifar_search_models.py",
+        "journal/cpu_flush_bootstrap.c",
+        "journal/diagonal_fading.py",
+        "journal/diagonal_fading_comparison.py",
+        "journal/erasure_bank_comparison.py",
+        "journal/erasure_cifar_scale_grid.py",
+        "journal/fading_severity.py",
+        "journal/fading_severity_cifar_search.py",
+        "journal/full_fading.py",
+        "journal/full_fading_comparison.py",
+        "journal/full_fading_spartan.slurm",
+        "journal/run_experiment.py",
+        "journal/run_task.py",
+        "journal/theorem1.py"
+      ]
+    },
+    {
+      "revision": "f4178d7063978b56636f507078dcd7a7f893e094",
+      "files": [
+        "journal/bounded_mlp.py",
+        "journal/build_bayesian_campaign.py",
+        "journal/build_campaign.py",
+        "journal/campaign.py",
+        "journal/cifar_models.py",
+        "journal/cifar_search_models.py",
+        "journal/cpu_flush_bootstrap.c",
+        "journal/diagonal_fading.py",
+        "journal/diagonal_fading_comparison.py",
+        "journal/full_fading.py",
+        "journal/full_fading_comparison.py",
+        "journal/full_fading_spartan.slurm",
+        "journal/run_experiment.py",
+        "journal/run_task.py",
+        "journal/theorem1.py"
+      ]
+    },
+    {
+      "revision": "f5a4c2460efed8776fceb62cb4ef6e3ee845a81b",
+      "files": [
+        "journal/bounded_mlp.py",
+        "journal/build_bayesian_campaign.py",
+        "journal/build_campaign.py",
+        "journal/campaign.py",
+        "journal/cifar_models.py",
+        "journal/cifar_search_models.py",
+        "journal/cpu_flush_bootstrap.c",
+        "journal/diagonal_fading.py",
+        "journal/diagonal_fading_comparison.py",
+        "journal/erasure_bank_comparison.py",
+        "journal/fading_severity.py",
+        "journal/full_fading.py",
+        "journal/full_fading_comparison.py",
+        "journal/full_fading_spartan.slurm",
+        "journal/run_experiment.py",
+        "journal/run_task.py",
+        "journal/theorem1.py"
+      ]
+    }
+  ]
+}

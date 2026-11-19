@@ -1,5 +1,7 @@
 # Two-moons bound decomposition
 
+The [selected journal figure](../results/final_chosen_results/bound_decomposition_d8_t1_t2_both_channels.pdf) shows both channels at width 8, with mismatch training at erasure probability 0.45 and fading correlation 0.15. The following reports document the alternative configurations.
+
 The [width-8 erasure decomposition](../results/correlated_diagonal_fading/bounds_erasure_d8_ptr035/README.md)
 uses 2000 training-channel draws and deployment erasure probability 0.50. With mismatch training at 0.35,
 the T1 and T2 upper bounds are 0.8573 and 0.7953. All five erasure bounds at width 8 are below one.

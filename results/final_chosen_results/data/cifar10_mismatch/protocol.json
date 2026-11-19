@@ -1,0 +1,63 @@
+{
+  "git_revision": "f602987cceff4a078d12fd33cb6eec8582a1cd3c",
+  "source_manifest": "results/journal_bayesian_final/20261117/manifests/p_train_sweep.jsonl",
+  "source_sha256": "559af634c132772791580a2dacf2794eb3cf63261c02e3a2cd1b1221d21d5a5b",
+  "task_count": 156,
+  "test_draws": 10,
+  "m": 2000,
+  "shards": {
+    "0": {
+      "p_train": 0.0,
+      "sha256": "4e18dcb9b8ea73a4ed6fb44262bbf26407b5c4351b65877a8b0a1b7a2b0703f9"
+    },
+    "1": {
+      "p_train": 0.025,
+      "sha256": "08e7cdd2c2958211aa3ff0f9d48c2956b0abeccd97d26042823384c1d555d1d4"
+    },
+    "2": {
+      "p_train": 0.05,
+      "sha256": "788acf084586ab803c3c3dacb38a4ca80d649591651dd06631c9954383193e92"
+    },
+    "3": {
+      "p_train": 0.1,
+      "sha256": "cbca269474e077db44b4fdf7ba2e745366b026890224f8fc7e33183c5b78c60c"
+    },
+    "4": {
+      "p_train": 0.15,
+      "sha256": "9796c43dd9137bd74115bdb8dcd8c20f825f060eb4401b7bb3ce1c2279e587f3"
+    },
+    "5": {
+      "p_train": 0.2,
+      "sha256": "4012657d8bcf34a65c292c273915c600456376d9b4d548e1e865f278807fde83"
+    },
+    "6": {
+      "p_train": 0.3,
+      "sha256": "b7c3516e7beef856677a8762a491277cc313963582d2dc2c87c1d2f0531085d6"
+    },
+    "7": {
+      "p_train": 0.4,
+      "sha256": "c959f99f75259f0cf1148679e17f737a55e407002cd99b4f116021211b1f3c98"
+    },
+    "8": {
+      "p_train": 0.5,
+      "sha256": "0c6143a86fd780ab9e0316ee1b2f6ae6df0eff1766d1d92b47e82c805df002c8"
+    },
+    "9": {
+      "p_train": 0.6,
+      "sha256": "907f3e3868ea4dd156f39659258f6af631823ce820502ff2c26c6864a48d82c4"
+    },
+    "10": {
+      "p_train": 0.7,
+      "sha256": "79f76518efc9ca1d02e100fee7effc62840c5345f899724b176489d075dfb48e"
+    },
+    "11": {
+      "p_train": 0.8,
+      "sha256": "eb9fa67a53ac11db72d578ffd3063bf4da0f69f12a66c228bbedf34219388581"
+    },
+    "12": {
+      "p_train": 0.9,
+      "sha256": "413cdcc38111117534c2ff5968a405b4caf51e1f05f1296feae98d9a834ad99d"
+    }
+  },
+  "same_protocol_as": "cifar10_erasure_mismatch_m100_20261118"
+}

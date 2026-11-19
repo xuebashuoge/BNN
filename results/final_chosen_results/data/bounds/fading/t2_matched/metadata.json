@@ -1,0 +1,118 @@
+{
+  "config": {
+    "dataset": "moons",
+    "architecture": "bounded_mlp",
+    "method": "joint",
+    "predictor": "gaussian",
+    "training_loss": "bounded_ce_smooth",
+    "loss_epsilon": 0.01,
+    "selection_metric": "accuracy",
+    "validation_seed_policy": "fixed",
+    "width": 8,
+    "train_size": 800,
+    "val_size": 200,
+    "batch_size": 128,
+    "epochs": 120,
+    "lr": 0.006,
+    "eta_channel": 0.0,
+    "eta_data": 0.02,
+    "prior_std": 0.24,
+    "posterior_std": 0.1,
+    "m": 2000,
+    "seed": 92601,
+    "data_seed": 92604,
+    "channel_seed": 92602,
+    "eval_seed": 92603,
+    "eval_draws": 10,
+    "val_draws": 8,
+    "clip_ce": 10.0,
+    "delta": 0.05,
+    "l2": 0.0001,
+    "device": "cpu",
+    "threads": 1,
+    "cpu_flush_denormal": false,
+    "rho_lr_scale": 0.0,
+    "download": false,
+    "moon_noise": 0.3,
+    "moons_sampler": "iid",
+    "train_channel": {
+      "kind": "diagonal_fading",
+      "rho_c": 0.35
+    },
+    "deployment_channel": {
+      "kind": "diagonal_fading",
+      "rho_c": 0.35
+    },
+    "bounded_feature_norm": 1.0,
+    "bounded_receiver_norm": 0.075,
+    "posterior_mean_clip": 0.25
+  },
+  "config_hash": "0d04247f22dd5a693b2aa12e685bd56224bdcb3458e5f8a0daeff0833d4914ad",
+  "split": {
+    "train_indices_hash": "0adff926d652b2c713445813166bac3a3f083a36e2f10d3e6df942a2b968b66a",
+    "validation_indices_hash": "60e55b9082cb18ebbd975dc3ea7a50b8b458c08ee3a8fdc9a7f621338855e2db",
+    "data_seed": 92604,
+    "transform": "float32 raw coordinates; iid Bernoulli(1/2) label, Uniform[0,pi] angle, independent Gaussian coordinate noise",
+    "train_size": 800,
+    "validation_size": 200,
+    "test_policy": "official test never loaded during training; independent moons test"
+  },
+  "git_sha": "d024af919e3c01b1f83e84260f69faecc9a86b53",
+  "git_dirty": false,
+  "torch_version": "2.8.0+cu128",
+  "python_version": "3.12.12",
+  "platform": "Linux-5.14.0-687.15.1.el9_8.x86_64-x86_64-with-glibc2.34",
+  "cpu_numerics": {
+    "flush_denormal_requested": false,
+    "flush_denormal_supported": true
+  },
+  "cpu_threading": {
+    "allowed_cpus": [
+      33
+    ],
+    "torch_intraop_threads": 1,
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "OMP_PROC_BIND": "false",
+      "OMP_PLACES": null,
+      "GOMP_CPU_AFFINITY": null,
+      "KMP_AFFINITY": null,
+      "MKL_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "SLURM_CPU_BIND": "quiet,mask_cpu:0x00000000000000000000000200000000",
+      "SLURM_CPU_BIND_LIST": "0x00000000000000000000000200000000"
+    }
+  },
+  "cuda_policy": null,
+  "prior": "fixed N(0,prior_std^2 I), independent of all data and channel banks",
+  "predictor": {
+    "family": "diagonal_gaussian",
+    "stochastic": true,
+    "configuration": "gaussian"
+  },
+  "regularization": "configured PAC-Bayes complexity penalty",
+  "training_objective": "normalized bounded empirical CE + configured PAC-Bayes penalty; proposed with eta_channel=eta_data=1 matches the separated bound's trainable objective",
+  "theoretical_loss": "-log(epsilon+(1-epsilon)*p_y)/(-log(epsilon)); epsilon=0.01 in [0,1]; sigma_data^2=sigma_channel^2=1/4",
+  "checkpoint_selection": "validation accuracy, with lower raw CE as tiebreak",
+  "validation_randomness": "fixed posterior/channel seed across epochs",
+  "certificate_note": "Complexity terms alone are not certificates. Risk estimates need MC/error control; perfect-to-noisy deployment needs a separately justified channel-shift term.",
+  "input_dim": 2,
+  "classes": 2,
+  "parameter_count": 42,
+  "training_channel_bank_hash": "968a2939c554c58f9baeb6a0c3e9e69a825675831e6d393f60f5e5af8b2cd837",
+  "training_channel_bank_hash_algorithm": "tensor-bytes-sha256-v1",
+  "posterior_scale_optimization": {
+    "stochastic_predictor": true,
+    "trainable": false,
+    "initial_standard_deviation": 0.1,
+    "rho_learning_rate": 0.0
+  },
+  "selected_epoch": 92,
+  "selected_validation_cross_entropy": 0.6870572566986084,
+  "selected_validation_accuracy": 0.565,
+  "selected_validation_bounded_loss": 0.14705216467380525,
+  "total_seconds": 2.9770121686160564,
+  "peak_rss_mb": 513.0,
+  "cuda_peak_allocated_mb": null,
+  "cuda_peak_reserved_mb": null
+}
