@@ -19,3 +19,17 @@ The launcher is `bash journal/submit_erasure_bank.sh DATASET_NAME M ABSOLUTE_OUT
 Within a dataset and deployment law, the common comparison uses the same available validation/confirmation phase and paired seed cohort across the three principal bank sizes. The illustrative table uses test rankings to identify a round in which a matched proposed objective leads. It prefers one common winning round across all three sizes; otherwise the cohort is designated separately for each size. The transfer table always includes the original validation-selected hyperparameters. The full-precision source and seven-method data accompany these views.
 
 Each displayed cell is mean deployment accuracy in percent ± sample SD across training seeds. The columns are matched ERM, L2, T1 and T2, and the shared perfect-training T1/T2 objective. The largest unrounded mean among the displayed columns is bold. Perfect ERM and L2 are retained in the CSV comparisons over all seven labels. Paired row-wise differences, convergence of the frozen-channel experiments, and statistical variability across training seeds are separate quantities.
+
+## Artifacts
+
+The [release index](../results/journal_channel_tables_20261119/README.md) links the common-protocol and illustrative
+five-page PDFs, individual table images, exact data and manuscript-ready LaTeX fragments. The matched/perfect
+training table sources and all confirmation cohorts are stored beside the tables. The [paired severity
+report](../results/harder_diagonal_fading_20261119/README.md) covers the original checkpoints, four deployment
+laws and their matched hard-trained counterparts.
+
+On Spartan, the three raw roots in the project account's yangshuo directory are
+`diagonal_fading_severity_20261119`, `erasure_mgrid_20261119`, and `journal_channel_tables_20261119`.
+The release can be rebuilt with
+`python -m journal.publish_channel_tables --fading SEVERITY_ROOT --erasure ERASURE_ROOT --output TABLE_OUTPUT`
+using the torch28 environment.
