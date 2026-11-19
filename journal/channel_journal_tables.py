@@ -125,9 +125,11 @@ def notes(m, rows, view="common"):
         sample = f"Paired training-seed counts (fading/erasure) are {pairs}."
     extra = []
     if view in ("illustrative","validation_examples"):
-        selected = [DATASETS[d] for d in datasets if get(d,"Erasure")["phase"]=="validation_selected_triple"]
+        selected = [DATASETS[d] for d in datasets if get(d,"Erasure")["phase"] in ("validation_selected_triple","bank_specific_validation_triple")]
         extra.append(("Erasure seed triples selected on validation for "+", ".join(selected)+".")
                      if selected else "Illustrative rounds were chosen using observed rankings.")
+        if any(get(d,"Erasure")["phase"]=="bank_specific_validation_triple" for d in datasets):
+            extra.append('The CIFAR-10 seed triple in this table was selected separately for this bank size.')
     long_mnist = 'mnist' in datasets and any(
         token in get('mnist','Erasure')['phase'] or token in get('mnist','Erasure')['source']
         for token in ('epochs60','penalty60','prior_width_reference'))

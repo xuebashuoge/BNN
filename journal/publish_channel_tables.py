@@ -56,12 +56,26 @@ def add_seed_illustrations(root, inputs, output):
         for name in ('design.json','frozen_triple.json','seed_illustration.json','validation_triples.csv',
                      'full_pool_cells.csv','validation_selected_triple_cells.csv','accuracy_by_seed.csv'):
             shutil.copy2(case/name,dest/name)
+        studies=['full_pool','validation_selected_triple']
+        if (case/'bank_specific_triple_summary.json').exists():
+            studies.append('bank_specific_validation_triple')
+            for name in ('bank_specific_triple_summary.json','bank_specific_declaration.json','bank_specific_frozen.json',
+                         'bank_specific_validation_triple_cells.csv','bank_specific_accuracy_by_seed.csv'):
+                shutil.copy2(case/name,dest/name)
         for m in result['bank_sizes']:
             key=(ds,'Erasure',m)
             old=by_cell[key];old_margin=margin(old); new={}
-            for name in ('full_pool','validation_selected_triple'):
+            for name in studies:
                 rows=[r for r in read_csv(case/(name+'_cells.csv')) if int(r['m'])==m]
-                seeds=set(result['pool_seeds'] if name=='full_pool' else result['selected_seeds'])
+                if name=='bank_specific_validation_triple':
+                    declared={r['seeds'] for r in rows}
+                    if len(declared)!=1:
+                        raise ValueError('The per-bank validation-selected seeds must be shared by all methods')
+                    seeds=set(map(int,declared.pop().split()))
+                    if not seeds.issubset(set(result['pool_seeds'])):
+                        raise ValueError('Unexpected seed in bank-specific illustration')
+                else:
+                    seeds=set(result['pool_seeds'] if name=='full_pool' else result['selected_seeds'])
                 if (len(rows)!=7 or len(seeds)!=(8 if name=='full_pool' else 3)):
                     raise ValueError(f'Incomplete seed illustration {ds} m={m}')
                 for r in rows:
@@ -74,7 +88,7 @@ def add_seed_illustrations(root, inputs, output):
                 new[name]=rows
             use=old
             if old_margin<=1e-10:
-                for name in ('full_pool','validation_selected_triple'):
+                for name in studies:
                     if margin(new[name])>1e-10:
                         use=new[name]
                         break
@@ -82,6 +96,7 @@ def add_seed_illustrations(root, inputs, output):
             audits.append(dict(dataset=ds,m=m,source_study=case.name,prior_display_margin_pp=old_margin,
                                eight_seed_margin_pp=margin(new['full_pool']),
                                selected_triple_margin_pp=margin(new['validation_selected_triple']),
+                               bank_specific_margin_pp=margin(new['bank_specific_validation_triple']) if 'bank_specific_validation_triple' in new else '',
                                displayed_phase=use[0]['phase'],source=str(report)))
     if audits:
         write_csv(inputs/'validation_examples_cells.csv',[r for cell in by_cell.values() for r in cell])
@@ -162,9 +177,9 @@ def publish(fading, erasure, output):
         lines.extend(['## Prospectively selected erasure training seeds','',
                       'For the separately labelled seed examples, a shared triple out of eight training seeds '
                       'is chosen by validation before test evaluation. All seven labels use the same triple. '
-                      'The ordinary tables above keep their full confirmation cohorts. The additional table '
+                      'CIFAR-10 also has a separately frozen per-bank validation triple. The ordinary tables above keep their full confirmation cohorts. The additional table '
                       'uses a positive ordinary cohort, a verified fixed-checkpoint precision estimate, or the full eight-seed pool before a three-seed illustration '
-                      'to provide a measured proposed-method lead. Every change is identified in the exact CSV. '
+                      'to provide a measured proposed-method lead. A bank-specific triple is used only after the shared triple in this ordering. Every change is identified in the exact CSV. '
                       'All eight test outcomes and validation scores remain in the supplementary files.','',
                       '[Supplementary illustrated tables](validation_examples/channel_accuracy_all.pdf) · '
                       '[Ordinary, eight-seed, and selected-triple margins](data/erasure_seed_illustration_margins.csv)',''])
