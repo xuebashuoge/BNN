@@ -31,7 +31,9 @@ def verify_case(report, width, case):
     """Recompute the component identities on the fitted posterior's declared KL."""
     cfg = report["config"]
     regime, method, certificate = CASES[case]
-    if (cfg != learner_config(width, case, cfg["train_channel"].get("rho_c", DEPLOYMENT_RHO))
+    expected_cfg = (learner_config(width, case, cfg["train_channel"]["rho_c"]) if regime == "mismatch"
+                    else learner_config(width, case))
+    if (cfg != expected_cfg
             or (report["dataset"], report["family"], report["regime"], cfg["method"],
                 report["certificate"], report["theory"]) !=
             ("moons", "fading", regime, method, certificate, THEORIES[certificate])):

@@ -20,3 +20,8 @@ id=$(sbatch --parsable --partition=sapphire --cpus-per-task=1 --mem=3G --time=00
         exec python -u -m journal.correlated_bound_study --width "${widths[i/5]}" --case "${cases[i%5]}" \
             --output "$CORR_BOUNDS_OUTPUT" --mismatch-rho "$CORR_BOUNDS_TRAIN_RHO"')
 printf '%s\n' "${id%%;*}" | tee "$root/train.job"
+report=$(sbatch --parsable --partition=sapphire --cpus-per-task=1 --mem=3G --time=00:04:00 \
+    --chdir="$PWD" --job-name=corr_bound_report --dependency="afterok:${id%%;*}" --kill-on-invalid-dep=yes \
+    --output="$root/logs/report_%j.out" --error="$root/logs/report_%j.err" \
+    journal/full_fading_spartan.slurm python -m journal.plot_correlated_bound_study --root "$root" --output "$root/figures")
+printf '%s\n' "${report%%;*}" | tee "$root/report.job"
