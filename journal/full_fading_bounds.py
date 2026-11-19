@@ -15,7 +15,7 @@ from .c1_full_fading import perfect_shift
 from .campaign import completed_trial
 from .run_experiment import (bounded_losses_from_ce, check_device, evaluate, file_fingerprint,
                             load_data, make_loader, make_models, normalize_config, save_json, train)
-from .theorem1 import channel_shift_diagnostic, gaussian_kl, theorem1_terms
+from .theorem1 import channel_shift_diagnostic, gaussian_kl, joint_complexity, theorem1_terms
 
 DATASETS = {"moons": "Two moons", "mnist": "MNIST", "fashionmnist": "Fashion-MNIST",
             "cifar10": "CIFAR-10"}
@@ -107,14 +107,24 @@ def empirical_mc(model, bank, train_data, config, draws, compact):
                 examples_per_observation=cluster_size, total_evaluations=len(indices), seed=seed)
 
 
-def risk_decomposition(config, model, empirical, family_size=FAMILY_SIZE, perfect_shift_fn=perfect_shift):
+def risk_decomposition(config, model, empirical, family_size=FAMILY_SIZE, perfect_shift_fn=perfect_shift,
+                       stochastic_theorem="T1"):
     # Allocate a theorem and an empirical MC event to each declared cell.
     failure = config["delta"] / (2 * family_size)
     radius = math.sqrt(math.log(1 / failure) / (2 * empirical["iid_observations"]))
     kl = gaussian_kl(model.mu.double(), model.rho.double(), config["prior_std"]).item()
     perfect = config["train_channel"]["kind"] == "perfect"
-    terms = theorem1_terms(torch.tensor(kl, dtype=torch.float64), n=config["train_size"],
-                           m=config["m"], delta=failure, perfect_training=perfect)
+    kl_tensor = torch.tensor(kl, dtype=torch.float64)
+    budget = dict(n=config["train_size"], m=config["m"], delta=failure, perfect_training=perfect)
+    if stochastic_theorem == "T2" and not perfect:
+        complexity = {"joint": joint_complexity(kl_tensor, **budget).item()}
+        theory = "Theorem 2"
+    elif stochastic_theorem == "T1":
+        terms = theorem1_terms(kl_tensor, **budget)
+        complexity = {"sample": terms["sample_complexity"].item(), "channel": terms["channel_complexity"].item()}
+        theory = "Corollary 1" if perfect else "Theorem 1"
+    else:
+        raise ValueError("Use T1 or T2 for stochastic training and the C1 specialization for perfect training")
     if perfect:
         shift = perfect_shift_fn(config["deployment_channel"], config["width"], model,
                                  config["loss_epsilon"])
@@ -124,13 +134,12 @@ def risk_decomposition(config, model, empirical, family_size=FAMILY_SIZE, perfec
         divergence = diagnostic["channel_kl_deployment_to_training"]
         if divergence is None or not math.isfinite(divergence):
             raise ValueError("Matched and mismatch regimes require finite analytic channel KL")
-        shift = dict(method="T1 channel KL", analytic=True,
+        shift = dict(method=f"{stochastic_theorem} channel KL", analytic=True,
                      upper=math.sqrt(max(0., divergence) / 2), channel_kl=divergence)
     components = dict(empirical=empirical["mean"], mc=min(radius, 1. - empirical["mean"]),
-                      sample=terms["sample_complexity"].item(),
-                      channel=terms["channel_complexity"].item(), shift=shift["upper"])
+                      **complexity, shift=shift["upper"])
     uncapped = sum(components.values())
-    return dict(theory="Corollary 1" if perfect else "Theorem 1", posterior_kl=kl,
+    return dict(theory=theory, posterior_kl=kl,
                 confidence=dict(family_failure=config["delta"], family_size=family_size,
                                 failure_each_theorem_and_mc=failure),
                 empirical_mc_radius=radius, components=components, channel_shift=shift,
@@ -151,7 +160,7 @@ def run(args):
 
 
 def evaluate_case(config, case, draws, test_draws, iid_weights, family_size, labels,
-                  perfect_shift_fn=perfect_shift):
+                  perfect_shift_fn=perfect_shift, stochastic_theorem="T1"):
     """Train once, then certify and evaluate the same frozen posterior and channel bank."""
     checkpoint = case / "checkpoint"
     report_path = case / "bound.json"
@@ -184,7 +193,7 @@ def evaluate_case(config, case, draws, test_draws, iid_weights, family_size, lab
     if bank_hash != metadata["training_channel_bank_hash"]:
         raise ValueError("Saved bank differs from checkpoint metadata")
     empirical = empirical_mc(model, bank, train_data, config, draws, iid_weights)
-    decomposition = risk_decomposition(config, model, empirical, family_size, perfect_shift_fn)
+    decomposition = risk_decomposition(config, model, empirical, family_size, perfect_shift_fn, stochastic_theorem)
     test = evaluate(model, bank, make_loader(test, config), config, test_draws,
                     config["eval_seed"] + 97557)
     if file_fingerprint(path) != weight_fingerprint:
