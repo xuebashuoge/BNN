@@ -157,7 +157,8 @@ def draw_figure(rows, output, mismatch_rho):
                        color="#111111", edgecolors="white", linewidths=.55, zorder=4)
             for x, total in zip(positions, bottom):
                 ax.annotate(f"{total:.3f}", (x, total), xytext=(0, 3), textcoords="offset points",
-                            ha="center", va="bottom", fontsize=7.6)
+                            ha="center", va="bottom", fontsize=7.6, zorder=5,
+                            bbox=dict(facecolor="white", edgecolor="none", pad=.4))
             ax.set_xticks(positions, [r["certificate"] for r in cells], fontsize=8)
             for x, label in groups:
                 ax.text(x, -.13, label, ha="center", va="top", transform=ax.get_xaxis_transform())
@@ -166,7 +167,7 @@ def draw_figure(rows, output, mismatch_rho):
             ax.grid(axis="y", linewidth=.45, color="#DADDE0")
             ax.set_axisbelow(True)
         axes[0].set_ylabel("Bounded Gibbs risk")
-        fig.suptitle(rf"Two moons   $n={rows[0]['n']:,}$   $m={rows[0]['m']:,}$   "
+        fig.suptitle(rf"Two moons   $n={rows[0]['n']}$   $m={rows[0]['m']}$   "
                      rf"$\rho_{{\rm test}}={DEPLOYMENT_RHO}$   $\rho_{{\rm mismatch}}={mismatch_rho:g}$",
                      y=.985, fontsize=10)
         handles = [Patch(facecolor=color, label=label) for label, color in COMPONENTS.values()]
