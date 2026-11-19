@@ -26,13 +26,12 @@ curves to $m=6400,12800,25600$.
 
 ## Two-moons guarantees
 
-The [bound derivation](DIAGONAL_FADING_BOUNDS.md) describes the joint gain/noise metric,
-the i.i.d. reference for Corollary 1's second inequality, and the binomial expectation
-in its first inequality for erasure. Both deployment laws use perfect, matched and
-mismatched training at $m=2000$. Under fading, the mismatch changes the training
-correlation to zero while preserving the marginals. The confidence allocation covers both
-the width-16 trial and the conditional width-8 fallback. The six width-8 bounds are
-non-vacuous for the smooth bounded deployment loss.
+The [bound derivation](DIAGONAL_FADING_BOUNDS.md) and [decomposition](../results/correlated_diagonal_fading/bounds_rho015_test035/README.md)
+compare perfect training with Corollary 1, T1 training with Theorem 1, and T2 training with
+Theorem 2. The two stochastic learners each train once under a matched law and once under a
+correlated mismatch. Deployment uses $\rho_c=0.35$, mismatch training uses $\rho_c=0.15$,
+and all gains have the same marginals and independent unit-variance AWGN. At $m=2000$ the
+mismatched T1/T2 bounds are 0.8955/0.8202 for width 16 and 0.6881/0.6433 for width 8.
 
 ## Accuracy protocol
 

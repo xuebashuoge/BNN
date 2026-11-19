@@ -1,15 +1,31 @@
 # Two-moons bound decomposition
 
-The correlated diagonal fading experiment gives non-vacuous bounds on smooth bounded deployment loss for perfect, matched and i.i.d. mismatched training at $d=8$ and $m=2000$. At $d=16$, the perfect and i.i.d. mismatch certificates exceed the maximum possible loss of one. Both widths use the same 800 i.i.d. training examples, 200 validation examples, Gaussian posterior training procedure and channel law.
+Five independently trained posteriors per width compare the perfect-channel corollary, the separated
+bound and the joint bound. All five are deployed at $\rho_{\rm test}=0.35$. The matched
+training bank uses $\rho_{\rm tr}=0.35$ and the mismatched bank uses $\rho_{\rm tr}=0.15$.
+Both stochastic laws have diagonal gains with marginal distribution $\mathcal N(0.5,1)$
+and independent standard Gaussian receiver noise. Perfect training uses $(I,0)$.
 
-| Width | Deployment law | Perfect training | Matched training | Mismatched training |
-|---:|---|---:|---:|---:|
-| 16 | Fading | 1.5400 | 0.4790 | 1.1805 |
-| 16 | Erasure | 0.4280 | 0.4778 | 0.6816 |
-| 8 | Fading | 0.9161 | 0.4036 | 0.8819 |
-| 8 | Erasure | 0.3689 | 0.4164 | 0.5618 |
+| Training law | Objective and certificate | Width 16 | Width 8 |
+|---|---|---:|---:|
+| Perfect | Sample-only objective, C1(ii) | 1.5396 | 0.9156 |
+| Matched | T1 learner, Theorem 1 | 0.4784 | 0.4028 |
+| Matched | T2 learner, Theorem 2 | 0.4014 | 0.3586 |
+| Correlated mismatch | T1 learner, Theorem 1 | 0.8955 | 0.6881 |
+| Correlated mismatch | T2 learner, Theorem 2 | 0.8202 | 0.6433 |
 
-Entries are uncapped population-risk upper bounds from the Spartan CPU experiment. For fading at width eight, held-out Gibbs accuracies were 56.14%, 53.62% and 53.48%, respectively. The certificate-specific network projects each transmitted feature vector to the Euclidean ball of radius $B=1$ and each receiver matrix to the Frobenius ball of radius $L=0.075$. These fixed projections hold for every raw Gaussian weight draw in the two-layer $2\to d\to2$ classifier.
+The entries are uncapped population bounds for the smooth bounded deployment loss. The two-layer
+$2\to d\to 2$ network projects each feature vector onto the Euclidean ball of radius $B=1$
+and each receiver matrix onto the Frobenius ball of radius $L=0.075$. The prior has standard
+deviation 0.24 and the posterior standard deviation is fixed at 0.1. All five fits at each
+width use the same 800 i.i.d. training examples, 200 validation examples, initialization seed,
+120-epoch budget and $m=2000$. T1 and T2 share the training bank and random seeds within each
+stochastic regime. Separate optimizations learn distinct posterior means. T1 trains with
+0.02 times its **sum** of data and channel complexities. T2 trains with 0.02 times its **joint**
+complexity. The perfect-channel learner uses 0.02 times the data complexity. The certificates
+use the full unweighted terms.
+
+[Decomposition figures and numerical results](../results/correlated_diagonal_fading/bounds_rho015_test035/README.md)
 
 ## Perfect training under correlated fading
 
@@ -34,34 +50,59 @@ $$
 
 At $d=8$ the log-moment upper bound is 0.13849 and the divergence is 0.45737. At $d=16$ these become 0.19573 and 0.98009. The divergence accounts for most of the change with width. The guarantee uses a closed-form upper bound on the log moment. The numerical quadrature in the regression test checks this calculation independently.
 
-## Erasure and mismatched training
+## Stochastic training
 
-Erasure deployment drops coordinates independently with probability $p=0.50$. For perfect training, Corollary 1's first inequality gives a shift of
+Write $p=\rho_{\rm test}$ and $q=\rho_{\rm tr}$. The noise law is identical at training and
+deployment. The stationary centered AR(1) gain process has conditional variance $1-\rho^2$.
+Summing the conditional Gaussian divergences gives the deployment-to-training KL
 
 $$
-\frac{\sqrt2 LB}{\log(1/\varepsilon)}
-\sum_{j=1}^{d}\sqrt j \binom{d}{j}p^j(1-p)^{d-j}.
+D_{\rm KL}(P_p\|P_q)=(d-1)
+\left[\tfrac12\log\frac{1-q^2}{1-p^2}+\frac{q(q-p)}{1-q^2}\right].
 $$
 
-The sum is the exact expected Frobenius distance between the erasure mask and the identity. The matched training law equals deployment in each family. Fading mismatch trains with $\rho_c=0$, preserving every coordinate marginal and noise distribution. Erasure mismatch trains with $p_{\rm tr}=0.45$. Both stochastic training regimes use the separated data and channel complexity terms and the bounded-loss shift $\sqrt{D_{\rm KL}(P_{\rm dep}\|P_{\rm tr})/2}$.
+The bounded-loss shift is $S=\sqrt{D_{\rm KL}(P_p\|P_q)/2}$. It vanishes under matched
+training. At $(p,q)=(0.35,0.15)$ it equals 0.417763 for width 16 and 0.285387 for width 8.
+Both stochastic learners use the same deployment shift because it depends only on the two channel laws.
 
-## Confidence and outputs
+Let $D_W$ denote the KL of the particular learned weight posterior from its prior.
+With bounded loss in $[0,1]$, both sub-Gaussian proxies are $1/4$. Write $\delta_T$ for the
+theorem event's failure probability. T1 uses the two separated terms
 
-Each stacked bar adds empirical Gibbs loss, a one-sided empirical Monte Carlo correction, sample complexity, channel complexity and channel shift. Black diamonds mark held-out Gibbs loss over 10,000 independently generated test examples and 20 draws. Perfect training has zero channel complexity. Matched training has zero shift. The $[0,1]$ loss gives the non-vacuity threshold of one.
+$$
+B_{\rm data}=\sqrt{\frac{D_W+\log(2\sqrt n/\delta_T)}{2(n-1)}},\qquad
+B_{\rm channel}=\sqrt{\frac{D_W+\log(2\sqrt m/\delta_T)}{2(m-1)}}.
+$$
 
-The confidence budget covers both declared widths, two channel families and three training regimes. Each of the twelve cases receives failure probability $0.05/24$ for the theorem and $0.05/24$ for its independent empirical Monte Carlo estimate. Each empirical estimate uses 20,000 independent triples of weight draw, training-example index and training-bank index. Its one-sided Hoeffding correction is 0.01242. The union bound gives simultaneous coverage of at least 95%, including the decision to run width eight if any width-sixteen bound exceeds or equals one.
+For the T2-trained posterior, Theorem 2 instead uses the single term
 
-Run the six width-sixteen cells, then apply the conditional fallback from the repository root in the torch28 environment.
+$$
+B_{\rm joint}=\sqrt{\left(\frac{1}{2(n-1)}+\frac{1}{2(m-1)}\right)
+             \left(D_W+\log\frac{\sqrt{nm}}{\delta_T}\right)}.
+$$
 
-~~~bash
-out=results/correlated_diagonal_fading/bounds
-for family in fading erasure; do
-  for regime in perfect matched mismatch; do
-    python -m journal.diagonal_fading_bounds run --width 16 --family "$family" \
-      --regime "$regime" --output "$out"
-  done
-done
-python -m journal.diagonal_fading_bounds fallback --output "$out"
-~~~
+Each bound adds its own empirical Gibbs loss upper estimate and $S$. Perfect training uses only
+the data term with $\log(\sqrt n/\delta_T)$, together with the analytic C1(ii) shift above.
 
-Each width directory contains the stacked figures in PNG and PDF and the complete numerical decomposition in JSON. Each case retains its posterior, bank, training history and selected epoch.
+## Confidence and reproduction
+
+The joint failure budget is 0.05 over the five training/guarantee combinations and both widths.
+Each of the ten fits gets $\delta_T=0.0025$ for its one assigned theorem/corollary and
+0.0025 for its empirical Monte Carlo event. The T1 stochastic certificate splits its theorem
+budget equally between the data and channel terms. Its empirical correction, also used for
+the other fits, is $\sqrt{\log(1/0.0025)/(2\times20000)}=0.0122387$.
+The 20,000 independent weight/example-index/bank-index observations estimate the empirical
+Cartesian-product loss of the actual checkpoint. Upper bounds below one are non-vacuous.
+Held-out loss markers use 10,000 examples and 20 paired Gibbs draws and are descriptive.
+
+Run the ten fits on Spartan from a clean checkout with the prepared dataset root in `DATASET`.
+The output directory holds per-case checkpoints, training histories, channel-bank fingerprints,
+uncapped bound totals and the figure export.
+
+```bash
+bash journal/submit_correlated_bounds.sh /absolute/shared/results_directory 0.15
+```
+
+The [archived combined-channel decomposition](../results/correlated_diagonal_fading/final/bounds/decomposition.csv)
+records the previous T1-only design, including i.i.d. mismatch and erasure. Those historical rows
+have their original confidence budget.

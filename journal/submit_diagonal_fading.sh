@@ -78,7 +78,10 @@ case $phase in
         submit "$stage/report.job" mnist_plot "${cpu[@]}" --time=00:05:00 --dependency="afterok:$wait_for" \
             "$worker" python -u -m "$mnist" report "${inputs[@]}" --manifest "$manifest" --stage-root "$stage" --output "$stage/figures"
         ;;
-    bounds)
+    bounds|bounds-by-method)
+        bash journal/submit_correlated_bounds.sh "$root/bounds-by-method" "${DIAGONAL_MISMATCH_RHO:-0.15}"
+        ;;
+    bounds-legacy)
         stage="$root/bounds"
         mkdir -p "$stage"
         job=$(submit "$stage/tasks.job" bounds "${cpu[@]}" --time=00:08:00 --array=0-5 \
