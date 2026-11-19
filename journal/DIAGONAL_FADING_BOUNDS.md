@@ -1,10 +1,11 @@
 # Two-moons bound decomposition
 
-The [combined fading and erasure report](../results/correlated_diagonal_fading/bounds_fading_erasure/README.md) gives
-a single simultaneous 95% guarantee over 20 trained predictors. It adds separate T1 and T2 erasure learners under
-matched and mismatched training. Perfect-trained erasure uses Corollary 1(i). Its ten erasure upper bounds are
-below one. The following table and confidence allocation describe the earlier fading-only family.
-
+The [width-8 erasure decomposition](../results/correlated_diagonal_fading/bounds_erasure_d8_ptr035/README.md)
+uses 2000 training-channel draws and deployment erasure probability 0.50. With mismatch training at 0.35,
+the T1 and T2 upper bounds are 0.8573 and 0.7953. All five erasure bounds at width 8 are below one.
+The [two-width comparison at 0.25](../results/correlated_diagonal_fading/bounds_fading_erasure_ptr025/README.md)
+includes the fading results and uses the same per-certificate confidence allocation.
+The following table and confidence allocation describe the earlier fading-only family.
 
 Five independently trained posteriors per width compare the perfect-channel corollary, the separated
 bound and the joint bound. All five are deployed at $\rho_{\rm test}=0.35$. The matched

@@ -5,11 +5,24 @@ root=${1:?Supply an absolute output directory}
 rho=${2:-0.15}
 scope=${3:-fading}
 export BOUND_ERASURE_TRAIN_P=${4:-0.25}
+width=${5:-}
+plot_root="$root"
 case $scope in
-    fading|erasure) last=9; plot_args=(--family "$scope") ;;
-    both) last=19; plot_args=(--both-channels) ;;
+    fading|erasure) nfamilies=1; plot_args=(--family "$scope") ;;
+    both) nfamilies=2; plot_args=(--both-channels) ;;
     *) echo "Supply fading, erasure or both as the channel scope" >&2; exit 2 ;;
 esac
+case $width in
+    "") nwidths=2 ;;
+    8|16)
+        nwidths=1
+        plot_args+=(--width "$width")
+        # A width slice uses the full study's confidence allocation and directory layout.
+        if [[ $scope != both ]]; then plot_root="$root/$scope"; fi ;;
+    *) echo "Width must be 8 or 16" >&2; exit 2 ;;
+esac
+last=$((5 * nwidths * nfamilies - 1))
+export CORR_BOUNDS_WIDTH="$width"
 [[ $root = /* ]]
 cd "$(git rev-parse --show-toplevel)"
 export JOURNAL_GIT_SHA=$(git rev-parse HEAD)
@@ -23,19 +36,23 @@ id=$(sbatch --parsable --partition=sapphire --cpus-per-task=1 --mem=3G --time=00
         set -eu
         cases=(perfect t1_matched t2_matched t1_mismatch t2_mismatch)
         widths=(16 8)
+        if [[ -n $CORR_BOUNDS_WIDTH ]]; then widths=("$CORR_BOUNDS_WIDTH"); fi
+        nwidths=${#widths[@]}
         i=$SLURM_ARRAY_TASK_ID
         families=(fading erasure)
         family=$CORR_BOUNDS_SCOPE
         args=()
         if [[ $family == both ]]; then
-            family=${families[i/10]}
+            family=${families[i/(5*nwidths)]}
+        fi
+        if [[ $CORR_BOUNDS_SCOPE == both || -n $CORR_BOUNDS_WIDTH ]]; then
             args=(--both-channels)
         fi
-        exec python -u -m journal.correlated_bound_study --width "${widths[(i%10)/5]}" --case "${cases[i%5]}" \
+        exec python -u -m journal.correlated_bound_study --width "${widths[(i/5)%nwidths]}" --case "${cases[i%5]}" \
             --output "$CORR_BOUNDS_OUTPUT" --mismatch-rho "$CORR_BOUNDS_TRAIN_RHO" --family "$family" --mismatch-p "$BOUND_ERASURE_TRAIN_P" "${args[@]}"')
 printf '%s\n' "${id%%;*}" | tee "$root/train.job"
 report=$(sbatch --parsable --partition=sapphire --cpus-per-task=1 --mem=3G --time=00:04:00 \
     --chdir="$PWD" --job-name=corr_bound_report --dependency="afterok:${id%%;*}" --kill-on-invalid-dep=yes \
     --output="$root/logs/report_%j.out" --error="$root/logs/report_%j.err" \
-    journal/full_fading_spartan.slurm python -m journal.plot_correlated_bound_study --root "$root" --output "$root/figures" "${plot_args[@]}")
+    journal/full_fading_spartan.slurm python -m journal.plot_correlated_bound_study --root "$plot_root" --output "$root/figures" "${plot_args[@]}")
 printf '%s\n' "${report%%;*}" | tee "$root/report.job"
