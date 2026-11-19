@@ -177,7 +177,7 @@ JOINT_STEM = "fading_erasure_bound_decomposition"
 FAMILY_LABELS = {"fading": "Correlated fading", "erasure": "Feature erasure"}
 
 
-def draw_figure(rows, output, families, stem):
+def draw_figure(rows, output, families, stem, widths=WIDTHS):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -188,16 +188,21 @@ def draw_figure(rows, output, families, stem):
              "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": .65}
     with plt.rc_context(style):
         nrows = len(families)
-        fig, axes = plt.subplots(nrows, len(WIDTHS), squeeze=False, sharey=True,
-                                 figsize=(7.45, 4.15 if nrows == 1 else 6.9))
-        if nrows == 1:
+        focused = len(widths) == 1
+        figsize = ((5.25, 4.6 if nrows == 1 else 7.45) if focused else
+                   (7.45, 4.15 if nrows == 1 else 6.9))
+        fig, axes = plt.subplots(nrows, len(widths), squeeze=False, sharey=True, figsize=figsize)
+        if focused:
+            fig.subplots_adjust(left=.13, right=.98, bottom=.365 if nrows == 1 else .225,
+                                top=.84 if nrows == 1 else .91, hspace=.63)
+        elif nrows == 1:
             fig.subplots_adjust(left=.10, right=.99, bottom=.34, top=.84, wspace=.15)
         else:
             fig.subplots_adjust(left=.10, right=.99, bottom=.19, top=.91, wspace=.15, hspace=.55)
         positions = [0., 1.08, 1.75, 2.86, 3.53]
         ymax = max(1., max(row["uncapped_risk_upper"] for row in rows)) * 1.13
         for i, family in enumerate(families):
-            for j, width in enumerate(WIDTHS):
+            for j, width in enumerate(widths):
                 ax = axes[i, j]
                 cells = [r for r in rows if r["family"] == family and r["width"] == width]
                 bottom = [0.] * len(cells)
@@ -233,25 +238,29 @@ def draw_figure(rows, output, families, stem):
         handles.extend([Line2D([], [], marker="D", color="#111111", ls="none", markersize=4,
                                label="Held-out Gibbs loss"),
                         Line2D([], [], ls=(0, (4, 2)), color="#333333", lw=.85, label="Risk ceiling (1)")])
-        fig.legend(handles=handles, ncol=4, loc="lower center", frameon=False, fontsize=7.6,
+        fig.legend(handles=handles, ncol=2 if focused else 4, loc="lower center", frameon=False, fontsize=7.6,
                    handlelength=1.3, columnspacing=1.3, bbox_to_anchor=(.53, .014))
         for suffix in (".png", ".pdf"):
             fig.savefig(output / (stem + suffix), dpi=300, facecolor="white")
         plt.close(fig)
 
 
-def export(root, output, *, family="fading", both_channels=False):
+def export(root, output, *, family="fading", both_channels=False, width=None):
+    if width is not None and width not in WIDTHS:
+        raise ValueError(f"Width must be one of {WIDTHS}")
+    widths = WIDTHS if width is None else (width,)
+    suffix = "" if width is None else f"_d{width}"
     families = FAMILIES if both_channels else (family,)
     if both_channels:
         family_size = JOINT_FAMILY_SIZE
     else:
-        first_path = root / f"d{WIDTHS[0]}" / next(iter(CASES)) / "bound.json"
+        first_path = root / f"d{widths[0]}" / next(iter(CASES)) / "bound.json"
         family_size = json.loads(first_path.read_text())["confidence"]["family_size"]
         if family_size not in (FAMILY_SIZE, JOINT_FAMILY_SIZE):
             raise ValueError("Unrecognized confidence family size")
 
     rows = [read_case(root, width, case, law, family_size, combined=both_channels)
-            for law in families for width in WIDTHS for case in CASES]
+            for law in families for width in widths for case in CASES]
     if len({(r["n"], r["m"], r["test_draws"], r["test_examples"], r["empirical_draws"],
              r["family_failure"]) for r in rows}) != 1:
         raise ValueError("All fitted predictors must share training, evaluation and confidence budgets")
@@ -259,7 +268,9 @@ def export(root, output, *, family="fading", both_channels=False):
     output.mkdir(parents=True, exist_ok=True)
     for law in families:
         selected = [r for r in rows if r["family"] == law]
-        for width in WIDTHS:
+        for width in widths:
+            if [r["case"] for r in selected if r["width"] == width] != list(CASES):
+                raise ValueError(f"Incomplete set of {law} certificates at width {width}")
             for regime in ("matched", "mismatch"):
                 t1, t2 = [r for r in selected if r["width"] == width and r["regime"] == regime]
                 if t1["bank_sha256"] != t2["bank_sha256"]:
@@ -270,16 +281,17 @@ def export(root, output, *, family="fading", both_channels=False):
             raise ValueError(f"All {law} mismatch training cases must share the same channel law")
         laws.update({"mismatch_train_" + key: values.pop(), "test_" + key: selected[0]["test_" + key]})
     for law in families:
-        draw_figure([r for r in rows if r["family"] == law], output, (law,), FAMILY_STEMS[law])
+        draw_figure([r for r in rows if r["family"] == law], output, (law,), FAMILY_STEMS[law] + suffix, widths)
 
-    stem = JOINT_STEM if both_channels else FAMILY_STEMS[family]
+    stem = (JOINT_STEM if both_channels else FAMILY_STEMS[family]) + suffix
     if both_channels:
-        draw_figure(rows, output, families, stem)
+        draw_figure(rows, output, families, stem, widths)
     with (output / (stem + ".csv")).open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=rows[0])
         writer.writeheader()
         writer.writerows(rows)
-    summary = dict(source_root=str(root.resolve()), family_size=family_size,
+    summary = dict(source_root=str(root.resolve()), displayed_cases=len(rows), widths=list(widths),
+                   family_size=family_size,
                    family_confidence=1. - rows[0]["family_failure"], **laws,
                    nonvacuous=sum(row["nonvacuous"] for row in rows), rows=rows)
     save_json(output / (stem + ".json"), summary)
@@ -290,9 +302,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--width", type=int, choices=WIDTHS, help="Export one width using the stored confidence allocation")
     selection = parser.add_mutually_exclusive_group()
     selection.add_argument("--family", choices=FAMILIES, default="fading", help="Single channel in ROOT/d*/CASE")
     selection.add_argument("--both-channels", action="store_true", help="Both channels in ROOT/FAMILY/d*/CASE")
     args = parser.parse_args()
-    summary = export(args.root, args.output, family=args.family, both_channels=args.both_channels)
+    summary = export(args.root, args.output, family=args.family, both_channels=args.both_channels, width=args.width)
     print(f"{summary['nonvacuous']} nonvacuous certificates out of {len(summary['rows'])} evaluated")
