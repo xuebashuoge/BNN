@@ -1,0 +1,405 @@
+[
+  {
+    "dataset": "cifar10",
+    "m": 100,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m100/cifar10/runs/accuracy_summary.json",
+    "sha256": "fd95b955d093b0d870d7ba5298b21734c295f5bca769c9d8a46a88ed3ac1a85c",
+    "bytes": 7081,
+    "manifest": {
+      "sha256": "db71067870dc90280d914a361744f9e7acd5d7e1464971c022ffe31996afc312",
+      "bytes": 28623
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/m100/comparison/cifar10/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 200,
+    "phase": "expansion/retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/mnist/expansion/retuned/runs/accuracy_summary.json",
+    "sha256": "3b8f270a398762bd1eddbe7184c5b0ee6a77bdc8531263e624a5717cac284104",
+    "bytes": 7172,
+    "manifest": {
+      "sha256": "f7acbdbd7eb8c5fa54a4ed8f853bf9e4582bc0dd304947e837eeb41100af6dbe",
+      "bytes": 81648
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 200,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/mnist/retuned/runs/accuracy_summary.json",
+    "sha256": "e2b43108cd1ea90789e50177341c74e6c9574bec6a567279987f7fbc0a17e137",
+    "bytes": 7195,
+    "manifest": {
+      "sha256": "5a2362ff55a15a797925464216fe0876fcb98a8b55cb4cff01693e41f5e4a3e1",
+      "bytes": 81360
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 200,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/mnist/runs/accuracy_summary.json",
+    "sha256": "a28e093d999d7c1a1cf298ad96f3411b2715561db829420f1da7f4bb6ea59de4",
+    "bytes": 7105,
+    "manifest": {
+      "sha256": "73d766e2fa60e3161120ae653e5f555dd813179e8827f70a7b33d7f78f20e87f",
+      "bytes": 28260
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 200,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/fashionmnist/runs/accuracy_summary.json",
+    "sha256": "d499657785d5b7f09b1e4cc445e3d46a297e7c557209f5d0c928426a31f0f020",
+    "bytes": 7198,
+    "manifest": {
+      "sha256": "18a3b64e3daee56761fe153405c0eba0000fc6a6f09e94c7285ba8ba86d0adfc",
+      "bytes": 87696
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/fashionmnist/confirm-finalists.jsonl"
+  },
+  {
+    "dataset": "cifar10",
+    "m": 200,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/cifar10/retuned/runs/accuracy_summary.json",
+    "sha256": "6c0e89b284df7fd8f7441d628eabce40a38871b06b0acdf313064208e6261503",
+    "bytes": 7075,
+    "manifest": {
+      "sha256": "62e95d5cc29731f1364615a43f2751163f9076c07dc1314ff358a11eedd2f458",
+      "bytes": 45775
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/cifar10/confirm-upper.jsonl"
+  },
+  {
+    "dataset": "cifar10",
+    "m": 200,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/cifar10/runs/accuracy_summary.json",
+    "sha256": "f884fb4b48cb89c545f3547aafbd128ef2d5a471445ee612c6d9bf0645b9d876",
+    "bytes": 7067,
+    "manifest": {
+      "sha256": "2b0d1e5445b3846275a49643965759c2c44dcc5fa3c21c4c40d92cc4811bffe0",
+      "bytes": 48135
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/cifar10/confirm-upper.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 200,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/moons/retuned/runs/accuracy_summary.json",
+    "sha256": "de30d38e1042092ca4982c2ee1a66391a5b064b8b134f7e110575ce447709eae",
+    "bytes": 7197,
+    "manifest": {
+      "sha256": "1542ece534e32bfdcd6a0fd44dcbdee377376f3b8f6fbfe35b1f6d3968e5c3ad",
+      "bytes": 81243
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/moons/confirm-revalidated.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 200,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m200/moons/runs/accuracy_summary.json",
+    "sha256": "b96a64353622147288043e00c3b5d4c8dcc69f62b45349d8a1d51d2bf9fda386",
+    "bytes": 7121,
+    "manifest": {
+      "sha256": "f158ef2dd08a55e8f7eaaf36c898ef942ba4d113616026d5f743fdaa31996415",
+      "bytes": 28194
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m200/comparison/moons/confirm-revalidated.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 500,
+    "phase": "expansion/retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/mnist/expansion/retuned/runs/accuracy_summary.json",
+    "sha256": "7947877205bae7c25008c99d924268cd128fa09b9a836852de933a28863340fd",
+    "bytes": 7172,
+    "manifest": {
+      "sha256": "7a6077c222a3b31f700dab0c1b3002bf21b6fd912f6b445a0d174fc58683e7a4",
+      "bytes": 81666
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 500,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/mnist/retuned/runs/accuracy_summary.json",
+    "sha256": "bbad81eaddc0d5d473c4b5f5e0f8ef8de9f16686784c6631c3d9956c2e7c485f",
+    "bytes": 7206,
+    "manifest": {
+      "sha256": "7047eeb47c4d245a10a153f11334111858c49193f67d11d0f0707f432518f3a6",
+      "bytes": 81369
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 500,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/mnist/runs/accuracy_summary.json",
+    "sha256": "19eb26acf7c2f4202c5eeda48e05fa01f2d3296885091c7c44400204d3582898",
+    "bytes": 7119,
+    "manifest": {
+      "sha256": "6579ddbbff19d6c2f0446822bfdd8386cbbd254599d564cfffd1b1dd72a9c75a",
+      "bytes": 28260
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 500,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/fashionmnist/runs/accuracy_summary.json",
+    "sha256": "e591e5e15fb9a5f1d9b59f5fbba31037d009f1ec38a0ba13734f692708e2200e",
+    "bytes": 7209,
+    "manifest": {
+      "sha256": "aadef54c2584ba47fc8592b0108a5070311b99ada3f5e03f2322a5d712367d3b",
+      "bytes": 87696
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/fashionmnist/confirm-finalists.jsonl"
+  },
+  {
+    "dataset": "cifar10",
+    "m": 500,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/cifar10/retuned/runs/accuracy_summary.json",
+    "sha256": "13febdc6493a0eace935f3abaf49ebfa0d68fa69a9aec5c5f49baaf317cfa095",
+    "bytes": 7072,
+    "manifest": {
+      "sha256": "342130175e309eb1c897882f4b87729062ffbbb97114fc242de5761a3a97a4b7",
+      "bytes": 45785
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/cifar10/confirm-upper.jsonl"
+  },
+  {
+    "dataset": "cifar10",
+    "m": 500,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/cifar10/runs/accuracy_summary.json",
+    "sha256": "f6cadf16946c5048a1618d4832135d721c6010e46dfe8f3568a88bac404b2b6c",
+    "bytes": 7047,
+    "manifest": {
+      "sha256": "bd71d4592841c16340d1fb00ac49df1699a96f40c4a99dfea09aec647afa4abd",
+      "bytes": 48135
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/cifar10/confirm-upper.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 500,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/moons/retuned/runs/accuracy_summary.json",
+    "sha256": "5521570c3730a2542d7234d78207cf865f486e67b092e3e64ed9547a303d9777",
+    "bytes": 7200,
+    "manifest": {
+      "sha256": "d542283fd5ff09c2c10401107b10eae373f02c099248d57e8e0db531449b4708",
+      "bytes": 81234
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/moons/confirm-revalidated.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 500,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m500/moons/runs/accuracy_summary.json",
+    "sha256": "b1d363ee4ac045e44724855f2984de46f605239b5d7b10a5560ea7e7e11224d4",
+    "bytes": 7138,
+    "manifest": {
+      "sha256": "826cd980df1b7fe984c10400e0f23d2cc3a53d62e1f762e89c8ffb38cc6b84d9",
+      "bytes": 28182
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m500/comparison/moons/confirm-revalidated.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 1000,
+    "phase": "expansion/retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/mnist/expansion/retuned/runs/accuracy_summary.json",
+    "sha256": "94a4025049017db07485a2659297e4dbf84ee8286646ea2d8b086cfd3ef40b7e",
+    "bytes": 7172,
+    "manifest": {
+      "sha256": "2936f2c15b28428d92963b2bba8bd690d2d626e50e699a36f6d642a7a4d56cfe",
+      "bytes": 81828
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 1000,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/mnist/retuned/runs/accuracy_summary.json",
+    "sha256": "67fcb3022ac872e17519867c22a3e23169e4e7f7118661fadf5d718312338d21",
+    "bytes": 7193,
+    "manifest": {
+      "sha256": "d951b7f8f50c757a950e1c5ba8413acd56d2231dade198ba3293a3bb4f38bb7a",
+      "bytes": 81540
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 1000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/mnist/runs/accuracy_summary.json",
+    "sha256": "262467863fa1a6d3f9aadb7e8620475cba0a938433b00fcc350692f7c4064176",
+    "bytes": 7115,
+    "manifest": {
+      "sha256": "7280ea91e8ad4be7444de396a8144b36b9fafdadb2c9ab4ef7e4595e42d97030",
+      "bytes": 28350
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 1000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/fashionmnist/runs/accuracy_summary.json",
+    "sha256": "d3db77b94a042d131459d4035cfe7abfefc83742d0c9ee30ea6a81ade41bac72",
+    "bytes": 7214,
+    "manifest": {
+      "sha256": "bc8d2aa5d4af2f8ae03b73be6a8079faf98bbe3f583cbd1dafde8a78973b0795",
+      "bytes": 87966
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/fashionmnist/confirm-finalists.jsonl"
+  },
+  {
+    "dataset": "cifar10",
+    "m": 1000,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/cifar10/retuned/runs/accuracy_summary.json",
+    "sha256": "3892b3a3d8f45ab9ca66fc8b2279d481ce643e72cb855a385a934a072dbe04aa",
+    "bytes": 7065,
+    "manifest": {
+      "sha256": "5753a129f3c643a2ed9ed82e4293047b815025358ae5ce6d62205d11b18926ae",
+      "bytes": 45980
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/cifar10/confirm-upper.jsonl"
+  },
+  {
+    "dataset": "cifar10",
+    "m": 1000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/cifar10/runs/accuracy_summary.json",
+    "sha256": "fee8945018c8e1fb8405311ac8347a14a470d6fdba79db1a664bb7905167cb3f",
+    "bytes": 7061,
+    "manifest": {
+      "sha256": "733ecc507c057c5524db014a2dbc1ecf57e4e811a770b38c12ea3f2e389f33a6",
+      "bytes": 48285
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/cifar10/confirm-upper.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 1000,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/moons/retuned/runs/accuracy_summary.json",
+    "sha256": "ca62577dec71873dc315bb8b4e37b5d6d797d008a80be5653bd8d22ad25fe916",
+    "bytes": 7200,
+    "manifest": {
+      "sha256": "a20eb6b6e8c3d4852bed1e9690cd6ccedba39520ccd300234801d7b49e09bf94",
+      "bytes": 81450
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/moons/confirm-revalidated.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 1000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m1000/moons/runs/accuracy_summary.json",
+    "sha256": "9cb79eae7e5522b72002eba0f26210f287f53938cea751575bbef88d2292cc40",
+    "bytes": 7136,
+    "manifest": {
+      "sha256": "d391bc0d568f3d44e0842a0572cfc7448f08e1e974cd55b5cf389edda6992db8",
+      "bytes": 28275
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_mgrid_20261119/m1000/comparison/moons/confirm-revalidated.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 2000,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m2000/mnist/retuned/runs/accuracy_summary.json",
+    "sha256": "22650029ee6ed8c403d1810cfe9fd27df1fc4e1363a8a9d9705950ac73365b0e",
+    "bytes": 7206,
+    "manifest": {
+      "sha256": "391fbe97d7e00f70658c4cd68950bb3475f1377b40773304d62865a5a75577a4",
+      "bytes": 81558
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "mnist",
+    "m": 2000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m2000/mnist/runs/accuracy_summary.json",
+    "sha256": "3cfdd574fb6db32a5d9696a08dca43ec4abcbf456ce427c1130d600df9fd4d2f",
+    "bytes": 7109,
+    "manifest": {
+      "sha256": "9b454c247f62d5af6b0d4008bcdee4585845157ae046f3ff241cbfaa44a59635",
+      "bytes": 28341
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/mnist/confirm.jsonl"
+  },
+  {
+    "dataset": "fashionmnist",
+    "m": 2000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m2000/fashionmnist/runs/accuracy_summary.json",
+    "sha256": "a6a9aadc4d9542380e9dc06cc50ffc6a77e1fab57cdcf1aed70324d3ebde8f90",
+    "bytes": 7119,
+    "manifest": {
+      "sha256": "05e52a180085d4fc809ed68fa1d12b8b6e18be93e5bca260526e716f371b9ca2",
+      "bytes": 29103
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/fashionmnist/confirm-refine.jsonl"
+  },
+  {
+    "dataset": "cifar10",
+    "m": 2000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m2000/cifar10/runs/accuracy_summary.json",
+    "sha256": "d07b091141e684c5c040fb8b5d359cb6ce72dcfc214aff37a5f38eca9ff89f34",
+    "bytes": 7067,
+    "manifest": {
+      "sha256": "a71a9d0cbb31bcf3949ecb324a85a8ad38893df1785e2d8cc1631442836527f3",
+      "bytes": 29034
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/cifar10/confirm-balanced.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 2000,
+    "phase": "retuned",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m2000/moons/retuned/runs/accuracy_summary.json",
+    "sha256": "16d2735f7f13041db6d161e9a1f5327194a5940e57549c9b7735afe8fcea7a1a",
+    "bytes": 7244,
+    "manifest": {
+      "sha256": "2b1a044c30ffc1d67169f95a08568e5c6c1e6ae806c0d5a05772530147d0cfdf",
+      "bytes": 81342
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/moons/confirm.jsonl"
+  },
+  {
+    "dataset": "moons",
+    "m": 2000,
+    "phase": "transfer",
+    "source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_severity_20261119/matched/m2000/moons/runs/accuracy_summary.json",
+    "sha256": "3e07c84c7e81b236c53c77ec11e7ec9b454910869094568c03d6eb692959a3f2",
+    "bytes": 7131,
+    "manifest": {
+      "sha256": "e3a66972d7af229708af17602e2338e8dc90a44d4533da5b32816e4b68993c95",
+      "bytes": 28278
+    },
+    "mild_source": "/data/gpfs/projects/punim2792/yangshuo/diagonal_fading_20261118/comparison/moons/confirm.jsonl"
+  }
+]
