@@ -128,7 +128,9 @@ def notes(m, rows, view="common"):
         selected = [DATASETS[d] for d in datasets if get(d,"Erasure")["phase"]=="validation_selected_triple"]
         extra.append(("Erasure seed triples selected on validation for "+", ".join(selected)+".")
                      if selected else "Illustrative rounds were chosen using observed rankings.")
-    long_mnist = 'mnist' in datasets and any(x in get('mnist','Erasure')['phase'] for x in ('epochs60','penalty60'))
+    long_mnist = 'mnist' in datasets and any(
+        token in get('mnist','Erasure')['phase'] or token in get('mnist','Erasure')['source']
+        for token in ('epochs60','penalty60','prior_width_reference'))
     if long_mnist:
         extra.append('The MNIST erasure comparison used 60 epochs and 200 deployment draws per seed.'
                      if get('mnist','Erasure')['phase']=='penalty60_precision200'

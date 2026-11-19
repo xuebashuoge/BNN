@@ -38,7 +38,7 @@ def case_order(r):
     # Each follow-up consumes the validation-selected configurations from the preceding stage.
     # The final local grid may have fewer candidates after shortlisting.
     order={'transfer':0, 'retuned':1, 'common/retuned':2, 'expansion/retuned':2,
-           'epochs60':3, 'penalty60/retuned':4}
+           'epochs60':3, 'penalty60/retuned':4, 'prior_width_reference/confirmation':5}
     if r['phase'] not in order:
         raise ValueError(f"Unregistered confirmation phase {r['phase']}")
     return (order[r['phase']],r['candidates_per_label'],r['n_seeds'],r['phase'])
