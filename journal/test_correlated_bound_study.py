@@ -1,7 +1,10 @@
 import math
+from pathlib import Path
+import tempfile
+from unittest.mock import patch
 import unittest
 
-from journal.correlated_bound_study import CASES, FAMILY_SIZE, learner_config
+from journal.correlated_bound_study import CASES, FAMILY_SIZE, JOINT_FAMILY_SIZE, learner_config, run
 from journal.diagonal_fading_bounds import perfect_shift
 from journal.full_fading_bounds import risk_decomposition
 from journal.run_experiment import make_models
@@ -38,6 +41,38 @@ class CorrelatedCertificateTests(unittest.TestCase):
             if regime != "perfect":
                 expected_shift = 0. if regime == "matched" else .28538650829
                 self.assertAlmostEqual(terms["shift"], expected_shift)
+
+    def test_erasure_learners_and_joint_confidence(self):
+        self.assertEqual(JOINT_FAMILY_SIZE, 20)
+        for width in (8, 16):
+            for case, (regime, method, certificate) in CASES.items():
+                with self.subTest(width=width, case=case):
+                    cfg = learner_config(width, case, family="erasure")
+                    self.assertEqual(cfg["deployment_channel"], {"kind": "outage", "outage_prob": .5})
+                    expected_train = ({"kind": "perfect"} if regime == "perfect" else
+                                      {"kind": "outage", "outage_prob": .5 if regime == "matched" else .45})
+                    self.assertEqual(cfg["train_channel"], expected_train)
+                    self.assertEqual(cfg["method"], method)
+                    with tempfile.TemporaryDirectory() as folder, patch(
+                            "journal.correlated_bound_study.evaluate_case") as evaluate:
+                        run(Path(folder), width, case, family="erasure", both_channels=True)
+                    args, kwargs = evaluate.call_args
+                    self.assertEqual(args[0], cfg)
+                    self.assertEqual(args[1], Path(folder) / "erasure" / f"d{width}" / case)
+                    self.assertEqual(args[5], JOINT_FAMILY_SIZE)
+                    self.assertEqual(args[6]["certificate"], certificate)
+                    self.assertEqual(kwargs["stochastic_theorem"], "T2" if method == "joint" else "T1")
+                    model, _ = make_models(cfg, 2, 2)
+                    result = risk_decomposition(cfg, model, {"mean": .15, "iid_observations": 20000},
+                                                JOINT_FAMILY_SIZE, perfect_shift, kwargs["stochastic_theorem"])
+                    self.assertEqual(result["confidence"]["failure_each_theorem_and_mc"], .00125)
+                    if regime == "perfect":
+                        self.assertEqual(result["channel_shift"]["method"], "C1 first")
+                        distance = sum(math.comb(width,k)*math.sqrt(k) for k in range(width+1))/2**width
+                        shift = math.sqrt(2)*.075/math.log(100)*distance
+                    else:
+                        shift = math.sqrt(-width*math.log(.99)/4) if regime == "mismatch" else 0.
+                    self.assertAlmostEqual(result["components"]["shift"], shift)
 
     def test_mismatch_is_a_correlated_alternative(self):
         for rho in (0, .35, 1., float("nan")):

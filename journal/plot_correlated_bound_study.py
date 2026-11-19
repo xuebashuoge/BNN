@@ -8,7 +8,7 @@ from pathlib import Path
 
 import torch
 
-from .correlated_bound_study import CASES, FAMILY_SIZE, learner_config
+from .correlated_bound_study import CASES, FAMILY_SIZE, JOINT_FAMILY_SIZE, learner_config
 from .diagonal_fading import diagonal_gain_kl
 from .diagonal_fading_bounds import FAMILIES, MISMATCH_RHO, WIDTHS
 from .run_experiment import channel_bank_fingerprint, checkpoint_bank_state, file_fingerprint, save_json
@@ -212,9 +212,9 @@ def draw_figure(rows, output, families, stem):
                                 bbox=dict(facecolor="white", edgecolor="none", pad=.4))
                 ax.set_xticks(positions, [r["certificate"] for r in cells], fontsize=8)
                 if family == "erasure":
-                    param, key = "p", "erasure_probability"
+                    param, test_param, key = r"p_{\rm tr}", r"p_{\rm test}", "erasure_probability"
                 else:
-                    param, key = r"\rho_c", "rho_c"
+                    param, test_param, key = r"\rho_{\rm tr}", r"\rho_{\rm test}", "rho_c"
                 test, mismatch = cells[0]["test_" + key], cells[-1]["train_" + key]
                 for x, label in [(0., "Perfect"), (1.415, "Matched\n" + rf"${param}={test:g}$"),
                                  (3.195, "Mismatch\n" + rf"${param}={mismatch:g}$")]:
@@ -241,11 +241,11 @@ def draw_figure(rows, output, families, stem):
 def export(root, output, *, family="fading", both_channels=False):
     families = FAMILIES if both_channels else (family,)
     if both_channels:
-        family_size = len(FAMILIES) * FAMILY_SIZE
+        family_size = JOINT_FAMILY_SIZE
     else:
         first_path = root / f"d{WIDTHS[0]}" / next(iter(CASES)) / "bound.json"
         family_size = json.loads(first_path.read_text())["confidence"]["family_size"]
-        if family_size not in (FAMILY_SIZE, len(FAMILIES) * FAMILY_SIZE):
+        if family_size not in (FAMILY_SIZE, JOINT_FAMILY_SIZE):
             raise ValueError("Unrecognized confidence family size")
 
     rows = [read_case(root, width, case, law, family_size, combined=both_channels)
