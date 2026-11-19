@@ -237,7 +237,8 @@ def export(input_file, output, sizes, defaults, view="common"):
             stem.with_suffix(".tex").write_text(document)
             start=document.index(r"\begin{tabular*}")
             end=document.index(r"\end{tabular*}")+len(r"\end{tabular*}")
-            (output/f"channel_accuracy_m{m}_tabular.tex").write_text(document[start:end]+"\n")
+            context="\n".join("% "+line for line in notes(m,rows,view))
+            (output/f"channel_accuracy_m{m}_tabular.tex").write_text(context+"\n"+document[start:end]+"\n")
             md=[f"### m = {m}","",
                 "| Dataset | Channel | Matched ERM | Matched L2 | Matched T1 | Matched T2 | Perfect T1/T2 |",
                 "|---|---|---:|---:|---:|---:|---:|"]
@@ -251,6 +252,7 @@ def export(input_file, output, sizes, defaults, view="common"):
                             value=f"**{value}**"
                         cells.append(f"{value} ± {fmt(row['sd_pp'])}")
                     md.append("| "+" | ".join([DATASETS[ds] if channel=="Fading" else "",channel,*cells])+" |")
+            md.extend(["",*notes(m, rows, view)])
             stem.with_suffix(".md").write_text("\n".join(md)+"\n")
             fig=render(m,rows,view)
             for ext in ("png","pdf"):
