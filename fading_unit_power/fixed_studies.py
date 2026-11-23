@@ -122,6 +122,8 @@ def empirical_bound_risk(model, bank, train_data, config, empirical):
     x, y = train_data.dataset.tensors
     device = config["device"]
     x, y = x[train_data.indices].to(device), y[train_data.indices].to(device)
+    # The archive records the base seed only. Adjacent seeds separate the
+    # example, posterior and channel streams in the reconstructed evaluator.
     data_rng = torch.Generator(device=device).manual_seed(seed)
     weight_rng = torch.Generator(device=device).manual_seed(seed + 1)
     channel_rng = torch.Generator(device=device).manual_seed(seed + 2)
@@ -161,6 +163,8 @@ def run_bound(index, output_root):
     if bank_hash != metadata["training_channel_bank_hash"]:
         raise ValueError(f"Training bank does not match the checkpoint metadata for {case}")
     empirical = empirical_bound_risk(model, bank, train, config, original["empirical"])
+    # The archived test report stores its draw count and sample count. Its
+    # selected config supplies the evaluation seed.
     test_seed = config["eval_seed"]
     test_result = trainer.evaluate(model, bank, trainer.make_loader(test, config), config,
                                    original["test"]["draws"], test_seed)
@@ -213,9 +217,12 @@ def collect(output_root, publish_root):
         metadata = read_json(checkpoint / "metadata.json")
         report = read_json(checkpoint / "test_full" / "evaluation.json")
         assert_unit_power(report["heldout_gibbs_mc"])
+        heldout = report["heldout_gibbs_mc"]
         observations.append(dict(method=entry["method_label"], m=entry["sweep_value"], seed=entry["config"]["seed"],
-                                 test_accuracy=report["heldout_gibbs_mc"]["accuracy"],
-                                 generalization_error=report["bounded_gap_mc"], seconds=metadata["total_seconds"]))
+                                 test_accuracy=heldout["accuracy"], generalization_error=report["bounded_gap_mc"],
+                                 seconds=metadata["total_seconds"],
+                                 feature_power_per_coordinate=heldout["feature_power_per_coordinate"],
+                                 weights_sha256=report["checkpoint_source_fingerprints"]["weights"]["sha256"]))
     fading = [(case, read_json(output_root / "bounds" / case / "bound.json")) for case in BOUND_CASES]
     for _, report in fading:
         assert_unit_power(report["test"])

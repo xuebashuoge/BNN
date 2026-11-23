@@ -83,7 +83,8 @@ def plot_bound(fading, erasure, output):
             if not math.isclose(running + parts["mc"], report["uncapped_risk_upper"]):
                 raise ValueError(f"Inconsistent risk decomposition for {report['family']}/{case}")
             axis.annotate(f"{running:.3f}", (x, running), xytext=(0, 2), textcoords="offset points",
-                          ha="center", fontsize=7)
+                          ha="center", fontsize=7,
+                          bbox=dict(boxstyle="square,pad=0.05", facecolor="white", edgecolor="none"))
             totals.append(running)
             heldout.append(report["test"]["bounded_loss"])
         axis.scatter(positions, heldout, marker="D", s=16, color="black",

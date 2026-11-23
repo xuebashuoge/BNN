@@ -21,7 +21,9 @@ export DATASET=${DATASET:-/data/gpfs/projects/punim2792/Datasets}
 export CONDA_ENVS_PATH=${CONDA_ENVS_PATH:-/data/gpfs/projects/punim2792/anaconda3/envs}
 module load Anaconda3/2024.02-1
 eval "$(conda shell.bash hook)"
+conda deactivate
 conda activate torch28
+python_bin=${CONDA_PREFIX:?torch28 activation failed}/bin/python
 set -u
 
 [[ -d "$DATASET" ]] || { printf 'Dataset directory missing: %s\n' "$DATASET" >&2; exit 1; }
@@ -71,16 +73,16 @@ array_range() {
 }
 
 if [[ "$scope" != performance ]]; then
-    mnist_count=$(python -m fading_unit_power.fixed_studies count mnist)
-    bounds_count=$(python -m fading_unit_power.fixed_studies count bounds)
+    mnist_count=$("$python_bin" -m fading_unit_power.fixed_studies count mnist)
+    bounds_count=$("$python_bin" -m fading_unit_power.fixed_studies count bounds)
     mnist_array=$(array_range "$mnist_count" 8)
     bounds_array=$(array_range "$bounds_count" 5)
 fi
 
 if [[ "$scope" != fixed ]]; then
     performance_dir=$run_dir/performance
-    python -m fading_unit_power.performance plan --output "$performance_dir"
-    confirmation_count=$(python -m fading_unit_power.performance confirmation-count)
+    "$python_bin" -m fading_unit_power.performance plan --output "$performance_dir"
+    confirmation_count=$("$python_bin" -m fading_unit_power.performance confirmation-count)
 fi
 
 if [[ "$scope" != performance ]]; then
