@@ -74,7 +74,7 @@ submit() {
     shift 6
     local -a flags=(--job-name="$name" --cpus-per-task="$cpus" --mem="$memory" --time="$time")
     if [[ -n "$dependency" ]]; then
-        flags+=(--dependency="afterok:$dependency" --kill-on-invalid-dep=yes)
+        flags+=(--dependency="$dependency" --kill-on-invalid-dep=yes)
     fi
     if [[ -n "$array" ]]; then
         flags+=(--array="$array" --output="$run_dir/logs/$name-%A_%a.log")
@@ -123,20 +123,26 @@ for dataset in moons mnist fashionmnist cifar10; do
     # The per-dataset stages run in series and share a 64-CPU limit.
     case "$dataset" in
         moons) time=00:05:00; memory=4G; concurrency=2 ;;
-        mnist|fashionmnist) time=00:12:00; memory=4G; concurrency=4 ;;
+        mnist|fashionmnist) time=00:30:00; memory=4G; concurrency=4 ;;
         cifar10) time=00:50:00; memory=6G; concurrency=22 ;;
     esac
     search_count=$(awk 'END { print NR }' "$performance_dir/manifests/$dataset-search.jsonl")
     search_job=$(submit_array "$dataset" search "$search_count" '')
-    promote_job=$(submit "sweep-$dataset-promote" 1 4G 00:05:00 "$search_job" '' \
+    # A successful rerun can leave an array's afterok dependency unsatisfied.
+    # Consumers of arrays validate the complete set of results before proceeding.
+    promote_job=$(submit "sweep-$dataset-promote" 1 4G 00:05:00 "${search_job:+afterany:$search_job}" '' \
         sweep-promote "$dataset" "$refine_count")
-    refine_job=$(submit_array "$dataset" refine "$refine_count" "$promote_job")
-    select_job=$(submit "sweep-$dataset-select" 1 4G 00:05:00 "${refine_job:-$promote_job}" '' \
+    refine_job=$(submit_array "$dataset" refine "$refine_count" "afterok:$promote_job")
+    select_dependency="afterok:$promote_job"
+    if [[ -n "$refine_job" ]]; then
+        select_dependency="afterany:$refine_job"
+    fi
+    select_job=$(submit "sweep-$dataset-select" 1 4G 00:05:00 "$select_dependency" '' \
         sweep-select "$dataset" "$confirmation_count")
-    confirmation_job=$(submit_array "$dataset" confirmation "$confirmation_count" "$select_job")
+    confirmation_job=$(submit_array "$dataset" confirmation "$confirmation_count" "afterok:$select_job")
     confirmations+=("${confirmation_job:-$select_job}")
 done
 
 confirmation_dependencies=$(IFS=:; printf '%s' "${confirmations[*]}")
-submit sweep-summary 1 4G 00:05:00 "$confirmation_dependencies" '' sweep-summarize >/dev/null
+submit sweep-summary 1 4G 00:05:00 "afterany:$confirmation_dependencies" '' sweep-summarize >/dev/null
 printf 'Submitted jobs recorded in %s\n' "$jobs_file"

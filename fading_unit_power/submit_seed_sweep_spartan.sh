@@ -19,7 +19,7 @@ printf 'stage\tjob_id\tdependency\tarray\n' > "$run_dir/jobs.tsv"
 submit() {
     local name=$1 dependency=$2 array=$3 cpus=$4 time=$5
     shift 5
-    local -a flags=(--job-name="$name" --dependency="afterok:$dependency" --kill-on-invalid-dep=yes
+    local -a flags=(--job-name="$name" --dependency="$dependency" --kill-on-invalid-dep=yes
                     --cpus-per-task="$cpus" --mem=6G --time="$time")
     if [[ -n "$array" ]]; then
         flags+=(--array="$array" --output="$run_dir/logs/$name-%A_%a.log")
@@ -42,9 +42,9 @@ for dataset in moons mnist fashionmnist cifar10; do
     [[ "$confirmation" =~ ^[0-9]+$ ]] || { printf 'Missing primary confirmation job for %s\n' "$dataset" >&2; exit 1; }
     concurrency=4
     [[ "$dataset" != moons ]] || concurrency=2
-    plan=$(submit "seed-$dataset-plan" "$confirmation" '' 1 00:05:00 seed-plan "$dataset" "$primary/performance")
-    evaluations+=("$(submit "seed-$dataset-test" "$plan" "0-3%$concurrency" 2 00:15:00 seed-run "$dataset")")
+    plan=$(submit "seed-$dataset-plan" "afterany:$confirmation" '' 1 00:05:00 seed-plan "$dataset" "$primary/performance")
+    evaluations+=("$(submit "seed-$dataset-test" "afterok:$plan" "0-3%$concurrency" 2 00:15:00 seed-run "$dataset")")
 done
 dependencies=$(IFS=:; printf '%s' "${evaluations[*]}")
-submit seed-summary "$dependencies" '' 1 00:05:00 seed-summary >/dev/null
+submit seed-summary "afterany:$dependencies" '' 1 00:05:00 seed-summary >/dev/null
 printf 'Submitted seed sweep jobs recorded in %s/jobs.tsv\n' "$run_dir"
