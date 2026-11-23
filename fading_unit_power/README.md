@@ -29,3 +29,16 @@ bash -l fading_unit_power/submit_spartan.sh "$refinement_run" refine "$primary_r
 ```
 
 When both runs finish, `python -m fading_unit_power.performance summarize --output "$primary_run/performance" --source "moons=$refinement_run/performance"` uses the refined confirmation for Two moons in the combined table.
+
+## Four-method tuning sweep
+
+The sweep uses the archived Gaussian MLPs and split CIFAR-10 CNN, the same data splits, and matched diagonal fading with correlation 0.35 and unit power. It compares ERM, L2, T1, and T2 at shared channel-set sizes 16, 128, and 2000. Each method gets five initial candidates per size, followed by the validation winner and one nearby configuration on three fresh paired seeds. The sweep varies Adam learning rate, exponential decay, epoch budget, the applicable regularization or ERM posterior scale, and the number of independent posterior/channel draws averaged per optimizer update.
+
+The selector first ranks configs within each method and bank size by mean validation accuracy. It then freezes the size with the largest validation gap between the best proposed method and the strongest baseline. The four selected configurations are refit on five fresh paired training seeds. Test accuracy uses 64 deployment draws per fit across all methods. The validation manifests retain individual seed results. The paired test report includes both baselines for each proposed method and the gap from the validation-selected proposed method to the stronger test baseline.
+
+```bash
+cd ~/Git/bnn-performance-sweep
+bash -l fading_unit_power/submit_sweep_spartan.sh /data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-RUN
+```
+
+The launcher caps the campaign at 64 CPUs and records job IDs and dependencies in `jobs.tsv`. After all jobs leave the queue, rerun the same command with `--resume` to retry incomplete tasks. The campaign uses a pinned Git revision. Its `performance/` directory contains the manifests, validation scores, test table, paired accuracy CSV, and a SHA-256 inventory of the selected checkpoints.

@@ -42,7 +42,7 @@ export MPLCONFIGDIR=${TMPDIR:-/tmp}/bnn-fading-${SLURM_JOB_ID}
 fixed_dir=$run_dir/fixed
 performance_dir=$run_dir/performance
 worker=(srun --export=ALL --ntasks=1 --cpus-per-task="$SLURM_CPUS_PER_TASK" --cpu-bind=cores)
-if [[ "$stage" == performance || ( "$stage" == fixed && "$target" == mnist ) ]]; then
+if [[ "$stage" == performance || "$stage" == sweep-run || ( "$stage" == fixed && "$target" == mnist ) ]]; then
     sha256sum --check --status "$run_dir/ftz.sha256"
     worker+=(env "LD_PRELOAD=$run_dir/libbnn_ftz.so${LD_PRELOAD:+:$LD_PRELOAD}")
 fi
@@ -74,6 +74,32 @@ case "$stage" in
         fi
         exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance summarize \
             --output "$performance_dir" "${selection[@]}"
+        ;;
+    sweep-run)
+        completion_dir=$run_dir/done/$target/$detail
+        mkdir -p -- "$completion_dir"
+        "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance run \
+            --output "$performance_dir" --manifest "$performance_dir/manifests/$target-$detail.jsonl" \
+            --index "$SLURM_ARRAY_TASK_ID" --device cpu
+        touch -- "$completion_dir/$SLURM_ARRAY_TASK_ID"
+        ;;
+    sweep-promote|sweep-select)
+        command=${stage#sweep-}
+        case "$command" in
+            promote) phase=refine ;;
+            select) phase=confirmation ;;
+        esac
+        "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_sweep "$command" \
+            --output "$performance_dir" --dataset "$target"
+        count=$(awk 'END { print NR }' "$performance_dir/manifests/$target-$phase.jsonl")
+        if [[ "$count" != "$detail" ]]; then
+            printf '%s %s manifest has %s tasks, expected %s\n' "$target" "$phase" "$count" "$detail" >&2
+            exit 1
+        fi
+        ;;
+    sweep-summarize)
+        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_sweep summarize \
+            --output "$performance_dir"
         ;;
     *) printf 'Unknown job stage: %s\n' "$stage" >&2; exit 2 ;;
 esac

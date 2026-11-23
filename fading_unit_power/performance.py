@@ -223,7 +223,7 @@ def task_dir(output, entry):
 
 
 def split_for(entry):
-    return {"search": "validation", "confirmation": "test"}[entry["phase"]]
+    return {"search": "validation", "refine": "validation", "confirmation": "test"}[entry["phase"]]
 
 
 def evaluate_result(output, entry):

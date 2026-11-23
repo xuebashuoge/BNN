@@ -48,6 +48,8 @@ DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", predicto
                 train_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1},
                 deployment_channel={"kind": "gaussian", "gain_mean": 1., "gain_std": .1, "noise_std": .1})
 BOUNDED_MODEL_DEFAULTS = dict(bounded_feature_norm=1., bounded_receiver_norm=.3, posterior_mean_clip=0.)
+# Omitted settings keep the normalized configuration and hash of older runs.
+OPTIONAL_OPTIMIZATION_DEFAULTS = dict(lr_decay=1., train_mc=1)
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
 CNN_ARCHITECTURES = {"cnn", "cnn_mid", "cnn_mid_relu", "cnn_rxconv", "cnn_spatial3"}
 _CPU_FLUSH_DENORMAL_SUPPORTED: bool | None = None
@@ -123,7 +125,7 @@ def read_config(path: str | None) -> dict:
 
 
 def normalize_config(supplied: dict) -> dict:
-    unknown = set(supplied) - set(DEFAULTS) - set(BOUNDED_MODEL_DEFAULTS)
+    unknown = supplied.keys() - DEFAULTS.keys() - BOUNDED_MODEL_DEFAULTS.keys() - OPTIONAL_OPTIMIZATION_DEFAULTS.keys()
     if unknown:
         raise ValueError(f"Unknown config fields: {sorted(unknown)}")
     config = {**DEFAULTS, **supplied}
@@ -136,6 +138,12 @@ def normalize_config(supplied: dict) -> dict:
     if (not isinstance(config["rho_lr_scale"], (int, float)) or isinstance(config["rho_lr_scale"], bool)
             or not math.isfinite(config["rho_lr_scale"]) or config["rho_lr_scale"] < 0):
         raise ValueError("rho_lr_scale must be a finite nonnegative number")
+    lr_decay = config.get("lr_decay", OPTIONAL_OPTIMIZATION_DEFAULTS["lr_decay"])
+    train_mc = config.get("train_mc", OPTIONAL_OPTIMIZATION_DEFAULTS["train_mc"])
+    if not isinstance(lr_decay, (int, float)) or isinstance(lr_decay, bool) or not 0 < lr_decay <= 1:
+        raise ValueError("lr_decay must lie in (0, 1]")
+    if not isinstance(train_mc, int) or isinstance(train_mc, bool) or train_mc < 1:
+        raise ValueError("train_mc must be a positive integer")
     if config["architecture"] == "bounded_mlp" or BOUNDED_MODEL_DEFAULTS.keys() & supplied.keys():
         for key, default in BOUNDED_MODEL_DEFAULTS.items():
             value = config.setdefault(key, default)
@@ -540,6 +548,9 @@ def train(config: dict, output: Path):
         with torch.no_grad():
             model.mu.clamp_(-mean_clip, mean_clip)
     optimizer = make_optimizer(model, config)
+    lr_decay = config.get("lr_decay", OPTIONAL_OPTIMIZATION_DEFAULTS["lr_decay"])
+    train_mc = config.get("train_mc", OPTIONAL_OPTIMIZATION_DEFAULTS["train_mc"])
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=lr_decay) if lr_decay < 1. else None
     channel_device = config["device"] if bank.config["kind"] in {"full_fading", "diagonal_fading"} else "cpu"
     channel_generator = torch.Generator(device=channel_device).manual_seed(config["channel_seed"] + 109)
     metadata = provenance(config, split)
@@ -558,33 +569,46 @@ def train(config: dict, output: Path):
         stochastic_predictor=model.stochastic, trainable=model.rho.requires_grad,
         initial_standard_deviation=config["posterior_std"],
         rho_learning_rate=(config["lr"] * config["rho_lr_scale"] if model.rho.requires_grad else 0.))
+    metadata["optimizer_schedule"] = dict(initial_learning_rates=[group["lr"] for group in optimizer.param_groups],
+                                          epoch_multiplier=lr_decay)
+    metadata["training_monte_carlo"] = dict(draws_per_minibatch=train_mc,
+                                           empirical_reduction="mean of independent posterior and channel draws",
+                                           penalty_applications_per_minibatch=1)
     save_json(output / "metadata.json", metadata)
     best, history = (float("inf"), float("inf")), []
     start = time.perf_counter()
     for epoch in range(config["epochs"]):
         epoch_start = time.perf_counter()
+        learning_rates = [group["lr"] for group in optimizer.param_groups]
         model.train()
         ce_sum, empirical_sum, objective_sum, samples = 0., 0., 0., 0
         for x, y in train_loader:
             x, y = x.to(config["device"], non_blocking=True), y.to(config["device"], non_blocking=True)
             optimizer.zero_grad(set_to_none=True)
-            theta = model.sample()
-            logits = model(x, theta, bank, "bank", generator=channel_generator)
-            ce = F.cross_entropy(logits, y)
-            empirical = empirical_objective(logits, y, config)
-            terms = complexities(model, config)
-            penalty = training_penalty(model, config, terms)
-            loss = empirical + penalty
-            if not torch.isfinite(loss):
-                raise FloatingPointError(f"Nonfinite objective at epoch {epoch + 1}")
-            loss.backward()
+            batch_ce, batch_empirical, batch_objective = 0., 0., 0.
+            for draw in range(train_mc):
+                theta = model.sample()
+                logits = model(x, theta, bank, "bank", generator=channel_generator)
+                ce = F.cross_entropy(logits, y)
+                empirical = empirical_objective(logits, y, config)
+                loss = empirical if train_mc == 1 else empirical / train_mc
+                if draw == train_mc - 1:
+                    loss = loss + training_penalty(model, config, complexities(model, config))
+                if not torch.isfinite(loss):
+                    raise FloatingPointError(f"Nonfinite objective at epoch {epoch + 1}, draw {draw + 1}")
+                # Backpropagate each draw immediately to keep the activation memory
+                # at one draw. Apply Adam and the exact penalty once per minibatch.
+                loss.backward()
+                batch_ce += ce.item()
+                batch_empirical += empirical.item()
+                batch_objective += loss.item()
             optimizer.step()
             if mean_clip:
                 with torch.no_grad():
                     model.mu.clamp_(-mean_clip, mean_clip)
-            ce_sum += ce.item() * len(y)
-            empirical_sum += empirical.item() * len(y)
-            objective_sum += loss.item() * len(y)
+            ce_sum += (batch_ce / train_mc) * len(y)
+            empirical_sum += (batch_empirical / train_mc) * len(y)
+            objective_sum += batch_objective * len(y)
             samples += len(y)
         validation_seed = (config["eval_seed"] if config["validation_seed_policy"] == "fixed" else
                            config["eval_seed"] + epoch * 1009)
@@ -594,7 +618,8 @@ def train(config: dict, output: Path):
         record = dict(epoch=epoch + 1, training_cross_entropy=ce_sum / samples,
                       training_empirical_objective=empirical_sum / samples,
                       training_total_objective=objective_sum / samples,
-                      validation=validation, epoch_seconds=time.perf_counter() - epoch_start,
+                      validation=validation, learning_rates=learning_rates,
+                      epoch_seconds=time.perf_counter() - epoch_start,
                       final_posterior_complexities={k: v.detach().item() for k, v in complexities(model, config).items()})
         history.append(record)
         selection_key = ((-validation["accuracy"], validation["cross_entropy"])
@@ -617,7 +642,10 @@ def train(config: dict, output: Path):
         save_json(output / "history.json", history)
         print(json.dumps({"epoch": epoch + 1, "validation_ce": validation["cross_entropy"],
                           "validation_accuracy": validation["accuracy"],
+                          "learning_rates": learning_rates,
                           "epoch_seconds": record["epoch_seconds"]}), flush=True)
+        if scheduler is not None:
+            scheduler.step()
     metadata.update(total_seconds=time.perf_counter() - start, peak_rss_mb=peak_memory_mb(),
                     cuda_peak_allocated_mb=(torch.cuda.max_memory_allocated() / 1024**2
                                             if config["device"].startswith("cuda") else None),
