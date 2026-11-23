@@ -71,9 +71,7 @@ array_range() {
 
 if [[ "$scope" == all || "$scope" == fixed ]]; then
     mnist_count=$("$python_bin" -m fading_unit_power.fixed_studies count mnist)
-    bounds_count=$("$python_bin" -m fading_unit_power.fixed_studies count bounds)
     mnist_array=$(array_range "$mnist_count" 8)
-    bounds_array=$(array_range "$bounds_count" 5)
 fi
 
 if [[ "$scope" != fixed ]]; then
@@ -91,8 +89,7 @@ fi
 
 if [[ "$scope" == all || "$scope" == fixed ]]; then
     mnist_job=$(submit fixed-mnist 2 00:08:00 '' "$mnist_array" fixed mnist)
-    bounds_job=$(submit fixed-bounds 1 00:05:00 '' "$bounds_array" fixed bounds)
-    submit fixed-collect 1 00:05:00 "$mnist_job:$bounds_job" '' collect >/dev/null
+    submit fixed-collect 1 00:05:00 "$mnist_job" '' collect >/dev/null
 fi
 
 if [[ "$scope" != fixed ]]; then

@@ -27,9 +27,6 @@ class BoundedGaussianMLP(GaussianMLP):
         """Smooth bounded loss constant for R||ΔH||_F + ||ΔN||_2."""
         return math.sqrt(2.) * self.receiver_norm / -math.log(loss_epsilon)
 
-    def transmit_feature_radius(self, bank) -> float:
-        return math.sqrt(self.width) if bank.transmit_unit_power else self.feature_norm
-
     def project_features(self, hidden):
         return hidden * (self.feature_norm / hidden.norm(dim=-1, keepdim=True)
                          .clamp_min(self.feature_norm))
@@ -41,7 +38,7 @@ class BoundedGaussianMLP(GaussianMLP):
 
     def forward(self, x, theta, bank, source="bank", channel=None, generator=None):
         w1, b1, w2, b2 = self.split(theta)
-        hidden = bank.transmit(self.project_features(F.relu(x.flatten(1) @ w1 + b1)))
+        hidden = self.project_features(F.relu(x.flatten(1) @ w1 + b1))
         if not self.training:
             self.last_feature_power = hidden.detach().square().mean().item()
         w2, b2 = self.project_receiver(w2, b2)
@@ -55,7 +52,7 @@ class BoundedGaussianMLP(GaussianMLP):
         w1 = raw[:, :a].reshape(-1, self.input_dim, self.width)
         w2 = raw[:, b:c].reshape(-1, self.width, self.classes)
         hidden = torch.bmm(x.flatten(1).unsqueeze(1), w1).squeeze(1) + raw[:, a:b]
-        hidden = bank.transmit(self.project_features(F.relu(hidden)))
+        hidden = self.project_features(F.relu(hidden))
         received = bank.apply(hidden, "bank", generator=channel_generator)
         w2, b2 = self.project_receiver(w2, raw[:, c:])
         return torch.bmm(received.unsqueeze(1), w2).squeeze(1) + b2

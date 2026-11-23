@@ -131,6 +131,8 @@ def normalize_config(supplied: dict) -> dict:
         raise ValueError("cpu_flush_denormal must be a boolean")
     if not isinstance(config["transmit_unit_power"], bool):
         raise ValueError("transmit_unit_power must be a boolean")
+    if config["architecture"] == "bounded_mlp" and config["transmit_unit_power"]:
+        raise ValueError("bounded_mlp requires transmit_unit_power=False to enforce its feature norm cap")
     if (not isinstance(config["rho_lr_scale"], (int, float)) or isinstance(config["rho_lr_scale"], bool)
             or not math.isfinite(config["rho_lr_scale"]) or config["rho_lr_scale"] < 0):
         raise ValueError("rho_lr_scale must be a finite nonnegative number")
