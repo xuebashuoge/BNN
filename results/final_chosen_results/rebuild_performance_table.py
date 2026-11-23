@@ -59,7 +59,7 @@ def seed_observations(index):
 
 
 def render_table(rows):
-    lines = [r"\begin{table*}[t]", r"\centering",
+    lines = [r"\begin{table*}[htb]", r"\centering",
              r"\caption{Deployment accuracy (\%) comparison at channel-set size $m=2000$.}",
              r"\label{tab:performance}", r"\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llccccc@{}}",
              r"\toprule", r"\multirow{2}{*}{Dataset} & \multirow{2}{*}{Channel}",
