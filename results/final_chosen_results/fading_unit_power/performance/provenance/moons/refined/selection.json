@@ -1,0 +1,222 @@
+{
+  "dataset": "moons",
+  "search_manifest_sha256": "fe29b25a5b64cfbc1debdfffa0f7b72b3437a23533344756a897cae1a00e60ac",
+  "confirmation_seeds": [
+    2026112301,
+    2026112302,
+    2026112303
+  ],
+  "candidates": {
+    "ERM-Matched": {
+      "primary-winner": {
+        "mean_accuracy": 0.705625,
+        "mean_cross_entropy": 0.5856138958930969,
+        "accuracies_by_seed": {
+          "123101": 0.70225,
+          "123102": 0.709
+        }
+      },
+      "refine-lr-low": {
+        "mean_accuracy": 0.7032499999999999,
+        "mean_cross_entropy": 0.5886928021907807,
+        "accuracies_by_seed": {
+          "123101": 0.7015,
+          "123102": 0.705
+        }
+      },
+      "refine-posterior-low": {
+        "mean_accuracy": 0.707375,
+        "mean_cross_entropy": 0.5822614991664886,
+        "accuracies_by_seed": {
+          "123101": 0.70175,
+          "123102": 0.713
+        }
+      },
+      "refine-posterior-high": {
+        "mean_accuracy": 0.70575,
+        "mean_cross_entropy": 0.58618195438385,
+        "accuracies_by_seed": {
+          "123101": 0.702,
+          "123102": 0.7095
+        }
+      }
+    },
+    "L2-Matched": {
+      "primary-winner": {
+        "mean_accuracy": 0.6995,
+        "mean_cross_entropy": 0.5947972223758697,
+        "accuracies_by_seed": {
+          "123101": 0.69025,
+          "123102": 0.70875
+        }
+      },
+      "refine-lr-low": {
+        "mean_accuracy": 0.7041250000000001,
+        "mean_cross_entropy": 0.588360939025879,
+        "accuracies_by_seed": {
+          "123101": 0.6990000000000001,
+          "123102": 0.7092500000000002
+        }
+      },
+      "refine-lr-high": {
+        "mean_accuracy": 0.69775,
+        "mean_cross_entropy": 0.5947569255828857,
+        "accuracies_by_seed": {
+          "123101": 0.68875,
+          "123102": 0.70675
+        }
+      },
+      "refine-l2-low": {
+        "mean_accuracy": 0.697125,
+        "mean_cross_entropy": 0.5942319402694702,
+        "accuracies_by_seed": {
+          "123101": 0.6900000000000001,
+          "123102": 0.7042499999999998
+        }
+      },
+      "refine-l2-high": {
+        "mean_accuracy": 0.702125,
+        "mean_cross_entropy": 0.5861193082332612,
+        "accuracies_by_seed": {
+          "123101": 0.696,
+          "123102": 0.70825
+        }
+      }
+    },
+    "T1-Matched": {
+      "primary-winner": {
+        "mean_accuracy": 0.698625,
+        "mean_cross_entropy": 0.5946025347709656,
+        "accuracies_by_seed": {
+          "123101": 0.6917500000000001,
+          "123102": 0.7055
+        }
+      },
+      "refine-lr-low": {
+        "mean_accuracy": 0.7035,
+        "mean_cross_entropy": 0.5877520201206208,
+        "accuracies_by_seed": {
+          "123101": 0.6992499999999999,
+          "123102": 0.70775
+        }
+      },
+      "refine-lr-high": {
+        "mean_accuracy": 0.7015,
+        "mean_cross_entropy": 0.5959337203502655,
+        "accuracies_by_seed": {
+          "123101": 0.68875,
+          "123102": 0.71425
+        }
+      },
+      "refine-kl-low": {
+        "mean_accuracy": 0.699125,
+        "mean_cross_entropy": 0.5943293812274932,
+        "accuracies_by_seed": {
+          "123101": 0.6917500000000001,
+          "123102": 0.7065
+        }
+      },
+      "refine-kl-high": {
+        "mean_accuracy": 0.6953750000000001,
+        "mean_cross_entropy": 0.5929737238883972,
+        "accuracies_by_seed": {
+          "123101": 0.69075,
+          "123102": 0.7000000000000001
+        }
+      }
+    },
+    "T2-Matched": {
+      "primary-winner": {
+        "mean_accuracy": 0.698625,
+        "mean_cross_entropy": 0.5946027824878692,
+        "accuracies_by_seed": {
+          "123101": 0.6917500000000001,
+          "123102": 0.7055
+        }
+      },
+      "refine-lr-low": {
+        "mean_accuracy": 0.7035,
+        "mean_cross_entropy": 0.5877520296573638,
+        "accuracies_by_seed": {
+          "123101": 0.6992499999999999,
+          "123102": 0.70775
+        }
+      },
+      "refine-lr-high": {
+        "mean_accuracy": 0.69575,
+        "mean_cross_entropy": 0.6049324853420258,
+        "accuracies_by_seed": {
+          "123101": 0.68875,
+          "123102": 0.70275
+        }
+      },
+      "refine-kl-low": {
+        "mean_accuracy": 0.6990000000000001,
+        "mean_cross_entropy": 0.5942451200485228,
+        "accuracies_by_seed": {
+          "123101": 0.6917500000000001,
+          "123102": 0.70625
+        }
+      },
+      "refine-kl-high": {
+        "mean_accuracy": 0.6953750000000001,
+        "mean_cross_entropy": 0.5929736971855164,
+        "accuracies_by_seed": {
+          "123101": 0.69075,
+          "123102": 0.7000000000000001
+        }
+      }
+    },
+    "Proposed-Perfect": {
+      "primary-winner": {
+        "mean_accuracy": 0.6535,
+        "mean_cross_entropy": 0.9674860682487488,
+        "accuracies_by_seed": {
+          "123101": 0.6552499999999999,
+          "123102": 0.65175
+        }
+      },
+      "refine-lr-low": {
+        "mean_accuracy": 0.648,
+        "mean_cross_entropy": 0.8410762386322022,
+        "accuracies_by_seed": {
+          "123101": 0.63775,
+          "123102": 0.65825
+        }
+      },
+      "refine-lr-high": {
+        "mean_accuracy": 0.63225,
+        "mean_cross_entropy": 1.1312605895996093,
+        "accuracies_by_seed": {
+          "123101": 0.62725,
+          "123102": 0.6372500000000001
+        }
+      },
+      "refine-kl-low": {
+        "mean_accuracy": 0.6535,
+        "mean_cross_entropy": 0.9674654521942139,
+        "accuracies_by_seed": {
+          "123101": 0.6552499999999999,
+          "123102": 0.65175
+        }
+      },
+      "refine-kl-high": {
+        "mean_accuracy": 0.653375,
+        "mean_cross_entropy": 0.9673178901672363,
+        "accuracies_by_seed": {
+          "123101": 0.6552499999999999,
+          "123102": 0.6515000000000001
+        }
+      }
+    }
+  },
+  "chosen": {
+    "ERM-Matched": "refine-posterior-low",
+    "L2-Matched": "refine-lr-low",
+    "T1-Matched": "refine-lr-low",
+    "T2-Matched": "refine-lr-low",
+    "Proposed-Perfect": "refine-kl-low"
+  },
+  "validation_gap_pp": -0.3874999999999962,
+  "refinement_plan_sha256": "edb907f339a0ade198d17f25a453b28160f46563c398fcb133b32e4e84438b63"
+}

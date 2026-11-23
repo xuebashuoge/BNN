@@ -1,0 +1,5 @@
+stage	job_id	dependency	array
+mnist-search	35554761		0-41%4
+mnist-select	35554762	35554761	-
+mnist-confirm	35554763	35554762	0-14%4
+fading-summary	35554764	35554763	-

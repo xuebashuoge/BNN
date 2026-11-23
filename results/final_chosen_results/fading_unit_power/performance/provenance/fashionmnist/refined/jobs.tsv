@@ -1,0 +1,5 @@
+stage	job_id	dependency	array
+fashionmnist-search	35554658		0-41%4
+fashionmnist-select	35554659	35554658	-
+fashionmnist-confirm	35554660	35554659	0-14%4
+fading-summary	35554661	35554660	-

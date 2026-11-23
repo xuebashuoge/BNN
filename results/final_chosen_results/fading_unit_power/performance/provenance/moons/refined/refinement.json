@@ -1,0 +1,43 @@
+{
+  "dataset": "moons",
+  "primary_directory": "/data/gpfs/projects/punim2792/yangshuo/unit-power-fading-20261123-r2/performance",
+  "primary_search_manifest_sha256": "fadbda6b9948a6bc910c956c63c1e0c6ec7462b699bddfe38d77dae191af159c",
+  "primary_selection_sha256": "e777d37ff1d8e9967908211dfe48dd4f131ce5204fc18a6d05fc0d3146e54e73",
+  "primary_validation_gap_pp": -0.6999999999999895,
+  "candidates": {
+    "ERM-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-posterior-low",
+      "refine-posterior-high"
+    ],
+    "L2-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-l2-low",
+      "refine-l2-high"
+    ],
+    "T1-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-kl-low",
+      "refine-kl-high"
+    ],
+    "T2-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-kl-low",
+      "refine-kl-high"
+    ],
+    "Proposed-Perfect": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-kl-low",
+      "refine-kl-high"
+    ]
+  }
+}

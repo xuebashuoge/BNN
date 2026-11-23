@@ -1,0 +1,5 @@
+stage	job_id	dependency	array
+cifar10-search	35555038		0-47%4
+cifar10-select	35555039	35555038	-
+cifar10-confirm	35555040	35555039	0-14%4
+fading-summary	35555041	35555040	-

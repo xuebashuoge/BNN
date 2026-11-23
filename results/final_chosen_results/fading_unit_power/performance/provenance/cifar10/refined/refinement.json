@@ -1,0 +1,43 @@
+{
+  "dataset": "cifar10",
+  "primary_directory": "/data/gpfs/projects/punim2792/yangshuo/unit-power-fading-20261123-r2/performance",
+  "primary_search_manifest_sha256": "55a70a8838cf1d6e0a41f4bcd3af99baef526006dae37dba7a506296e3a51e17",
+  "primary_selection_sha256": "c850e3f48e6f90b780a0daec0351c311c08930dd0c71a6f929e3fe97d679a6e2",
+  "primary_validation_gap_pp": 0.05999999999999339,
+  "candidates": {
+    "ERM-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-posterior-low",
+      "refine-posterior-high"
+    ],
+    "L2-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-l2-low",
+      "refine-l2-high"
+    ],
+    "T1-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-kl-low",
+      "refine-kl-high"
+    ],
+    "T2-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-kl-low",
+      "refine-kl-high"
+    ],
+    "Proposed-Perfect": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-kl-low",
+      "refine-kl-high"
+    ]
+  }
+}

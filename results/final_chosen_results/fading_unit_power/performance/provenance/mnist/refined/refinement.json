@@ -1,0 +1,40 @@
+{
+  "dataset": "mnist",
+  "primary_directory": "/data/gpfs/projects/punim2792/yangshuo/unit-power-fading-20261123-r2/performance",
+  "primary_search_manifest_sha256": "d193ba8f9a66dac5082b14c9adbd6352780d84be1401475d2b79b5af3262d7d0",
+  "primary_selection_sha256": "23132e740f9ef921839421b27018ca8a6e6d2b69b3d10803f30313238925c78a",
+  "primary_validation_gap_pp": -0.0035000000000007248,
+  "candidates": {
+    "ERM-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-posterior-low",
+      "refine-posterior-high"
+    ],
+    "L2-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-l2-low",
+      "refine-l2-high"
+    ],
+    "T1-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-kl-low"
+    ],
+    "T2-Matched": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-lr-high",
+      "refine-kl-low"
+    ],
+    "Proposed-Perfect": [
+      "primary-winner",
+      "refine-lr-low",
+      "refine-kl-low",
+      "refine-kl-high"
+    ]
+  }
+}
