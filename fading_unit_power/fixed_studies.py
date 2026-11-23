@@ -230,7 +230,7 @@ def collect(output_root, publish_root):
     bank_data = publish_root / "data" / "mnist_bank"
     bank_data.mkdir(parents=True, exist_ok=True)
     with (bank_data / "observations.csv").open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(observations[0]))
+        writer = csv.DictWriter(stream, fieldnames=list(observations[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(observations)
     for case, report in fading:
