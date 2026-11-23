@@ -234,6 +234,9 @@ def main():
         command.add_argument("--output", type=Path, required=True)
         if name != "plan":
             command.add_argument("--dataset", choices=DATASETS, required=name != "summarize")
+    commands.choices["summarize"].add_argument(
+        "--recorded-checkpoints", type=Path, help="Replay with the verified checkpoint inventory when weights are offline",
+    )
     args = parser.parse_args()
     if args.command == "count":
         print(count(args.phase))
@@ -247,7 +250,7 @@ def main():
         select(output, args.dataset)
     else:
         from .performance_sweep_report import summarize
-        summarize(output, args.dataset)
+        summarize(output, args.dataset, recorded_checkpoints=args.recorded_checkpoints)
 
 
 if __name__ == "__main__":

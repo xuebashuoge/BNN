@@ -42,3 +42,9 @@ bash -l fading_unit_power/submit_sweep_spartan.sh /data/gpfs/projects/punim2792/
 ```
 
 The launcher caps the campaign at 64 CPUs and records job IDs and dependencies in `jobs.tsv`. After all jobs leave the queue, rerun the same command with `--resume` to retry incomplete tasks. The campaign uses a pinned Git revision. Its `performance/` directory contains the manifests, validation scores, test table, paired accuracy CSV, and a SHA-256 inventory of the selected checkpoints.
+
+The exploratory seed sweep chooses a shared bank size and training seed by validation gap. Each method can select either refinement candidate at that seed and bank size. Four selected checkpoints are evaluated on 128 fresh deployment draws per dataset. Its report describes one validation-tuned seed per dataset. The primary table estimates performance across five fresh training seeds.
+
+```bash
+bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$primary_run" "$seed_run"
+```

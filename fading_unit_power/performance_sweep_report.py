@@ -22,6 +22,21 @@ def file_record(path: Path) -> dict:
     return dict(sha256=performance.historical_table.file_sha256(path), bytes=path.stat().st_size)
 
 
+def read_checkpoint_inventory(path: Path) -> dict:
+    by_dataset = {dataset: {} for dataset in DATASETS}
+    task_ids = set()
+    for line in path.read_text().splitlines():
+        record = json.loads(line)
+        entry = record["manifest_entry"]
+        task_id = entry["task_id"]
+        dataset = entry["config"]["dataset"]
+        if task_id in task_ids or dataset not in by_dataset:
+            raise ValueError(f"Unexpected checkpoint inventory entry for {task_id}")
+        task_ids.add(task_id)
+        by_dataset[dataset][task_id] = record
+    return by_dataset
+
+
 def paired_difference(proposed: dict, baseline: dict) -> dict:
     by_seed = {seed: proposed[seed] - baseline[seed] for seed in proposed}
     values = tuple(by_seed.values())
@@ -64,7 +79,7 @@ def method_results(rows: list[dict], entries: list[dict]) -> dict:
     return results
 
 
-def read_cohort(output: Path, dataset: str) -> tuple[dict, list[dict], list[dict]]:
+def read_cohort(output: Path, dataset: str, recorded: dict | None = None) -> tuple[dict, list[dict], list[dict]]:
     selection_path = output / "manifests" / f"{dataset}-sweep-selection.json"
     selection = performance.read_json(selection_path)
     manifest = performance.manifest_path(output, dataset, "confirmation")
@@ -83,6 +98,8 @@ def read_cohort(output: Path, dataset: str) -> tuple[dict, list[dict], list[dict
         raise ValueError(f"Expected complete paired confirmation for {dataset}")
     if sorted(selection.get("confirmation_seeds", seeds)) != seeds:
         raise ValueError(f"Confirmation seeds differ from the frozen selection for {dataset}")
+    if recorded is not None and recorded.keys() != {entry["task_id"] for entry in entries}:
+        raise ValueError(f"Checkpoint inventory differs from the confirmation manifest for {dataset}")
 
     rows, checksums = [], []
     eval_settings = {}
@@ -102,8 +119,13 @@ def read_cohort(output: Path, dataset: str) -> tuple[dict, list[dict], list[dict
         directory = performance.task_dir(output, entry)
         weights = directory / "weights.pt"
         metadata_path = directory / "metadata.json"
-        weights_record, metadata_record = file_record(weights), file_record(metadata_path)
-        if report["checkpoint_source_fingerprints"] != dict(weights=weights_record, metadata=metadata_record):
+        expected = report["checkpoint_source_fingerprints"]
+        metadata_record = file_record(metadata_path)
+        if recorded is None or weights.exists() or weights.is_symlink():
+            weights_record = file_record(weights)
+        else:
+            weights_record = expected["weights"]
+        if expected != dict(weights=weights_record, metadata=metadata_record):
             raise ValueError(f"Checkpoint fingerprints differ from the held-out report for {entry['task_id']}")
         metadata = performance.read_json(metadata_path)
         epoch = report["selected_epoch"]
@@ -122,11 +144,14 @@ def read_cohort(output: Path, dataset: str) -> tuple[dict, list[dict], list[dict
             weights_sha256=weights_record["sha256"], weights_bytes=weights_record["bytes"],
         )
         rows.append(row)
-        checksums.append(dict(
+        record = dict(
             manifest_entry=entry, archive_key=archive_key,
             weights=dict(path=weights.relative_to(output).as_posix(), **weights_record),
             metadata=dict(path=metadata_path.relative_to(output).as_posix(), **metadata_record),
-        ))
+        )
+        if recorded is not None and record != recorded[entry["task_id"]]:
+            raise ValueError(f"Checkpoint inventory differs from the held-out report for {entry['task_id']}")
+        checksums.append(record)
 
     stats = method_results(rows, entries)
     accuracies = {
@@ -191,12 +216,15 @@ def render_table(datasets: dict) -> str:
     return "\n".join(lines)
 
 
-def summarize(output: Path, dataset: str | None = None) -> None:
+def summarize(output: Path, dataset: str | None = None, *, recorded_checkpoints: Path | None = None) -> None:
+    """Validate local weights or replay reports using an archived checkpoint inventory."""
     output = output.resolve()
     datasets = (dataset,) if dataset else tuple(DATASETS)
+    inventory = None if recorded_checkpoints is None else read_checkpoint_inventory(recorded_checkpoints)
     results, rows, checkpoints = {}, [], []
     for current in datasets:
-        summary, seed_rows, checksums = read_cohort(output, current)
+        recorded = None if inventory is None else inventory[current]
+        summary, seed_rows, checksums = read_cohort(output, current, recorded)
         results[current] = summary
         rows.extend(seed_rows)
         checkpoints.extend(checksums)

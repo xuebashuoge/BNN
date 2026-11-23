@@ -42,7 +42,8 @@ export MPLCONFIGDIR=${TMPDIR:-/tmp}/bnn-fading-${SLURM_JOB_ID}
 fixed_dir=$run_dir/fixed
 performance_dir=$run_dir/performance
 worker=(srun --export=ALL --ntasks=1 --cpus-per-task="$SLURM_CPUS_PER_TASK" --cpu-bind=cores)
-if [[ "$stage" == performance || "$stage" == sweep-run || ( "$stage" == fixed && "$target" == mnist ) ]]; then
+if [[ "$stage" == performance || "$stage" == sweep-run || "$stage" == seed-run ||
+      ( "$stage" == fixed && "$target" == mnist ) ]]; then
     sha256sum --check --status "$run_dir/ftz.sha256"
     worker+=(env "LD_PRELOAD=$run_dir/libbnn_ftz.so${LD_PRELOAD:+:$LD_PRELOAD}")
 fi
@@ -99,6 +100,18 @@ case "$stage" in
         ;;
     sweep-summarize)
         exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_sweep summarize \
+            --output "$performance_dir"
+        ;;
+    seed-plan)
+        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep plan \
+            --output "$performance_dir" --source "$detail" --dataset "$target"
+        ;;
+    seed-run)
+        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep run \
+            --output "$performance_dir" --dataset "$target" --index "$SLURM_ARRAY_TASK_ID"
+        ;;
+    seed-summary)
+        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep summarize \
             --output "$performance_dir"
         ;;
     *) printf 'Unknown job stage: %s\n' "$stage" >&2; exit 2 ;;
