@@ -8,6 +8,7 @@ The three figures and the deployment accuracy table below are the manuscript sel
 | [CIFAR-10 erasure mismatch](cifar10_channel_mismatch_all_methods.pdf) | [Observations](data/cifar10_mismatch/observations.csv) from 156 fits, four methods and three paired seeds at each of 13 training erasure probabilities. Deployment erases features with probability 0.50 and the bank size is 2000. |
 | [Two-moons bound decomposition](bound_decomposition_d8_t1_t2_both_channels.pdf) | [Ten fitted case reports](data/bounds/) for width 8 and bank size 2000. Panel (a) uses fading with deployment correlation 0.35 and mismatch training at 0.15. Panel (b) uses erasure with deployment probability 0.50 and mismatch training at 0.45. |
 | [Deployment accuracy table](performance_table.tex) | [Per-seed accuracy](data/performance/deployment_by_seed.csv) and [evaluation records](data/performance/selected_trials.tar.gz) from 180 fits at bank size 2000. Deployment uses correlated fading with correlation 0.35 and unit noise variance, or independent feature erasure with probability 0.50. |
+| [Fresh ten-seed replication](fresh_paired_seeds/README.md) | All 40 selected configurations repeated on ten new common seeds, with 400 deployment evaluations and paired differences from ERM and L2. |
 
 ## Regenerating figures and table
 

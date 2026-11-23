@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{Deployment accuracy (\%) in the replication at channel-set size $m=2000$. Each entry gives the mean and sample standard deviation over ten paired training seeds. Perfect denotes T1/T2 trained on the perfect channel.}
+\label{tab:replication-accuracy}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+Dataset & Channel & ERM & L2 & T1 & T2 & Perfect \\
+\midrule
+Two moons & Fading & \(74.51\pm0.51\) & \(74.51\pm0.41\) & \(74.53\pm0.50\) & \(74.53\pm0.50\) & \(63.04\pm1.74\) \\
+Two moons & Erasure & \(86.80\pm0.55\) & \(86.72\pm0.40\) & \(86.67\pm0.40\) & \(86.70\pm0.35\) & \(82.93\pm0.57\) \\
+MNIST & Fading & \(83.36\pm0.52\) & \(83.02\pm0.21\) & \(83.68\pm0.36\) & \(83.59\pm0.51\) & \(57.05\pm0.91\) \\
+MNIST & Erasure & \(96.17\pm0.07\) & \(96.30\pm0.06\) & \(96.31\pm0.06\) & \(96.26\pm0.04\) & \(87.33\pm0.77\) \\
+Fashion-MNIST & Fading & \(73.90\pm0.43\) & \(74.53\pm0.45\) & \(74.63\pm0.36\) & \(74.60\pm0.45\) & \(50.65\pm0.73\) \\
+Fashion-MNIST & Erasure & \(86.22\pm0.19\) & \(86.22\pm0.19\) & \(86.27\pm0.18\) & \(86.38\pm0.11\) & \(78.01\pm0.54\) \\
+CIFAR-10 & Fading & \(52.85\pm2.99\) & \(56.38\pm2.04\) & \(54.61\pm2.64\) & \(55.90\pm2.52\) & \(19.24\pm1.27\) \\
+CIFAR-10 & Erasure & \(64.84\pm0.93\) & \(65.33\pm0.45\) & \(64.64\pm1.12\) & \(64.22\pm1.10\) & \(36.87\pm5.56\) \\
+\bottomrule
+\end{tabular*}
+\end{table*}
