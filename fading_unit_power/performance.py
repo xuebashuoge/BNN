@@ -145,6 +145,79 @@ def plan(output):
         print(f"{path} ({len(rows)} tasks)")
 
 
+def search_groups(rows, dataset):
+    groups = defaultdict(lambda: defaultdict(list))
+    for entry in rows:
+        if entry["phase"] != "search" or entry["config"]["dataset"] != dataset or entry["method"] not in METHODS:
+            raise ValueError(f"Unexpected search entry: {entry['task_id']}")
+        groups[entry["method"]][entry["candidate"]].append(entry)
+
+    seeds = {entry["config"]["seed"] for entry in rows}
+    if len(seeds) != 2 or seeds & set(CONFIRMATION_SEEDS):
+        raise ValueError(f"Unexpected search seeds for {dataset}")
+    for method in METHODS:
+        if not groups[method] or any(len(entries) != 2 or {entry["config"]["seed"] for entry in entries} != seeds
+                                     for entries in groups[method].values()):
+            raise ValueError(f"Incomplete or unpaired search for {dataset}/{method}")
+    return groups
+
+
+def refinement_variants(method):
+    yield "refine-lr-low", {"lr": .25}
+    yield "refine-lr-high", {"lr": 2.}
+    if method in PROPOSED:
+        fields, scales, label = ("eta_channel", "eta_data"), (.25, 4.), "kl"
+    elif method == "L2-Matched":
+        fields, scales, label = ("l2",), (.25, 4.), "l2"
+    elif method == "ERM-Matched":
+        fields, scales, label = ("posterior_std",), (1 / 3, 3.), "posterior"
+    else:
+        fields, scales, label = ("eta_data",), (.25, 4.), "kl"
+    for side, scale in zip(("low", "high"), scales):
+        yield f"refine-{label}-{side}", dict.fromkeys(fields, scale)
+
+
+def plan_refinement(source, output, dataset):
+    source, output = source.resolve(), output.resolve()
+    if source == output:
+        raise ValueError("Use a separate directory for refinement")
+    source_manifest = manifest_path(source, dataset, "search")
+    selection_path = source / "manifests" / f"{dataset}-selection.json"
+    selection = read_json(selection_path)
+    digest = historical_table.file_sha256(source_manifest)
+    if (selection["dataset"], selection["search_manifest_sha256"]) != (dataset, digest):
+        raise ValueError(f"Selection does not match the primary search manifest for {dataset}")
+    groups = search_groups(read_manifest(source_manifest), dataset)
+    rows = []
+    candidate_names = {}
+    for method in METHODS:
+        considered = groups[method]
+        anchor = considered[selection["chosen"][method]]
+        primary_configs = [entry["config"] for entries in considered.values() for entry in entries]
+        names = []
+        for name, scales in [("primary-winner", {}), *refinement_variants(method)]:
+            configs = [{**entry["config"], **{key: entry["config"][key] * scale for key, scale in scales.items()}}
+                       for entry in anchor]
+            if scales and any(config in primary_configs for config in configs):
+                continue
+            names.append(name)
+            for entry, config in zip(anchor, configs):
+                provenance = {**entry["source"], "primary_validation_task": entry["task_id"]}
+                rows.append(task_entry("search", method, name, config, entry["evaluation"], provenance))
+        if not 3 <= len(names) <= 5:
+            raise ValueError(f"Expected two to four new candidates for {dataset}/{method}")
+        candidate_names[method] = names
+
+    write_json(output / "manifests" / f"{dataset}-refinement.json", dict(
+        dataset=dataset, primary_directory=str(source), primary_search_manifest_sha256=digest,
+        primary_selection_sha256=historical_table.file_sha256(selection_path),
+        primary_validation_gap_pp=selection["validation_gap_pp"], candidates=candidate_names,
+    ), frozen=True)
+    path = manifest_path(output, dataset, "search")
+    write_manifest(path, rows)
+    print(f"{path} ({len(rows)} validation tasks)")
+
+
 def task_dir(output, entry):
     return output / entry["phase"] / entry["task_id"]
 
@@ -214,32 +287,30 @@ def run_task(output, manifest, index, device, threads):
 
 def select(output, dataset):
     path = manifest_path(output, dataset, "search")
-    rows = read_manifest(path)
-    validation = defaultdict(list)
-    for entry in rows:
-        if entry["phase"] != "search" or entry["config"]["dataset"] != dataset:
-            raise ValueError(f"Unexpected search entry: {entry['task_id']}")
-        score = evaluate_result(output, entry)["heldout_gibbs_mc"]
-        validation[entry["method"], entry["candidate"]].append((entry, score))
+    groups = search_groups(read_manifest(path), dataset)
+    refinement_path = output / "manifests" / f"{dataset}-refinement.json"
+    refinement = read_json(refinement_path) if refinement_path.is_file() else None
 
     chosen, scores = {}, {}
-    search_seeds = {entry["config"]["seed"] for entry in rows}
-    if len(search_seeds) != 2 or search_seeds & set(CONFIRMATION_SEEDS):
-        raise ValueError(f"Unexpected search seeds for {dataset}")
     for method in METHODS:
-        by_candidate = {name: items for (label, name), items in validation.items() if label == method}
-        if len(by_candidate) != 3 or any(len(items) != 2 or {row["config"]["seed"] for row, _ in items} != search_seeds
-                                         for items in by_candidate.values()):
-            raise ValueError(f"Incomplete or unpaired search for {dataset}/{method}")
-        scores[method] = {
-            name: dict(mean_accuracy=statistics.fmean(score["accuracy"] for _, score in items),
-                       mean_cross_entropy=statistics.fmean(score["cross_entropy"] for _, score in items),
-                       accuracies_by_seed={row["config"]["seed"]: score["accuracy"] for row, score in items})
-            for name, items in by_candidate.items()
-        }
+        candidates = groups[method]
+        if refinement is None:
+            if ("archive" not in candidates or
+                    set(candidates) != {name for name, _ in candidate_variants(method, candidates["archive"][0]["config"])}):
+                raise ValueError(f"Unexpected primary candidates for {dataset}/{method}")
+        elif list(candidates) != refinement["candidates"][method] or refinement["dataset"] != dataset:
+            raise ValueError(f"Unexpected refinement candidates for {dataset}/{method}")
+        scores[method] = {}
+        for name, entries in candidates.items():
+            validation = [evaluate_result(output, row)["heldout_gibbs_mc"] for row in entries]
+            scores[method][name] = dict(
+                mean_accuracy=statistics.fmean(score["accuracy"] for score in validation),
+                mean_cross_entropy=statistics.fmean(score["cross_entropy"] for score in validation),
+                accuracies_by_seed={row["config"]["seed"]: score["accuracy"] for row, score in zip(entries, validation)},
+            )
         winner = min(scores[method], key=lambda name: (-scores[method][name]["mean_accuracy"],
                                                       scores[method][name]["mean_cross_entropy"], name))
-        chosen[method] = by_candidate[winner][0][0]
+        chosen[method] = candidates[winner][0]
 
     confirmation_rows = []
     for method, winner in chosen.items():
@@ -258,6 +329,8 @@ def select(output, dataset):
                      confirmation_seeds=CONFIRMATION_SEEDS, candidates=scores,
                      chosen={method: row["candidate"] for method, row in chosen.items()},
                      validation_gap_pp=(best_proposed - best_baseline) * 100)
+    if refinement is not None:
+        selection["refinement_plan_sha256"] = historical_table.file_sha256(refinement_path)
     write_json(output / "manifests" / f"{dataset}-selection.json", selection, frozen=True)
     confirmation_path = manifest_path(output, dataset, "confirmation")
     write_manifest(confirmation_path, confirmation_rows)
@@ -279,28 +352,37 @@ def comparison(rows):
                 gap_pp=statistics.fmean(gaps.values()), gap_sd_pp=statistics.stdev(gaps.values()), gaps_by_seed_pp=gaps)
 
 
-def summarize(output):
+def confirmation_observations(output, source, dataset):
+    entries = read_manifest(manifest_path(source, dataset, "confirmation"))
+    keys = {(entry["method"], entry["config"]["seed"]) for entry in entries}
+    if len(entries) != len(keys) or keys != {(method, seed) for method in METHODS for seed in CONFIRMATION_SEEDS}:
+        raise ValueError(f"Incomplete confirmation manifest for {dataset}")
+    for entry in entries:
+        if entry["phase"] != "confirmation" or entry["config"]["dataset"] != dataset:
+            raise ValueError(f"Unexpected confirmation entry: {entry['task_id']}")
+        report = evaluate_result(source, entry)
+        mc = report["heldout_gibbs_mc"]
+        directory = task_dir(source, entry)
+        yield dict(
+            dataset=dataset, channel="Fading", method=entry["method"], seed=entry["config"]["seed"], m=2000,
+            test_accuracy_pct=mc["accuracy"] * 100, draws=mc["draws"], examples=mc["examples"],
+            task_id=entry["task_id"], training_revision=read_json(directory / "metadata.json")["git_sha"],
+            archive_key=os.path.relpath(directory, output),
+            weights_sha256=report["checkpoint_source_fingerprints"]["weights"]["sha256"],
+        )
+
+
+def summarize(output, only_dataset=None, sources=None):
+    sources = sources or {}
+    datasets = (only_dataset,) if only_dataset else DATASETS
+    if sources.keys() - set(datasets):
+        raise ValueError("Every supplied source must be included in the summary")
     previous = historical_table.seed_observations(read_json(DATA / "provenance.json"))
-    rows = [row for row in previous if row["channel"] == "Erasure"]
+    rows = [row for row in previous if row["channel"] == "Erasure" and row["dataset"] in datasets]
     summary = {}
-    for dataset in DATASETS:
-        entries = read_manifest(manifest_path(output, dataset, "confirmation"))
-        keys = {(entry["method"], entry["config"]["seed"]) for entry in entries}
-        if len(entries) != len(keys) or keys != {(method, seed) for method in METHODS for seed in CONFIRMATION_SEEDS}:
-            raise ValueError(f"Incomplete confirmation manifest for {dataset}")
-        normalized = []
-        for entry in entries:
-            if entry["phase"] != "confirmation" or entry["config"]["dataset"] != dataset:
-                raise ValueError(f"Unexpected confirmation entry: {entry['task_id']}")
-            report = evaluate_result(output, entry)
-            mc = report["heldout_gibbs_mc"]
-            directory = task_dir(output, entry)
-            normalized.append(dict(
-                dataset=dataset, channel="Fading", method=entry["method"], seed=entry["config"]["seed"], m=2000,
-                test_accuracy_pct=mc["accuracy"] * 100, draws=mc["draws"], examples=mc["examples"],
-                task_id=entry["task_id"], training_revision=read_json(directory / "metadata.json")["git_sha"],
-                archive_key=str(directory.relative_to(output)), weights_sha256=report["checkpoint_source_fingerprints"]["weights"]["sha256"],
-            ))
+    for dataset in datasets:
+        source = sources.get(dataset, output)
+        normalized = list(confirmation_observations(output, source, dataset))
         rows.extend(normalized)
         old_rows = [row for row in previous if row["dataset"] == dataset and row["channel"] == "Fading"]
         summary[dataset] = comparison(normalized)
@@ -312,27 +394,36 @@ def summarize(output):
     writer = csv.DictWriter(stream, fieldnames=rows[0], lineterminator="\n")
     writer.writeheader()
     writer.writerows(rows)
-    write_text(output / "deployment_by_seed.csv", stream.getvalue())
-    table = historical_table.render_table(rows).replace(
-        "at channel-set size $m=2000$.",
-        r"at channel-set size $m=2000$. Fading uses unit transmit power per channel coordinate.",
-    )
-    write_text(output / "performance_table.tex", table)
-    write_json(output / "performance_summary.json", summary)
+    suffix = f"-{only_dataset}" if only_dataset else ""
+    write_text(output / f"deployment_by_seed{suffix}.csv", stream.getvalue())
+    if only_dataset is None:
+        table = historical_table.render_table(rows).replace(
+            "at channel-set size $m=2000$.",
+            r"at channel-set size $m=2000$. Fading uses unit transmit power per channel coordinate.",
+        )
+        write_text(output / "performance_table.tex", table)
+    write_json(output / f"performance_summary{suffix}.json", summary)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("confirmation-count")
-    for name in ("plan", "run", "select", "summarize"):
+    for name in ("plan", "plan-refinement", "run", "select", "summarize"):
         commands.add_parser(name).add_argument("--output", type=Path, required=True)
+    refinement = commands.choices["plan-refinement"]
+    refinement.add_argument("--source", type=Path, required=True, help="Primary performance directory")
+    refinement.add_argument("--dataset", choices=DATASETS, required=True)
     run = commands.choices["run"]
     run.add_argument("--manifest", type=Path, required=True)
     run.add_argument("--index", type=int)
     run.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
     run.add_argument("--threads", type=int, default=int(os.environ.get("SLURM_CPUS_PER_TASK", "2")))
     commands.choices["select"].add_argument("--dataset", choices=DATASETS, required=True)
+    summarize_command = commands.choices["summarize"]
+    summarize_command.add_argument("--dataset", choices=DATASETS, help="Summarize one completed dataset")
+    summarize_command.add_argument("--source", action="append", default=[], metavar="DATASET=RUN_DIR",
+                                   help="Use a different confirmation directory for this dataset")
     args = parser.parse_args()
     if args.command == "confirmation-count":
         print(len(METHODS) * len(CONFIRMATION_SEEDS))
@@ -340,6 +431,8 @@ def main():
     output = args.output.resolve()
     if args.command == "plan":
         plan(output)
+    elif args.command == "plan-refinement":
+        plan_refinement(args.source, output, args.dataset)
     elif args.command == "run":
         index = args.index
         if index is None:
@@ -348,7 +441,13 @@ def main():
     elif args.command == "select":
         select(output, args.dataset)
     else:
-        summarize(output)
+        sources = {}
+        for setting in args.source:
+            dataset, separator, source = setting.partition("=")
+            if not separator or not source or dataset not in DATASETS or dataset in sources:
+                parser.error(f"Expected one DATASET=RUN_DIR per supplied dataset, got {setting!r}")
+            sources[dataset] = Path(source).resolve()
+        summarize(output, only_dataset=args.dataset, sources=sources)
 
 
 if __name__ == "__main__":

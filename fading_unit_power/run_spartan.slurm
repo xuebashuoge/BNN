@@ -68,7 +68,12 @@ case "$stage" in
         fi
         ;;
     summarize)
-        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance summarize --output "$performance_dir"
+        selection=()
+        if [[ -n "$target" ]]; then
+            selection=(--dataset "$target")
+        fi
+        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance summarize \
+            --output "$performance_dir" "${selection[@]}"
         ;;
     *) printf 'Unknown job stage: %s\n' "$stage" >&2; exit 2 ;;
 esac

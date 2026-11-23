@@ -22,3 +22,11 @@ bash -l fading_unit_power/submit_spartan.sh /data/gpfs/projects/punim2792/yangsh
 The launcher submits CPU arrays on `sapphire`, followed by dependent validation selection, held-out confirmation and reporting jobs. `jobs.tsv` records the Slurm job IDs and dependencies, and `logs/` contains the per-task logs. Use `fixed` or `performance` as a second argument to submit just that part in a new campaign directory.
 
 The fixed-study figures and source records land in `fixed/fixed_results/`. The comparison writes `performance/performance_table.tex`, `performance/deployment_by_seed.csv` and `performance/performance_summary.json`. The comparison table and bound figure draw their erasure data from the original archive. The fitted weights, full evaluation records and frozen manifests are under the campaign directory.
+
+A dataset can be refined after its validation selection finishes. The new search uses each method's validation winner and nearby learning rates, regularization strengths or posterior scales. The planner reads the search manifest and validation selection record. Use a checkout separate from the primary run while any primary job is active.
+
+```bash
+bash -l fading_unit_power/submit_spartan.sh "$refinement_run" refine "$primary_run/performance" moons
+```
+
+When both runs finish, `python -m fading_unit_power.performance summarize --output "$primary_run/performance" --source "moons=$refinement_run/performance"` uses the refined confirmation for Two moons in the combined table.
