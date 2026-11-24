@@ -48,3 +48,14 @@ The exploratory seed sweep chooses a shared bank size and training seed by valid
 ```bash
 bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$primary_run" "$seed_run"
 ```
+
+### Regularization follow-up
+
+The follow-up replays the primary refinement validation records and uses the validation-selected bank size and schedule for each method. Each method evaluates six candidates on three new paired seeds. T1 and T2 include tighter priors and different posterior scales, and their penalty coefficients are calibrated to match an L2 mean gradient at initialization. ERM and L2 receive their own posterior-scale and regularization candidates. Validation ranks each method's fits before five new paired confirmation seeds are generated. The confirmation uses the same dataset test examples as the primary sweep.
+
+Once the primary and exploratory seed jobs have finished, submit the follow-up for the desired datasets from a checkout of its Git revision.
+
+```bash
+bash -l fading_unit_power/submit_sweep_spartan.sh "$followup_run" \
+  --regularization-from "$primary_run/performance" moons mnist fashionmnist
+```

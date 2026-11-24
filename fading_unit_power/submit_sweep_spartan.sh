@@ -1,15 +1,27 @@
 #!/bin/bash -l
 set -eo pipefail
 
-if [[ ${1:-} == --help ]]; then
+usage() {
     printf 'Usage: %s RUN_DIRECTORY [--resume]\n' "$0"
+    printf '       %s RUN_DIRECTORY --regularization-from PRIMARY_PERFORMANCE_DIRECTORY DATASET [DATASET ...]\n' "$0"
+}
+
+if [[ ${1:-} == --help ]]; then
+    usage
     exit 0
 fi
-if [[ $# != 1 && ( $# != 2 || $2 != --resume ) ]]; then
-    printf 'Usage: %s RUN_DIRECTORY [--resume]\n' "$0" >&2
+resume=
+regularization_source=
+datasets=(moons mnist fashionmnist cifar10)
+if [[ $# == 2 && $2 == --resume ]]; then
+    resume=1
+elif [[ $# -ge 4 && $2 == --regularization-from ]]; then
+    regularization_source=$(cd -- "$3" && pwd -P)
+    datasets=("${@:4}")
+elif [[ $# != 1 ]]; then
+    usage >&2
     exit 2
 fi
-resume=${2:-}
 
 repo=$(git -C "$(dirname -- "$0")" rev-parse --show-toplevel)
 export DATASET=${DATASET:-/data/gpfs/projects/punim2792/Datasets}
@@ -31,6 +43,38 @@ jobs_file=$run_dir/jobs.tsv
 mkdir -p -- "$run_dir/logs"
 exec 9>"$run_dir/.submit.lock"
 flock -n 9 || { printf 'Submission already in progress for %s\n' "$run_dir" >&2; exit 1; }
+
+regularization_plan="$run_dir/regularization-plan.txt"
+if [[ -n "$resume" && -f "$regularization_plan" ]]; then
+    {
+        IFS= read -r regularization_source
+        datasets=()
+        while IFS= read -r dataset; do
+            datasets+=("$dataset")
+        done
+    } < "$regularization_plan"
+fi
+if [[ -n "$regularization_source" ]]; then
+    seen=' '
+    for dataset in "${datasets[@]}"; do
+        case "$dataset" in
+            moons|mnist|fashionmnist|cifar10) ;;
+            *) printf 'Unknown dataset: %s\n' "$dataset" >&2; exit 2 ;;
+        esac
+        if [[ $seen == *" $dataset "* ]]; then
+            printf 'Repeated dataset: %s\n' "$dataset" >&2
+            exit 2
+        fi
+        seen+="$dataset "
+    done
+    if [[ ${#datasets[@]} == 0 ]]; then
+        printf 'Choose at least one dataset for the regularization sweep\n' >&2
+        exit 2
+    fi
+    if [[ ! -f "$regularization_plan" ]]; then
+        printf '%s\n' "$regularization_source" "${datasets[@]}" > "$regularization_plan"
+    fi
+fi
 
 cd -- "$repo"
 revision=$(git rev-parse HEAD)
@@ -64,9 +108,16 @@ else
     sha256sum "$run_dir/libbnn_ftz.so" > "$run_dir/ftz.sha256"
 fi
 
-sweep=("$python_bin" -m fading_unit_power.performance_sweep)
-"${sweep[@]}" plan --output "$performance_dir"
-refine_count=$("${sweep[@]}" count --phase refine)
+if [[ -n "$regularization_source" ]]; then
+    sweep=("$python_bin" -m fading_unit_power.performance_regularization_sweep)
+    for dataset in "${datasets[@]}"; do
+        "${sweep[@]}" plan --output "$performance_dir" --source "$regularization_source" --dataset "$dataset"
+    done
+else
+    sweep=("$python_bin" -m fading_unit_power.performance_sweep)
+    "${sweep[@]}" plan --output "$performance_dir"
+    refine_count=$("${sweep[@]}" count --phase refine)
+fi
 confirmation_count=$("${sweep[@]}" count --phase confirmation)
 
 submit() {
@@ -119,17 +170,32 @@ submit_array() {
 }
 
 confirmations=()
-for dataset in moons mnist fashionmnist cifar10; do
+for dataset in "${datasets[@]}"; do
     # The per-dataset stages run in series and share a 64-CPU limit.
     case "$dataset" in
         moons) time=00:05:00; memory=4G; concurrency=2 ;;
         mnist|fashionmnist) time=00:30:00; memory=4G; concurrency=4 ;;
         cifar10) time=00:50:00; memory=6G; concurrency=22 ;;
     esac
+    if [[ -n "$regularization_source" ]]; then
+        case "$dataset" in
+            moons) concurrency=4 ;;
+            mnist|fashionmnist) concurrency=6 ;;
+            cifar10) concurrency=16 ;;
+        esac
+    fi
     search_count=$(awk 'END { print NR }' "$performance_dir/manifests/$dataset-search.jsonl")
     search_job=$(submit_array "$dataset" search "$search_count" '')
     # A successful rerun can leave an array's afterok dependency unsatisfied.
     # Consumers of arrays validate the complete set of results before proceeding.
+    if [[ -n "$regularization_source" ]]; then
+        select_job=$(submit "sweep-$dataset-select" 1 4G 00:05:00 "${search_job:+afterany:$search_job}" '' \
+            sweep-regularization-select "$dataset" "$confirmation_count")
+        confirmation_job=$(submit_array "$dataset" confirmation "$confirmation_count" "afterok:$select_job")
+        submit "sweep-$dataset-summary" 1 4G 00:05:00 "afterany:${confirmation_job:-$select_job}" '' \
+            sweep-summarize "$dataset" >/dev/null
+        continue
+    fi
     promote_job=$(submit "sweep-$dataset-promote" 1 4G 00:05:00 "${search_job:+afterany:$search_job}" '' \
         sweep-promote "$dataset" "$refine_count")
     refine_job=$(submit_array "$dataset" refine "$refine_count" "afterok:$promote_job")
@@ -143,6 +209,8 @@ for dataset in moons mnist fashionmnist cifar10; do
     confirmations+=("${confirmation_job:-$select_job}")
 done
 
-confirmation_dependencies=$(IFS=:; printf '%s' "${confirmations[*]}")
-submit sweep-summary 1 4G 00:05:00 "afterany:$confirmation_dependencies" '' sweep-summarize >/dev/null
+if [[ -z "$regularization_source" ]]; then
+    confirmation_dependencies=$(IFS=:; printf '%s' "${confirmations[*]}")
+    submit sweep-summary 1 4G 00:05:00 "afterany:$confirmation_dependencies" '' sweep-summarize >/dev/null
+fi
 printf 'Submitted jobs recorded in %s\n' "$jobs_file"

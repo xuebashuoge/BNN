@@ -84,13 +84,16 @@ case "$stage" in
             --index "$SLURM_ARRAY_TASK_ID" --device cpu
         touch -- "$completion_dir/$SLURM_ARRAY_TASK_ID"
         ;;
-    sweep-promote|sweep-select)
-        command=${stage#sweep-}
-        case "$command" in
-            promote) phase=refine ;;
-            select) phase=confirmation ;;
+    sweep-promote|sweep-select|sweep-regularization-select)
+        sweep_module=fading_unit_power.performance_sweep
+        case "$stage" in
+            sweep-promote) command=promote; phase=refine ;;
+            sweep-select) command=select; phase=confirmation ;;
+            sweep-regularization-select)
+                sweep_module=fading_unit_power.performance_regularization_sweep
+                command=select; phase=confirmation ;;
         esac
-        "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_sweep "$command" \
+        "${worker[@]}" "$python_bin" -u -m "$sweep_module" "$command" \
             --output "$performance_dir" --dataset "$target"
         count=$(awk 'END { print NR }' "$performance_dir/manifests/$target-$phase.jsonl")
         if [[ "$count" != "$detail" ]]; then
@@ -99,8 +102,12 @@ case "$stage" in
         fi
         ;;
     sweep-summarize)
-        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_sweep summarize \
-            --output "$performance_dir"
+        summary=("${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_sweep summarize
+                 --output "$performance_dir")
+        if [[ -n "$target" ]]; then
+            summary+=(--dataset "$target")
+        fi
+        exec "${summary[@]}"
         ;;
     seed-plan)
         exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep plan \
