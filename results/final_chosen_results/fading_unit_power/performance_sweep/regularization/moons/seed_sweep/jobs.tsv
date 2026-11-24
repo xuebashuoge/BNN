@@ -1,0 +1,10 @@
+stage	job_id	dependency	array
+seed-moons-plan	35609187	afterany:35608110	
+seed-moons-test	35609188	afterok:35609187	0-3%2
+seed-moons-summary	35609189	afterany:35609188	
+seed-fashionmnist-plan	35609190	afterany:35608114	
+seed-fashionmnist-test	35609191	afterok:35609190	0-3%4
+seed-fashionmnist-summary	35609192	afterany:35609191	
+seed-cifar10-plan	35609193	afterany:35608118	
+seed-cifar10-test	35609194	afterok:35609193	0-3%4
+seed-cifar10-summary	35609195	afterany:35609194	

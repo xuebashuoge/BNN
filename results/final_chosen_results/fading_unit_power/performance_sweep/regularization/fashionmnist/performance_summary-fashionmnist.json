@@ -1,0 +1,364 @@
+{
+  "channel": "Unit-power diagonal fading",
+  "paired_interval": {
+    "level": 0.95,
+    "method": "percentile bootstrap of paired training seeds",
+    "resamples": 10000,
+    "seed": 18171,
+    "multiplicity_adjusted": false
+  },
+  "all_reported_datasets_have_validation_selected_proposed_wins": false,
+  "datasets": {
+    "fashionmnist": {
+      "bank_size": 2000,
+      "paired_test_seeds": [
+        24112441,
+        24112442,
+        24112443,
+        24112444,
+        24112445
+      ],
+      "methods": {
+        "ERM-Matched": {
+          "mean_accuracy_pct": 70.61834375,
+          "sample_sd_accuracy_pct": 0.1060189698717005,
+          "candidate": "regularization-m2000-incumbent",
+          "selected_config": {
+            "dataset": "fashionmnist",
+            "architecture": "mlp",
+            "method": "erm",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 55000,
+            "val_size": 5000,
+            "batch_size": 256,
+            "epochs": 24,
+            "lr": 0.0001875,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.00099,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 0.1,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.960944400588468,
+            "train_mc": 3
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 24,
+            "24112442": 24,
+            "24112443": 24,
+            "24112444": 21,
+            "24112445": 23
+          }
+        },
+        "L2-Matched": {
+          "mean_accuracy_pct": 70.80828125000001,
+          "sample_sd_accuracy_pct": 0.2796212604871221,
+          "candidate": "regularization-m2000-incumbent",
+          "selected_config": {
+            "dataset": "fashionmnist",
+            "architecture": "mlp",
+            "method": "l2",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 55000,
+            "val_size": 5000,
+            "batch_size": 256,
+            "epochs": 24,
+            "lr": 0.000375,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.003,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-06,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 0.1,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.960944400588468,
+            "train_mc": 3
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 24,
+            "24112442": 24,
+            "24112443": 22,
+            "24112444": 24,
+            "24112445": 24
+          }
+        },
+        "T1-Matched": {
+          "mean_accuracy_pct": 70.55428125,
+          "sample_sd_accuracy_pct": 0.25469813052967716,
+          "candidate": "regularization-m2000-matched-shrinkage",
+          "selected_config": {
+            "dataset": "fashionmnist",
+            "architecture": "mlp",
+            "method": "proposed",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 55000,
+            "val_size": 5000,
+            "batch_size": 256,
+            "epochs": 48,
+            "lr": 0.00024375000000000002,
+            "eta_channel": 0.09295781909707068,
+            "eta_data": 0.4875931452686794,
+            "prior_std": 1.0,
+            "posterior_std": 0.003,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 0.1,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.9663363085715326,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 48,
+            "24112442": 42,
+            "24112443": 45,
+            "24112444": 47,
+            "24112445": 48
+          }
+        },
+        "T2-Matched": {
+          "mean_accuracy_pct": 70.59165625,
+          "sample_sd_accuracy_pct": 0.29613107037230396,
+          "candidate": "regularization-m2000-tight-prior",
+          "selected_config": {
+            "dataset": "fashionmnist",
+            "architecture": "mlp",
+            "method": "joint",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 55000,
+            "val_size": 5000,
+            "batch_size": 256,
+            "epochs": 48,
+            "lr": 0.00024375000000000002,
+            "eta_channel": 0.0,
+            "eta_data": 0.002230682287672863,
+            "prior_std": 0.125,
+            "posterior_std": 0.003,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 0.1,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.9663363085715326,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 47,
+            "24112442": 46,
+            "24112443": 47,
+            "24112444": 47,
+            "24112445": 48
+          }
+        }
+      },
+      "paired_differences": {
+        "T1-Matched": {
+          "ERM-Matched": {
+            "mean_pp": -0.06406249999999432,
+            "sample_sd_pp": 0.23614991989828643,
+            "paired_bootstrap_95_interval_pp": [
+              -0.22118749999999351,
+              0.13743750000000432
+            ],
+            "wins": 1,
+            "ties": 0,
+            "losses": 4,
+            "by_seed_pp": {
+              "24112441": -0.19484375000000398,
+              "24112442": -0.1368749999999892,
+              "24112443": 0.3203125,
+              "24112444": -0.01921874999999318,
+              "24112445": -0.2896874999999852
+            }
+          },
+          "L2-Matched": {
+            "mean_pp": -0.2539999999999935,
+            "sample_sd_pp": 0.14072113033740472,
+            "paired_bootstrap_95_interval_pp": [
+              -0.34618749999999354,
+              -0.12293749999999477
+            ],
+            "wins": 0,
+            "ties": 0,
+            "losses": 5,
+            "by_seed_pp": {
+              "24112441": -0.305156249999996,
+              "24112442": -0.3073437499999869,
+              "24112443": -0.23937499999999545,
+              "24112444": -0.022656249999997158,
+              "24112445": -0.39546874999999204
+            }
+          }
+        },
+        "T2-Matched": {
+          "ERM-Matched": {
+            "mean_pp": -0.02668750000000273,
+            "sample_sd_pp": 0.2758788203816276,
+            "paired_bootstrap_95_interval_pp": [
+              -0.22637500000000726,
+              0.18237499999999898
+            ],
+            "wins": 3,
+            "ties": 0,
+            "losses": 2,
+            "by_seed_pp": {
+              "24112441": -0.28812500000002217,
+              "24112442": 0.05109375000000682,
+              "24112443": 0.37999999999999545,
+              "24112444": 0.0028125000000045475,
+              "24112445": -0.2792187499999983
+            }
+          },
+          "L2-Matched": {
+            "mean_pp": -0.21662500000000193,
+            "sample_sd_pp": 0.17239769951155737,
+            "paired_bootstrap_95_interval_pp": [
+              -0.34931250000000774,
+              -0.08393749999999614
+            ],
+            "wins": 0,
+            "ties": 0,
+            "losses": 5,
+            "by_seed_pp": {
+              "24112441": -0.3984375000000142,
+              "24112442": -0.1193749999999909,
+              "24112443": -0.1796875,
+              "24112444": -0.0006249999999994316,
+              "24112445": -0.3850000000000051
+            }
+          }
+        }
+      },
+      "validation_selection_path": "manifests/fashionmnist-sweep-selection.json",
+      "validation_selection_sha256": "841fe6aa5553f52b4c79ebc115369abca1a9ba9475e557bde29c584909ad98e4",
+      "confirmation_manifest_sha256": "a418c7b76365ee3a0393df539033773d33dc51e9fa7e0297419dfd01278b5149",
+      "validation_selected": {
+        "proposed": "T1-Matched",
+        "baseline": "L2-Matched",
+        "paired_gap": {
+          "mean_pp": -0.2539999999999935,
+          "sample_sd_pp": 0.14072113033740472,
+          "paired_bootstrap_95_interval_pp": [
+            -0.34618749999999354,
+            -0.12293749999999477
+          ],
+          "wins": 0,
+          "ties": 0,
+          "losses": 5,
+          "by_seed_pp": {
+            "24112441": -0.305156249999996,
+            "24112442": -0.3073437499999869,
+            "24112443": -0.23937499999999545,
+            "24112444": -0.022656249999997158,
+            "24112445": -0.39546874999999204
+          }
+        },
+        "strongest_test_baseline": "L2-Matched",
+        "gap_to_strongest_test_baseline_pp": -0.2539999999999935,
+        "beats_both_baselines": false
+      },
+      "descriptive_test_best": {
+        "proposed": "T2-Matched",
+        "baseline": "L2-Matched",
+        "mean_gap_pp": -0.21662500000000193
+      }
+    }
+  }
+}

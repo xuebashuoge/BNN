@@ -1,0 +1,13 @@
+stage	job_id	dependency	array
+sweep-moons-search	35608108		0-71%4
+sweep-moons-select	35608109	afterany:35608108	
+sweep-moons-confirmation	35608110	afterok:35608109	0-19%4
+sweep-moons-summary	35608111	afterany:35608110	
+sweep-fashionmnist-search	35608112		0-71%6
+sweep-fashionmnist-select	35608113	afterany:35608112	
+sweep-fashionmnist-confirmation	35608114	afterok:35608113	0-19%6
+sweep-fashionmnist-summary	35608115	afterany:35608114	
+sweep-cifar10-search	35608116		0-71%16
+sweep-cifar10-select	35608117	afterany:35608116	
+sweep-cifar10-confirmation	35608118	afterok:35608117	0-19%16
+sweep-cifar10-summary	35608119	afterany:35608118	

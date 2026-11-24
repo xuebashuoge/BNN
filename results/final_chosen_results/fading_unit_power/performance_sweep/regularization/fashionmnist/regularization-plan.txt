@@ -1,0 +1,4 @@
+/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance
+moons
+fashionmnist
+cifar10

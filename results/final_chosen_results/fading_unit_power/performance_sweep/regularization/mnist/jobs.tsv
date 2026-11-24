@@ -1,0 +1,5 @@
+stage	job_id	dependency	array
+sweep-mnist-search	35608930		0-71%6
+sweep-mnist-select	35608931	afterany:35608930	
+sweep-mnist-confirmation	35608932	afterok:35608931	0-19%6
+sweep-mnist-summary	35608933	afterany:35608932	

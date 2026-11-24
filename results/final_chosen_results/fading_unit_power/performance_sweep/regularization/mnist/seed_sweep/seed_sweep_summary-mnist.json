@@ -1,0 +1,97 @@
+{
+  "analysis": "Exploratory single training seed selected on regularization validation",
+  "all_reported_datasets_have_validation_selected_proposed_wins": true,
+  "datasets": {
+    "mnist": {
+      "bank_size": 2000,
+      "training_seed": 24112433,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy_pct": 78.242578125,
+          "test_cross_entropy": 0.8052971494957804,
+          "validation_accuracy_pct": 77.65950000000001,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+          "selected_epoch": 48,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "c887fb6db19cb626067af295174ab38343257605ceb5ff7e078028452d514bf0",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "62ee4951f59192afd618bfe993dd011585e50ac4b94a7f2d76b180b392cfed0b",
+              "bytes": 4390
+            }
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy_pct": 78.45539062499999,
+          "test_cross_entropy": 0.7965477961236611,
+          "validation_accuracy_pct": 77.932,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+          "selected_epoch": 46,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "876e68f47d4699e3fa93c5ecd828697ac0848c5939c3977d1fbbce499db69f87",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "ac717946e535e662420ceeae69697961966f63b34ad0175b9643bd7dfc0e9985",
+              "bytes": 4430
+            }
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy_pct": 78.621796875,
+          "test_cross_entropy": 0.8227101208035834,
+          "validation_accuracy_pct": 78.05250000000001,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+          "selected_epoch": 22,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "9b56265b762edee9a9c7e48c1384cdaabb972a9a827cf149e19a15aac85a8446",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "516d41a8f2b4a777b5e3dd291bb659a051f1a5cbd75747791a81487f79fab00b",
+              "bytes": 4487
+            }
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy_pct": 78.65546875,
+          "test_cross_entropy": 0.8227025526573881,
+          "validation_accuracy_pct": 78.16500000000002,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+          "selected_epoch": 22,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "9e8ee833c30269149ad8728a7887fd7a7e834590b7fbabca9163d9c987d8a922",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "c7505ed89bbbfd9a11249f6222fe6233551a61e516e5a9cf59c594bd4c5199a8",
+              "bytes": 4468
+            }
+          }
+        }
+      },
+      "validation_proposed": "T2-Matched",
+      "validation_baseline": "L2-Matched",
+      "validation_gap_pp": 0.23300000000001653,
+      "test_gaps_pp": {
+        "ERM-Matched": 0.41289062500000284,
+        "L2-Matched": 0.20007812500000455
+      },
+      "beats_both_baselines": true,
+      "selection_sha256": "4de9518c76fdd8c800dbbc67ee6b48ca90b9b08df59f6695d54d9abfb73ec2e2"
+    }
+  }
+}

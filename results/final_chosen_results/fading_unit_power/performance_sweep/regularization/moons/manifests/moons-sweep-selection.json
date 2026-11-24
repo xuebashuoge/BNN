@@ -1,0 +1,249 @@
+{
+  "dataset": "moons",
+  "chosen_bank_size": 128,
+  "chosen_proposed": "T1-Matched",
+  "chosen_baseline": "L2-Matched",
+  "validation_gap_pp": -0.01249999999998197,
+  "chosen_candidates": {
+    "ERM-Matched": "regularization-m128-hot-learned",
+    "L2-Matched": "regularization-m128-hot-current-l2",
+    "T1-Matched": "regularization-m128-tight-hot-strong",
+    "T2-Matched": "regularization-m128-tight-hot"
+  },
+  "validation_scores": {
+    "ERM-Matched": {
+      "regularization-m128-incumbent": {
+        "mean_accuracy": 0.6916666666666668,
+        "mean_cross_entropy": 0.615324805021286,
+        "accuracy_by_seed": {
+          "24112431": 0.68675,
+          "24112432": 0.692125,
+          "24112433": 0.696125
+        }
+      },
+      "regularization-m128-hot-learned": {
+        "mean_accuracy": 0.6936249999999999,
+        "mean_cross_entropy": 0.6125306288401285,
+        "accuracy_by_seed": {
+          "24112431": 0.696875,
+          "24112432": 0.689875,
+          "24112433": 0.694125
+        }
+      },
+      "regularization-m128-hot-fixed": {
+        "mean_accuracy": 0.693375,
+        "mean_cross_entropy": 0.6127176804542541,
+        "accuracy_by_seed": {
+          "24112431": 0.695125,
+          "24112432": 0.689375,
+          "24112433": 0.6956249999999999
+        }
+      },
+      "regularization-m128-cool-learned": {
+        "mean_accuracy": 0.6931249999999999,
+        "mean_cross_entropy": 0.6132573009332022,
+        "accuracy_by_seed": {
+          "24112431": 0.687,
+          "24112432": 0.692,
+          "24112433": 0.700375
+        }
+      },
+      "regularization-m128-cool-fixed": {
+        "mean_accuracy": 0.6898333333333334,
+        "mean_cross_entropy": 0.6157777749697367,
+        "accuracy_by_seed": {
+          "24112431": 0.678875,
+          "24112432": 0.69225,
+          "24112433": 0.6983750000000001
+        }
+      },
+      "regularization-m128-current-fast-scale": {
+        "mean_accuracy": 0.6917916666666667,
+        "mean_cross_entropy": 0.6150246841907502,
+        "accuracy_by_seed": {
+          "24112431": 0.687125,
+          "24112432": 0.6925000000000001,
+          "24112433": 0.6957500000000001
+        }
+      }
+    },
+    "L2-Matched": {
+      "regularization-m128-incumbent": {
+        "mean_accuracy": 0.6882916666666666,
+        "mean_cross_entropy": 0.6141280054251353,
+        "accuracy_by_seed": {
+          "24112431": 0.6735,
+          "24112432": 0.6917500000000001,
+          "24112433": 0.6996249999999999
+        }
+      },
+      "regularization-m128-l2-weak": {
+        "mean_accuracy": 0.6880416666666666,
+        "mean_cross_entropy": 0.6141074506441752,
+        "accuracy_by_seed": {
+          "24112431": 0.6735,
+          "24112432": 0.6906249999999999,
+          "24112433": 0.7
+        }
+      },
+      "regularization-m128-l2-strong": {
+        "mean_accuracy": 0.6886666666666668,
+        "mean_cross_entropy": 0.6144983178774516,
+        "accuracy_by_seed": {
+          "24112431": 0.6740000000000002,
+          "24112432": 0.6926249999999999,
+          "24112433": 0.6993750000000001
+        }
+      },
+      "regularization-m128-hot-current-l2": {
+        "mean_accuracy": 0.6957916666666666,
+        "mean_cross_entropy": 0.613613882859548,
+        "accuracy_by_seed": {
+          "24112431": 0.69675,
+          "24112432": 0.692,
+          "24112433": 0.698625
+        }
+      },
+      "regularization-m128-hot-weak-l2": {
+        "mean_accuracy": 0.695,
+        "mean_cross_entropy": 0.6133801883856455,
+        "accuracy_by_seed": {
+          "24112431": 0.6965,
+          "24112432": 0.692,
+          "24112433": 0.6965
+        }
+      },
+      "regularization-m128-hot-strong-l2": {
+        "mean_accuracy": 0.6955,
+        "mean_cross_entropy": 0.612172598361969,
+        "accuracy_by_seed": {
+          "24112431": 0.69625,
+          "24112432": 0.690125,
+          "24112433": 0.700125
+        }
+      }
+    },
+    "T1-Matched": {
+      "regularization-m128-incumbent": {
+        "mean_accuracy": 0.6880416666666666,
+        "mean_cross_entropy": 0.6141147389411926,
+        "accuracy_by_seed": {
+          "24112431": 0.6735,
+          "24112432": 0.690375,
+          "24112433": 0.7002499999999999
+        }
+      },
+      "regularization-m128-matched-shrinkage": {
+        "mean_accuracy": 0.6880833333333333,
+        "mean_cross_entropy": 0.6139931266307831,
+        "accuracy_by_seed": {
+          "24112431": 0.6741250000000001,
+          "24112432": 0.692,
+          "24112433": 0.6981249999999999
+        }
+      },
+      "regularization-m128-tight-prior": {
+        "mean_accuracy": 0.688875,
+        "mean_cross_entropy": 0.6148503000736236,
+        "accuracy_by_seed": {
+          "24112431": 0.67425,
+          "24112432": 0.6922499999999999,
+          "24112433": 0.700125
+        }
+      },
+      "regularization-m128-tight-hot": {
+        "mean_accuracy": 0.6955,
+        "mean_cross_entropy": 0.6132751316229502,
+        "accuracy_by_seed": {
+          "24112431": 0.698625,
+          "24112432": 0.691125,
+          "24112433": 0.69675
+        }
+      },
+      "regularization-m128-tight-hot-weak": {
+        "mean_accuracy": 0.695125,
+        "mean_cross_entropy": 0.6135741191705069,
+        "accuracy_by_seed": {
+          "24112431": 0.69625,
+          "24112432": 0.692375,
+          "24112433": 0.69675
+        }
+      },
+      "regularization-m128-tight-hot-strong": {
+        "mean_accuracy": 0.6956666666666668,
+        "mean_cross_entropy": 0.6122099630832673,
+        "accuracy_by_seed": {
+          "24112431": 0.6970000000000001,
+          "24112432": 0.6905,
+          "24112433": 0.6995
+        }
+      }
+    },
+    "T2-Matched": {
+      "regularization-m128-incumbent": {
+        "mean_accuracy": 0.6892083333333333,
+        "mean_cross_entropy": 0.6139187033176422,
+        "accuracy_by_seed": {
+          "24112431": 0.6768750000000001,
+          "24112432": 0.690125,
+          "24112433": 0.7006249999999999
+        }
+      },
+      "regularization-m128-matched-shrinkage": {
+        "mean_accuracy": 0.6892916666666666,
+        "mean_cross_entropy": 0.6138639124234517,
+        "accuracy_by_seed": {
+          "24112431": 0.6768750000000001,
+          "24112432": 0.69025,
+          "24112433": 0.70075
+        }
+      },
+      "regularization-m128-tight-prior": {
+        "mean_accuracy": 0.6897500000000001,
+        "mean_cross_entropy": 0.6137532196044923,
+        "accuracy_by_seed": {
+          "24112431": 0.6768750000000001,
+          "24112432": 0.6915000000000001,
+          "24112433": 0.7008749999999999
+        }
+      },
+      "regularization-m128-tight-hot": {
+        "mean_accuracy": 0.6916666666666668,
+        "mean_cross_entropy": 0.6154645864963532,
+        "accuracy_by_seed": {
+          "24112431": 0.6878749999999999,
+          "24112432": 0.688375,
+          "24112433": 0.6987500000000001
+        }
+      },
+      "regularization-m128-tight-hot-weak": {
+        "mean_accuracy": 0.6914583333333333,
+        "mean_cross_entropy": 0.6153646306991577,
+        "accuracy_by_seed": {
+          "24112431": 0.6876249999999999,
+          "24112432": 0.68825,
+          "24112433": 0.6984999999999999
+        }
+      },
+      "regularization-m128-tight-hot-strong": {
+        "mean_accuracy": 0.6891250000000001,
+        "mean_cross_entropy": 0.6124756998221079,
+        "accuracy_by_seed": {
+          "24112431": 0.6831250000000001,
+          "24112432": 0.68875,
+          "24112433": 0.6955
+        }
+      }
+    }
+  },
+  "search_manifest_sha256": "79b727b13720148ec35ec0362678d2f0d87a6a16200de7ca7d5f2955bf9a0f0d",
+  "search_plan_sha256": "54d675b6b177523deb84cdb8c5806e93145479267b3a25ac12b2493d26242738",
+  "confirmation_seeds": [
+    24112441,
+    24112442,
+    24112443,
+    24112444,
+    24112445
+  ],
+  "confirmation_manifest_sha256": "2df11294aee18cc720fb866dcce875b974d45d1705a26ae10cc697d75634b531"
+}

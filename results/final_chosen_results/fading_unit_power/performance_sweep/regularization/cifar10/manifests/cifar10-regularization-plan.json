@@ -1,0 +1,66 @@
+{
+  "dataset": "cifar10",
+  "bank_size": 128,
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance",
+  "source_fingerprints": {
+    "refine_manifest_sha256": "6638a0817760d70ee0aada29f2f4fa514d9dc1c667d693e978da464e9af2548d",
+    "refine_scores_sha256": "d445a3fad3aeb1dd45a9e61716147065072873f301a802a2e2872204fce4a901",
+    "validation_selection_sha256": "fd175e7bfddb00e51c022b84b0ee3fc400ee8c30dac5f98ded8c723327eeae5f"
+  },
+  "anchor_tasks": {
+    "ERM-Matched": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112411",
+    "L2-Matched": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112411",
+    "T1-Matched": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112411",
+    "T2-Matched": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112411"
+  },
+  "l2_anchor": 1.0000000000000003e-05,
+  "hot_posterior": 0.01,
+  "tight_prior": 0.125,
+  "validation_seeds": [
+    24112431,
+    24112432,
+    24112433
+  ],
+  "confirmation_seeds": [
+    24112441,
+    24112442,
+    24112443,
+    24112444,
+    24112445
+  ],
+  "profiles": {
+    "ERM-Matched": [
+      "regularization-m128-incumbent",
+      "regularization-m128-hot-learned",
+      "regularization-m128-hot-fixed",
+      "regularization-m128-cool-learned",
+      "regularization-m128-cool-fixed",
+      "regularization-m128-current-fast-scale"
+    ],
+    "L2-Matched": [
+      "regularization-m128-incumbent",
+      "regularization-m128-l2-weak",
+      "regularization-m128-l2-strong",
+      "regularization-m128-hot-current-l2",
+      "regularization-m128-hot-weak-l2",
+      "regularization-m128-hot-strong-l2"
+    ],
+    "T1-Matched": [
+      "regularization-m128-incumbent",
+      "regularization-m128-matched-shrinkage",
+      "regularization-m128-tight-prior",
+      "regularization-m128-tight-hot",
+      "regularization-m128-tight-hot-weak",
+      "regularization-m128-tight-hot-strong"
+    ],
+    "T2-Matched": [
+      "regularization-m128-incumbent",
+      "regularization-m128-matched-shrinkage",
+      "regularization-m128-tight-prior",
+      "regularization-m128-tight-hot",
+      "regularization-m128-tight-hot-weak",
+      "regularization-m128-tight-hot-strong"
+    ]
+  },
+  "search_manifest_sha256": "1441e0910c7fe0306d1e5d1922943a41c7b1b6de06cad89de0f2d440413b96e8"
+}

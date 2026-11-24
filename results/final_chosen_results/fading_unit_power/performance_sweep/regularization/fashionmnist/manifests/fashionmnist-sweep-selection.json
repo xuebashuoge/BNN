@@ -1,0 +1,249 @@
+{
+  "dataset": "fashionmnist",
+  "chosen_bank_size": 2000,
+  "chosen_proposed": "T1-Matched",
+  "chosen_baseline": "L2-Matched",
+  "validation_gap_pp": -0.1851666666666807,
+  "chosen_candidates": {
+    "ERM-Matched": "regularization-m2000-incumbent",
+    "L2-Matched": "regularization-m2000-incumbent",
+    "T1-Matched": "regularization-m2000-matched-shrinkage",
+    "T2-Matched": "regularization-m2000-tight-prior"
+  },
+  "validation_scores": {
+    "ERM-Matched": {
+      "regularization-m2000-incumbent": {
+        "mean_accuracy": 0.7162533333333334,
+        "mean_cross_entropy": 0.8686375613530477,
+        "accuracy_by_seed": {
+          "24112431": 0.71716,
+          "24112432": 0.7123100000000001,
+          "24112433": 0.71929
+        }
+      },
+      "regularization-m2000-hot-learned": {
+        "mean_accuracy": 0.7010583333333334,
+        "mean_cross_entropy": 0.9003365374120077,
+        "accuracy_by_seed": {
+          "24112431": 0.70197,
+          "24112432": 0.698485,
+          "24112433": 0.70272
+        }
+      },
+      "regularization-m2000-hot-fixed": {
+        "mean_accuracy": 0.7009516666666666,
+        "mean_cross_entropy": 0.9011486933390299,
+        "accuracy_by_seed": {
+          "24112431": 0.703385,
+          "24112432": 0.697575,
+          "24112433": 0.701895
+        }
+      },
+      "regularization-m2000-cool-learned": {
+        "mean_accuracy": 0.7156066666666666,
+        "mean_cross_entropy": 0.8693911799621582,
+        "accuracy_by_seed": {
+          "24112431": 0.71596,
+          "24112432": 0.7135400000000001,
+          "24112433": 0.71732
+        }
+      },
+      "regularization-m2000-cool-fixed": {
+        "mean_accuracy": 0.7154933333333333,
+        "mean_cross_entropy": 0.8697486827977499,
+        "accuracy_by_seed": {
+          "24112431": 0.71559,
+          "24112432": 0.7134400000000001,
+          "24112433": 0.71745
+        }
+      },
+      "regularization-m2000-current-fast-scale": {
+        "mean_accuracy": 0.7158899999999999,
+        "mean_cross_entropy": 0.8697631637827555,
+        "accuracy_by_seed": {
+          "24112431": 0.716835,
+          "24112432": 0.711745,
+          "24112433": 0.7190899999999999
+        }
+      }
+    },
+    "L2-Matched": {
+      "regularization-m2000-incumbent": {
+        "mean_accuracy": 0.718055,
+        "mean_cross_entropy": 0.8785125468190511,
+        "accuracy_by_seed": {
+          "24112431": 0.718955,
+          "24112432": 0.7164550000000001,
+          "24112433": 0.718755
+        }
+      },
+      "regularization-m2000-l2-weak": {
+        "mean_accuracy": 0.7172433333333333,
+        "mean_cross_entropy": 0.8792251439921062,
+        "accuracy_by_seed": {
+          "24112431": 0.719435,
+          "24112432": 0.7155400000000001,
+          "24112433": 0.7167549999999999
+        }
+      },
+      "regularization-m2000-l2-strong": {
+        "mean_accuracy": 0.71774,
+        "mean_cross_entropy": 0.8771875659561158,
+        "accuracy_by_seed": {
+          "24112431": 0.716985,
+          "24112432": 0.716375,
+          "24112433": 0.7198599999999999
+        }
+      },
+      "regularization-m2000-hot-current-l2": {
+        "mean_accuracy": 0.711205,
+        "mean_cross_entropy": 0.8938549486668905,
+        "accuracy_by_seed": {
+          "24112431": 0.7116,
+          "24112432": 0.711125,
+          "24112433": 0.71089
+        }
+      },
+      "regularization-m2000-hot-weak-l2": {
+        "mean_accuracy": 0.71082,
+        "mean_cross_entropy": 0.8929499107615153,
+        "accuracy_by_seed": {
+          "24112431": 0.71132,
+          "24112432": 0.71112,
+          "24112433": 0.71002
+        }
+      },
+      "regularization-m2000-hot-strong-l2": {
+        "mean_accuracy": 0.7109183333333333,
+        "mean_cross_entropy": 0.8917949522781372,
+        "accuracy_by_seed": {
+          "24112431": 0.713145,
+          "24112432": 0.710615,
+          "24112433": 0.708995
+        }
+      }
+    },
+    "T1-Matched": {
+      "regularization-m2000-incumbent": {
+        "mean_accuracy": 0.7159399999999999,
+        "mean_cross_entropy": 0.8730687462743124,
+        "accuracy_by_seed": {
+          "24112431": 0.71742,
+          "24112432": 0.71477,
+          "24112433": 0.71563
+        }
+      },
+      "regularization-m2000-matched-shrinkage": {
+        "mean_accuracy": 0.7162033333333332,
+        "mean_cross_entropy": 0.8736520173136393,
+        "accuracy_by_seed": {
+          "24112431": 0.7183999999999999,
+          "24112432": 0.71441,
+          "24112433": 0.7158
+        }
+      },
+      "regularization-m2000-tight-prior": {
+        "mean_accuracy": 0.7158933333333333,
+        "mean_cross_entropy": 0.8733883943430581,
+        "accuracy_by_seed": {
+          "24112431": 0.71887,
+          "24112432": 0.71365,
+          "24112433": 0.7151599999999999
+        }
+      },
+      "regularization-m2000-tight-hot": {
+        "mean_accuracy": 0.7052783333333333,
+        "mean_cross_entropy": 0.8979936293156943,
+        "accuracy_by_seed": {
+          "24112431": 0.706865,
+          "24112432": 0.702595,
+          "24112433": 0.7063750000000001
+        }
+      },
+      "regularization-m2000-tight-hot-weak": {
+        "mean_accuracy": 0.704505,
+        "mean_cross_entropy": 0.8986670876185099,
+        "accuracy_by_seed": {
+          "24112431": 0.7066100000000001,
+          "24112432": 0.70132,
+          "24112433": 0.7055849999999999
+        }
+      },
+      "regularization-m2000-tight-hot-strong": {
+        "mean_accuracy": 0.7047216666666666,
+        "mean_cross_entropy": 0.898078106358846,
+        "accuracy_by_seed": {
+          "24112431": 0.7061550000000001,
+          "24112432": 0.701675,
+          "24112433": 0.7063349999999999
+        }
+      }
+    },
+    "T2-Matched": {
+      "regularization-m2000-incumbent": {
+        "mean_accuracy": 0.7157883333333332,
+        "mean_cross_entropy": 0.8736024300893148,
+        "accuracy_by_seed": {
+          "24112431": 0.717375,
+          "24112432": 0.7146800000000001,
+          "24112433": 0.7153099999999999
+        }
+      },
+      "regularization-m2000-matched-shrinkage": {
+        "mean_accuracy": 0.7157566666666666,
+        "mean_cross_entropy": 0.8741825542068481,
+        "accuracy_by_seed": {
+          "24112431": 0.718185,
+          "24112432": 0.71322,
+          "24112433": 0.715865
+        }
+      },
+      "regularization-m2000-tight-prior": {
+        "mean_accuracy": 0.7160183333333333,
+        "mean_cross_entropy": 0.8725383771642049,
+        "accuracy_by_seed": {
+          "24112431": 0.7175649999999999,
+          "24112432": 0.715295,
+          "24112433": 0.715195
+        }
+      },
+      "regularization-m2000-tight-hot": {
+        "mean_accuracy": 0.705105,
+        "mean_cross_entropy": 0.8970538992436726,
+        "accuracy_by_seed": {
+          "24112431": 0.7071500000000001,
+          "24112432": 0.70231,
+          "24112433": 0.705855
+        }
+      },
+      "regularization-m2000-tight-hot-weak": {
+        "mean_accuracy": 0.7041983333333333,
+        "mean_cross_entropy": 0.8984291995747884,
+        "accuracy_by_seed": {
+          "24112431": 0.70526,
+          "24112432": 0.7018650000000001,
+          "24112433": 0.7054699999999999
+        }
+      },
+      "regularization-m2000-tight-hot-strong": {
+        "mean_accuracy": 0.7047466666666665,
+        "mean_cross_entropy": 0.8980953714497883,
+        "accuracy_by_seed": {
+          "24112431": 0.7061299999999999,
+          "24112432": 0.701915,
+          "24112433": 0.706195
+        }
+      }
+    }
+  },
+  "search_manifest_sha256": "c493d602b8a4c406086d86d5b0e2716bbc5bce86edba6aafb80f02af6b7c0c79",
+  "search_plan_sha256": "62a083a7dfb6146708b3a1055626cc26c2e106aa102a5393d65ecc7b421191c5",
+  "confirmation_seeds": [
+    24112441,
+    24112442,
+    24112443,
+    24112444,
+    24112445
+  ],
+  "confirmation_manifest_sha256": "a418c7b76365ee3a0393df539033773d33dc51e9fa7e0297419dfd01278b5149"
+}

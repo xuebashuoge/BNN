@@ -1,0 +1,66 @@
+{
+  "dataset": "fashionmnist",
+  "bank_size": 2000,
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance",
+  "source_fingerprints": {
+    "refine_manifest_sha256": "59b91a7465f6078472a9488284215b07b224167acc0c2abc2b69a25a9c02440a",
+    "refine_scores_sha256": "92f0920aaa3b38219e579ccfa342b3c3593d1304a194e510b912c7366bfb1016",
+    "validation_selection_sha256": "436c51edc934d1e97961358871b8bfe9a2cef3cb44e3779b85a6a138e5193fa5"
+  },
+  "anchor_tasks": {
+    "ERM-Matched": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+    "L2-Matched": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+    "T1-Matched": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112411",
+    "T2-Matched": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112411"
+  },
+  "l2_anchor": 1e-06,
+  "hot_posterior": 0.01,
+  "tight_prior": 0.125,
+  "validation_seeds": [
+    24112431,
+    24112432,
+    24112433
+  ],
+  "confirmation_seeds": [
+    24112441,
+    24112442,
+    24112443,
+    24112444,
+    24112445
+  ],
+  "profiles": {
+    "ERM-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-hot-learned",
+      "regularization-m2000-hot-fixed",
+      "regularization-m2000-cool-learned",
+      "regularization-m2000-cool-fixed",
+      "regularization-m2000-current-fast-scale"
+    ],
+    "L2-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-l2-weak",
+      "regularization-m2000-l2-strong",
+      "regularization-m2000-hot-current-l2",
+      "regularization-m2000-hot-weak-l2",
+      "regularization-m2000-hot-strong-l2"
+    ],
+    "T1-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-matched-shrinkage",
+      "regularization-m2000-tight-prior",
+      "regularization-m2000-tight-hot",
+      "regularization-m2000-tight-hot-weak",
+      "regularization-m2000-tight-hot-strong"
+    ],
+    "T2-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-matched-shrinkage",
+      "regularization-m2000-tight-prior",
+      "regularization-m2000-tight-hot",
+      "regularization-m2000-tight-hot-weak",
+      "regularization-m2000-tight-hot-strong"
+    ]
+  },
+  "search_manifest_sha256": "c493d602b8a4c406086d86d5b0e2716bbc5bce86edba6aafb80f02af6b7c0c79"
+}

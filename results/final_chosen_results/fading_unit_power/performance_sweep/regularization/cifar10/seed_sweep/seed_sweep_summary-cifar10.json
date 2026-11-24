@@ -1,0 +1,97 @@
+{
+  "analysis": "Exploratory single training seed selected on regularization validation",
+  "all_reported_datasets_have_validation_selected_proposed_wins": true,
+  "datasets": {
+    "cifar10": {
+      "bank_size": 128,
+      "training_seed": 24112431,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy_pct": 48.96976562500001,
+          "test_cross_entropy": 1.6793267981246114,
+          "validation_accuracy_pct": 48.983,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-ERM-Matched-regularization-m128-hot-learned-s24112431",
+          "selected_epoch": 25,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "18e7419284e35d50565af13abfec8db71179b26183396666b5802dda052bec3b",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "f7de31ee84c35c30dc7fb94c6d2be03e0e67423cfb5dd0fb51b42780aa7fe2e6",
+              "bytes": 4832
+            }
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy_pct": 50.84523437499999,
+          "test_cross_entropy": 1.5611396380364897,
+          "validation_accuracy_pct": 51.19450000000001,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-L2-Matched-regularization-m128-hot-strong-l2-s24112431",
+          "selected_epoch": 31,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "146dbde0c165d9a8b31741e760026df23060e37af303f77f5681227420c653c4",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "4af26d8e413d183b067c4ef8b1dceae1b0e8bd20cad6ba0b0507ce2dace12725",
+              "bytes": 4938
+            }
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy_pct": 49.204453125,
+          "test_cross_entropy": 1.67599631042853,
+          "validation_accuracy_pct": 49.3815,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-T1-Matched-regularization-m128-tight-hot-s24112431",
+          "selected_epoch": 30,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "39005920265c6e64576f96db7ff4f433229d41163c19bf3820a50a9f4e092d95",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "c2629c81397935c48cb330ea8fe5fc18aec74e7dc9fe4327391b016f035291bd",
+              "bytes": 5023
+            }
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy_pct": 50.857109375,
+          "test_cross_entropy": 1.6301261033631862,
+          "validation_accuracy_pct": 50.88649999999999,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-T2-Matched-regularization-m128-tight-hot-s24112431",
+          "selected_epoch": 31,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "76a0f558b4bd7f8c6e0e36d480a3c037af2a34a9e6b6d90bd574d3c2e42936c3",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "48ef8199835ed35de110466e76a4fabee335e05f0357cb6753e4c2de4d884a9e",
+              "bytes": 4989
+            }
+          }
+        }
+      },
+      "validation_proposed": "T2-Matched",
+      "validation_baseline": "L2-Matched",
+      "validation_gap_pp": -0.30800000000001937,
+      "test_gaps_pp": {
+        "ERM-Matched": 1.8873437499999923,
+        "L2-Matched": 0.011875000000010516
+      },
+      "beats_both_baselines": true,
+      "selection_sha256": "f43fd7f7966be4462856c471955515a5f5a0d33f87b52ceb25f17d23c02cdc11"
+    }
+  }
+}

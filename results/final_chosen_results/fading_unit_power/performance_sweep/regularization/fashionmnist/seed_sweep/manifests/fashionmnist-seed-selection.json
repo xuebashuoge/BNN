@@ -1,0 +1,977 @@
+{
+  "dataset": "fashionmnist",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization/performance",
+  "source_phase": "search",
+  "search_manifest_sha256": "c493d602b8a4c406086d86d5b0e2716bbc5bce86edba6aafb80f02af6b7c0c79",
+  "search_plan_sha256": "62a083a7dfb6146708b3a1055626cc26c2e106aa102a5393d65ecc7b421191c5",
+  "selected": {
+    "m": 2000,
+    "seed": 24112431,
+    "proposed": "T1-Matched",
+    "baseline": "L2-Matched",
+    "validation_gap_pp": -0.05650000000000377,
+    "winners": {
+      "ERM-Matched": {
+        "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112431",
+        "accuracy": 0.71716,
+        "cross_entropy": 0.8657581038665771
+      },
+      "L2-Matched": {
+        "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112431",
+        "accuracy": 0.719435,
+        "cross_entropy": 0.8732131435012818
+      },
+      "T1-Matched": {
+        "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112431",
+        "accuracy": 0.71887,
+        "cross_entropy": 0.8651045323181151
+      },
+      "T2-Matched": {
+        "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112431",
+        "accuracy": 0.718185,
+        "cross_entropy": 0.8683595993423461
+      }
+    },
+    "trials": {
+      "ERM-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112431",
+          "accuracy": 0.71716,
+          "cross_entropy": 0.8657581038665771
+        },
+        "regularization-m2000-hot-learned": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-learned-s24112431",
+          "accuracy": 0.70197,
+          "cross_entropy": 0.8976496143722535
+        },
+        "regularization-m2000-hot-fixed": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-fixed-s24112431",
+          "accuracy": 0.703385,
+          "cross_entropy": 0.8962702081298829
+        },
+        "regularization-m2000-cool-learned": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-learned-s24112431",
+          "accuracy": 0.71596,
+          "cross_entropy": 0.8685323903274537
+        },
+        "regularization-m2000-cool-fixed": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-fixed-s24112431",
+          "accuracy": 0.71559,
+          "cross_entropy": 0.8699152799224853
+        },
+        "regularization-m2000-current-fast-scale": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112431",
+          "accuracy": 0.716835,
+          "cross_entropy": 0.8669326404953004
+        }
+      },
+      "L2-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-incumbent-s24112431",
+          "accuracy": 0.718955,
+          "cross_entropy": 0.8741273131942748
+        },
+        "regularization-m2000-l2-weak": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112431",
+          "accuracy": 0.719435,
+          "cross_entropy": 0.8732131435012818
+        },
+        "regularization-m2000-l2-strong": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-strong-s24112431",
+          "accuracy": 0.716985,
+          "cross_entropy": 0.8695772153854371
+        },
+        "regularization-m2000-hot-current-l2": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-current-l2-s24112431",
+          "accuracy": 0.7116,
+          "cross_entropy": 0.8920481407546997
+        },
+        "regularization-m2000-hot-weak-l2": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112431",
+          "accuracy": 0.71132,
+          "cross_entropy": 0.8911853505706786
+        },
+        "regularization-m2000-hot-strong-l2": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112431",
+          "accuracy": 0.713145,
+          "cross_entropy": 0.885540252609253
+        }
+      },
+      "T1-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-incumbent-s24112431",
+          "accuracy": 0.71742,
+          "cross_entropy": 0.8710479056167604
+        },
+        "regularization-m2000-matched-shrinkage": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112431",
+          "accuracy": 0.7183999999999999,
+          "cross_entropy": 0.8679894834899902
+        },
+        "regularization-m2000-tight-prior": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112431",
+          "accuracy": 0.71887,
+          "cross_entropy": 0.8651045323181151
+        },
+        "regularization-m2000-tight-hot": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-s24112431",
+          "accuracy": 0.706865,
+          "cross_entropy": 0.8943282030868531
+        },
+        "regularization-m2000-tight-hot-weak": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112431",
+          "accuracy": 0.7066100000000001,
+          "cross_entropy": 0.8954580140686035
+        },
+        "regularization-m2000-tight-hot-strong": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112431",
+          "accuracy": 0.7061550000000001,
+          "cross_entropy": 0.8943681686019896
+        }
+      },
+      "T2-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-incumbent-s24112431",
+          "accuracy": 0.717375,
+          "cross_entropy": 0.8714267192840577
+        },
+        "regularization-m2000-matched-shrinkage": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112431",
+          "accuracy": 0.718185,
+          "cross_entropy": 0.8683595993423461
+        },
+        "regularization-m2000-tight-prior": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-prior-s24112431",
+          "accuracy": 0.7175649999999999,
+          "cross_entropy": 0.8683268389892579
+        },
+        "regularization-m2000-tight-hot": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-s24112431",
+          "accuracy": 0.7071500000000001,
+          "cross_entropy": 0.8942637663650512
+        },
+        "regularization-m2000-tight-hot-weak": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112431",
+          "accuracy": 0.70526,
+          "cross_entropy": 0.8965643700790406
+        },
+        "regularization-m2000-tight-hot-strong": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112431",
+          "accuracy": 0.7061299999999999,
+          "cross_entropy": 0.8943610782241821
+        }
+      }
+    }
+  },
+  "leaderboard": [
+    {
+      "m": 2000,
+      "seed": 24112431,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.05650000000000377,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112431",
+          "accuracy": 0.71716,
+          "cross_entropy": 0.8657581038665771
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112431",
+          "accuracy": 0.719435,
+          "cross_entropy": 0.8732131435012818
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112431",
+          "accuracy": 0.71887,
+          "cross_entropy": 0.8651045323181151
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112431",
+          "accuracy": 0.718185,
+          "cross_entropy": 0.8683595993423461
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.71716,
+            "cross_entropy": 0.8657581038665771
+          },
+          "regularization-m2000-hot-learned": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-learned-s24112431",
+            "accuracy": 0.70197,
+            "cross_entropy": 0.8976496143722535
+          },
+          "regularization-m2000-hot-fixed": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-fixed-s24112431",
+            "accuracy": 0.703385,
+            "cross_entropy": 0.8962702081298829
+          },
+          "regularization-m2000-cool-learned": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-learned-s24112431",
+            "accuracy": 0.71596,
+            "cross_entropy": 0.8685323903274537
+          },
+          "regularization-m2000-cool-fixed": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-fixed-s24112431",
+            "accuracy": 0.71559,
+            "cross_entropy": 0.8699152799224853
+          },
+          "regularization-m2000-current-fast-scale": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112431",
+            "accuracy": 0.716835,
+            "cross_entropy": 0.8669326404953004
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.718955,
+            "cross_entropy": 0.8741273131942748
+          },
+          "regularization-m2000-l2-weak": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112431",
+            "accuracy": 0.719435,
+            "cross_entropy": 0.8732131435012818
+          },
+          "regularization-m2000-l2-strong": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-strong-s24112431",
+            "accuracy": 0.716985,
+            "cross_entropy": 0.8695772153854371
+          },
+          "regularization-m2000-hot-current-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-current-l2-s24112431",
+            "accuracy": 0.7116,
+            "cross_entropy": 0.8920481407546997
+          },
+          "regularization-m2000-hot-weak-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112431",
+            "accuracy": 0.71132,
+            "cross_entropy": 0.8911853505706786
+          },
+          "regularization-m2000-hot-strong-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112431",
+            "accuracy": 0.713145,
+            "cross_entropy": 0.885540252609253
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.71742,
+            "cross_entropy": 0.8710479056167604
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112431",
+            "accuracy": 0.7183999999999999,
+            "cross_entropy": 0.8679894834899902
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112431",
+            "accuracy": 0.71887,
+            "cross_entropy": 0.8651045323181151
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-s24112431",
+            "accuracy": 0.706865,
+            "cross_entropy": 0.8943282030868531
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112431",
+            "accuracy": 0.7066100000000001,
+            "cross_entropy": 0.8954580140686035
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112431",
+            "accuracy": 0.7061550000000001,
+            "cross_entropy": 0.8943681686019896
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.717375,
+            "cross_entropy": 0.8714267192840577
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112431",
+            "accuracy": 0.718185,
+            "cross_entropy": 0.8683595993423461
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-prior-s24112431",
+            "accuracy": 0.7175649999999999,
+            "cross_entropy": 0.8683268389892579
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-s24112431",
+            "accuracy": 0.7071500000000001,
+            "cross_entropy": 0.8942637663650512
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112431",
+            "accuracy": 0.70526,
+            "cross_entropy": 0.8965643700790406
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112431",
+            "accuracy": 0.7061299999999999,
+            "cross_entropy": 0.8943610782241821
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112432,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.11600000000000499,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-learned-s24112432",
+          "accuracy": 0.7135400000000001,
+          "cross_entropy": 0.8761717665481568
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-incumbent-s24112432",
+          "accuracy": 0.7164550000000001,
+          "cross_entropy": 0.8809394321441651
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-incumbent-s24112432",
+          "accuracy": 0.71477,
+          "cross_entropy": 0.8756894554519654
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-prior-s24112432",
+          "accuracy": 0.715295,
+          "cross_entropy": 0.8749288321685791
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.7123100000000001,
+            "cross_entropy": 0.8787032353591918
+          },
+          "regularization-m2000-hot-learned": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-learned-s24112432",
+            "accuracy": 0.698485,
+            "cross_entropy": 0.9047874360656738
+          },
+          "regularization-m2000-hot-fixed": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-fixed-s24112432",
+            "accuracy": 0.697575,
+            "cross_entropy": 0.9068603517532349
+          },
+          "regularization-m2000-cool-learned": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-learned-s24112432",
+            "accuracy": 0.7135400000000001,
+            "cross_entropy": 0.8761717665481568
+          },
+          "regularization-m2000-cool-fixed": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-fixed-s24112432",
+            "accuracy": 0.7134400000000001,
+            "cross_entropy": 0.8759403742599486
+          },
+          "regularization-m2000-current-fast-scale": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112432",
+            "accuracy": 0.711745,
+            "cross_entropy": 0.880653698310852
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.7164550000000001,
+            "cross_entropy": 0.8809394321441651
+          },
+          "regularization-m2000-l2-weak": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112432",
+            "accuracy": 0.7155400000000001,
+            "cross_entropy": 0.8859837028884886
+          },
+          "regularization-m2000-l2-strong": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-strong-s24112432",
+            "accuracy": 0.716375,
+            "cross_entropy": 0.88344244430542
+          },
+          "regularization-m2000-hot-current-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-current-l2-s24112432",
+            "accuracy": 0.711125,
+            "cross_entropy": 0.891873681716919
+          },
+          "regularization-m2000-hot-weak-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112432",
+            "accuracy": 0.71112,
+            "cross_entropy": 0.8924645154953005
+          },
+          "regularization-m2000-hot-strong-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112432",
+            "accuracy": 0.710615,
+            "cross_entropy": 0.890211455192566
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.71477,
+            "cross_entropy": 0.8756894554519654
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112432",
+            "accuracy": 0.71441,
+            "cross_entropy": 0.8794677024459838
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112432",
+            "accuracy": 0.71365,
+            "cross_entropy": 0.8799739035797118
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-s24112432",
+            "accuracy": 0.702595,
+            "cross_entropy": 0.9047188974380493
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112432",
+            "accuracy": 0.70132,
+            "cross_entropy": 0.9068000009918213
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112432",
+            "accuracy": 0.701675,
+            "cross_entropy": 0.9049332881164551
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.7146800000000001,
+            "cross_entropy": 0.8771760279083252
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112432",
+            "accuracy": 0.71322,
+            "cross_entropy": 0.8811947928237915
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-prior-s24112432",
+            "accuracy": 0.715295,
+            "cross_entropy": 0.8749288321685791
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-s24112432",
+            "accuracy": 0.70231,
+            "cross_entropy": 0.9046344761657716
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112432",
+            "accuracy": 0.7018650000000001,
+            "cross_entropy": 0.9049246487808226
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112432",
+            "accuracy": 0.701915,
+            "cross_entropy": 0.9045592041397095
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112433,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.3994999999999971,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+          "accuracy": 0.71929,
+          "cross_entropy": 0.861451344833374
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+          "accuracy": 0.7198599999999999,
+          "cross_entropy": 0.8785430381774901
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112433",
+          "accuracy": 0.7158,
+          "cross_entropy": 0.8734988660049439
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112433",
+          "accuracy": 0.715865,
+          "cross_entropy": 0.8729932704544068
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.71929,
+            "cross_entropy": 0.861451344833374
+          },
+          "regularization-m2000-hot-learned": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-learned-s24112433",
+            "accuracy": 0.70272,
+            "cross_entropy": 0.8985725617980957
+          },
+          "regularization-m2000-hot-fixed": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-hot-fixed-s24112433",
+            "accuracy": 0.701895,
+            "cross_entropy": 0.9003155201339721
+          },
+          "regularization-m2000-cool-learned": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-learned-s24112433",
+            "accuracy": 0.71732,
+            "cross_entropy": 0.8634693830108642
+          },
+          "regularization-m2000-cool-fixed": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-cool-fixed-s24112433",
+            "accuracy": 0.71745,
+            "cross_entropy": 0.8633903942108155
+          },
+          "regularization-m2000-current-fast-scale": {
+            "task_id": "fashionmnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112433",
+            "accuracy": 0.7190899999999999,
+            "cross_entropy": 0.8617031525421142
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.718755,
+            "cross_entropy": 0.8804708951187135
+          },
+          "regularization-m2000-l2-weak": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112433",
+            "accuracy": 0.7167549999999999,
+            "cross_entropy": 0.8784785855865479
+          },
+          "regularization-m2000-l2-strong": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+            "accuracy": 0.7198599999999999,
+            "cross_entropy": 0.8785430381774901
+          },
+          "regularization-m2000-hot-current-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-current-l2-s24112433",
+            "accuracy": 0.71089,
+            "cross_entropy": 0.8976430235290527
+          },
+          "regularization-m2000-hot-weak-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112433",
+            "accuracy": 0.71002,
+            "cross_entropy": 0.895199866218567
+          },
+          "regularization-m2000-hot-strong-l2": {
+            "task_id": "fashionmnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112433",
+            "accuracy": 0.708995,
+            "cross_entropy": 0.8996331490325928
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.71563,
+            "cross_entropy": 0.8724688777542114
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112433",
+            "accuracy": 0.7158,
+            "cross_entropy": 0.8734988660049439
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112433",
+            "accuracy": 0.7151599999999999,
+            "cross_entropy": 0.8750867471313477
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+            "accuracy": 0.7063750000000001,
+            "cross_entropy": 0.8949337874221801
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112433",
+            "accuracy": 0.7055849999999999,
+            "cross_entropy": 0.8937432477951048
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112433",
+            "accuracy": 0.7063349999999999,
+            "cross_entropy": 0.8949328623580932
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.7153099999999999,
+            "cross_entropy": 0.8722045430755616
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112433",
+            "accuracy": 0.715865,
+            "cross_entropy": 0.8729932704544068
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-prior-s24112433",
+            "accuracy": 0.715195,
+            "cross_entropy": 0.8743594603347777
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+            "accuracy": 0.705855,
+            "cross_entropy": 0.8922634552001952
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112433",
+            "accuracy": 0.7054699999999999,
+            "cross_entropy": 0.893798579864502
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "fashionmnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112433",
+            "accuracy": 0.706195,
+            "cross_entropy": 0.8953658319854736
+          }
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "entry": {
+        "task_id": "fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112431",
+        "phase": "confirmation",
+        "method": "ERM-Matched",
+        "candidate": "regularization-m2000-incumbent",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "erm",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 24,
+          "lr": 0.0001875,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.00099,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.960944400588468,
+          "train_mc": 3,
+          "seed": 24112431,
+          "channel_seed": 24122431,
+          "eval_seed": 24132431
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112438
+        },
+        "source": {
+          "primary_refine_task": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+          "profile": "incumbent",
+          "calibration": {},
+          "refine_manifest_sha256": "59b91a7465f6078472a9488284215b07b224167acc0c2abc2b69a25a9c02440a",
+          "refine_scores_sha256": "92f0920aaa3b38219e579ccfa342b3c3593d1304a194e510b912c7366bfb1016",
+          "validation_selection_sha256": "436c51edc934d1e97961358871b8bfe9a2cef3cb44e3779b85a6a138e5193fa5"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization/performance/search/fashionmnist-ERM-Matched-regularization-m2000-incumbent-s24112431",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "7692e56a9187addf117fc0ba63d6e4243298163c777b568a3df32311207e6347",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "38e1fc58a81ab73d63459714fec4c4280a4bab123f899ce881086714a42d8ce4",
+          "bytes": 4375
+        }
+      },
+      "validation_report_sha256": "26caa112fecd16061189a7e3352233a29fcbf1fc4f88e220bb6ecae3854cddf0",
+      "selected_epoch": 23
+    },
+    {
+      "entry": {
+        "task_id": "fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112431",
+        "phase": "confirmation",
+        "method": "L2-Matched",
+        "candidate": "regularization-m2000-l2-weak",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "l2",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 24,
+          "lr": 0.000375,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.003,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-07,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.960944400588468,
+          "train_mc": 3,
+          "seed": 24112431,
+          "channel_seed": 24122431,
+          "eval_seed": 24132431
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112438
+        },
+        "source": {
+          "primary_refine_task": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "profile": "l2-weak",
+          "calibration": {},
+          "refine_manifest_sha256": "59b91a7465f6078472a9488284215b07b224167acc0c2abc2b69a25a9c02440a",
+          "refine_scores_sha256": "92f0920aaa3b38219e579ccfa342b3c3593d1304a194e510b912c7366bfb1016",
+          "validation_selection_sha256": "436c51edc934d1e97961358871b8bfe9a2cef3cb44e3779b85a6a138e5193fa5"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization/performance/search/fashionmnist-L2-Matched-regularization-m2000-l2-weak-s24112431",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "a996fc7472861c845dba0d32c0e65a5e977659eaa55c46081dbf7e40565dca9d",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "034cc743e6220c4c88b745a7b01591c643d556af5f42d1c30af2495f86aa2e9f",
+          "bytes": 4444
+        }
+      },
+      "validation_report_sha256": "16ddceb9d5dbf6e9c8958adac12a46c2641c657eaae37d16cf6127a04f85e90b",
+      "selected_epoch": 22
+    },
+    {
+      "entry": {
+        "task_id": "fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112431",
+        "phase": "confirmation",
+        "method": "T1-Matched",
+        "candidate": "regularization-m2000-tight-prior",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "proposed",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 48,
+          "lr": 0.00024375000000000002,
+          "eta_channel": 0.0011354212079121412,
+          "eta_data": 0.005955648955843494,
+          "prior_std": 0.125,
+          "posterior_std": 0.003,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9663363085715326,
+          "train_mc": 1,
+          "seed": 24112431,
+          "channel_seed": 24122431,
+          "eval_seed": 24132431
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112438
+        },
+        "source": {
+          "primary_refine_task": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112411",
+          "profile": "tight-prior",
+          "calibration": {
+            "initial_l2_target": 1e-06,
+            "initial_channel_gradient_share": 0.5
+          },
+          "refine_manifest_sha256": "59b91a7465f6078472a9488284215b07b224167acc0c2abc2b69a25a9c02440a",
+          "refine_scores_sha256": "92f0920aaa3b38219e579ccfa342b3c3593d1304a194e510b912c7366bfb1016",
+          "validation_selection_sha256": "436c51edc934d1e97961358871b8bfe9a2cef3cb44e3779b85a6a138e5193fa5"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization/performance/search/fashionmnist-T1-Matched-regularization-m2000-tight-prior-s24112431",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "c1e5f7c0a7dfa517ad098d9184b8bc19a0d8496fc6649d7182e27ca8280e15e1",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "641d3cf1dff9665290d7ad288391ce31ddd492c89943ffca4f4b009c464ad4ef",
+          "bytes": 4558
+        }
+      },
+      "validation_report_sha256": "11ab3e45ae07f25a6d29deddf74736eba5f3d9497e2137ac7250f0b0e04c3ca8",
+      "selected_epoch": 46
+    },
+    {
+      "entry": {
+        "task_id": "fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112431",
+        "phase": "confirmation",
+        "method": "T2-Matched",
+        "candidate": "regularization-m2000-matched-shrinkage",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "joint",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 48,
+          "lr": 0.00024375000000000002,
+          "eta_channel": 0.0,
+          "eta_data": 0.18262718479174694,
+          "prior_std": 1.0,
+          "posterior_std": 0.003,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9663363085715326,
+          "train_mc": 1,
+          "seed": 24112431,
+          "channel_seed": 24122431,
+          "eval_seed": 24132431
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112438
+        },
+        "source": {
+          "primary_refine_task": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112411",
+          "profile": "matched-shrinkage",
+          "calibration": {
+            "initial_l2_target": 1e-06,
+            "initial_channel_gradient_share": null
+          },
+          "refine_manifest_sha256": "59b91a7465f6078472a9488284215b07b224167acc0c2abc2b69a25a9c02440a",
+          "refine_scores_sha256": "92f0920aaa3b38219e579ccfa342b3c3593d1304a194e510b912c7366bfb1016",
+          "validation_selection_sha256": "436c51edc934d1e97961358871b8bfe9a2cef3cb44e3779b85a6a138e5193fa5"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization/performance/search/fashionmnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112431",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "26a6a7bf1365afe854de49c28a03879aff6f0322ea92f2dbd360d2757de2736e",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "32e37f209e00dd3d988f399baa076456183ac33dabce6291693325bb48691b78",
+          "bytes": 4547
+        }
+      },
+      "validation_report_sha256": "b44c2961a520931897f205df3ba92094297ad7546add68220fe3c91bf2fac64a",
+      "selected_epoch": 47
+    }
+  ]
+}

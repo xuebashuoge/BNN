@@ -1,0 +1,4 @@
+stage	job_id	dependency	array
+seed-mnist-plan	35609196	afterany:35608932	
+seed-mnist-test	35609197	afterok:35609196	0-3%4
+seed-mnist-summary	35609198	afterany:35609197	

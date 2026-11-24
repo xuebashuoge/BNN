@@ -1,0 +1,364 @@
+{
+  "channel": "Unit-power diagonal fading",
+  "paired_interval": {
+    "level": 0.95,
+    "method": "percentile bootstrap of paired training seeds",
+    "resamples": 10000,
+    "seed": 18171,
+    "multiplicity_adjusted": false
+  },
+  "all_reported_datasets_have_validation_selected_proposed_wins": false,
+  "datasets": {
+    "cifar10": {
+      "bank_size": 128,
+      "paired_test_seeds": [
+        24112441,
+        24112442,
+        24112443,
+        24112444,
+        24112445
+      ],
+      "methods": {
+        "ERM-Matched": {
+          "mean_accuracy_pct": 47.117343749999996,
+          "sample_sd_accuracy_pct": 1.0791805012134075,
+          "candidate": "regularization-m128-hot-learned",
+          "selected_config": {
+            "dataset": "cifar10",
+            "architecture": "cnn_spatial3",
+            "method": "erm",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 25,
+            "lr": 0.0015,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.01,
+            "m": 128,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 1.0,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 1.0,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 24,
+            "24112442": 21,
+            "24112443": 25,
+            "24112444": 25,
+            "24112445": 22
+          }
+        },
+        "L2-Matched": {
+          "mean_accuracy_pct": 50.66075,
+          "sample_sd_accuracy_pct": 0.9713294879293519,
+          "candidate": "regularization-m128-hot-strong-l2",
+          "selected_config": {
+            "dataset": "cifar10",
+            "architecture": "cnn_spatial3",
+            "method": "l2",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 31,
+            "lr": 0.00105,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.01,
+            "m": 128,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 0.00010000000000000002,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 1.0,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 1.0,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 31,
+            "24112442": 31,
+            "24112443": 31,
+            "24112444": 29,
+            "24112445": 29
+          }
+        },
+        "T1-Matched": {
+          "mean_accuracy_pct": 48.425312500000004,
+          "sample_sd_accuracy_pct": 0.6705378864232099,
+          "candidate": "regularization-m128-tight-hot",
+          "selected_config": {
+            "dataset": "cifar10",
+            "architecture": "cnn_spatial3",
+            "method": "proposed",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 31,
+            "lr": 0.00105,
+            "eta_channel": 0.002863803759995449,
+            "eta_data": 0.053906948794277626,
+            "prior_std": 0.125,
+            "posterior_std": 0.01,
+            "m": 128,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 1.0,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 1.0,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 26,
+            "24112442": 31,
+            "24112443": 31,
+            "24112444": 28,
+            "24112445": 29
+          }
+        },
+        "T2-Matched": {
+          "mean_accuracy_pct": 48.73146875,
+          "sample_sd_accuracy_pct": 1.6488768172003567,
+          "candidate": "regularization-m128-tight-hot",
+          "selected_config": {
+            "dataset": "cifar10",
+            "architecture": "cnn_spatial3",
+            "method": "joint",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 128,
+            "train_size": 45000,
+            "val_size": 5000,
+            "batch_size": 128,
+            "epochs": 31,
+            "lr": 0.0014,
+            "eta_channel": 0.0,
+            "eta_data": 0.005719582458406098,
+            "prior_std": 0.125,
+            "posterior_std": 0.01,
+            "m": 128,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 1.0,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 1.0,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "24112441": 31,
+            "24112442": 31,
+            "24112443": 30,
+            "24112444": 29,
+            "24112445": 27
+          }
+        }
+      },
+      "paired_differences": {
+        "T1-Matched": {
+          "ERM-Matched": {
+            "mean_pp": 1.307968750000002,
+            "sample_sd_pp": 1.3875739528433702,
+            "paired_bootstrap_95_interval_pp": [
+              0.459531250000002,
+              2.559906250000003
+            ],
+            "wins": 5,
+            "ties": 0,
+            "losses": 0,
+            "by_seed_pp": {
+              "24112441": 0.37234375000000597,
+              "24112442": 1.3585937500000043,
+              "24112443": 3.6895312500000017,
+              "24112444": 0.43359375,
+              "24112445": 0.685781249999998
+            }
+          },
+          "L2-Matched": {
+            "mean_pp": -2.2354375000000006,
+            "sample_sd_pp": 0.604217450945718,
+            "paired_bootstrap_95_interval_pp": [
+              -2.6817499999999983,
+              -1.7588125000000019
+            ],
+            "wins": 0,
+            "ties": 0,
+            "losses": 5,
+            "by_seed_pp": {
+              "24112441": -2.687968749999996,
+              "24112442": -2.9059375000000003,
+              "24112443": -1.9904687500000051,
+              "24112444": -2.220937499999998,
+              "24112445": -1.3718750000000028
+            }
+          }
+        },
+        "T2-Matched": {
+          "ERM-Matched": {
+            "mean_pp": 1.6141249999999985,
+            "sample_sd_pp": 1.1371111683041502,
+            "paired_bootstrap_95_interval_pp": [
+              0.6811249999999986,
+              2.456156249999998
+            ],
+            "wins": 4,
+            "ties": 0,
+            "losses": 1,
+            "by_seed_pp": {
+              "24112441": 1.9292187499999969,
+              "24112442": 3.012187499999996,
+              "24112443": 1.368906250000002,
+              "24112444": 1.8753124999999997,
+              "24112445": -0.11500000000000199
+            }
+          },
+          "L2-Matched": {
+            "mean_pp": -1.9292812500000038,
+            "sample_sd_pp": 1.4274324496933304,
+            "paired_bootstrap_95_interval_pp": [
+              -3.1770312500000033,
+              -1.014593750000003
+            ],
+            "wins": 0,
+            "ties": 0,
+            "losses": 5,
+            "by_seed_pp": {
+              "24112441": -1.1310937500000051,
+              "24112442": -1.2523437500000085,
+              "24112443": -4.311093750000005,
+              "24112444": -0.7792187499999983,
+              "24112445": -2.172656250000003
+            }
+          }
+        }
+      },
+      "validation_selection_path": "manifests/cifar10-sweep-selection.json",
+      "validation_selection_sha256": "6b55910aa30a76c2554c3c9e9b1f2823b8a085f74d4c283166281d061d330760",
+      "confirmation_manifest_sha256": "17b9e05a4a62cf677cb2f143059e9d96cbbc71cc26c185ef11897fe85d8d383c",
+      "validation_selected": {
+        "proposed": "T2-Matched",
+        "baseline": "L2-Matched",
+        "paired_gap": {
+          "mean_pp": -1.9292812500000038,
+          "sample_sd_pp": 1.4274324496933304,
+          "paired_bootstrap_95_interval_pp": [
+            -3.1770312500000033,
+            -1.014593750000003
+          ],
+          "wins": 0,
+          "ties": 0,
+          "losses": 5,
+          "by_seed_pp": {
+            "24112441": -1.1310937500000051,
+            "24112442": -1.2523437500000085,
+            "24112443": -4.311093750000005,
+            "24112444": -0.7792187499999983,
+            "24112445": -2.172656250000003
+          }
+        },
+        "strongest_test_baseline": "L2-Matched",
+        "gap_to_strongest_test_baseline_pp": -1.9292812500000038,
+        "beats_both_baselines": false
+      },
+      "descriptive_test_best": {
+        "proposed": "T2-Matched",
+        "baseline": "L2-Matched",
+        "mean_gap_pp": -1.9292812500000038
+      }
+    }
+  }
+}
