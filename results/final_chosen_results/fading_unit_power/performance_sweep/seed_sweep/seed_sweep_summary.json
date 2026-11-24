@@ -1,0 +1,370 @@
+{
+  "analysis": "Exploratory single training seed selected on refinement validation",
+  "all_reported_datasets_have_validation_selected_proposed_wins": false,
+  "datasets": {
+    "moons": {
+      "bank_size": 128,
+      "training_seed": 24112413,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy_pct": 69.439609375,
+          "test_cross_entropy": 0.5952813376523554,
+          "validation_accuracy_pct": 68.525,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112413",
+          "selected_epoch": 44,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "097068e23eb2d618d291eafbda1b6e3a3af186387b46d4a080d7bd19977fac6f",
+              "bytes": 19515
+            },
+            "metadata": {
+              "sha256": "4666ce66a5672ce85361093586a0dbda016d26d24a4e4e8c43cb7aa0556f2fdb",
+              "bytes": 4403
+            }
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy_pct": 69.543828125,
+          "test_cross_entropy": 0.5949543603636325,
+          "validation_accuracy_pct": 68.8,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112413",
+          "selected_epoch": 157,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "cd11e2ab79f93e7554b0805832c7dd70a43828f7f33e8d7cc6ca7d11d45e3bd4",
+              "bytes": 19515
+            },
+            "metadata": {
+              "sha256": "bfe280808dbdf701c578a783b781d365f7c0516a806255a7f65aa42389532b27",
+              "bytes": 4461
+            }
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy_pct": 69.801484375,
+          "test_cross_entropy": 0.5938231420278549,
+          "validation_accuracy_pct": 69.03750000000001,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112413",
+          "selected_epoch": 173,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "345e76e2c6a9739eded88efab4a68ac4a015a02b664ed4bcf69a3a3758b7cde9",
+              "bytes": 19515
+            },
+            "metadata": {
+              "sha256": "9ee6b115de5a94407ae2fc7ebe2207dd3a5d1f634c4db8849896e6001a8b764c",
+              "bytes": 4529
+            }
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy_pct": 69.70343749999999,
+          "test_cross_entropy": 0.5943932855777442,
+          "validation_accuracy_pct": 69.0125,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112413",
+          "selected_epoch": 167,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "351afde011457f93deef2017bf7bad128a1c2e6d486d26baf640faaec88bec1c",
+              "bytes": 19515
+            },
+            "metadata": {
+              "sha256": "4943a326f3271b35a30ceef0fd963335faeafaa8b4043fd1c63313dac0c1bf60",
+              "bytes": 4583
+            }
+          }
+        }
+      },
+      "validation_proposed": "T1-Matched",
+      "validation_baseline": "L2-Matched",
+      "validation_gap_pp": 0.2375000000000127,
+      "test_gaps_pp": {
+        "ERM-Matched": 0.3618749999999977,
+        "L2-Matched": 0.2576562499999966
+      },
+      "beats_both_baselines": true,
+      "selection_sha256": "d809d5cc1a82b2cf35fa5fdc78a82df98cc7afe7f1682ab7d12453f15efb6a67"
+    },
+    "mnist": {
+      "bank_size": 2000,
+      "training_seed": 24112411,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy_pct": 78.40773437499999,
+          "test_cross_entropy": 0.7911030050965958,
+          "validation_accuracy_pct": 77.7175,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-ERM-Matched-sweep-refine-m2000-local-s24112411",
+          "selected_epoch": 47,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "fa7f166834fb7481a54c00a388cd0a26d843d8afbffd569a1c508e0faf483232",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "6ff302a73755daa1e813f501b65bcd4c6bff46e358341802f9ecd44f227e7dde",
+              "bytes": 4391
+            }
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy_pct": 78.445546875,
+          "test_cross_entropy": 0.7941990018402227,
+          "validation_accuracy_pct": 77.689,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "selected_epoch": 45,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "f61185dc2d384120222badb0592976cb7158e0d7ac44fa51482393ecef8704d6",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "57374bfda92788954c955ec62218c24d9d28a198475572cfd5d9c32db2b35282",
+              "bytes": 4430
+            }
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy_pct": 78.330234375,
+          "test_cross_entropy": 0.8223034799315967,
+          "validation_accuracy_pct": 77.64899999999999,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+          "selected_epoch": 22,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "7fd3f4f3819bd71cdd0bba106e08dddc6711111cd926cdbd5b3d1375d5d2dfd8",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "566d19e6c61e02ecf371a04d8773f5869ca6af201090f2bf9ac26a95242864bb",
+              "bytes": 4476
+            }
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy_pct": 78.417265625,
+          "test_cross_entropy": 0.8224721801651641,
+          "validation_accuracy_pct": 77.698,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "mnist-T2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "selected_epoch": 22,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "7322543f0c5b4c52a046bb42fb0851f30efeaa528cbcd1fea15b5f605e7e0e75",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "d0e30b829d049fb19e1ad9da738b2beef37f63f8f6e28006cfeeac89e6981e79",
+              "bytes": 4473
+            }
+          }
+        }
+      },
+      "validation_proposed": "T2-Matched",
+      "validation_baseline": "ERM-Matched",
+      "validation_gap_pp": -0.019500000000005624,
+      "test_gaps_pp": {
+        "ERM-Matched": 0.009531250000009095,
+        "L2-Matched": -0.028281250000006253
+      },
+      "beats_both_baselines": false,
+      "selection_sha256": "f4f68f0fcec4dd5cbf59db427b32f5f0a77be171899c42498d89d9b80ba2e8ff"
+    },
+    "fashionmnist": {
+      "bank_size": 2000,
+      "training_seed": 24112413,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy_pct": 70.75242187500001,
+          "test_cross_entropy": 0.9088584155684336,
+          "validation_accuracy_pct": 71.6325,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 24,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "6666050aa6c98e3974e161e0d0aeae152e88219d11da62c77f3f23a1fa3318a0",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "27a18708c318bc2628f5cd390e394cec8a33ba370f5c842c8c8fc3a692fb6895",
+              "bytes": 4374
+            }
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy_pct": 70.9253125,
+          "test_cross_entropy": 0.9210993907513096,
+          "validation_accuracy_pct": 71.702,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 24,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "ab803e28244ed678a1079ec25645184e2928f35e1e30fcb6b97c0a738cf2c2a7",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "03ea1ae5f73249b707d5df063023f0b952bbb7c570c59586d3b9b59201571614",
+              "bytes": 4442
+            }
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy_pct": 71.003359375,
+          "test_cross_entropy": 0.9162737582515925,
+          "validation_accuracy_pct": 71.91449999999999,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 47,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "5f2a6abec20fbcbe5f3b6b5727d6f5697842661ea993a50468ab676a19136713",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "dafc20a7f6ef9ed63f8e5a39208e9607bff44ee33ef6be1fb1c9ac2b4bef96d1",
+              "bytes": 4511
+            }
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy_pct": 71.00359375000001,
+          "test_cross_entropy": 0.9158703681251034,
+          "validation_accuracy_pct": 71.956,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 47,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "bd42039b7eaf0264c57da6cb8b8a3f2f60363b25880bfd15f867d58aa76ec556",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "5fb7656dad5cca2c400cc47abb47af295b36beb8b5a5b39f48a091761d1964be",
+              "bytes": 4521
+            }
+          }
+        }
+      },
+      "validation_proposed": "T2-Matched",
+      "validation_baseline": "L2-Matched",
+      "validation_gap_pp": 0.25399999999999867,
+      "test_gaps_pp": {
+        "ERM-Matched": 0.25117187499999716,
+        "L2-Matched": 0.07828125000000341
+      },
+      "beats_both_baselines": true,
+      "selection_sha256": "1dd2a607a84eff70c5a31f3723cc0e4247e50faf3cb1eedb2406508f8181ff7a"
+    },
+    "cifar10": {
+      "bank_size": 128,
+      "training_seed": 24112413,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy_pct": 48.680390624999994,
+          "test_cross_entropy": 1.743053127194941,
+          "validation_accuracy_pct": 48.903,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+          "selected_epoch": 20,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "b406b2e6c94a8b642cec777c7fc2fd026b174d03aafc8a83a2bf14f19172c436",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "f13c67b3e308a84effacbf3cf7c63a75b37379a27436edbda7bb2dfc48ed7c7b",
+              "bytes": 4891
+            }
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy_pct": 49.427578125000004,
+          "test_cross_entropy": 1.7746583955839277,
+          "validation_accuracy_pct": 49.2735,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112413",
+          "selected_epoch": 31,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "2dfafe4a8d6648c34f54fc3bf9c4a9badbd45e9f66ca9ea6b1869e295d86a7b3",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "f80a6d32f27e860614220305cb24e124fe7525e93f7958c8f478c4443f2b6a7f",
+              "bytes": 4955
+            }
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy_pct": 50.462421875000004,
+          "test_cross_entropy": 1.7177857225947082,
+          "validation_accuracy_pct": 50.43450000000001,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112413",
+          "selected_epoch": 31,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "9bec075e5e6f3276a9817206395e3bd7275139cc03fe69ad9e85a3716f470d5d",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "c9be4738d587c92e4fc82713060a89da629504001976b9c43a58e1d04ae0a63f",
+              "bytes": 5024
+            }
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy_pct": 49.5715625,
+          "test_cross_entropy": 1.6839414391815661,
+          "validation_accuracy_pct": 49.951,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112413",
+          "selected_epoch": 18,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "582c0d18e2d6ffa34a9fd2c5beb8b3632f7964cd74d11f13c51c82503c47a222",
+              "bytes": 1423675
+            },
+            "metadata": {
+              "sha256": "a8a170743e80b760ca9a20145d5584f9e16646367c93696612d7ff3ae974530c",
+              "bytes": 5031
+            }
+          }
+        }
+      },
+      "validation_proposed": "T1-Matched",
+      "validation_baseline": "L2-Matched",
+      "validation_gap_pp": 1.1610000000000065,
+      "test_gaps_pp": {
+        "ERM-Matched": 1.78203125000001,
+        "L2-Matched": 1.0348437500000003
+      },
+      "beats_both_baselines": true,
+      "selection_sha256": "2c4e041b56354b614118b54d0860ec72a7eb5575be2d66f9385d8f153ab23c9b"
+    }
+  }
+}

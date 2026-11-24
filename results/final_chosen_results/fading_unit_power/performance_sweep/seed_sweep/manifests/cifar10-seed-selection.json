@@ -1,0 +1,1115 @@
+{
+  "dataset": "cifar10",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance",
+  "refine_manifest_sha256": "6638a0817760d70ee0aada29f2f4fa514d9dc1c667d693e978da464e9af2548d",
+  "selected": {
+    "m": 128,
+    "seed": 24112413,
+    "proposed": "T1-Matched",
+    "baseline": "L2-Matched",
+    "validation_gap_pp": 1.1610000000000065,
+    "winners": {
+      "ERM-Matched": {
+        "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+        "accuracy": 0.48902999999999996,
+        "cross_entropy": 1.7323828974068163
+      },
+      "L2-Matched": {
+        "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112413",
+        "accuracy": 0.492735,
+        "cross_entropy": 1.7793214870190617
+      },
+      "T1-Matched": {
+        "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112413",
+        "accuracy": 0.504345,
+        "cross_entropy": 1.7063088228952883
+      },
+      "T2-Matched": {
+        "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112413",
+        "accuracy": 0.49951,
+        "cross_entropy": 1.6746132363086936
+      }
+    },
+    "trials": {
+      "ERM-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.48902999999999996,
+          "cross_entropy": 1.7323828974068163
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.47856,
+          "cross_entropy": 1.7770828598523138
+        }
+      },
+      "L2-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.492735,
+          "cross_entropy": 1.7793214870190617
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.49173999999999995,
+          "cross_entropy": 1.9053460719144346
+        }
+      },
+      "T1-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.504345,
+          "cross_entropy": 1.7063088228952883
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.48911499999999997,
+          "cross_entropy": 1.7907918396162987
+        }
+      },
+      "T2-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.49951,
+          "cross_entropy": 1.6746132363086936
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.4837949999999999,
+          "cross_entropy": 1.8354922112762928
+        }
+      }
+    }
+  },
+  "leaderboard": [
+    {
+      "m": 16,
+      "seed": 24112411,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": 0.035000000000001696,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m16-promoted-s24112411",
+          "accuracy": 0.328245,
+          "cross_entropy": 3.2381212110805513
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m16-promoted-s24112411",
+          "accuracy": 0.336415,
+          "cross_entropy": 2.879653832988739
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m16-promoted-s24112411",
+          "accuracy": 0.32047000000000003,
+          "cross_entropy": 2.7647154860162737
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m16-promoted-s24112411",
+          "accuracy": 0.33676500000000004,
+          "cross_entropy": 2.8541440700817104
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.328245,
+            "cross_entropy": 3.2381212110805513
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.29052,
+            "cross_entropy": 3.4912743938398365
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.336415,
+            "cross_entropy": 2.879653832988739
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.286755,
+            "cross_entropy": 3.3710723397088045
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.32047000000000003,
+            "cross_entropy": 2.7647154860162737
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.277015,
+            "cross_entropy": 3.2372868650865554
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.33676500000000004,
+            "cross_entropy": 2.8541440700817104
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.28466,
+            "cross_entropy": 3.50338418027401
+          }
+        }
+      }
+    },
+    {
+      "m": 16,
+      "seed": 24112412,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.7350000000000023,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m16-promoted-s24112412",
+          "accuracy": 0.31982,
+          "cross_entropy": 3.2239536886215205
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m16-promoted-s24112412",
+          "accuracy": 0.31827500000000003,
+          "cross_entropy": 3.101996254224777
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m16-promoted-s24112412",
+          "accuracy": 0.306465,
+          "cross_entropy": 3.2110277565717693
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m16-promoted-s24112412",
+          "accuracy": 0.31246999999999997,
+          "cross_entropy": 3.3539375729894636
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.31982,
+            "cross_entropy": 3.2239536886215205
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.28839000000000004,
+            "cross_entropy": 3.3265021165800093
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.31827500000000003,
+            "cross_entropy": 3.101996254224777
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.295885,
+            "cross_entropy": 3.0982264226579668
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.306465,
+            "cross_entropy": 3.2110277565717693
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.29325,
+            "cross_entropy": 3.255319746813774
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.31246999999999997,
+            "cross_entropy": 3.3539375729894636
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.29137500000000005,
+            "cross_entropy": 3.262333487710953
+          }
+        }
+      }
+    },
+    {
+      "m": 16,
+      "seed": 24112413,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.4159999999999997,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m16-promoted-s24112413",
+          "accuracy": 0.32326499999999997,
+          "cross_entropy": 2.949392509675026
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m16-local-s24112413",
+          "accuracy": 0.3198,
+          "cross_entropy": 3.2956995471906665
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m16-promoted-s24112413",
+          "accuracy": 0.31910499999999997,
+          "cross_entropy": 2.83275550369978
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m16-promoted-s24112413",
+          "accuracy": 0.31471499999999997,
+          "cross_entropy": 3.0622477243757245
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.32326499999999997,
+            "cross_entropy": 2.949392509675026
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.300775,
+            "cross_entropy": 3.3536872255134584
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.31892,
+            "cross_entropy": 3.012354100108147
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.3198,
+            "cross_entropy": 3.2956995471906665
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.31910499999999997,
+            "cross_entropy": 2.83275550369978
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.303015,
+            "cross_entropy": 3.3578465202474588
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.31471499999999997,
+            "cross_entropy": 3.0622477243757245
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.29856999999999995,
+            "cross_entropy": 3.444138973884583
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112411,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": 0.5850000000000022,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.48,
+          "cross_entropy": 1.7324294055813554
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m128-local-s24112411",
+          "accuracy": 0.47501,
+          "cross_entropy": 1.866200587539673
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.48585,
+          "cross_entropy": 1.7939330088555814
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.475075,
+          "cross_entropy": 1.893249977762699
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.48,
+            "cross_entropy": 1.7324294055813554
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.4673999999999999,
+            "cross_entropy": 1.866464652043581
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.46718000000000004,
+            "cross_entropy": 1.909207169423103
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.47501,
+            "cross_entropy": 1.866200587539673
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.48585,
+            "cross_entropy": 1.7939330088555814
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.447095,
+            "cross_entropy": 2.106711693655252
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.475075,
+            "cross_entropy": 1.893249977762699
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.4270899999999999,
+            "cross_entropy": 2.2398104435384276
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112412,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.20399999999999863,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.47928,
+          "cross_entropy": 1.7692998896598815
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.481105,
+          "cross_entropy": 1.8100566565418243
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.479065,
+          "cross_entropy": 1.8624256366848946
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.47671,
+          "cross_entropy": 1.8555658110260964
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.47928,
+            "cross_entropy": 1.7692998896598815
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.42764499999999994,
+            "cross_entropy": 2.2306020332312584
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.481105,
+            "cross_entropy": 1.8100566565418243
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.449,
+            "cross_entropy": 1.9203065125870704
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.479065,
+            "cross_entropy": 1.8624256366848946
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.45397999999999994,
+            "cross_entropy": 1.9640245748710634
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.47671,
+            "cross_entropy": 1.8555658110260964
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.43468,
+            "cross_entropy": 1.9648608466994761
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112413,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": 1.1610000000000065,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.48902999999999996,
+          "cross_entropy": 1.7323828974068163
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.492735,
+          "cross_entropy": 1.7793214870190617
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.504345,
+          "cross_entropy": 1.7063088228952883
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.49951,
+          "cross_entropy": 1.6746132363086936
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.48902999999999996,
+            "cross_entropy": 1.7323828974068163
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.47856,
+            "cross_entropy": 1.7770828598523138
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.492735,
+            "cross_entropy": 1.7793214870190617
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.49173999999999995,
+            "cross_entropy": 1.9053460719144346
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.504345,
+            "cross_entropy": 1.7063088228952883
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.48911499999999997,
+            "cross_entropy": 1.7907918396162987
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.49951,
+            "cross_entropy": 1.6746132363086936
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.4837949999999999,
+            "cross_entropy": 1.8354922112762928
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112411,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.30649999999999844,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-local-s24112411",
+          "accuracy": 0.579805,
+          "cross_entropy": 1.2730100371205808
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m2000-local-s24112411",
+          "accuracy": 0.586785,
+          "cross_entropy": 1.2759773540949824
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+          "accuracy": 0.58372,
+          "cross_entropy": 1.2583239566135407
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m2000-local-s24112411",
+          "accuracy": 0.583125,
+          "cross_entropy": 1.2719506239426135
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.57912,
+            "cross_entropy": 1.2933448117804527
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.579805,
+            "cross_entropy": 1.2730100371205808
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.575985,
+            "cross_entropy": 1.2909322337019442
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.586785,
+            "cross_entropy": 1.2759773540949824
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.58372,
+            "cross_entropy": 1.2583239566135407
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.5791550000000001,
+            "cross_entropy": 1.2818913997292518
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.572915,
+            "cross_entropy": 1.3173326641899348
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.583125,
+            "cross_entropy": 1.2719506239426135
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112412,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -1.0380000000000056,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-local-s24112412",
+          "accuracy": 0.581505,
+          "cross_entropy": 1.28781957321167
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m2000-promoted-s24112412",
+          "accuracy": 0.55146,
+          "cross_entropy": 1.343208803651333
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m2000-local-s24112412",
+          "accuracy": 0.569575,
+          "cross_entropy": 1.298509456139803
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m2000-local-s24112412",
+          "accuracy": 0.571125,
+          "cross_entropy": 1.3304375055742264
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.5734,
+            "cross_entropy": 1.3138253312551975
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.581505,
+            "cross_entropy": 1.28781957321167
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.55146,
+            "cross_entropy": 1.343208803651333
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.54802,
+            "cross_entropy": 1.362373538057804
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.563565,
+            "cross_entropy": 1.3177945275831222
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.569575,
+            "cross_entropy": 1.298509456139803
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.5609949999999999,
+            "cross_entropy": 1.3369831135773658
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.571125,
+            "cross_entropy": 1.3304375055742264
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112413,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.9305000000000119,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-local-s24112413",
+          "accuracy": 0.56052,
+          "cross_entropy": 1.3238913544738293
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-refine-m2000-local-s24112413",
+          "accuracy": 0.58189,
+          "cross_entropy": 1.273950682425499
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.5725849999999999,
+          "cross_entropy": 1.29024114087224
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.5690799999999999,
+          "cross_entropy": 1.3084866779065132
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.53942,
+            "cross_entropy": 1.3779046435034275
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-ERM-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.56052,
+            "cross_entropy": 1.3238913544738293
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.5644899999999999,
+            "cross_entropy": 1.3043355142819881
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-L2-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.58189,
+            "cross_entropy": 1.273950682425499
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.5725849999999999,
+            "cross_entropy": 1.29024114087224
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-T1-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.56371,
+            "cross_entropy": 1.3000760615074634
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.5690799999999999,
+            "cross_entropy": 1.3084866779065132
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "cifar10-T2-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.561325,
+            "cross_entropy": 1.3338312076842787
+          }
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "entry": {
+        "task_id": "cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "ERM-Matched",
+        "candidate": "sweep-refine-m128-promoted",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "erm",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 25,
+          "lr": 0.0015,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "cifar10-ERM-Matched-refine-posterior-low-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743",
+          "search_candidate": "sweep-search-m128-archived",
+          "search_task": "cifar10-ERM-Matched-sweep-search-m128-archived-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/cifar10-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "b406b2e6c94a8b642cec777c7fc2fd026b174d03aafc8a83a2bf14f19172c436",
+          "bytes": 1423675
+        },
+        "metadata": {
+          "sha256": "f13c67b3e308a84effacbf3cf7c63a75b37379a27436edbda7bb2dfc48ed7c7b",
+          "bytes": 4891
+        }
+      },
+      "validation_report_sha256": "afd18016991d7394cd3b829d6b18e57d4cf1107479798b3ecfbe8e82621740db",
+      "selected_epoch": 20
+    },
+    {
+      "entry": {
+        "task_id": "cifar10-L2-Matched-sweep-refine-m128-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "L2-Matched",
+        "candidate": "sweep-refine-m128-promoted",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "l2",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 31,
+          "lr": 0.00105,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1.0000000000000003e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "cifar10-L2-Matched-primary-winner-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743",
+          "search_candidate": "sweep-search-m128-regularization",
+          "search_task": "cifar10-L2-Matched-sweep-search-m128-regularization-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/cifar10-L2-Matched-sweep-refine-m128-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "2dfafe4a8d6648c34f54fc3bf9c4a9badbd45e9f66ca9ea6b1869e295d86a7b3",
+          "bytes": 1423675
+        },
+        "metadata": {
+          "sha256": "f80a6d32f27e860614220305cb24e124fe7525e93f7958c8f478c4443f2b6a7f",
+          "bytes": 4955
+        }
+      },
+      "validation_report_sha256": "bcb198aa02a1aabcaaa0735a4f329aff1fdaf908d7189c33ff25ce9656e930b8",
+      "selected_epoch": 31
+    },
+    {
+      "entry": {
+        "task_id": "cifar10-T1-Matched-sweep-refine-m128-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "T1-Matched",
+        "candidate": "sweep-refine-m128-promoted",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "proposed",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 31,
+          "lr": 0.00105,
+          "eta_channel": 1e-05,
+          "eta_data": 0.00474455007115415,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "cifar10-T1-Matched-primary-winner-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743",
+          "search_candidate": "sweep-search-m128-regularization",
+          "search_task": "cifar10-T1-Matched-sweep-search-m128-regularization-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/cifar10-T1-Matched-sweep-refine-m128-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "9bec075e5e6f3276a9817206395e3bd7275139cc03fe69ad9e85a3716f470d5d",
+          "bytes": 1423675
+        },
+        "metadata": {
+          "sha256": "c9be4738d587c92e4fc82713060a89da629504001976b9c43a58e1d04ae0a63f",
+          "bytes": 5024
+        }
+      },
+      "validation_report_sha256": "fc033b01d5d4570eb3bb210cc2bcfd30abe0001319b704ad2a01c5cead0234b4",
+      "selected_epoch": 31
+    },
+    {
+      "entry": {
+        "task_id": "cifar10-T2-Matched-sweep-refine-m128-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "T2-Matched",
+        "candidate": "sweep-refine-m128-promoted",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "joint",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 31,
+          "lr": 0.0014,
+          "eta_channel": 0.0,
+          "eta_data": 0.0004892510283996971,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "cifar10-T2-Matched-refine-kl-low-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743",
+          "search_candidate": "sweep-search-m128-regularization",
+          "search_task": "cifar10-T2-Matched-sweep-search-m128-regularization-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/cifar10-T2-Matched-sweep-refine-m128-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "582c0d18e2d6ffa34a9fd2c5beb8b3632f7964cd74d11f13c51c82503c47a222",
+          "bytes": 1423675
+        },
+        "metadata": {
+          "sha256": "a8a170743e80b760ca9a20145d5584f9e16646367c93696612d7ff3ae974530c",
+          "bytes": 5031
+        }
+      },
+      "validation_report_sha256": "22c5a45110b31a173177040d53bcf5542a98f13016b22885c8dfbf2dc027b847",
+      "selected_epoch": 18
+    }
+  ]
+}

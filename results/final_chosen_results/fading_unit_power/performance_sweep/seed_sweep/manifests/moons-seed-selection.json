@@ -1,0 +1,1115 @@
+{
+  "dataset": "moons",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance",
+  "refine_manifest_sha256": "243e8c45e9954ecc90ebcc7f7bb7f4ed49a5e24399315954acf3a8f75e6a6571",
+  "selected": {
+    "m": 128,
+    "seed": 24112413,
+    "proposed": "T1-Matched",
+    "baseline": "L2-Matched",
+    "validation_gap_pp": 0.2375000000000127,
+    "winners": {
+      "ERM-Matched": {
+        "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112413",
+        "accuracy": 0.68525,
+        "cross_entropy": 0.6069504940509797
+      },
+      "L2-Matched": {
+        "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112413",
+        "accuracy": 0.688,
+        "cross_entropy": 0.6037184817790985
+      },
+      "T1-Matched": {
+        "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112413",
+        "accuracy": 0.6903750000000001,
+        "cross_entropy": 0.6023980407714844
+      },
+      "T2-Matched": {
+        "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112413",
+        "accuracy": 0.690125,
+        "cross_entropy": 0.6015857338905334
+      }
+    },
+    "trials": {
+      "ERM-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.6835,
+          "cross_entropy": 0.6046644680500031
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.68525,
+          "cross_entropy": 0.6069504940509797
+        }
+      },
+      "L2-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.688,
+          "cross_entropy": 0.6037184817790985
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "moons-L2-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.68725,
+          "cross_entropy": 0.6064539232254027
+        }
+      },
+      "T1-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.6903750000000001,
+          "cross_entropy": 0.6023980407714844
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "moons-T1-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.6895,
+          "cross_entropy": 0.6060137100219727
+        }
+      },
+      "T2-Matched": {
+        "sweep-refine-m128-promoted": {
+          "task_id": "moons-T2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.68775,
+          "cross_entropy": 0.6049109587669372
+        },
+        "sweep-refine-m128-local": {
+          "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.690125,
+          "cross_entropy": 0.6015857338905334
+        }
+      }
+    }
+  },
+  "leaderboard": [
+    {
+      "m": 16,
+      "seed": 24112411,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.45000000000000595,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m16-promoted-s24112411",
+          "accuracy": 0.6461250000000001,
+          "cross_entropy": 0.6903519809246064
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m16-promoted-s24112411",
+          "accuracy": 0.643375,
+          "cross_entropy": 0.6816842017173766
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m16-local-s24112411",
+          "accuracy": 0.641625,
+          "cross_entropy": 0.7014423742294312
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m16-local-s24112411",
+          "accuracy": 0.641625,
+          "cross_entropy": 0.7014423799514771
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.6461250000000001,
+            "cross_entropy": 0.6903519809246064
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.645,
+            "cross_entropy": 0.7090341155529022
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.643375,
+            "cross_entropy": 0.6816842017173766
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.6356250000000001,
+            "cross_entropy": 0.6886355652809144
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.638,
+            "cross_entropy": 0.6866070199012757
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.641625,
+            "cross_entropy": 0.7014423742294312
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.638,
+            "cross_entropy": 0.6866070261001587
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.641625,
+            "cross_entropy": 0.7014423799514771
+          }
+        }
+      }
+    },
+    {
+      "m": 16,
+      "seed": 24112412,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.03750000000001252,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m16-promoted-s24112412",
+          "accuracy": 0.6733750000000001,
+          "cross_entropy": 0.6911808750629426
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m16-promoted-s24112412",
+          "accuracy": 0.672125,
+          "cross_entropy": 0.7361691284179688
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m16-local-s24112412",
+          "accuracy": 0.6729999999999999,
+          "cross_entropy": 0.7077461838722229
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m16-local-s24112412",
+          "accuracy": 0.6729999999999999,
+          "cross_entropy": 0.7077463026046752
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.6733750000000001,
+            "cross_entropy": 0.6911808750629426
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.67225,
+            "cross_entropy": 0.675621842622757
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.672125,
+            "cross_entropy": 0.7361691284179688
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.6679999999999999,
+            "cross_entropy": 0.6625530953407288
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.6675000000000001,
+            "cross_entropy": 0.6789093992710113
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.6729999999999999,
+            "cross_entropy": 0.7077461838722229
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.6675000000000001,
+            "cross_entropy": 0.678909462928772
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.6729999999999999,
+            "cross_entropy": 0.7077463026046752
+          }
+        }
+      }
+    },
+    {
+      "m": 16,
+      "seed": 24112413,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.6750000000000034,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m16-promoted-s24112413",
+          "accuracy": 0.6505000000000001,
+          "cross_entropy": 0.89072847032547
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m16-promoted-s24112413",
+          "accuracy": 0.651375,
+          "cross_entropy": 0.9002455196380617
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m16-promoted-s24112413",
+          "accuracy": 0.644625,
+          "cross_entropy": 1.0326543283462526
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m16-promoted-s24112413",
+          "accuracy": 0.644625,
+          "cross_entropy": 1.0326545257568358
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.6505000000000001,
+            "cross_entropy": 0.89072847032547
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.647625,
+            "cross_entropy": 0.9912284746170045
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.651375,
+            "cross_entropy": 0.9002455196380617
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.649375,
+            "cross_entropy": 0.9493289670944215
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.644625,
+            "cross_entropy": 1.0326543283462526
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.630625,
+            "cross_entropy": 1.2174775366783142
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.644625,
+            "cross_entropy": 1.0326545257568358
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.630625,
+            "cross_entropy": 1.2174882774353026
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112411,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.5874999999999964,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112411",
+          "accuracy": 0.701125,
+          "cross_entropy": 0.5982708952426912
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m128-local-s24112411",
+          "accuracy": 0.6960000000000001,
+          "cross_entropy": 0.5922597420215606
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m128-local-s24112411",
+          "accuracy": 0.69525,
+          "cross_entropy": 0.5910886533260346
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.694375,
+          "cross_entropy": 0.5954362180233002
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.6998749999999999,
+            "cross_entropy": 0.5952600226402284
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.701125,
+            "cross_entropy": 0.5982708952426912
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.694875,
+            "cross_entropy": 0.5966853792667389
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.6960000000000001,
+            "cross_entropy": 0.5922597420215606
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.694375,
+            "cross_entropy": 0.5966517443656921
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.69525,
+            "cross_entropy": 0.5910886533260346
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.694375,
+            "cross_entropy": 0.5954362180233002
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.69375,
+            "cross_entropy": 0.5964985768795014
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112412,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.7625000000000104,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.6890000000000001,
+          "cross_entropy": 0.5998643171787261
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m128-local-s24112412",
+          "accuracy": 0.68125,
+          "cross_entropy": 0.606495463848114
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m128-local-s24112412",
+          "accuracy": 0.68125,
+          "cross_entropy": 0.6063348460197449
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.681375,
+          "cross_entropy": 0.6008963799476623
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.6890000000000001,
+            "cross_entropy": 0.5998643171787261
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.67125,
+            "cross_entropy": 0.6067168216705323
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.675875,
+            "cross_entropy": 0.6067297534942627
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.68125,
+            "cross_entropy": 0.606495463848114
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.676125,
+            "cross_entropy": 0.6067594494819641
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.68125,
+            "cross_entropy": 0.6063348460197449
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.681375,
+            "cross_entropy": 0.6008963799476623
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.68075,
+            "cross_entropy": 0.6026765441894532
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112413,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": 0.2375000000000127,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.68525,
+          "cross_entropy": 0.6069504940509797
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.688,
+          "cross_entropy": 0.6037184817790985
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.6903750000000001,
+          "cross_entropy": 0.6023980407714844
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.690125,
+          "cross_entropy": 0.6015857338905334
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.6835,
+            "cross_entropy": 0.6046644680500031
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.68525,
+            "cross_entropy": 0.6069504940509797
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.688,
+            "cross_entropy": 0.6037184817790985
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.68725,
+            "cross_entropy": 0.6064539232254027
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.6903750000000001,
+            "cross_entropy": 0.6023980407714844
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.6895,
+            "cross_entropy": 0.6060137100219727
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.68775,
+            "cross_entropy": 0.6049109587669372
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.690125,
+            "cross_entropy": 0.6015857338905334
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112411,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.9124999999999939,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+          "accuracy": 0.7122499999999999,
+          "cross_entropy": 0.5745159544944763
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "accuracy": 0.703125,
+          "cross_entropy": 0.5842923717498779
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+          "accuracy": 0.703125,
+          "cross_entropy": 0.5843839333057403
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "accuracy": 0.703125,
+          "cross_entropy": 0.5843839273452758
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.7122499999999999,
+            "cross_entropy": 0.5745159544944763
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.711625,
+            "cross_entropy": 0.5764835371971131
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.703125,
+            "cross_entropy": 0.5842923717498779
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.691125,
+            "cross_entropy": 0.5911189651489257
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.703125,
+            "cross_entropy": 0.5843839333057403
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.6907500000000001,
+            "cross_entropy": 0.5911204838752747
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.703125,
+            "cross_entropy": 0.5843839273452758
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.6907500000000001,
+            "cross_entropy": 0.5911205143928528
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112412,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.21250000000001545,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m2000-promoted-s24112412",
+          "accuracy": 0.708,
+          "cross_entropy": 0.5784697515964508
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m2000-promoted-s24112412",
+          "accuracy": 0.7106250000000001,
+          "cross_entropy": 0.573983300447464
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m2000-promoted-s24112412",
+          "accuracy": 0.7084999999999999,
+          "cross_entropy": 0.5751248562335969
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m2000-promoted-s24112412",
+          "accuracy": 0.7084999999999999,
+          "cross_entropy": 0.5751248593330384
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.708,
+            "cross_entropy": 0.5784697515964508
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.7064999999999999,
+            "cross_entropy": 0.5811099665164947
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.7106250000000001,
+            "cross_entropy": 0.573983300447464
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.706125,
+            "cross_entropy": 0.5752760169506073
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.7084999999999999,
+            "cross_entropy": 0.5751248562335969
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.706125,
+            "cross_entropy": 0.5752790186405182
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.7084999999999999,
+            "cross_entropy": 0.5751248593330384
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.706125,
+            "cross_entropy": 0.5752790420055389
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112413,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -1.1750000000000038,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-sweep-refine-m2000-local-s24112413",
+          "accuracy": 0.704875,
+          "cross_entropy": 0.5760882987976074
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.693125,
+          "cross_entropy": 0.5928074343204498
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.693125,
+          "cross_entropy": 0.5927945840358734
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.693125,
+          "cross_entropy": 0.5927945845127105
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.703625,
+            "cross_entropy": 0.5808401639461517
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-ERM-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.704875,
+            "cross_entropy": 0.5760882987976074
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.693125,
+            "cross_entropy": 0.5928074343204498
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-L2-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.689875,
+            "cross_entropy": 0.5942338583469391
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.693125,
+            "cross_entropy": 0.5927945840358734
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-T1-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.6900000000000001,
+            "cross_entropy": 0.5942147555351258
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "moons-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.693125,
+            "cross_entropy": 0.5927945845127105
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "moons-T2-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.6900000000000001,
+            "cross_entropy": 0.5942147467136383
+          }
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "entry": {
+        "task_id": "moons-ERM-Matched-sweep-refine-m128-local-s24112413",
+        "phase": "confirmation",
+        "method": "ERM-Matched",
+        "candidate": "sweep-refine-m128-local",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "erm",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 300,
+          "lr": 0.00625,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9942813025596521,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "moons-ERM-Matched-refine-posterior-low-s123101",
+          "archive_manifest_sha256": "fe29b25a5b64cfbc1debdfffa0f7b72b3437a23533344756a897cae1a00e60ac",
+          "search_candidate": "sweep-search-m128-long-decay",
+          "search_task": "moons-ERM-Matched-sweep-search-m128-long-decay-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/moons-ERM-Matched-sweep-refine-m128-local-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "097068e23eb2d618d291eafbda1b6e3a3af186387b46d4a080d7bd19977fac6f",
+          "bytes": 19515
+        },
+        "metadata": {
+          "sha256": "4666ce66a5672ce85361093586a0dbda016d26d24a4e4e8c43cb7aa0556f2fdb",
+          "bytes": 4403
+        }
+      },
+      "validation_report_sha256": "13c8f22972d1f2e58e1194e3aec5234155e36a5763d9bd8ced09453831d52c16",
+      "selected_epoch": 44
+    },
+    {
+      "entry": {
+        "task_id": "moons-L2-Matched-sweep-refine-m128-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "L2-Matched",
+        "candidate": "sweep-refine-m128-promoted",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "l2",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 240,
+          "lr": 0.0025,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 2.9999999999999997e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.993288573061084,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "moons-L2-Matched-refine-lr-low-s123101",
+          "archive_manifest_sha256": "fe29b25a5b64cfbc1debdfffa0f7b72b3437a23533344756a897cae1a00e60ac",
+          "search_candidate": "sweep-search-m128-long-decay",
+          "search_task": "moons-L2-Matched-sweep-search-m128-long-decay-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/moons-L2-Matched-sweep-refine-m128-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "cd11e2ab79f93e7554b0805832c7dd70a43828f7f33e8d7cc6ca7d11d45e3bd4",
+          "bytes": 19515
+        },
+        "metadata": {
+          "sha256": "bfe280808dbdf701c578a783b781d365f7c0516a806255a7f65aa42389532b27",
+          "bytes": 4461
+        }
+      },
+      "validation_report_sha256": "d4ca9b46c6141dec76eccc70cca6126fcfd4bcd17c26dcca67c3f3ff09e1c734",
+      "selected_epoch": 157
+    },
+    {
+      "entry": {
+        "task_id": "moons-T1-Matched-sweep-refine-m128-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "T1-Matched",
+        "candidate": "sweep-refine-m128-promoted",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "proposed",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 240,
+          "lr": 0.0025,
+          "eta_channel": 3e-05,
+          "eta_data": 1.8966545941010614e-05,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.993288573061084,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "moons-T1-Matched-refine-lr-low-s123101",
+          "archive_manifest_sha256": "fe29b25a5b64cfbc1debdfffa0f7b72b3437a23533344756a897cae1a00e60ac",
+          "search_candidate": "sweep-search-m128-long-decay",
+          "search_task": "moons-T1-Matched-sweep-search-m128-long-decay-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/moons-T1-Matched-sweep-refine-m128-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "345e76e2c6a9739eded88efab4a68ac4a015a02b664ed4bcf69a3a3758b7cde9",
+          "bytes": 19515
+        },
+        "metadata": {
+          "sha256": "9ee6b115de5a94407ae2fc7ebe2207dd3a5d1f634c4db8849896e6001a8b764c",
+          "bytes": 4529
+        }
+      },
+      "validation_report_sha256": "4e0f57983a4813946b1f85578c9c7b870a57dc7483bbf69f4264fa39cbeca9ae",
+      "selected_epoch": 173
+    },
+    {
+      "entry": {
+        "task_id": "moons-T2-Matched-sweep-refine-m128-local-s24112413",
+        "phase": "confirmation",
+        "method": "T2-Matched",
+        "candidate": "sweep-refine-m128-local",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "joint",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 300,
+          "lr": 0.0021874999999999998,
+          "eta_channel": 0.0,
+          "eta_data": 0.0010687583732204423,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 128,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9942813025596521,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "moons-T2-Matched-refine-lr-low-s123101",
+          "archive_manifest_sha256": "fe29b25a5b64cfbc1debdfffa0f7b72b3437a23533344756a897cae1a00e60ac",
+          "search_candidate": "sweep-search-m128-regularization",
+          "search_task": "moons-T2-Matched-sweep-search-m128-regularization-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/moons-T2-Matched-sweep-refine-m128-local-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "351afde011457f93deef2017bf7bad128a1c2e6d486d26baf640faaec88bec1c",
+          "bytes": 19515
+        },
+        "metadata": {
+          "sha256": "4943a326f3271b35a30ceef0fd963335faeafaa8b4043fd1c63313dac0c1bf60",
+          "bytes": 4583
+        }
+      },
+      "validation_report_sha256": "68bc0067e9d2b98c9d89c251bcb7e6ee649fe48dbb10ed623943f9b9546077d2",
+      "selected_epoch": 167
+    }
+  ]
+}

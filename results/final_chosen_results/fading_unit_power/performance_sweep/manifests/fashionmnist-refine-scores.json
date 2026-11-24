@@ -1,0 +1,272 @@
+{
+  "dataset": "fashionmnist",
+  "manifest_sha256": "59b91a7465f6078472a9488284215b07b224167acc0c2abc2b69a25a9c02440a",
+  "winners": {
+    "16": {
+      "ERM-Matched": "sweep-refine-m16-local",
+      "L2-Matched": "sweep-refine-m16-local",
+      "T1-Matched": "sweep-refine-m16-local",
+      "T2-Matched": "sweep-refine-m16-local"
+    },
+    "128": {
+      "ERM-Matched": "sweep-refine-m128-promoted",
+      "L2-Matched": "sweep-refine-m128-promoted",
+      "T1-Matched": "sweep-refine-m128-local",
+      "T2-Matched": "sweep-refine-m128-local"
+    },
+    "2000": {
+      "ERM-Matched": "sweep-refine-m2000-promoted",
+      "L2-Matched": "sweep-refine-m2000-promoted",
+      "T1-Matched": "sweep-refine-m2000-local",
+      "T2-Matched": "sweep-refine-m2000-local"
+    }
+  },
+  "bank_sizes": {
+    "16": {
+      "ERM-Matched": {
+        "sweep-refine-m16-promoted": {
+          "mean_accuracy": 0.6147933333333334,
+          "mean_cross_entropy": 1.2555722179921467,
+          "accuracy_by_seed": {
+            "24112411": 0.6101850000000001,
+            "24112412": 0.62234,
+            "24112413": 0.611855
+          }
+        },
+        "sweep-refine-m16-local": {
+          "mean_accuracy": 0.6173516666666666,
+          "mean_cross_entropy": 1.2360111555480957,
+          "accuracy_by_seed": {
+            "24112411": 0.6108399999999999,
+            "24112412": 0.62549,
+            "24112413": 0.6157250000000001
+          }
+        }
+      },
+      "L2-Matched": {
+        "sweep-refine-m16-promoted": {
+          "mean_accuracy": 0.6015583333333333,
+          "mean_cross_entropy": 1.2660383853912354,
+          "accuracy_by_seed": {
+            "24112411": 0.59586,
+            "24112412": 0.6046950000000001,
+            "24112413": 0.60412
+          }
+        },
+        "sweep-refine-m16-local": {
+          "mean_accuracy": 0.6076449999999999,
+          "mean_cross_entropy": 1.269414923350016,
+          "accuracy_by_seed": {
+            "24112411": 0.601405,
+            "24112412": 0.6112949999999999,
+            "24112413": 0.610235
+          }
+        }
+      },
+      "T1-Matched": {
+        "sweep-refine-m16-promoted": {
+          "mean_accuracy": 0.5939766666666667,
+          "mean_cross_entropy": 1.359411577606201,
+          "accuracy_by_seed": {
+            "24112411": 0.5895250000000001,
+            "24112412": 0.5921200000000001,
+            "24112413": 0.6002850000000001
+          }
+        },
+        "sweep-refine-m16-local": {
+          "mean_accuracy": 0.5997150000000001,
+          "mean_cross_entropy": 1.316159596862793,
+          "accuracy_by_seed": {
+            "24112411": 0.590995,
+            "24112412": 0.604395,
+            "24112413": 0.603755
+          }
+        }
+      },
+      "T2-Matched": {
+        "sweep-refine-m16-promoted": {
+          "mean_accuracy": 0.5940833333333333,
+          "mean_cross_entropy": 1.3435135615285239,
+          "accuracy_by_seed": {
+            "24112411": 0.58959,
+            "24112412": 0.591695,
+            "24112413": 0.600965
+          }
+        },
+        "sweep-refine-m16-local": {
+          "mean_accuracy": 0.6011833333333333,
+          "mean_cross_entropy": 1.3457260257466634,
+          "accuracy_by_seed": {
+            "24112411": 0.593905,
+            "24112412": 0.60497,
+            "24112413": 0.604675
+          }
+        }
+      }
+    },
+    "128": {
+      "ERM-Matched": {
+        "sweep-refine-m128-promoted": {
+          "mean_accuracy": 0.6655916666666667,
+          "mean_cross_entropy": 1.0619686446126302,
+          "accuracy_by_seed": {
+            "24112411": 0.6707699999999999,
+            "24112412": 0.6685000000000001,
+            "24112413": 0.657505
+          }
+        },
+        "sweep-refine-m128-local": {
+          "mean_accuracy": 0.66236,
+          "mean_cross_entropy": 1.0750154935201008,
+          "accuracy_by_seed": {
+            "24112411": 0.668715,
+            "24112412": 0.663125,
+            "24112413": 0.65524
+          }
+        }
+      },
+      "L2-Matched": {
+        "sweep-refine-m128-promoted": {
+          "mean_accuracy": 0.6604199999999999,
+          "mean_cross_entropy": 1.1125515467707316,
+          "accuracy_by_seed": {
+            "24112411": 0.6670849999999999,
+            "24112412": 0.65971,
+            "24112413": 0.654465
+          }
+        },
+        "sweep-refine-m128-local": {
+          "mean_accuracy": 0.6560549999999999,
+          "mean_cross_entropy": 1.1318366866811118,
+          "accuracy_by_seed": {
+            "24112411": 0.6610699999999999,
+            "24112412": 0.657945,
+            "24112413": 0.64915
+          }
+        }
+      },
+      "T1-Matched": {
+        "sweep-refine-m128-promoted": {
+          "mean_accuracy": 0.655065,
+          "mean_cross_entropy": 1.0834485068639121,
+          "accuracy_by_seed": {
+            "24112411": 0.66139,
+            "24112412": 0.65595,
+            "24112413": 0.6478550000000001
+          }
+        },
+        "sweep-refine-m128-local": {
+          "mean_accuracy": 0.6563216666666666,
+          "mean_cross_entropy": 1.114853697052002,
+          "accuracy_by_seed": {
+            "24112411": 0.6611899999999999,
+            "24112412": 0.658415,
+            "24112413": 0.64936
+          }
+        }
+      },
+      "T2-Matched": {
+        "sweep-refine-m128-promoted": {
+          "mean_accuracy": 0.6569383333333333,
+          "mean_cross_entropy": 1.0755965349197387,
+          "accuracy_by_seed": {
+            "24112411": 0.66561,
+            "24112412": 0.657305,
+            "24112413": 0.6479
+          }
+        },
+        "sweep-refine-m128-local": {
+          "mean_accuracy": 0.656975,
+          "mean_cross_entropy": 1.0998434251276652,
+          "accuracy_by_seed": {
+            "24112411": 0.66368,
+            "24112412": 0.657625,
+            "24112413": 0.64962
+          }
+        }
+      }
+    },
+    "2000": {
+      "ERM-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "mean_accuracy": 0.715465,
+          "mean_cross_entropy": 0.874113141263326,
+          "accuracy_by_seed": {
+            "24112411": 0.70898,
+            "24112412": 0.72109,
+            "24112413": 0.716325
+          }
+        },
+        "sweep-refine-m2000-local": {
+          "mean_accuracy": 0.71035,
+          "mean_cross_entropy": 0.8809756361007691,
+          "accuracy_by_seed": {
+            "24112411": 0.703385,
+            "24112412": 0.715895,
+            "24112413": 0.71177
+          }
+        }
+      },
+      "L2-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "mean_accuracy": 0.7170266666666668,
+          "mean_cross_entropy": 0.8813430760701498,
+          "accuracy_by_seed": {
+            "24112411": 0.7143650000000001,
+            "24112412": 0.719695,
+            "24112413": 0.71702
+          }
+        },
+        "sweep-refine-m2000-local": {
+          "mean_accuracy": 0.7137183333333335,
+          "mean_cross_entropy": 0.8807730004374186,
+          "accuracy_by_seed": {
+            "24112411": 0.707935,
+            "24112412": 0.719165,
+            "24112413": 0.7140550000000001
+          }
+        }
+      },
+      "T1-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "mean_accuracy": 0.7157316666666667,
+          "mean_cross_entropy": 0.8874410850779215,
+          "accuracy_by_seed": {
+            "24112411": 0.7063999999999999,
+            "24112412": 0.72165,
+            "24112413": 0.7191449999999999
+          }
+        },
+        "sweep-refine-m2000-local": {
+          "mean_accuracy": 0.7171099999999999,
+          "mean_cross_entropy": 0.8737940726470947,
+          "accuracy_by_seed": {
+            "24112411": 0.71101,
+            "24112412": 0.721865,
+            "24112413": 0.718455
+          }
+        }
+      },
+      "T2-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "mean_accuracy": 0.7151766666666667,
+          "mean_cross_entropy": 0.8871992238616944,
+          "accuracy_by_seed": {
+            "24112411": 0.70644,
+            "24112412": 0.71953,
+            "24112413": 0.71956
+          }
+        },
+        "sweep-refine-m2000-local": {
+          "mean_accuracy": 0.71552,
+          "mean_cross_entropy": 0.8769746402359009,
+          "accuracy_by_seed": {
+            "24112411": 0.709605,
+            "24112412": 0.71976,
+            "24112413": 0.717195
+          }
+        }
+      }
+    }
+  }
+}

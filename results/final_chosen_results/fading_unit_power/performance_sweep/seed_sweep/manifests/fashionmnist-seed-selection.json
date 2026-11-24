@@ -1,0 +1,1115 @@
+{
+  "dataset": "fashionmnist",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance",
+  "refine_manifest_sha256": "59b91a7465f6078472a9488284215b07b224167acc0c2abc2b69a25a9c02440a",
+  "selected": {
+    "m": 2000,
+    "seed": 24112413,
+    "proposed": "T2-Matched",
+    "baseline": "L2-Matched",
+    "validation_gap_pp": 0.25399999999999867,
+    "winners": {
+      "ERM-Matched": {
+        "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+        "accuracy": 0.716325,
+        "cross_entropy": 0.872832915763855
+      },
+      "L2-Matched": {
+        "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+        "accuracy": 0.71702,
+        "cross_entropy": 0.8836477444458009
+      },
+      "T1-Matched": {
+        "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+        "accuracy": 0.7191449999999999,
+        "cross_entropy": 0.8765360374450684
+      },
+      "T2-Matched": {
+        "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+        "accuracy": 0.71956,
+        "cross_entropy": 0.8753218356323241
+      }
+    },
+    "trials": {
+      "ERM-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.716325,
+          "cross_entropy": 0.872832915763855
+        },
+        "sweep-refine-m2000-local": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-local-s24112413",
+          "accuracy": 0.71177,
+          "cross_entropy": 0.8784541233825685
+        }
+      },
+      "L2-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.71702,
+          "cross_entropy": 0.8836477444458009
+        },
+        "sweep-refine-m2000-local": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-local-s24112413",
+          "accuracy": 0.7140550000000001,
+          "cross_entropy": 0.8825350849914552
+        }
+      },
+      "T1-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.7191449999999999,
+          "cross_entropy": 0.8765360374450684
+        },
+        "sweep-refine-m2000-local": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112413",
+          "accuracy": 0.718455,
+          "cross_entropy": 0.8636975391387939
+        }
+      },
+      "T2-Matched": {
+        "sweep-refine-m2000-promoted": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.71956,
+          "cross_entropy": 0.8753218356323241
+        },
+        "sweep-refine-m2000-local": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112413",
+          "accuracy": 0.717195,
+          "cross_entropy": 0.8699709530639648
+        }
+      }
+    }
+  },
+  "leaderboard": [
+    {
+      "m": 16,
+      "seed": 24112411,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -1.6934999999999922,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-local-s24112411",
+          "accuracy": 0.6108399999999999,
+          "cross_entropy": 1.2822648876953124
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-local-s24112411",
+          "accuracy": 0.601405,
+          "cross_entropy": 1.3404316485595702
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-local-s24112411",
+          "accuracy": 0.590995,
+          "cross_entropy": 1.4356407377624512
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-local-s24112411",
+          "accuracy": 0.593905,
+          "cross_entropy": 1.5328211737823485
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.6101850000000001,
+            "cross_entropy": 1.2751771061706543
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.6108399999999999,
+            "cross_entropy": 1.2822648876953124
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.59586,
+            "cross_entropy": 1.3092423416900634
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.601405,
+            "cross_entropy": 1.3404316485595702
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.5895250000000001,
+            "cross_entropy": 1.4859688078308104
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.590995,
+            "cross_entropy": 1.4356407377624512
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-promoted-s24112411",
+            "accuracy": 0.58959,
+            "cross_entropy": 1.4321843441772462
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-local-s24112411",
+            "accuracy": 0.593905,
+            "cross_entropy": 1.5328211737823485
+          }
+        }
+      }
+    },
+    {
+      "m": 16,
+      "seed": 24112412,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -2.0519999999999983,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-local-s24112412",
+          "accuracy": 0.62549,
+          "cross_entropy": 1.1895927589416504
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-local-s24112412",
+          "accuracy": 0.6112949999999999,
+          "cross_entropy": 1.194666030807495
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-local-s24112412",
+          "accuracy": 0.604395,
+          "cross_entropy": 1.2413151117706298
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-local-s24112412",
+          "accuracy": 0.60497,
+          "cross_entropy": 1.2379684694671629
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.62234,
+            "cross_entropy": 1.2050211402130127
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.62549,
+            "cross_entropy": 1.1895927589416504
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.6046950000000001,
+            "cross_entropy": 1.23251451751709
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.6112949999999999,
+            "cross_entropy": 1.194666030807495
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.5921200000000001,
+            "cross_entropy": 1.30912715675354
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.604395,
+            "cross_entropy": 1.2413151117706298
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-promoted-s24112412",
+            "accuracy": 0.591695,
+            "cross_entropy": 1.314893147354126
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-local-s24112412",
+            "accuracy": 0.60497,
+            "cross_entropy": 1.2379684694671629
+          }
+        }
+      }
+    },
+    {
+      "m": 16,
+      "seed": 24112413,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -1.1050000000000115,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-local-s24112413",
+          "accuracy": 0.6157250000000001,
+          "cross_entropy": 1.2361758200073243
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-local-s24112413",
+          "accuracy": 0.610235,
+          "cross_entropy": 1.2731470906829832
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-local-s24112413",
+          "accuracy": 0.603755,
+          "cross_entropy": 1.271522941055298
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-local-s24112413",
+          "accuracy": 0.604675,
+          "cross_entropy": 1.2663884339904787
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.611855,
+            "cross_entropy": 1.2865184075927734
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.6157250000000001,
+            "cross_entropy": 1.2361758200073243
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.60412,
+            "cross_entropy": 1.2563582969665528
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.610235,
+            "cross_entropy": 1.2731470906829832
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.6002850000000001,
+            "cross_entropy": 1.2831387682342528
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.603755,
+            "cross_entropy": 1.271522941055298
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m16-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-promoted-s24112413",
+            "accuracy": 0.600965,
+            "cross_entropy": 1.283463193054199
+          },
+          "sweep-refine-m16-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m16-local-s24112413",
+            "accuracy": 0.604675,
+            "cross_entropy": 1.2663884339904787
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112411,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.5159999999999831,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.6707699999999999,
+          "cross_entropy": 1.0549324823760986
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.6670849999999999,
+          "cross_entropy": 1.1104702643585205
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.66139,
+          "cross_entropy": 1.0854004441452028
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-promoted-s24112411",
+          "accuracy": 0.66561,
+          "cross_entropy": 1.059150020980835
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.6707699999999999,
+            "cross_entropy": 1.0549324823760986
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.668715,
+            "cross_entropy": 1.0675974532699584
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.6670849999999999,
+            "cross_entropy": 1.1104702643585205
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.6610699999999999,
+            "cross_entropy": 1.1310262607955932
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.66139,
+            "cross_entropy": 1.0854004441452028
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.6611899999999999,
+            "cross_entropy": 1.1354363214492798
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-promoted-s24112411",
+            "accuracy": 0.66561,
+            "cross_entropy": 1.059150020980835
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-local-s24112411",
+            "accuracy": 0.66368,
+            "cross_entropy": 1.1001725890350342
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112412,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -1.0085000000000122,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.6685000000000001,
+          "cross_entropy": 1.0457941482543947
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-promoted-s24112412",
+          "accuracy": 0.65971,
+          "cross_entropy": 1.1237715101242067
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-local-s24112412",
+          "accuracy": 0.658415,
+          "cross_entropy": 1.0592229227066041
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-local-s24112412",
+          "accuracy": 0.657625,
+          "cross_entropy": 1.0802862754821778
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.6685000000000001,
+            "cross_entropy": 1.0457941482543947
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.663125,
+            "cross_entropy": 1.0679690308761596
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.65971,
+            "cross_entropy": 1.1237715101242067
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.657945,
+            "cross_entropy": 1.1617801305770876
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.65595,
+            "cross_entropy": 1.0594964228057862
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.658415,
+            "cross_entropy": 1.0592229227066041
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-promoted-s24112412",
+            "accuracy": 0.657305,
+            "cross_entropy": 1.068601534614563
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-local-s24112412",
+            "accuracy": 0.657625,
+            "cross_entropy": 1.0802862754821778
+          }
+        }
+      }
+    },
+    {
+      "m": 128,
+      "seed": 24112413,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.7885000000000031,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.657505,
+          "cross_entropy": 1.0851793032073975
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-promoted-s24112413",
+          "accuracy": 0.654465,
+          "cross_entropy": 1.1034128658294677
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.64936,
+          "cross_entropy": 1.149901847000122
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-local-s24112413",
+          "accuracy": 0.64962,
+          "cross_entropy": 1.1190714108657835
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.657505,
+            "cross_entropy": 1.0851793032073975
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.65524,
+            "cross_entropy": 1.0894799964141846
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.654465,
+            "cross_entropy": 1.1034128658294677
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.64915,
+            "cross_entropy": 1.1027036686706544
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.6478550000000001,
+            "cross_entropy": 1.105448653640747
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.64936,
+            "cross_entropy": 1.149901847000122
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m128-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-promoted-s24112413",
+            "accuracy": 0.6479,
+            "cross_entropy": 1.0990380491638183
+          },
+          "sweep-refine-m128-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m128-local-s24112413",
+            "accuracy": 0.64962,
+            "cross_entropy": 1.1190714108657835
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112411,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.3355000000000108,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+          "accuracy": 0.70898,
+          "cross_entropy": 0.8920435847091674
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "accuracy": 0.7143650000000001,
+          "cross_entropy": 0.891713159942627
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112411",
+          "accuracy": 0.71101,
+          "cross_entropy": 0.8967835689544679
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112411",
+          "accuracy": 0.709605,
+          "cross_entropy": 0.8979913932800294
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.70898,
+            "cross_entropy": 0.8920435847091674
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.703385,
+            "cross_entropy": 0.8987029580307008
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.7143650000000001,
+            "cross_entropy": 0.891713159942627
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.707935,
+            "cross_entropy": 0.8993181797027588
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.7063999999999999,
+            "cross_entropy": 0.91513922580719
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.71101,
+            "cross_entropy": 0.8967835689544679
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112411",
+            "accuracy": 0.70644,
+            "cross_entropy": 0.9159930184173584
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112411",
+            "accuracy": 0.709605,
+            "cross_entropy": 0.8979913932800294
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112412,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": 0.07749999999999702,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112412",
+          "accuracy": 0.72109,
+          "cross_entropy": 0.8574629233169556
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112412",
+          "accuracy": 0.719695,
+          "cross_entropy": 0.8686683238220215
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112412",
+          "accuracy": 0.721865,
+          "cross_entropy": 0.8609011098480224
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112412",
+          "accuracy": 0.71976,
+          "cross_entropy": 0.8629615743637086
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.72109,
+            "cross_entropy": 0.8574629233169556
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.715895,
+            "cross_entropy": 0.8657698268890381
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.719695,
+            "cross_entropy": 0.8686683238220215
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.719165,
+            "cross_entropy": 0.8604657366180419
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.72165,
+            "cross_entropy": 0.8706479919815063
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.721865,
+            "cross_entropy": 0.8609011098480224
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112412",
+            "accuracy": 0.71953,
+            "cross_entropy": 0.8702828175354004
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112412",
+            "accuracy": 0.71976,
+            "cross_entropy": 0.8629615743637086
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112413,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": 0.25399999999999867,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.716325,
+          "cross_entropy": 0.872832915763855
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.71702,
+          "cross_entropy": 0.8836477444458009
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.7191449999999999,
+          "cross_entropy": 0.8765360374450684
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "accuracy": 0.71956,
+          "cross_entropy": 0.8753218356323241
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.716325,
+            "cross_entropy": 0.872832915763855
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.71177,
+            "cross_entropy": 0.8784541233825685
+          }
+        },
+        "L2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.71702,
+            "cross_entropy": 0.8836477444458009
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.7140550000000001,
+            "cross_entropy": 0.8825350849914552
+          }
+        },
+        "T1-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.7191449999999999,
+            "cross_entropy": 0.8765360374450684
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.718455,
+            "cross_entropy": 0.8636975391387939
+          }
+        },
+        "T2-Matched": {
+          "sweep-refine-m2000-promoted": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+            "accuracy": 0.71956,
+            "cross_entropy": 0.8753218356323241
+          },
+          "sweep-refine-m2000-local": {
+            "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-local-s24112413",
+            "accuracy": 0.717195,
+            "cross_entropy": 0.8699709530639648
+          }
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "entry": {
+        "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "ERM-Matched",
+        "candidate": "sweep-refine-m2000-promoted",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "erm",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 24,
+          "lr": 0.0001875,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.00099,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.960944400588468,
+          "train_mc": 3,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "fashionmnist-ERM-Matched-refine-lr-low-s124101",
+          "archive_manifest_sha256": "6262bb2f5eb5d582547c29705adce43530a24736dbfe4baad2082482b6ce5c4d",
+          "search_candidate": "sweep-search-m2000-mc3",
+          "search_task": "fashionmnist-ERM-Matched-sweep-search-m2000-mc3-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "6666050aa6c98e3974e161e0d0aeae152e88219d11da62c77f3f23a1fa3318a0",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "27a18708c318bc2628f5cd390e394cec8a33ba370f5c842c8c8fc3a692fb6895",
+          "bytes": 4374
+        }
+      },
+      "validation_report_sha256": "43ace2612ec372d8ea1b4f060145a9fc8621ed41c00cd398181f2ad2db74f3c4",
+      "selected_epoch": 24
+    },
+    {
+      "entry": {
+        "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "L2-Matched",
+        "candidate": "sweep-refine-m2000-promoted",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "l2",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 24,
+          "lr": 0.000375,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.003,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.960944400588468,
+          "train_mc": 3,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "fashionmnist-L2-Matched-refine-lr-low-s124101",
+          "archive_manifest_sha256": "6262bb2f5eb5d582547c29705adce43530a24736dbfe4baad2082482b6ce5c4d",
+          "search_candidate": "sweep-search-m2000-mc3",
+          "search_task": "fashionmnist-L2-Matched-sweep-search-m2000-mc3-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "ab803e28244ed678a1079ec25645184e2928f35e1e30fcb6b97c0a738cf2c2a7",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "03ea1ae5f73249b707d5df063023f0b952bbb7c570c59586d3b9b59201571614",
+          "bytes": 4442
+        }
+      },
+      "validation_report_sha256": "54011ccb2a44a3d355f7a04179e065238c264e9cf28d0b5bb6144970687d1a32",
+      "selected_epoch": 24
+    },
+    {
+      "entry": {
+        "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "T1-Matched",
+        "candidate": "sweep-refine-m2000-promoted",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "proposed",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 48,
+          "lr": 0.000375,
+          "eta_channel": 0.03,
+          "eta_data": 0.15735924175428254,
+          "prior_std": 1.0,
+          "posterior_std": 0.003,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9663363085715326,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "fashionmnist-T1-Matched-refine-lr-low-s124101",
+          "archive_manifest_sha256": "6262bb2f5eb5d582547c29705adce43530a24736dbfe4baad2082482b6ce5c4d",
+          "search_candidate": "sweep-search-m2000-long-decay",
+          "search_task": "fashionmnist-T1-Matched-sweep-search-m2000-long-decay-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "5f2a6abec20fbcbe5f3b6b5727d6f5697842661ea993a50468ab676a19136713",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "dafc20a7f6ef9ed63f8e5a39208e9607bff44ee33ef6be1fb1c9ac2b4bef96d1",
+          "bytes": 4511
+        }
+      },
+      "validation_report_sha256": "dcbc87d946d16a8cedfa898ddf35f216b7b495062d7d18b79ee33873d7ffc187",
+      "selected_epoch": 47
+    },
+    {
+      "entry": {
+        "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+        "phase": "confirmation",
+        "method": "T2-Matched",
+        "candidate": "sweep-refine-m2000-promoted",
+        "config": {
+          "dataset": "fashionmnist",
+          "architecture": "mlp",
+          "method": "joint",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 48,
+          "lr": 0.000375,
+          "eta_channel": 0.0,
+          "eta_data": 0.2357538695622607,
+          "prior_std": 1.0,
+          "posterior_std": 0.003,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9663363085715326,
+          "train_mc": 1,
+          "seed": 24112413,
+          "channel_seed": 24122413,
+          "eval_seed": 24132413
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112420
+        },
+        "source": {
+          "archived_validation_task": "fashionmnist-T2-Matched-refine-lr-low-s124101",
+          "archive_manifest_sha256": "6262bb2f5eb5d582547c29705adce43530a24736dbfe4baad2082482b6ce5c4d",
+          "search_candidate": "sweep-search-m2000-long-decay",
+          "search_task": "fashionmnist-T2-Matched-sweep-search-m2000-long-decay-s24112401"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/refine/fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "bd42039b7eaf0264c57da6cb8b8a3f2f60363b25880bfd15f867d58aa76ec556",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "5fb7656dad5cca2c400cc47abb47af295b36beb8b5a5b39f48a091761d1964be",
+          "bytes": 4521
+        }
+      },
+      "validation_report_sha256": "22bb5dfdf56e6c782804489f67e406482e0e47b49ca7cd6cedbe24dd8ec96dc0",
+      "selected_epoch": 47
+    }
+  ]
+}

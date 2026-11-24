@@ -1,0 +1,15 @@
+\begin{table*}[htb]
+\centering
+\caption{Held-out deployment accuracy (\%) under unit-power fading. Entries show mean and sample standard deviation across paired training seeds. The final column gives the difference in percentage points between the validation-selected proposed method and the stronger baseline on the test set.}
+\label{tab:unit-power-sweep}
+\begin{tabular}{lrccccc}
+\toprule
+Dataset & $m$ & ERM & L2 & T1 & T2 & Gap (pp) \\
+\midrule
+Two moons & 128 & $\mathbf{69.96}\pm0.38$ & $69.90\pm0.18$ & $69.84\pm0.31$ & $69.76\pm0.45$ & $-0.12$ \\
+MNIST & 2000 & $78.45\pm0.18$ & $\mathbf{78.58}\pm0.25$ & $78.09\pm0.36$ & $78.12\pm0.39$ & $-0.46$ \\
+Fashion-MNIST & 2000 & $70.67\pm0.33$ & $\mathbf{70.67}\pm0.31$ & $70.63\pm0.35$ & $70.64\pm0.33$ & $-0.04$ \\
+CIFAR-10 & 128 & $48.22\pm1.21$ & $\mathbf{48.59}\pm0.30$ & $48.23\pm1.26$ & $47.92\pm2.15$ & $-0.36$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
