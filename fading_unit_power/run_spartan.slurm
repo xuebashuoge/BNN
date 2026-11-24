@@ -109,11 +109,14 @@ case "$stage" in
         fi
         exec "${summary[@]}"
         ;;
-    seed-plan|seed-regularization-plan)
+    seed-plan|seed-regularization-plan|seed-fixed-plan)
         source_phase=refine
         if [[ "$stage" == seed-regularization-plan ]]; then source_phase=search; fi
-        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep plan \
-            --output "$performance_dir" --source "$detail" --source-phase "$source_phase" --dataset "$target"
+        if [[ "$stage" == seed-fixed-plan ]]; then source_phase=${5:?Pass the source phase}; fi
+        seed_plan=("${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep plan
+                   --output "$performance_dir" --source "$detail" --source-phase "$source_phase" --dataset "$target")
+        if [[ "$stage" == seed-fixed-plan ]]; then seed_plan+=(--bank-size "${6:?Pass the fixed bank size}"); fi
+        exec "${seed_plan[@]}"
         ;;
     seed-run)
         exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep run \

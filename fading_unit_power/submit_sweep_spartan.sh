@@ -3,7 +3,7 @@ set -eo pipefail
 
 usage() {
     printf 'Usage: %s RUN_DIRECTORY [--resume]\n' "$0"
-    printf '       %s RUN_DIRECTORY --regularization-from PRIMARY_PERFORMANCE_DIRECTORY DATASET [DATASET ...]\n' "$0"
+    printf '       %s RUN_DIRECTORY --regularization-from PRIMARY_PERFORMANCE_DIRECTORY [--bank-size M] DATASET [DATASET ...]\n' "$0"
 }
 
 if [[ ${1:-} == --help ]]; then
@@ -12,12 +12,19 @@ if [[ ${1:-} == --help ]]; then
 fi
 resume=
 regularization_source=
+bank_size=
 datasets=(moons mnist fashionmnist cifar10)
 if [[ $# == 2 && $2 == --resume ]]; then
     resume=1
 elif [[ $# -ge 4 && $2 == --regularization-from ]]; then
     regularization_source=$(cd -- "$3" && pwd -P)
-    datasets=("${@:4}")
+    if [[ $4 == --bank-size ]]; then
+        if [[ $# -lt 6 || ! $5 =~ ^[1-9][0-9]*$ ]]; then usage >&2; exit 2; fi
+        bank_size=$5
+        datasets=("${@:6}")
+    else
+        datasets=("${@:4}")
+    fi
 elif [[ $# != 1 ]]; then
     usage >&2
     exit 2
@@ -45,6 +52,7 @@ exec 9>"$run_dir/.submit.lock"
 flock -n 9 || { printf 'Submission already in progress for %s\n' "$run_dir" >&2; exit 1; }
 
 regularization_plan="$run_dir/regularization-plan.txt"
+fixed_bank_file="$run_dir/fixed-bank-size.txt"
 if [[ -n "$resume" && -f "$regularization_plan" ]]; then
     {
         IFS= read -r regularization_source
@@ -53,6 +61,7 @@ if [[ -n "$resume" && -f "$regularization_plan" ]]; then
             datasets+=("$dataset")
         done
     } < "$regularization_plan"
+    if [[ -f "$fixed_bank_file" ]]; then IFS= read -r bank_size < "$fixed_bank_file"; fi
 fi
 if [[ -n "$regularization_source" ]]; then
     seen=' '
@@ -73,6 +82,7 @@ if [[ -n "$regularization_source" ]]; then
     fi
     if [[ ! -f "$regularization_plan" ]]; then
         printf '%s\n' "$regularization_source" "${datasets[@]}" > "$regularization_plan"
+        if [[ -n "$bank_size" ]]; then printf '%s\n' "$bank_size" > "$fixed_bank_file"; fi
     fi
 fi
 
@@ -111,7 +121,9 @@ fi
 if [[ -n "$regularization_source" ]]; then
     sweep=("$python_bin" -m fading_unit_power.performance_regularization_sweep)
     for dataset in "${datasets[@]}"; do
-        "${sweep[@]}" plan --output "$performance_dir" --source "$regularization_source" --dataset "$dataset"
+        plan_command=("${sweep[@]}" plan --output "$performance_dir" --source "$regularization_source" --dataset "$dataset")
+        if [[ -n "$bank_size" ]]; then plan_command+=(--bank-size "$bank_size"); fi
+        "${plan_command[@]}"
     done
 else
     sweep=("$python_bin" -m fading_unit_power.performance_sweep)

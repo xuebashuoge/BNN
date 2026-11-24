@@ -65,3 +65,15 @@ The exploratory seed check can also use these regularization candidates. It sele
 ```bash
 bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$followup_run" "$followup_seed_run" --regularization
 ```
+
+### Fixed channel-bank comparison
+
+Pass a shared bank size when every selected fit must use the same (m). The regularization follow-up anchors each method to its validation winner at that bank and uses six paired validation seeds. The bank is recorded in the plan and checked before confirmation.
+
+```bash
+bash -l fading_unit_power/submit_sweep_spartan.sh "$fixed_run" \
+  --regularization-from "$primary_run/performance" --bank-size 2000 moons
+bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$fixed_run" "$fixed_seed_run" --regularization
+```
+
+The seed planner also accepts `--bank-size 2000` to select among existing checkpoints at that bank. For an initial search campaign, pass `--source-phase search` with the fixed bank. The planner verifies the archived validation scores and evaluates the selected checkpoints in a separate Slurm stage.

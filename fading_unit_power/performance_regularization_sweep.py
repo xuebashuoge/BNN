@@ -12,6 +12,8 @@ from . import performance_sweep as primary
 
 VALIDATION_SEEDS = (24112431, 24112432, 24112433)
 CONFIRMATION_SEEDS = (24112441, 24112442, 24112443, 24112444, 24112445)
+FIXED_BANK_VALIDATION_SEEDS = tuple(range(26112501, 26112507))
+FIXED_BANK_CONFIRMATION_SEEDS = tuple(range(26112511, 26112516))
 PROFILE_COUNT = 6
 EVAL_DRAWS = {"search": 40, "confirmation": 64}
 SEED_FIELDS = {"seed", "channel_seed", "eval_seed"}
@@ -30,12 +32,19 @@ def selection_path(output, dataset):
     return output / "manifests" / f"{dataset}-sweep-selection.json"
 
 
-def count(phase):
-    per_method = PROFILE_COUNT * len(VALIDATION_SEEDS) if phase == "search" else len(CONFIRMATION_SEEDS)
+def seed_sets(fixed_bank):
+    if fixed_bank:
+        return FIXED_BANK_VALIDATION_SEEDS, FIXED_BANK_CONFIRMATION_SEEDS
+    return VALIDATION_SEEDS, CONFIRMATION_SEEDS
+
+
+def count(phase, *, fixed_bank=False):
+    validation_seeds, confirmation_seeds = seed_sets(fixed_bank)
+    per_method = PROFILE_COUNT * len(validation_seeds) if phase == "search" else len(confirmation_seeds)
     return len(primary.METHODS) * per_method
 
 
-def primary_anchors(source, dataset):
+def primary_anchors(source, dataset, bank_size=None):
     """Replay the refined validation candidates and verify the frozen bank choice."""
     manifest = performance.manifest_path(source, dataset, "refine")
     scores_path = source / "manifests" / f"{dataset}-refine-scores.json"
@@ -68,12 +77,15 @@ def primary_anchors(source, dataset):
             raise ValueError(f"Primary validation winners differ for {dataset}/m={m}")
         leaderboard[m] = expected
 
-    m = min(leaderboard, key=lambda size: (-leaderboard[size]["gap_pp"], -leaderboard[size]["proposed_accuracy"], size))
-    selected = leaderboard[m]
+    primary_m = min(leaderboard, key=lambda size: (-leaderboard[size]["gap_pp"], -leaderboard[size]["proposed_accuracy"], size))
+    selected = leaderboard[primary_m]
     if (selection["chosen_bank_size"], selection["chosen_proposed"], selection["chosen_baseline"],
-            selection["validation_gap_pp"]) != (m, selected["proposed"], selected["baseline"], selected["gap_pp"]):
+            selection["validation_gap_pp"]) != (primary_m, selected["proposed"], selected["baseline"], selected["gap_pp"]):
         raise ValueError(f"Primary bank selection differs for {dataset}")
-    anchors = {method: groups[m, method][name][0] for method, name in selected["chosen"].items()}
+    m = primary_m if bank_size is None else bank_size
+    if m not in leaderboard:
+        raise ValueError(f"No primary validation at m={m} for {dataset}")
+    anchors = {method: groups[m, method][name][0] for method, name in leaderboard[m]["chosen"].items()}
     common = anchors[primary.METHODS[0]]["config"]
     for method, row in anchors.items():
         config = row["config"]
@@ -181,10 +193,11 @@ def task(phase, method, name, config, source, seed):
     return performance.task_entry(phase, method, candidate, values, evaluation, source)
 
 
-def plan(output, source, dataset):
+def plan(output, source, dataset, *, bank_size=None):
     if output == source or source in output.parents or output in source.parents:
         raise ValueError("Use a follow-up directory separate from the primary performance directory")
-    m, anchors, fingerprints = primary_anchors(source, dataset)
+    m, anchors, fingerprints = primary_anchors(source, dataset, bank_size)
+    validation_seeds, confirmation_seeds = seed_sets(bank_size is not None)
     l2_anchor = anchors["L2-Matched"]["config"]["l2"]
     if not math.isfinite(l2_anchor) or l2_anchor <= 0:
         raise ValueError(f"Cannot calibrate a zero or invalid L2 anchor for {dataset}")
@@ -201,18 +214,19 @@ def plan(output, source, dataset):
         for name, config, calibration in variants:
             provenance = dict(primary_refine_task=anchor["task_id"], profile=name, calibration=calibration,
                               **fingerprints)
-            generated = [task("search", method, name, config, provenance, seed) for seed in VALIDATION_SEEDS]
+            generated = [task("search", method, name, config, provenance, seed) for seed in validation_seeds]
             planned[method].append(generated[0]["candidate"])
             rows.extend(generated)
 
     manifest = performance.manifest_path(output, dataset, "search")
     performance.write_manifest(manifest, rows)
+    fixed_bank = {} if bank_size is None else {"fixed_bank_size": bank_size}
     performance.write_json(plan_path(output, dataset), dict(
         dataset=dataset, bank_size=m, source=str(source), source_fingerprints=fingerprints,
         anchor_tasks={method: row["task_id"] for method, row in anchors.items()},
         l2_anchor=l2_anchor, hot_posterior=hot_posterior, tight_prior=tight_prior,
-        validation_seeds=VALIDATION_SEEDS, confirmation_seeds=CONFIRMATION_SEEDS, profiles=planned,
-        search_manifest_sha256=primary.sha256(manifest),
+        validation_seeds=validation_seeds, confirmation_seeds=confirmation_seeds, profiles=planned,
+        search_manifest_sha256=primary.sha256(manifest), **fixed_bank,
     ), frozen=True)
     print(f"{manifest} ({len(rows)} tasks), m={m}")
 
@@ -224,9 +238,13 @@ def select(output, dataset):
     manifest_hash = primary.sha256(manifest)
     rows = performance.read_manifest(manifest)
     m = planned["bank_size"]
+    if planned.get("fixed_bank_size", m) != m:
+        raise ValueError(f"Fixed bank differs from planned bank for {dataset}")
+    fixed_bank = "fixed_bank_size" in planned
+    validation_seeds, confirmation_seeds = seed_sets(fixed_bank)
     if (planned["dataset"], planned["search_manifest_sha256"], len(rows),
             tuple(planned["validation_seeds"]), tuple(planned["confirmation_seeds"])) != (
-            dataset, manifest_hash, count("search"), VALIDATION_SEEDS, CONFIRMATION_SEEDS):
+            dataset, manifest_hash, count("search", fixed_bank=fixed_bank), validation_seeds, confirmation_seeds):
         raise ValueError(f"Incomplete or inconsistent search plan for {dataset}")
 
     groups = defaultdict(lambda: defaultdict(list))
@@ -246,7 +264,7 @@ def select(output, dataset):
         for candidate, entries in members.items():
             configs = [{key: value for key, value in entry["config"].items() if key not in SEED_FIELDS}
                        for entry in entries]
-            if (sorted(entry["config"]["seed"] for entry in entries) != list(VALIDATION_SEEDS) or
+            if (sorted(entry["config"]["seed"] for entry in entries) != list(validation_seeds) or
                     any(config != configs[0] for config in configs)):
                 raise ValueError(f"Unpaired regularization validation entries for {dataset}/{candidate}")
             metrics = [performance.evaluate_result(output, entry)["heldout_gibbs_mc"] for entry in entries]
@@ -267,7 +285,7 @@ def select(output, dataset):
         entry = groups[method][name][0]
         provenance = {**entry["source"], "validation_task": entry["task_id"]}
         confirmation.extend(task("confirmation", method, provenance["profile"], entry["config"], provenance, seed)
-                            for seed in CONFIRMATION_SEEDS)
+                            for seed in confirmation_seeds)
 
     selected_manifest = performance.manifest_path(output, dataset, "confirmation")
     performance.write_manifest(selected_manifest, confirmation)
@@ -275,7 +293,7 @@ def select(output, dataset):
         dataset=dataset, chosen_bank_size=m, chosen_proposed=proposed, chosen_baseline=baseline,
         validation_gap_pp=gap, chosen_candidates=winners, validation_scores=scores,
         search_manifest_sha256=manifest_hash, search_plan_sha256=primary.sha256(planned_path),
-        confirmation_seeds=CONFIRMATION_SEEDS, confirmation_manifest_sha256=primary.sha256(selected_manifest),
+        confirmation_seeds=confirmation_seeds, confirmation_manifest_sha256=primary.sha256(selected_manifest),
     ), frozen=True)
     print(f"{selected_manifest} ({len(confirmation)} tasks), m={m}, validation gap {gap:+.3f} pp")
 
@@ -289,11 +307,13 @@ def main():
         command.add_argument("--output", type=Path, required=True)
         command.add_argument("--dataset", choices=primary.DATASETS, required=True)
     commands.choices["plan"].add_argument("--source", type=Path, required=True, help="Primary performance directory")
+    commands.choices["plan"].add_argument("--bank-size", type=int, choices=primary.BANK_SIZES,
+                                         help="Use the same validated bank for all requested datasets")
     args = parser.parse_args()
     if args.command == "count":
         print(count(args.phase))
     elif args.command == "plan":
-        plan(args.output.resolve(), args.source.resolve(), args.dataset)
+        plan(args.output.resolve(), args.source.resolve(), args.dataset, bank_size=args.bank_size)
     else:
         select(args.output.resolve(), args.dataset)
 
