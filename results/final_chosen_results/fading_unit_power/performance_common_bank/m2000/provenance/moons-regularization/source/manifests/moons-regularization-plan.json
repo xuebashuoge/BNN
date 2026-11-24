@@ -1,0 +1,70 @@
+{
+  "dataset": "moons",
+  "bank_size": 2000,
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance",
+  "source_fingerprints": {
+    "refine_manifest_sha256": "243e8c45e9954ecc90ebcc7f7bb7f4ed49a5e24399315954acf3a8f75e6a6571",
+    "refine_scores_sha256": "34a7fd549469968516a25847d848c647e584ac71dff5e11673c9874cd8d624d1",
+    "validation_selection_sha256": "7b0ad41520e1f13f053c99276bb349fffbe7b7a7e798f8efdc707d0d7158e2b6"
+  },
+  "anchor_tasks": {
+    "ERM-Matched": "moons-ERM-Matched-sweep-refine-m2000-promoted-s24112411",
+    "L2-Matched": "moons-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+    "T1-Matched": "moons-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+    "T2-Matched": "moons-T2-Matched-sweep-refine-m2000-promoted-s24112411"
+  },
+  "l2_anchor": 2.9999999999999997e-06,
+  "hot_posterior": 0.025,
+  "tight_prior": 0.25,
+  "validation_seeds": [
+    26112501,
+    26112502,
+    26112503,
+    26112504,
+    26112505,
+    26112506
+  ],
+  "confirmation_seeds": [
+    26112511,
+    26112512,
+    26112513,
+    26112514,
+    26112515
+  ],
+  "profiles": {
+    "ERM-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-hot-learned",
+      "regularization-m2000-hot-fixed",
+      "regularization-m2000-cool-learned",
+      "regularization-m2000-cool-fixed",
+      "regularization-m2000-current-fast-scale"
+    ],
+    "L2-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-l2-weak",
+      "regularization-m2000-l2-strong",
+      "regularization-m2000-hot-current-l2",
+      "regularization-m2000-hot-weak-l2",
+      "regularization-m2000-hot-strong-l2"
+    ],
+    "T1-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-matched-shrinkage",
+      "regularization-m2000-tight-prior",
+      "regularization-m2000-tight-hot",
+      "regularization-m2000-tight-hot-weak",
+      "regularization-m2000-tight-hot-strong"
+    ],
+    "T2-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-matched-shrinkage",
+      "regularization-m2000-tight-prior",
+      "regularization-m2000-tight-hot",
+      "regularization-m2000-tight-hot-weak",
+      "regularization-m2000-tight-hot-strong"
+    ]
+  },
+  "search_manifest_sha256": "c97bdb9bdd768ad6b31d1bcbdbb9f7806848dda8c752c588f30ef29cbacb3266",
+  "fixed_bank_size": 2000
+}

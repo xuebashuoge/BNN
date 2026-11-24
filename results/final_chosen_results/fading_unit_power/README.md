@@ -6,7 +6,8 @@ These results use one unit of transmit power per real channel symbol. The [campa
 |---|---|
 | [MNIST generalization and deployment accuracy vs. $m$](mnist_analog_finite_channel_generalization.pdf) | [54 observations](data/mnist_bank/observations.csv) at 18 bank sizes, including measured transmit power and checkpoint SHA-256. |
 | [Deployment accuracy at $m=2000$](performance/performance_table.tex) | [Paired results](performance/deployment_by_seed.csv), [method gaps](performance/performance_summary.json), [selected trial reports](performance/selected_trials.tar.gz) and [validation manifests](performance/provenance). The table's erasure rows come from the original archive. |
-| [Four-method tuning sweep](performance_sweep/README.md) | [Fresh-seed comparison](performance_sweep/performance_table.tex), [paired results](performance_sweep/deployment_by_seed.csv) and [validation-selected seed comparison](performance_sweep/seed_sweep/seed_sweep_summary.json). |
+| [Four-method comparison at one shared $m=2000$](performance_common_bank/m2000/README.md) | [Fading and erasure comparison](performance_common_bank/m2000/common_bank_comparison.md), [CSV](performance_common_bank/m2000/common_bank_comparison.csv), and the frozen validation selections. |
+| [Exploratory four-method tuning across bank sizes](performance_sweep/README.md) | [Fresh-seed comparison](performance_sweep/performance_table.tex), [paired results](performance_sweep/deployment_by_seed.csv) and [validation-selected seed comparison](performance_sweep/seed_sweep/seed_sweep_summary.json). |
 
 In the MNIST sweep, the mean bounded-loss gap decreases from 0.40108 at $m=2$ to 0.01240 at $m=25600$. Mean deployment accuracy increases from 36.81% to 73.94% across those endpoints.
 

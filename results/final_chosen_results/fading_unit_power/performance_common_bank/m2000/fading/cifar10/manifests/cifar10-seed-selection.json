@@ -1,0 +1,738 @@
+{
+  "dataset": "cifar10",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance",
+  "source_phase": "search",
+  "search_origin": "initial",
+  "search_manifest_sha256": "67bfa361b143cd13a4e522c8121b467229b72f093b20ab14a0ab08dd7ec41f6e",
+  "search_scores_sha256": "048229e8599521f349fb106e254607ba76f79c6da618553e6a64bda3ac283c62",
+  "fixed_bank_size": 2000,
+  "selected": {
+    "m": 2000,
+    "seed": 24112402,
+    "proposed": "T1-Matched",
+    "baseline": "L2-Matched",
+    "validation_gap_pp": 1.9058333333333288,
+    "winners": {
+      "ERM-Matched": {
+        "task_id": "cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112402",
+        "accuracy": 0.5503166666666667,
+        "cross_entropy": 1.34363952190876
+      },
+      "L2-Matched": {
+        "task_id": "cifar10-L2-Matched-sweep-search-m2000-regularization-s24112402",
+        "accuracy": 0.5568666666666667,
+        "cross_entropy": 1.337303091029326
+      },
+      "T1-Matched": {
+        "task_id": "cifar10-T1-Matched-sweep-search-m2000-regularization-s24112402",
+        "accuracy": 0.575925,
+        "cross_entropy": 1.2978886723697185
+      },
+      "T2-Matched": {
+        "task_id": "cifar10-T2-Matched-sweep-search-m2000-regularization-s24112402",
+        "accuracy": 0.5588166666666666,
+        "cross_entropy": 1.3428649789015452
+      }
+    },
+    "trials": {
+      "ERM-Matched": {
+        "sweep-search-m2000-archived": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-archived-s24112402",
+          "accuracy": 0.5283583333333334,
+          "cross_entropy": 1.411983913052082
+        },
+        "sweep-search-m2000-long-decay": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-long-decay-s24112402",
+          "accuracy": 0.5413666666666667,
+          "cross_entropy": 1.3868027378837269
+        },
+        "sweep-search-m2000-fast-decay": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-fast-decay-s24112402",
+          "accuracy": 0.52455,
+          "cross_entropy": 1.4396191459019978
+        },
+        "sweep-search-m2000-mc3": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-mc3-s24112402",
+          "accuracy": 0.5115333333333334,
+          "cross_entropy": 1.4671194700082142
+        },
+        "sweep-search-m2000-regularization": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.5503166666666667,
+          "cross_entropy": 1.34363952190876
+        }
+      },
+      "L2-Matched": {
+        "sweep-search-m2000-archived": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-archived-s24112402",
+          "accuracy": 0.5262916666666667,
+          "cross_entropy": 1.4146883241613706
+        },
+        "sweep-search-m2000-long-decay": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-long-decay-s24112402",
+          "accuracy": 0.555075,
+          "cross_entropy": 1.372717039970557
+        },
+        "sweep-search-m2000-fast-decay": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-fast-decay-s24112402",
+          "accuracy": 0.49404166666666666,
+          "cross_entropy": 1.4746405395269393
+        },
+        "sweep-search-m2000-mc3": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-mc3-s24112402",
+          "accuracy": 0.5559833333333333,
+          "cross_entropy": 1.3457510833760102
+        },
+        "sweep-search-m2000-regularization": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.5568666666666667,
+          "cross_entropy": 1.337303091029326
+        }
+      },
+      "T1-Matched": {
+        "sweep-search-m2000-archived": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-archived-s24112402",
+          "accuracy": 0.513575,
+          "cross_entropy": 1.4610308505336445
+        },
+        "sweep-search-m2000-long-decay": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-long-decay-s24112402",
+          "accuracy": 0.5262916666666667,
+          "cross_entropy": 1.43394457171758
+        },
+        "sweep-search-m2000-fast-decay": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-fast-decay-s24112402",
+          "accuracy": 0.533975,
+          "cross_entropy": 1.4084442204952239
+        },
+        "sweep-search-m2000-mc3": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-mc3-s24112402",
+          "accuracy": 0.562175,
+          "cross_entropy": 1.3288872208575409
+        },
+        "sweep-search-m2000-regularization": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.575925,
+          "cross_entropy": 1.2978886723697185
+        }
+      },
+      "T2-Matched": {
+        "sweep-search-m2000-archived": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-archived-s24112402",
+          "accuracy": 0.5477416666666667,
+          "cross_entropy": 1.3765332102894785
+        },
+        "sweep-search-m2000-long-decay": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-long-decay-s24112402",
+          "accuracy": 0.09834166666666666,
+          "cross_entropy": 2.3027918032805124
+        },
+        "sweep-search-m2000-fast-decay": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-fast-decay-s24112402",
+          "accuracy": 0.10410000000000001,
+          "cross_entropy": 2.3023478857040405
+        },
+        "sweep-search-m2000-mc3": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-mc3-s24112402",
+          "accuracy": 0.5485333333333333,
+          "cross_entropy": 1.3707215687274932
+        },
+        "sweep-search-m2000-regularization": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.5588166666666666,
+          "cross_entropy": 1.3428649789015452
+        }
+      }
+    }
+  },
+  "leaderboard": [
+    {
+      "m": 2000,
+      "seed": 24112401,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": 1.352500000000001,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-long-decay-s24112401",
+          "accuracy": 0.5628916666666667,
+          "cross_entropy": 1.3310571373601754
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-mc3-s24112401",
+          "accuracy": 0.5582583333333334,
+          "cross_entropy": 1.3368238451699417
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-long-decay-s24112401",
+          "accuracy": 0.5764166666666667,
+          "cross_entropy": 1.3354240544617177
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-long-decay-s24112401",
+          "accuracy": 0.5727916666666667,
+          "cross_entropy": 1.3106998671829702
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-archived-s24112401",
+            "accuracy": 0.551825,
+            "cross_entropy": 1.3769684025963145
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-long-decay-s24112401",
+            "accuracy": 0.5628916666666667,
+            "cross_entropy": 1.3310571373601754
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-fast-decay-s24112401",
+            "accuracy": 0.5494916666666666,
+            "cross_entropy": 1.33045559882919
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-mc3-s24112401",
+            "accuracy": 0.5302666666666666,
+            "cross_entropy": 1.3990630997101468
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112401",
+            "accuracy": 0.5580666666666666,
+            "cross_entropy": 1.3373291741013524
+          }
+        },
+        "L2-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-archived-s24112401",
+            "accuracy": 0.5538583333333333,
+            "cross_entropy": 1.3243885226885477
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-long-decay-s24112401",
+            "accuracy": 0.544925,
+            "cross_entropy": 1.3935513035019238
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-fast-decay-s24112401",
+            "accuracy": 0.5443916666666667,
+            "cross_entropy": 1.3558522776325546
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-mc3-s24112401",
+            "accuracy": 0.5582583333333334,
+            "cross_entropy": 1.3368238451699417
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-regularization-s24112401",
+            "accuracy": 0.549325,
+            "cross_entropy": 1.340702753674984
+          }
+        },
+        "T1-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-archived-s24112401",
+            "accuracy": 0.5358999999999999,
+            "cross_entropy": 1.394594031071663
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-long-decay-s24112401",
+            "accuracy": 0.5764166666666667,
+            "cross_entropy": 1.3354240544617177
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-fast-decay-s24112401",
+            "accuracy": 0.5448583333333333,
+            "cross_entropy": 1.3760893827418486
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-mc3-s24112401",
+            "accuracy": 0.5667583333333334,
+            "cross_entropy": 1.3195734010775884
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-regularization-s24112401",
+            "accuracy": 0.5714583333333333,
+            "cross_entropy": 1.3058069804668426
+          }
+        },
+        "T2-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-archived-s24112401",
+            "accuracy": 0.5334500000000001,
+            "cross_entropy": 1.4141804275631904
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-long-decay-s24112401",
+            "accuracy": 0.5727916666666667,
+            "cross_entropy": 1.3106998671829702
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-fast-decay-s24112401",
+            "accuracy": 0.5179583333333333,
+            "cross_entropy": 1.4325055903693038
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-mc3-s24112401",
+            "accuracy": 0.5251333333333333,
+            "cross_entropy": 1.4293025253534317
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-regularization-s24112401",
+            "accuracy": 0.5612083333333333,
+            "cross_entropy": 1.3566367371718089
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112402,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": 1.9058333333333288,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.5503166666666667,
+          "cross_entropy": 1.34363952190876
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.5568666666666667,
+          "cross_entropy": 1.337303091029326
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.575925,
+          "cross_entropy": 1.2978886723697185
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-regularization-s24112402",
+          "accuracy": 0.5588166666666666,
+          "cross_entropy": 1.3428649789015452
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-archived-s24112402",
+            "accuracy": 0.5283583333333334,
+            "cross_entropy": 1.411983913052082
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-long-decay-s24112402",
+            "accuracy": 0.5413666666666667,
+            "cross_entropy": 1.3868027378837269
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-fast-decay-s24112402",
+            "accuracy": 0.52455,
+            "cross_entropy": 1.4396191459019978
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-mc3-s24112402",
+            "accuracy": 0.5115333333333334,
+            "cross_entropy": 1.4671194700082142
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112402",
+            "accuracy": 0.5503166666666667,
+            "cross_entropy": 1.34363952190876
+          }
+        },
+        "L2-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-archived-s24112402",
+            "accuracy": 0.5262916666666667,
+            "cross_entropy": 1.4146883241613706
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-long-decay-s24112402",
+            "accuracy": 0.555075,
+            "cross_entropy": 1.372717039970557
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-fast-decay-s24112402",
+            "accuracy": 0.49404166666666666,
+            "cross_entropy": 1.4746405395269393
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-mc3-s24112402",
+            "accuracy": 0.5559833333333333,
+            "cross_entropy": 1.3457510833760102
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-L2-Matched-sweep-search-m2000-regularization-s24112402",
+            "accuracy": 0.5568666666666667,
+            "cross_entropy": 1.337303091029326
+          }
+        },
+        "T1-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-archived-s24112402",
+            "accuracy": 0.513575,
+            "cross_entropy": 1.4610308505336445
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-long-decay-s24112402",
+            "accuracy": 0.5262916666666667,
+            "cross_entropy": 1.43394457171758
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-fast-decay-s24112402",
+            "accuracy": 0.533975,
+            "cross_entropy": 1.4084442204952239
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-mc3-s24112402",
+            "accuracy": 0.562175,
+            "cross_entropy": 1.3288872208575409
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-T1-Matched-sweep-search-m2000-regularization-s24112402",
+            "accuracy": 0.575925,
+            "cross_entropy": 1.2978886723697185
+          }
+        },
+        "T2-Matched": {
+          "sweep-search-m2000-archived": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-archived-s24112402",
+            "accuracy": 0.5477416666666667,
+            "cross_entropy": 1.3765332102894785
+          },
+          "sweep-search-m2000-long-decay": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-long-decay-s24112402",
+            "accuracy": 0.09834166666666666,
+            "cross_entropy": 2.3027918032805124
+          },
+          "sweep-search-m2000-fast-decay": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-fast-decay-s24112402",
+            "accuracy": 0.10410000000000001,
+            "cross_entropy": 2.3023478857040405
+          },
+          "sweep-search-m2000-mc3": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-mc3-s24112402",
+            "accuracy": 0.5485333333333333,
+            "cross_entropy": 1.3707215687274932
+          },
+          "sweep-search-m2000-regularization": {
+            "task_id": "cifar10-T2-Matched-sweep-search-m2000-regularization-s24112402",
+            "accuracy": 0.5588166666666666,
+            "cross_entropy": 1.3428649789015452
+          }
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "entry": {
+        "task_id": "cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112402",
+        "phase": "confirmation",
+        "method": "ERM-Matched",
+        "candidate": "sweep-search-m2000-regularization",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "erm",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 31,
+          "lr": 0.00105,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.003,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 24,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112402,
+          "channel_seed": 24122402,
+          "eval_seed": 24132402
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112409
+        },
+        "source": {
+          "archived_validation_task": "cifar10-ERM-Matched-refine-posterior-low-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/search/cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112402",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "6b2794cb3b12c158081c23ecd40870e1a196994814d28499239f51c88a406865",
+          "bytes": 3340603
+        },
+        "metadata": {
+          "sha256": "a68768acd49d0102eb8f5cf6171fcdf612104017fc6771f577b80035ba091071",
+          "bytes": 4871
+        }
+      },
+      "validation_report_sha256": "2239c012b05b3bbf6530245616e61026d9f78609d5f5ce85968ae6640ab1852d",
+      "selected_epoch": 29
+    },
+    {
+      "entry": {
+        "task_id": "cifar10-L2-Matched-sweep-search-m2000-regularization-s24112402",
+        "phase": "confirmation",
+        "method": "L2-Matched",
+        "candidate": "sweep-search-m2000-regularization",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "l2",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 31,
+          "lr": 0.00105,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 24,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1.0000000000000003e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112402,
+          "channel_seed": 24122402,
+          "eval_seed": 24132402
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112409
+        },
+        "source": {
+          "archived_validation_task": "cifar10-L2-Matched-primary-winner-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/search/cifar10-L2-Matched-sweep-search-m2000-regularization-s24112402",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "96bef363ca5378620d1e9608ae50e51acd020f68643ef9fb97be213041858066",
+          "bytes": 3340603
+        },
+        "metadata": {
+          "sha256": "d56a72dd45c45e583fd2ae6909d6a9ef4880735dc46345620113cd7e6c642125",
+          "bytes": 4957
+        }
+      },
+      "validation_report_sha256": "1277ca67faef0a0ee0edc8186bb023dd877e5ed2f2e563d53f0aabaf47060bbd",
+      "selected_epoch": 29
+    },
+    {
+      "entry": {
+        "task_id": "cifar10-T1-Matched-sweep-search-m2000-regularization-s24112402",
+        "phase": "confirmation",
+        "method": "T1-Matched",
+        "candidate": "sweep-search-m2000-regularization",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "proposed",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 31,
+          "lr": 0.00105,
+          "eta_channel": 1e-05,
+          "eta_data": 0.00474455007115415,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 24,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112402,
+          "channel_seed": 24122402,
+          "eval_seed": 24132402
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112409
+        },
+        "source": {
+          "archived_validation_task": "cifar10-T1-Matched-primary-winner-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/search/cifar10-T1-Matched-sweep-search-m2000-regularization-s24112402",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "1fbe90cfd550310e98d40f4d415e6269df38d500089708cfcd9535fd9a1a066e",
+          "bytes": 3340603
+        },
+        "metadata": {
+          "sha256": "3320f8b94666802b474ab6af4e29c848f3777b7a08502ba9640315e77dfe64ab",
+          "bytes": 5023
+        }
+      },
+      "validation_report_sha256": "9741fb4ebf5cdd13c8b32c3056dd2764c23b880c44282e120d4faaa51d794825",
+      "selected_epoch": 29
+    },
+    {
+      "entry": {
+        "task_id": "cifar10-T2-Matched-sweep-search-m2000-regularization-s24112402",
+        "phase": "confirmation",
+        "method": "T2-Matched",
+        "candidate": "sweep-search-m2000-regularization",
+        "config": {
+          "dataset": "cifar10",
+          "architecture": "cnn_spatial3",
+          "method": "joint",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 45000,
+          "val_size": 5000,
+          "batch_size": 128,
+          "epochs": 31,
+          "lr": 0.0014,
+          "eta_channel": 0.0,
+          "eta_data": 0.0004892510283996971,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 24,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 1.0,
+          "train_mc": 1,
+          "seed": 24112402,
+          "channel_seed": 24122402,
+          "eval_seed": 24132402
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112409
+        },
+        "source": {
+          "archived_validation_task": "cifar10-T2-Matched-refine-kl-low-s151101",
+          "archive_manifest_sha256": "ddcc8601da1716a1cc787dfe6608c89133f78a2cca36bdec96017bdf0c773743"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124/performance/search/cifar10-T2-Matched-sweep-search-m2000-regularization-s24112402",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "7b63043163fda61890eb38d5d71ee14bee4beddee210bcf845f0026b1ab18622",
+          "bytes": 3340603
+        },
+        "metadata": {
+          "sha256": "7f6f40f24f08a5b632e12399d8a7b36e07fde425a499ec882ebc48da2fc4f0d6",
+          "bytes": 5050
+        }
+      },
+      "validation_report_sha256": "3e9b730e816a521690e962bc9a97d914a31bcd0fc228183e4a6bd01c840b4773",
+      "selected_epoch": 29
+    }
+  ]
+}

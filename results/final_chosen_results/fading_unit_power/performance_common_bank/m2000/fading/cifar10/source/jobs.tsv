@@ -1,0 +1,31 @@
+stage	job_id	dependency	array
+sweep-moons-search	35592238		0-119%2
+sweep-moons-promote	35592239	35592238	
+sweep-moons-refine	35592240	35592239	0-71%2
+sweep-moons-select	35592241	35592240	
+sweep-moons-confirmation	35592242	35592241	0-19%2
+sweep-mnist-search	35592243		0-119%4
+sweep-mnist-promote	35592244	35592243	
+sweep-mnist-refine	35592245	35592244	0-71%4
+sweep-mnist-select	35592246	35592245	
+sweep-mnist-confirmation	35592247	35592246	0-19%4
+sweep-fashionmnist-search	35592248		0-119%4
+sweep-fashionmnist-promote	35592249	35592248	
+sweep-fashionmnist-refine	35592250	35592249	0-71%4
+sweep-fashionmnist-select	35592251	35592250	
+sweep-fashionmnist-confirmation	35592252	35592251	0-19%4
+sweep-cifar10-search	35592253		0-119%22
+sweep-cifar10-promote	35592254	35592253	
+sweep-cifar10-refine	35592255	35592254	0-71%22
+sweep-cifar10-select	35592256	35592255	
+sweep-cifar10-confirmation	35592257	35592256	0-19%22
+sweep-summary	35592258	35592242:35592247:35592252:35592257	
+sweep-mnist-promote	35594907		
+sweep-mnist-refine	35594908	35594907	0-71%4
+sweep-mnist-select	35594909	35594908	
+sweep-mnist-confirmation	35594910	35594909	0-19%4
+sweep-summary	35594954	35592242:35594910:35592252:35592257	
+sweep-mnist-refine	35608069		51
+sweep-mnist-select	35608070	35608069	
+sweep-mnist-confirmation	35608071	35608070	0-19%4
+sweep-summary	35608074	35608071	

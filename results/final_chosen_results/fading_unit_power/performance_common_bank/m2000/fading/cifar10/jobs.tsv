@@ -1,0 +1,4 @@
+stage	job_id	dependency	array
+common-cifar10-plan	35651620		
+common-cifar10-test	35651621	afterok:35651620	0-3%4
+common-cifar10-summary	35651622	afterany:35651621	

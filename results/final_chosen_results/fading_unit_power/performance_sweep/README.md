@@ -2,7 +2,9 @@
 
 T1, T2, ERM, and L2 used the archived Gaussian MLP on Two moons, MNIST, and Fashion-MNIST, and the archived split Gaussian CNN on CIFAR-10. The sweep used matched diagonal fading at unit power. It searched learning rates, regularization strengths, learning-rate decay, epoch budgets, channel banks of 16, 128, or 2000, and one to four training Monte Carlo draws per update. The initial search and refinement used 480 and 288 validation fits, respectively.
 
-## Selected training seeds
+## Exploratory selections across bank sizes
+
+The [common-bank comparison](../performance_common_bank/m2000/README.md) uses $m=2000$ for both channels and all datasets.
 
 For each dataset, the selected fit set comes from the campaign with the larger proposed-to-baseline validation accuracy gap. Both campaigns used the same validation and test splits. The table reports held-out accuracy (%) from 128 deployment draws for the selected shared training seed and the gap to the stronger test baseline.
 

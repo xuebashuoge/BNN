@@ -1,0 +1,5 @@
+stage	job_id	dependency	array
+sweep-moons-search	35651623		0-143%4
+sweep-moons-select	35651624	afterany:35651623	
+sweep-moons-confirmation	35651626	afterok:35651624	0-19%4
+sweep-moons-summary	35651627	afterany:35651626	

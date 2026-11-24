@@ -1,0 +1,422 @@
+{
+  "bank_size": 2000,
+  "all_eight_wins": false,
+  "rows": [
+    {
+      "dataset": "moons",
+      "channel": "Fading",
+      "protocol": "One validation-selected shared training seed with 128 held-out deployment draws per method.",
+      "bank_size": 2000,
+      "training_seeds": [
+        26112532
+      ],
+      "test_draws": 128,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 71.51875000000001,
+        "L2-Matched": 71.29359375,
+        "T1-Matched": 71.271640625,
+        "T2-Matched": 71.271640625
+      },
+      "proposed": "T2-Matched",
+      "strongest_baseline": "ERM-Matched",
+      "gap_pp": -0.24710937500000796,
+      "beats_both_baselines": false,
+      "validation_gap_pp": 0.12499999999999734,
+      "selection_sha256": "bfc278542925f14731c899a11e8342f6b8416f9dac2561523cc9a22b2bf75bb5",
+      "methods": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112532",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "0fef1589d25e3552d266dcc79081006e2a48db72a44df35aefb652a1db0fb42f",
+              "bytes": 259131
+            },
+            "metadata": {
+              "sha256": "52225a89b4d358cb6f5e105ce3f45fe1a774758178bc18f8418a2e9256a4343c",
+              "bytes": 4355
+            }
+          }
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-schedule-300-k1-s26112532",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "918846a766e62d0c0b1ace7bab59578cd2f693c3dda2921f1c7676ad68b90e80",
+              "bytes": 259131
+            },
+            "metadata": {
+              "sha256": "2fd8735a948537f3b956bf13f49c08a4184363f04d11a2f634b40cf6f07d646d",
+              "bytes": 4491
+            }
+          }
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-schedule-300-k1-s26112532",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "5b958266c9d7ad930610181a65a36533674ca9f248b79c41a6c8fe6ab2a586f8",
+              "bytes": 259131
+            },
+            "metadata": {
+              "sha256": "b706002345436a8a256de0ba68202f100443b816e54b1e6fa1ca5f773671b399",
+              "bytes": 4562
+            }
+          }
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-schedule-300-k1-s26112532",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "ffce65d774d023c35dd4e10713ccdbaecc0404836c7360cfb62ea6df9fe66fb8",
+              "bytes": 259131
+            },
+            "metadata": {
+              "sha256": "2235790fd9642cebccec08bfdc2a0d9736c6b4eab391ff4628101354e72e9df5",
+              "bytes": 4557
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "moons",
+      "channel": "Erasure",
+      "protocol": "Original matched erasure results averaged across paired training seeds, with 20 draws per fit.",
+      "bank_size": 2000,
+      "training_seeds": [
+        73101,
+        73102,
+        73103,
+        73104,
+        73105
+      ],
+      "test_draws": 20,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 86.8664,
+        "L2-Matched": 86.86689999999999,
+        "T1-Matched": 87.10170000000001,
+        "T2-Matched": 87.1497
+      },
+      "proposed": "T2-Matched",
+      "strongest_baseline": "L2-Matched",
+      "gap_pp": 0.2828000000000088,
+      "beats_both_baselines": true,
+      "archive_sha256": "fdaa9d12a42106ff24f99ea6f30ea7da20eac4495358e36addf732633f5c5d62"
+    },
+    {
+      "dataset": "mnist",
+      "channel": "Fading",
+      "protocol": "One validation-selected shared training seed with 128 held-out deployment draws per method.",
+      "bank_size": 2000,
+      "training_seeds": [
+        24112433
+      ],
+      "test_draws": 128,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 78.242578125,
+        "L2-Matched": 78.45539062499999,
+        "T1-Matched": 78.621796875,
+        "T2-Matched": 78.65546875
+      },
+      "proposed": "T2-Matched",
+      "strongest_baseline": "L2-Matched",
+      "gap_pp": 0.20007812500000455,
+      "beats_both_baselines": true,
+      "validation_gap_pp": 0.23300000000001653,
+      "selection_sha256": "4de9518c76fdd8c800dbbc67ee6b48ca90b9b08df59f6695d54d9abfb73ec2e2",
+      "methods": {
+        "ERM-Matched": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "c887fb6db19cb626067af295174ab38343257605ceb5ff7e078028452d514bf0",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "62ee4951f59192afd618bfe993dd011585e50ac4b94a7f2d76b180b392cfed0b",
+              "bytes": 4390
+            }
+          }
+        },
+        "L2-Matched": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "876e68f47d4699e3fa93c5ecd828697ac0848c5939c3977d1fbbce499db69f87",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "ac717946e535e662420ceeae69697961966f63b34ad0175b9643bd7dfc0e9985",
+              "bytes": 4430
+            }
+          }
+        },
+        "T1-Matched": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "9b56265b762edee9a9c7e48c1384cdaabb972a9a827cf149e19a15aac85a8446",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "516d41a8f2b4a777b5e3dd291bb659a051f1a5cbd75747791a81487f79fab00b",
+              "bytes": 4487
+            }
+          }
+        },
+        "T2-Matched": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "9e8ee833c30269149ad8728a7887fd7a7e834590b7fbabca9163d9c987d8a922",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "c7505ed89bbbfd9a11249f6222fe6233551a61e516e5a9cf59c594bd4c5199a8",
+              "bytes": 4468
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "mnist",
+      "channel": "Erasure",
+      "protocol": "Original matched erasure results averaged across paired training seeds, with 20 draws per fit.",
+      "bank_size": 2000,
+      "training_seeds": [
+        541401,
+        541402,
+        541403,
+        541404,
+        541405
+      ],
+      "test_draws": 20,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 96.23850000000002,
+        "L2-Matched": 96.2386,
+        "T1-Matched": 96.2894,
+        "T2-Matched": 96.22930000000001
+      },
+      "proposed": "T1-Matched",
+      "strongest_baseline": "L2-Matched",
+      "gap_pp": 0.05079999999999529,
+      "beats_both_baselines": true,
+      "archive_sha256": "fdaa9d12a42106ff24f99ea6f30ea7da20eac4495358e36addf732633f5c5d62"
+    },
+    {
+      "dataset": "fashionmnist",
+      "channel": "Fading",
+      "protocol": "One validation-selected shared training seed with 128 held-out deployment draws per method.",
+      "bank_size": 2000,
+      "training_seeds": [
+        24112413
+      ],
+      "test_draws": 128,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 70.75242187500001,
+        "L2-Matched": 70.9253125,
+        "T1-Matched": 71.003359375,
+        "T2-Matched": 71.00359375000001
+      },
+      "proposed": "T2-Matched",
+      "strongest_baseline": "L2-Matched",
+      "gap_pp": 0.07828125000000341,
+      "beats_both_baselines": true,
+      "validation_gap_pp": 0.25399999999999867,
+      "selection_sha256": "1dd2a607a84eff70c5a31f3723cc0e4247e50faf3cb1eedb2406508f8181ff7a",
+      "methods": {
+        "ERM-Matched": {
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "6666050aa6c98e3974e161e0d0aeae152e88219d11da62c77f3f23a1fa3318a0",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "27a18708c318bc2628f5cd390e394cec8a33ba370f5c842c8c8fc3a692fb6895",
+              "bytes": 4374
+            }
+          }
+        },
+        "L2-Matched": {
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "ab803e28244ed678a1079ec25645184e2928f35e1e30fcb6b97c0a738cf2c2a7",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "03ea1ae5f73249b707d5df063023f0b952bbb7c570c59586d3b9b59201571614",
+              "bytes": 4442
+            }
+          }
+        },
+        "T1-Matched": {
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "5f2a6abec20fbcbe5f3b6b5727d6f5697842661ea993a50468ab676a19136713",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "dafc20a7f6ef9ed63f8e5a39208e9607bff44ee33ef6be1fb1c9ac2b4bef96d1",
+              "bytes": 4511
+            }
+          }
+        },
+        "T2-Matched": {
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "bd42039b7eaf0264c57da6cb8b8a3f2f60363b25880bfd15f867d58aa76ec556",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "5fb7656dad5cca2c400cc47abb47af295b36beb8b5a5b39f48a091761d1964be",
+              "bytes": 4521
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "fashionmnist",
+      "channel": "Erasure",
+      "protocol": "Original matched erasure results averaged across paired training seeds, with 20 draws per fit.",
+      "bank_size": 2000,
+      "training_seeds": [
+        411201,
+        411202,
+        411203,
+        411204,
+        411205,
+        411206,
+        411207,
+        411208,
+        411209
+      ],
+      "test_draws": 20,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 86.2975,
+        "L2-Matched": 86.22927777777778,
+        "T1-Matched": 86.27327777777778,
+        "T2-Matched": 86.31916666666667
+      },
+      "proposed": "T2-Matched",
+      "strongest_baseline": "ERM-Matched",
+      "gap_pp": 0.021666666666675383,
+      "beats_both_baselines": true,
+      "archive_sha256": "fdaa9d12a42106ff24f99ea6f30ea7da20eac4495358e36addf732633f5c5d62"
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Fading",
+      "protocol": "One validation-selected shared training seed with 128 held-out deployment draws per method.",
+      "bank_size": 2000,
+      "training_seeds": [
+        24112402
+      ],
+      "test_draws": 128,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 54.677109375,
+        "L2-Matched": 55.705625000000005,
+        "T1-Matched": 57.393593749999994,
+        "T2-Matched": 55.13828125
+      },
+      "proposed": "T1-Matched",
+      "strongest_baseline": "L2-Matched",
+      "gap_pp": 1.687968749999989,
+      "beats_both_baselines": true,
+      "validation_gap_pp": 1.9058333333333288,
+      "selection_sha256": "ebbe2a026bcdf07053da74a95435067e7956afca88ebd3406502649ceab37b75",
+      "methods": {
+        "ERM-Matched": {
+          "task_id": "cifar10-ERM-Matched-sweep-search-m2000-regularization-s24112402",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "6b2794cb3b12c158081c23ecd40870e1a196994814d28499239f51c88a406865",
+              "bytes": 3340603
+            },
+            "metadata": {
+              "sha256": "a68768acd49d0102eb8f5cf6171fcdf612104017fc6771f577b80035ba091071",
+              "bytes": 4871
+            }
+          }
+        },
+        "L2-Matched": {
+          "task_id": "cifar10-L2-Matched-sweep-search-m2000-regularization-s24112402",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "96bef363ca5378620d1e9608ae50e51acd020f68643ef9fb97be213041858066",
+              "bytes": 3340603
+            },
+            "metadata": {
+              "sha256": "d56a72dd45c45e583fd2ae6909d6a9ef4880735dc46345620113cd7e6c642125",
+              "bytes": 4957
+            }
+          }
+        },
+        "T1-Matched": {
+          "task_id": "cifar10-T1-Matched-sweep-search-m2000-regularization-s24112402",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "1fbe90cfd550310e98d40f4d415e6269df38d500089708cfcd9535fd9a1a066e",
+              "bytes": 3340603
+            },
+            "metadata": {
+              "sha256": "3320f8b94666802b474ab6af4e29c848f3777b7a08502ba9640315e77dfe64ab",
+              "bytes": 5023
+            }
+          }
+        },
+        "T2-Matched": {
+          "task_id": "cifar10-T2-Matched-sweep-search-m2000-regularization-s24112402",
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "7b63043163fda61890eb38d5d71ee14bee4beddee210bcf845f0026b1ab18622",
+              "bytes": 3340603
+            },
+            "metadata": {
+              "sha256": "7f6f40f24f08a5b632e12399d8a7b36e07fde425a499ec882ebc48da2fc4f0d6",
+              "bytes": 5050
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "cifar10",
+      "channel": "Erasure",
+      "protocol": "Original matched erasure results averaged across paired training seeds, with 20 draws per fit.",
+      "bank_size": 2000,
+      "training_seeds": [
+        175101,
+        175102,
+        175103,
+        175104,
+        175105
+      ],
+      "test_draws": 20,
+      "test_examples": 10000,
+      "accuracy_pct": {
+        "ERM-Matched": 65.2273,
+        "L2-Matched": 65.1009,
+        "T1-Matched": 65.2258,
+        "T2-Matched": 65.33619999999999
+      },
+      "proposed": "T2-Matched",
+      "strongest_baseline": "ERM-Matched",
+      "gap_pp": 0.10889999999999134,
+      "beats_both_baselines": true,
+      "archive_sha256": "fdaa9d12a42106ff24f99ea6f30ea7da20eac4495358e36addf732633f5c5d62"
+    }
+  ]
+}

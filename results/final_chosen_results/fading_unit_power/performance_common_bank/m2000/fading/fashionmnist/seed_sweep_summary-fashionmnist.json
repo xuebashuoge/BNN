@@ -1,0 +1,97 @@
+{
+  "analysis": "Exploratory single training seed selected on refinement validation",
+  "all_reported_datasets_have_validation_selected_proposed_wins": true,
+  "datasets": {
+    "fashionmnist": {
+      "bank_size": 2000,
+      "training_seed": 24112413,
+      "methods": {
+        "ERM-Matched": {
+          "test_accuracy_pct": 70.75242187500001,
+          "test_cross_entropy": 0.9088584155684336,
+          "validation_accuracy_pct": 71.6325,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-ERM-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 24,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "6666050aa6c98e3974e161e0d0aeae152e88219d11da62c77f3f23a1fa3318a0",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "27a18708c318bc2628f5cd390e394cec8a33ba370f5c842c8c8fc3a692fb6895",
+              "bytes": 4374
+            }
+          }
+        },
+        "L2-Matched": {
+          "test_accuracy_pct": 70.9253125,
+          "test_cross_entropy": 0.9210993907513096,
+          "validation_accuracy_pct": 71.702,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-L2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 24,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "ab803e28244ed678a1079ec25645184e2928f35e1e30fcb6b97c0a738cf2c2a7",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "03ea1ae5f73249b707d5df063023f0b952bbb7c570c59586d3b9b59201571614",
+              "bytes": 4442
+            }
+          }
+        },
+        "T1-Matched": {
+          "test_accuracy_pct": 71.003359375,
+          "test_cross_entropy": 0.9162737582515925,
+          "validation_accuracy_pct": 71.91449999999999,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-T1-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 47,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "5f2a6abec20fbcbe5f3b6b5727d6f5697842661ea993a50468ab676a19136713",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "dafc20a7f6ef9ed63f8e5a39208e9607bff44ee33ef6be1fb1c9ac2b4bef96d1",
+              "bytes": 4511
+            }
+          }
+        },
+        "T2-Matched": {
+          "test_accuracy_pct": 71.00359375000001,
+          "test_cross_entropy": 0.9158703681251034,
+          "validation_accuracy_pct": 71.956,
+          "test_draws": 128,
+          "test_examples": 10000,
+          "task_id": "fashionmnist-T2-Matched-sweep-refine-m2000-promoted-s24112413",
+          "selected_epoch": 47,
+          "checkpoint_fingerprints": {
+            "weights": {
+              "sha256": "bd42039b7eaf0264c57da6cb8b8a3f2f60363b25880bfd15f867d58aa76ec556",
+              "bytes": 2864571
+            },
+            "metadata": {
+              "sha256": "5fb7656dad5cca2c400cc47abb47af295b36beb8b5a5b39f48a091761d1964be",
+              "bytes": 4521
+            }
+          }
+        }
+      },
+      "validation_proposed": "T2-Matched",
+      "validation_baseline": "L2-Matched",
+      "validation_gap_pp": 0.25399999999999867,
+      "test_gaps_pp": {
+        "ERM-Matched": 0.25117187499999716,
+        "L2-Matched": 0.07828125000000341
+      },
+      "beats_both_baselines": true,
+      "selection_sha256": "1dd2a607a84eff70c5a31f3723cc0e4247e50faf3cb1eedb2406508f8181ff7a"
+    }
+  }
+}

@@ -1,0 +1,977 @@
+{
+  "dataset": "mnist",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization-mnist/performance",
+  "source_phase": "search",
+  "search_manifest_sha256": "43138c17bb27369fb240416cf2e29937cc4c0da343f287102d7f84eefd7f6942",
+  "search_plan_sha256": "d631e488dfb3b0b582e560fd88787e0538a0667e721662458c06b9a82af91551",
+  "selected": {
+    "m": 2000,
+    "seed": 24112433,
+    "proposed": "T2-Matched",
+    "baseline": "L2-Matched",
+    "validation_gap_pp": 0.23300000000001653,
+    "winners": {
+      "ERM-Matched": {
+        "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+        "accuracy": 0.776595,
+        "cross_entropy": 0.828002412071228
+      },
+      "L2-Matched": {
+        "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+        "accuracy": 0.77932,
+        "cross_entropy": 0.8207024448776246
+      },
+      "T1-Matched": {
+        "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+        "accuracy": 0.780525,
+        "cross_entropy": 0.8512980456542969
+      },
+      "T2-Matched": {
+        "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+        "accuracy": 0.7816500000000002,
+        "cross_entropy": 0.8496695470428467
+      }
+    },
+    "trials": {
+      "ERM-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+          "accuracy": 0.776595,
+          "cross_entropy": 0.828002412071228
+        },
+        "regularization-m2000-hot-learned": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-hot-learned-s24112433",
+          "accuracy": 0.7754,
+          "cross_entropy": 0.8281745169830321
+        },
+        "regularization-m2000-hot-fixed": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-hot-fixed-s24112433",
+          "accuracy": 0.77249,
+          "cross_entropy": 0.8342526256942749
+        },
+        "regularization-m2000-cool-learned": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-cool-learned-s24112433",
+          "accuracy": 0.7739499999999999,
+          "cross_entropy": 0.8336629748916625
+        },
+        "regularization-m2000-cool-fixed": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-cool-fixed-s24112433",
+          "accuracy": 0.77339,
+          "cross_entropy": 0.8380358826828005
+        },
+        "regularization-m2000-current-fast-scale": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112433",
+          "accuracy": 0.7747949999999999,
+          "cross_entropy": 0.8372993332290648
+        }
+      },
+      "L2-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-incumbent-s24112433",
+          "accuracy": 0.7777000000000001,
+          "cross_entropy": 0.8239322663879394
+        },
+        "regularization-m2000-l2-weak": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-l2-weak-s24112433",
+          "accuracy": 0.77776,
+          "cross_entropy": 0.8241965090560914
+        },
+        "regularization-m2000-l2-strong": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+          "accuracy": 0.77932,
+          "cross_entropy": 0.8207024448776246
+        },
+        "regularization-m2000-hot-current-l2": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-hot-current-l2-s24112433",
+          "accuracy": 0.77371,
+          "cross_entropy": 0.8301721119308473
+        },
+        "regularization-m2000-hot-weak-l2": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112433",
+          "accuracy": 0.774485,
+          "cross_entropy": 0.827691934967041
+        },
+        "regularization-m2000-hot-strong-l2": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112433",
+          "accuracy": 0.7753950000000001,
+          "cross_entropy": 0.8272041437911988
+        }
+      },
+      "T1-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-incumbent-s24112433",
+          "accuracy": 0.774735,
+          "cross_entropy": 0.8612616333007811
+        },
+        "regularization-m2000-matched-shrinkage": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112433",
+          "accuracy": 0.772395,
+          "cross_entropy": 0.8645678378677367
+        },
+        "regularization-m2000-tight-prior": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-prior-s24112433",
+          "accuracy": 0.7727900000000001,
+          "cross_entropy": 0.8666145055389404
+        },
+        "regularization-m2000-tight-hot": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+          "accuracy": 0.780525,
+          "cross_entropy": 0.8512980456542969
+        },
+        "regularization-m2000-tight-hot-weak": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112433",
+          "accuracy": 0.7765299999999999,
+          "cross_entropy": 0.8646359090423583
+        },
+        "regularization-m2000-tight-hot-strong": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112433",
+          "accuracy": 0.778465,
+          "cross_entropy": 0.8587953591918944
+        }
+      },
+      "T2-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-incumbent-s24112433",
+          "accuracy": 0.771425,
+          "cross_entropy": 0.8677101150131226
+        },
+        "regularization-m2000-matched-shrinkage": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112433",
+          "accuracy": 0.772655,
+          "cross_entropy": 0.8638734181594849
+        },
+        "regularization-m2000-tight-prior": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-prior-s24112433",
+          "accuracy": 0.77286,
+          "cross_entropy": 0.8668837294769286
+        },
+        "regularization-m2000-tight-hot": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+          "accuracy": 0.7816500000000002,
+          "cross_entropy": 0.8496695470428467
+        },
+        "regularization-m2000-tight-hot-weak": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112433",
+          "accuracy": 0.7763,
+          "cross_entropy": 0.8649552296829224
+        },
+        "regularization-m2000-tight-hot-strong": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112433",
+          "accuracy": 0.77727,
+          "cross_entropy": 0.8602480267715455
+        }
+      }
+    }
+  },
+  "leaderboard": [
+    {
+      "m": 2000,
+      "seed": 24112431,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.04450000000000287,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-cool-fixed-s24112431",
+          "accuracy": 0.7810500000000001,
+          "cross_entropy": 0.8140528158950806
+        },
+        "L2-Matched": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112431",
+          "accuracy": 0.78268,
+          "cross_entropy": 0.8055642077636719
+        },
+        "T1-Matched": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112431",
+          "accuracy": 0.78086,
+          "cross_entropy": 0.8549272636413574
+        },
+        "T2-Matched": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112431",
+          "accuracy": 0.782235,
+          "cross_entropy": 0.8461240907287598
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.77973,
+            "cross_entropy": 0.8161028240585327
+          },
+          "regularization-m2000-hot-learned": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-hot-learned-s24112431",
+            "accuracy": 0.775015,
+            "cross_entropy": 0.8291730496597289
+          },
+          "regularization-m2000-hot-fixed": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-hot-fixed-s24112431",
+            "accuracy": 0.77605,
+            "cross_entropy": 0.8313877057266236
+          },
+          "regularization-m2000-cool-learned": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-cool-learned-s24112431",
+            "accuracy": 0.7794000000000001,
+            "cross_entropy": 0.8161031900024414
+          },
+          "regularization-m2000-cool-fixed": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-cool-fixed-s24112431",
+            "accuracy": 0.7810500000000001,
+            "cross_entropy": 0.8140528158950806
+          },
+          "regularization-m2000-current-fast-scale": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112431",
+            "accuracy": 0.7806,
+            "cross_entropy": 0.81544415599823
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.78196,
+            "cross_entropy": 0.8056772816467284
+          },
+          "regularization-m2000-l2-weak": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-l2-weak-s24112431",
+            "accuracy": 0.78201,
+            "cross_entropy": 0.8117800820541381
+          },
+          "regularization-m2000-l2-strong": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112431",
+            "accuracy": 0.78268,
+            "cross_entropy": 0.8055642077636719
+          },
+          "regularization-m2000-hot-current-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-current-l2-s24112431",
+            "accuracy": 0.774605,
+            "cross_entropy": 0.8282191835021973
+          },
+          "regularization-m2000-hot-weak-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112431",
+            "accuracy": 0.77599,
+            "cross_entropy": 0.8272489278030395
+          },
+          "regularization-m2000-hot-strong-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112431",
+            "accuracy": 0.7768900000000001,
+            "cross_entropy": 0.8222062149047851
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.777795,
+            "cross_entropy": 0.8677147747421264
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112431",
+            "accuracy": 0.779975,
+            "cross_entropy": 0.8684889338684083
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-prior-s24112431",
+            "accuracy": 0.7801600000000001,
+            "cross_entropy": 0.8671690747070311
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112431",
+            "accuracy": 0.78086,
+            "cross_entropy": 0.8549272636413574
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112431",
+            "accuracy": 0.777675,
+            "cross_entropy": 0.8543646092605591
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112431",
+            "accuracy": 0.778945,
+            "cross_entropy": 0.8492271213531494
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-incumbent-s24112431",
+            "accuracy": 0.77919,
+            "cross_entropy": 0.865416647644043
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112431",
+            "accuracy": 0.7803100000000001,
+            "cross_entropy": 0.8673473227310182
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-prior-s24112431",
+            "accuracy": 0.7803549999999999,
+            "cross_entropy": 0.8668361235809325
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112431",
+            "accuracy": 0.782235,
+            "cross_entropy": 0.8461240907287598
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112431",
+            "accuracy": 0.77802,
+            "cross_entropy": 0.8494017379379273
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112431",
+            "accuracy": 0.776825,
+            "cross_entropy": 0.8579925364685058
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112432,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.16399999999998638,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-cool-fixed-s24112432",
+          "accuracy": 0.7766249999999999,
+          "cross_entropy": 0.8283006190109254
+        },
+        "L2-Matched": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112432",
+          "accuracy": 0.7776099999999999,
+          "cross_entropy": 0.8295788350677489
+        },
+        "T1-Matched": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112432",
+          "accuracy": 0.77597,
+          "cross_entropy": 0.8590257143402098
+        },
+        "T2-Matched": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112432",
+          "accuracy": 0.77578,
+          "cross_entropy": 0.866370863647461
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.7759050000000001,
+            "cross_entropy": 0.8376633226776123
+          },
+          "regularization-m2000-hot-learned": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-hot-learned-s24112432",
+            "accuracy": 0.775535,
+            "cross_entropy": 0.8360608020019532
+          },
+          "regularization-m2000-hot-fixed": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-hot-fixed-s24112432",
+            "accuracy": 0.7750049999999999,
+            "cross_entropy": 0.8413725659942626
+          },
+          "regularization-m2000-cool-learned": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-cool-learned-s24112432",
+            "accuracy": 0.776575,
+            "cross_entropy": 0.8286858321762084
+          },
+          "regularization-m2000-cool-fixed": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-cool-fixed-s24112432",
+            "accuracy": 0.7766249999999999,
+            "cross_entropy": 0.8283006190109254
+          },
+          "regularization-m2000-current-fast-scale": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112432",
+            "accuracy": 0.775985,
+            "cross_entropy": 0.8374962656402587
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.7771600000000001,
+            "cross_entropy": 0.8224292359924317
+          },
+          "regularization-m2000-l2-weak": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-l2-weak-s24112432",
+            "accuracy": 0.77687,
+            "cross_entropy": 0.8304002330398561
+          },
+          "regularization-m2000-l2-strong": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112432",
+            "accuracy": 0.7776099999999999,
+            "cross_entropy": 0.8295788350677489
+          },
+          "regularization-m2000-hot-current-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-current-l2-s24112432",
+            "accuracy": 0.77419,
+            "cross_entropy": 0.8361380014038085
+          },
+          "regularization-m2000-hot-weak-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112432",
+            "accuracy": 0.7744,
+            "cross_entropy": 0.8355065538024903
+          },
+          "regularization-m2000-hot-strong-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112432",
+            "accuracy": 0.77439,
+            "cross_entropy": 0.8355456135177611
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.76799,
+            "cross_entropy": 0.8709107194519042
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112432",
+            "accuracy": 0.7672899999999999,
+            "cross_entropy": 0.8782937914276122
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-prior-s24112432",
+            "accuracy": 0.768955,
+            "cross_entropy": 0.8704704818725586
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112432",
+            "accuracy": 0.775625,
+            "cross_entropy": 0.86618850440979
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112432",
+            "accuracy": 0.77125,
+            "cross_entropy": 0.8749143926620484
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112432",
+            "accuracy": 0.77597,
+            "cross_entropy": 0.8590257143402098
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-incumbent-s24112432",
+            "accuracy": 0.76985,
+            "cross_entropy": 0.8693536037445068
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112432",
+            "accuracy": 0.7668950000000001,
+            "cross_entropy": 0.8769585984802246
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-prior-s24112432",
+            "accuracy": 0.769975,
+            "cross_entropy": 0.8680444408416748
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112432",
+            "accuracy": 0.77578,
+            "cross_entropy": 0.866370863647461
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112432",
+            "accuracy": 0.773905,
+            "cross_entropy": 0.8697233505249023
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112432",
+            "accuracy": 0.77423,
+            "cross_entropy": 0.8726734240341187
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 24112433,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": 0.23300000000001653,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+          "accuracy": 0.776595,
+          "cross_entropy": 0.828002412071228
+        },
+        "L2-Matched": {
+          "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+          "accuracy": 0.77932,
+          "cross_entropy": 0.8207024448776246
+        },
+        "T1-Matched": {
+          "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+          "accuracy": 0.780525,
+          "cross_entropy": 0.8512980456542969
+        },
+        "T2-Matched": {
+          "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+          "accuracy": 0.7816500000000002,
+          "cross_entropy": 0.8496695470428467
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.776595,
+            "cross_entropy": 0.828002412071228
+          },
+          "regularization-m2000-hot-learned": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-hot-learned-s24112433",
+            "accuracy": 0.7754,
+            "cross_entropy": 0.8281745169830321
+          },
+          "regularization-m2000-hot-fixed": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-hot-fixed-s24112433",
+            "accuracy": 0.77249,
+            "cross_entropy": 0.8342526256942749
+          },
+          "regularization-m2000-cool-learned": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-cool-learned-s24112433",
+            "accuracy": 0.7739499999999999,
+            "cross_entropy": 0.8336629748916625
+          },
+          "regularization-m2000-cool-fixed": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-cool-fixed-s24112433",
+            "accuracy": 0.77339,
+            "cross_entropy": 0.8380358826828005
+          },
+          "regularization-m2000-current-fast-scale": {
+            "task_id": "mnist-ERM-Matched-regularization-m2000-current-fast-scale-s24112433",
+            "accuracy": 0.7747949999999999,
+            "cross_entropy": 0.8372993332290648
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.7777000000000001,
+            "cross_entropy": 0.8239322663879394
+          },
+          "regularization-m2000-l2-weak": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-l2-weak-s24112433",
+            "accuracy": 0.77776,
+            "cross_entropy": 0.8241965090560914
+          },
+          "regularization-m2000-l2-strong": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+            "accuracy": 0.77932,
+            "cross_entropy": 0.8207024448776246
+          },
+          "regularization-m2000-hot-current-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-current-l2-s24112433",
+            "accuracy": 0.77371,
+            "cross_entropy": 0.8301721119308473
+          },
+          "regularization-m2000-hot-weak-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-weak-l2-s24112433",
+            "accuracy": 0.774485,
+            "cross_entropy": 0.827691934967041
+          },
+          "regularization-m2000-hot-strong-l2": {
+            "task_id": "mnist-L2-Matched-regularization-m2000-hot-strong-l2-s24112433",
+            "accuracy": 0.7753950000000001,
+            "cross_entropy": 0.8272041437911988
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.774735,
+            "cross_entropy": 0.8612616333007811
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-matched-shrinkage-s24112433",
+            "accuracy": 0.772395,
+            "cross_entropy": 0.8645678378677367
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-prior-s24112433",
+            "accuracy": 0.7727900000000001,
+            "cross_entropy": 0.8666145055389404
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+            "accuracy": 0.780525,
+            "cross_entropy": 0.8512980456542969
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-weak-s24112433",
+            "accuracy": 0.7765299999999999,
+            "cross_entropy": 0.8646359090423583
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-strong-s24112433",
+            "accuracy": 0.778465,
+            "cross_entropy": 0.8587953591918944
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-incumbent-s24112433",
+            "accuracy": 0.771425,
+            "cross_entropy": 0.8677101150131226
+          },
+          "regularization-m2000-matched-shrinkage": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-matched-shrinkage-s24112433",
+            "accuracy": 0.772655,
+            "cross_entropy": 0.8638734181594849
+          },
+          "regularization-m2000-tight-prior": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-prior-s24112433",
+            "accuracy": 0.77286,
+            "cross_entropy": 0.8668837294769286
+          },
+          "regularization-m2000-tight-hot": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+            "accuracy": 0.7816500000000002,
+            "cross_entropy": 0.8496695470428467
+          },
+          "regularization-m2000-tight-hot-weak": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-weak-s24112433",
+            "accuracy": 0.7763,
+            "cross_entropy": 0.8649552296829224
+          },
+          "regularization-m2000-tight-hot-strong": {
+            "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-strong-s24112433",
+            "accuracy": 0.77727,
+            "cross_entropy": 0.8602480267715455
+          }
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "entry": {
+        "task_id": "mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+        "phase": "confirmation",
+        "method": "ERM-Matched",
+        "candidate": "regularization-m2000-incumbent",
+        "config": {
+          "dataset": "mnist",
+          "architecture": "mlp",
+          "method": "erm",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 48,
+          "lr": 0.0008125000000000001,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.0004,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9663363085715326,
+          "train_mc": 1,
+          "seed": 24112433,
+          "channel_seed": 24122433,
+          "eval_seed": 24132433
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112440
+        },
+        "source": {
+          "primary_refine_task": "mnist-ERM-Matched-sweep-refine-m2000-local-s24112411",
+          "profile": "incumbent",
+          "calibration": {},
+          "refine_manifest_sha256": "6f8e5ad8018edad29ae196a0ba81ebcc3dc64cd6bf3d857cae71cc5e1e67c3e6",
+          "refine_scores_sha256": "4ed4e69b6166e0a21d7e805b630cc62aab6266ccd986829dccf5eae49bf602a0",
+          "validation_selection_sha256": "5b44a762b7ff859bc421da0b666cf010eb421e3ccc04ea53a9001d880810dcaf"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization-mnist/performance/search/mnist-ERM-Matched-regularization-m2000-incumbent-s24112433",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "c887fb6db19cb626067af295174ab38343257605ceb5ff7e078028452d514bf0",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "62ee4951f59192afd618bfe993dd011585e50ac4b94a7f2d76b180b392cfed0b",
+          "bytes": 4390
+        }
+      },
+      "validation_report_sha256": "3d44fe146c1142135c3f7481b392ea56e4c2003e56132c009738f1a0ae9db11d",
+      "selected_epoch": 48
+    },
+    {
+      "entry": {
+        "task_id": "mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+        "phase": "confirmation",
+        "method": "L2-Matched",
+        "candidate": "regularization-m2000-l2-strong",
+        "config": {
+          "dataset": "mnist",
+          "architecture": "mlp",
+          "method": "l2",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 48,
+          "lr": 0.00075,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 3e-06,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9663363085715326,
+          "train_mc": 1,
+          "seed": 24112433,
+          "channel_seed": 24122433,
+          "eval_seed": 24132433
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112440
+        },
+        "source": {
+          "primary_refine_task": "mnist-L2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "profile": "l2-strong",
+          "calibration": {},
+          "refine_manifest_sha256": "6f8e5ad8018edad29ae196a0ba81ebcc3dc64cd6bf3d857cae71cc5e1e67c3e6",
+          "refine_scores_sha256": "4ed4e69b6166e0a21d7e805b630cc62aab6266ccd986829dccf5eae49bf602a0",
+          "validation_selection_sha256": "5b44a762b7ff859bc421da0b666cf010eb421e3ccc04ea53a9001d880810dcaf"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization-mnist/performance/search/mnist-L2-Matched-regularization-m2000-l2-strong-s24112433",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "876e68f47d4699e3fa93c5ecd828697ac0848c5939c3977d1fbbce499db69f87",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "ac717946e535e662420ceeae69697961966f63b34ad0175b9643bd7dfc0e9985",
+          "bytes": 4430
+        }
+      },
+      "validation_report_sha256": "4840e41c9fc5220cfc2da9d1465923b1523df8734a419c59afa83a99638e2e7c",
+      "selected_epoch": 46
+    },
+    {
+      "entry": {
+        "task_id": "mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+        "phase": "confirmation",
+        "method": "T1-Matched",
+        "candidate": "regularization-m2000-tight-hot",
+        "config": {
+          "dataset": "mnist",
+          "architecture": "mlp",
+          "method": "proposed",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 24,
+          "lr": 0.00375,
+          "eta_channel": 0.0002703250489246722,
+          "eta_data": 0.0014179438067211299,
+          "prior_std": 0.125,
+          "posterior_std": 0.01,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 1.0,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.960944400588468,
+          "train_mc": 3,
+          "seed": 24112433,
+          "channel_seed": 24122433,
+          "eval_seed": 24132433
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112440
+        },
+        "source": {
+          "primary_refine_task": "mnist-T1-Matched-sweep-refine-m2000-promoted-s24112411",
+          "profile": "tight-hot",
+          "calibration": {
+            "initial_l2_target": 3e-07,
+            "initial_channel_gradient_share": 0.5
+          },
+          "refine_manifest_sha256": "6f8e5ad8018edad29ae196a0ba81ebcc3dc64cd6bf3d857cae71cc5e1e67c3e6",
+          "refine_scores_sha256": "4ed4e69b6166e0a21d7e805b630cc62aab6266ccd986829dccf5eae49bf602a0",
+          "validation_selection_sha256": "5b44a762b7ff859bc421da0b666cf010eb421e3ccc04ea53a9001d880810dcaf"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization-mnist/performance/search/mnist-T1-Matched-regularization-m2000-tight-hot-s24112433",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "9b56265b762edee9a9c7e48c1384cdaabb972a9a827cf149e19a15aac85a8446",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "516d41a8f2b4a777b5e3dd291bb659a051f1a5cbd75747791a81487f79fab00b",
+          "bytes": 4487
+        }
+      },
+      "validation_report_sha256": "da64c9cf0bccd5d8ec3a041aedbded1add18fb13d765d4819245f95f3f46123a",
+      "selected_epoch": 22
+    },
+    {
+      "entry": {
+        "task_id": "mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+        "phase": "confirmation",
+        "method": "T2-Matched",
+        "candidate": "regularization-m2000-tight-hot",
+        "config": {
+          "dataset": "mnist",
+          "architecture": "mlp",
+          "method": "joint",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 128,
+          "train_size": 55000,
+          "val_size": 5000,
+          "batch_size": 256,
+          "epochs": 24,
+          "lr": 0.00375,
+          "eta_channel": 0.0,
+          "eta_data": 0.0005310908861768765,
+          "prior_std": 0.125,
+          "posterior_std": 0.01,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 1.0,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.960944400588468,
+          "train_mc": 3,
+          "seed": 24112433,
+          "channel_seed": 24122433,
+          "eval_seed": 24132433
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 26112440
+        },
+        "source": {
+          "primary_refine_task": "mnist-T2-Matched-sweep-refine-m2000-promoted-s24112411",
+          "profile": "tight-hot",
+          "calibration": {
+            "initial_l2_target": 3e-07,
+            "initial_channel_gradient_share": null
+          },
+          "refine_manifest_sha256": "6f8e5ad8018edad29ae196a0ba81ebcc3dc64cd6bf3d857cae71cc5e1e67c3e6",
+          "refine_scores_sha256": "4ed4e69b6166e0a21d7e805b630cc62aab6266ccd986829dccf5eae49bf602a0",
+          "validation_selection_sha256": "5b44a762b7ff859bc421da0b666cf010eb421e3ccc04ea53a9001d880810dcaf"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-performance-sweep-20261124-regularization-mnist/performance/search/mnist-T2-Matched-regularization-m2000-tight-hot-s24112433",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "9e8ee833c30269149ad8728a7887fd7a7e834590b7fbabca9163d9c987d8a922",
+          "bytes": 2864571
+        },
+        "metadata": {
+          "sha256": "c7505ed89bbbfd9a11249f6222fe6233551a61e516e5a9cf59c594bd4c5199a8",
+          "bytes": 4468
+        }
+      },
+      "validation_report_sha256": "972c9fc16d3f85ac26bfb9cfaf2f6d0e14195eaa9b7c60d97ffc9dbeac9e913e",
+      "selected_epoch": 22
+    }
+  ]
+}
