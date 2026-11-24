@@ -1,4 +1,4 @@
-"""Explore validation-tuned training seeds using the existing refinement weights."""
+"""Explore validation-tuned training seeds using existing trained checkpoints."""
 
 import argparse
 from collections import defaultdict
@@ -9,6 +9,7 @@ import subprocess
 import sys
 
 from . import performance
+from . import performance_regularization_sweep as regularization
 from . import performance_sweep as sweep
 from .performance_sweep_report import file_record
 
@@ -30,38 +31,76 @@ def rank(trial):
     return -trial["accuracy"], trial["cross_entropy"], trial["task_id"]
 
 
-def plan(output, source, dataset):
+def validation_design(source, dataset, manifest, source_phase):
+    manifest_hash = sweep.sha256(manifest)
+    if source_phase == "refine":
+        return sweep.BANK_SIZES, sweep.REFINE_SEEDS, None, dict(refine_manifest_sha256=manifest_hash)
+    if source_phase != "search":
+        raise ValueError(f"Unsupported validation phase: {source_phase}")
+
+    planned_path = regularization.plan_path(source, dataset)
+    planned = performance.read_json(planned_path)
+    m = planned["bank_size"]
+    if (planned["dataset"] != dataset or m not in sweep.BANK_SIZES or
+            planned["search_manifest_sha256"] != manifest_hash or
+            tuple(planned["validation_seeds"]) != regularization.VALIDATION_SEEDS):
+        raise ValueError(f"Regularization search plan differs from the manifest for {dataset}")
+    profiles = {method: set(names) for method, names in planned["profiles"].items()}
+    if profiles.keys() != set(sweep.METHODS) or any(
+            len(names) != regularization.PROFILE_COUNT or len(profiles[method]) != len(names)
+            for method, names in planned["profiles"].items()):
+        raise ValueError(f"Expected six regularization profiles per method for {dataset}")
+    provenance = dict(source_phase="search", search_manifest_sha256=manifest_hash,
+                      search_plan_sha256=sweep.sha256(planned_path))
+    return (m,), regularization.VALIDATION_SEEDS, profiles, provenance
+
+
+def plan(output, source, dataset, *, source_phase="refine"):
     if source == output:
         raise ValueError("Use a separate output directory for seed tuning")
-    manifest = performance.manifest_path(source, dataset, "refine")
+    manifest = performance.manifest_path(source, dataset, source_phase)
+    banks, seeds, profiles, provenance = validation_design(source, dataset, manifest, source_phase)
     entries = performance.read_manifest(manifest)
     by_id = {entry["task_id"]: entry for entry in entries}
     candidates = defaultdict(dict)
+    profile_configs = {}
     pairing = {}
     for entry in entries:
         config = entry["config"]
         m, seed, method = config["m"], config["seed"], entry["method"]
-        if (entry["phase"], config["dataset"]) != ("refine", dataset):
-            raise ValueError(f"Unexpected refinement entry: {entry['task_id']}")
+        if (entry["phase"], config["dataset"]) != (source_phase, dataset):
+            raise ValueError(f"Unexpected {source_phase} entry: {entry['task_id']}")
+        if profiles is not None:
+            if (m not in banks or seed not in seeds or method not in profiles or
+                    entry["candidate"] not in profiles[method] or config["method"] != sweep.METHOD_OBJECTIVE[method] or
+                    entry["evaluation"]["eval_draws"] != regularization.EVAL_DRAWS["search"]):
+                raise ValueError(f"Regularization search entry differs from its plan: {entry['task_id']}")
+            settings = {field: value for field, value in config.items() if field not in regularization.SEED_FIELDS}
+            if settings != profile_configs.setdefault((method, entry["candidate"]), settings):
+                raise ValueError(f"Unpaired regularization profile configuration: {entry['task_id']}")
         report = performance.evaluate_result(source, entry)
         score = report["heldout_gibbs_mc"]
         settings = (config["data_seed"], config["channel_seed"], entry["evaluation"]["eval_seed"],
                     score["draws"], score["examples"])
         if settings != pairing.setdefault(seed, settings):
-            raise ValueError(f"Unpaired refinement validation for {dataset}/seed {seed}")
+            raise ValueError(f"Unpaired {source_phase} validation for {dataset}/seed {seed}")
         group = candidates[m, seed, method]
         if entry["candidate"] in group:
             raise ValueError(f"Repeated candidate for {dataset}/{m}/{seed}/{method}")
         group[entry["candidate"]] = dict(task_id=entry["task_id"], accuracy=score["accuracy"],
                                          cross_entropy=score["cross_entropy"])
 
-    expected = {(m, seed, method) for m in sweep.BANK_SIZES for seed in sweep.REFINE_SEEDS for method in sweep.METHODS}
-    if candidates.keys() != expected or any(len(group) != 2 for group in candidates.values()):
-        raise ValueError(f"Expected two refinement candidates per bank size, seed and method for {dataset}")
+    expected = {(m, seed, method) for m in banks for seed in seeds for method in sweep.METHODS}
+    if profiles is None:
+        if candidates.keys() != expected or any(len(group) != 2 for group in candidates.values()):
+            raise ValueError(f"Expected two refinement candidates per bank size, seed and method for {dataset}")
+    elif candidates.keys() != expected or any(
+            group.keys() != profiles[method] for (_, _, method), group in candidates.items()):
+        raise ValueError(f"Incomplete regularization candidates per bank size, seed and method for {dataset}")
 
     leaderboard = []
-    for m in sweep.BANK_SIZES:
-        for seed in sweep.REFINE_SEEDS:
+    for m in banks:
+        for seed in seeds:
             trials = {method: candidates[m, seed, method] for method in sweep.METHODS}
             winners = {method: min(group.values(), key=rank) for method, group in trials.items()}
             proposed = min(sweep.PROPOSED, key=lambda method: rank(winners[method]))
@@ -80,7 +119,7 @@ def plan(output, source, dataset):
         validation_report = performance.evaluate_result(source, entry)
         expected_fingerprints = fingerprints(checkpoint)
         if expected_fingerprints != validation_report["checkpoint_source_fingerprints"]:
-            raise ValueError(f"Refinement weights or metadata changed after validation: {entry['task_id']}")
+            raise ValueError(f"Weights or metadata changed after {source_phase} validation: {entry['task_id']}")
         validation_path = checkpoint / "validation" / "evaluation.json"
         tasks.append(dict(
             entry={**entry, "phase": "confirmation", "evaluation": evaluation},
@@ -89,7 +128,7 @@ def plan(output, source, dataset):
         ))
 
     path = selection_path(output, dataset)
-    performance.write_json(path, dict(dataset=dataset, source=str(source), refine_manifest_sha256=sweep.sha256(manifest),
+    performance.write_json(path, dict(dataset=dataset, source=str(source), **provenance,
                                       selected=selected, leaderboard=leaderboard, tasks=tasks), frozen=True)
     print(f"{path}: m={selected['m']}, seed={selected['seed']}, validation gap {selected['validation_gap_pp']:+.3f} pp")
 
@@ -109,7 +148,7 @@ def run(output, dataset, index):
     entry = task["entry"]
     checkpoint = Path(task["checkpoint"])
     if fingerprints(checkpoint) != task["checkpoint_fingerprints"]:
-        raise ValueError(f"Refinement checkpoint changed after seed selection: {entry['task_id']}")
+        raise ValueError(f"Checkpoint changed after seed selection: {entry['task_id']}")
     directory = performance.task_dir(output, entry)
     directory.mkdir(parents=True, exist_ok=True)
     with (directory / ".lock").open("a") as lock:
@@ -128,9 +167,14 @@ def run(output, dataset, index):
 
 def summarize(output, dataset=None):
     results = {}
+    source_phase = None
     for current in (dataset,) if dataset else sweep.DATASETS:
         path = selection_path(output, current)
         selection = performance.read_json(path)
+        phase = selection.get("source_phase", "refine")
+        if phase not in ("refine", "search") or (source_phase is not None and phase != source_phase):
+            raise ValueError(f"Inconsistent validation source phase for {current}")
+        source_phase = phase
         selected = selection["selected"]
         methods = {}
         for task in selection["tasks"]:
@@ -154,8 +198,9 @@ def summarize(output, dataset=None):
         formatted = ", ".join(f"{baseline} {gap:+.3f} pp" for baseline, gap in gaps.items())
         print(f"{current}: {proposed} vs {formatted}")
     suffix = f"-{dataset}" if dataset else ""
+    validation_source = "regularization" if source_phase == "search" else "refinement"
     performance.write_json(output / f"seed_sweep_summary{suffix}.json", dict(
-        analysis="Exploratory single training seed selected on refinement validation",
+        analysis=f"Exploratory single training seed selected on {validation_source} validation",
         all_reported_datasets_have_validation_selected_proposed_wins=all(
             row["beats_both_baselines"] for row in results.values()),
         datasets=results,
@@ -170,11 +215,13 @@ def main():
         command.add_argument("--output", type=Path, required=True)
         command.add_argument("--dataset", choices=sweep.DATASETS, required=name != "summarize")
     commands.choices["plan"].add_argument("--source", type=Path, required=True)
+    commands.choices["plan"].add_argument("--source-phase", choices=("refine", "search"), default="refine",
+                                         help="Use refinement or regularization search validation")
     commands.choices["run"].add_argument("--index", type=int, choices=range(len(sweep.METHODS)), required=True)
     args = parser.parse_args()
     output = args.output.resolve()
     if args.command == "plan":
-        plan(output, args.source.resolve(), args.dataset)
+        plan(output, args.source.resolve(), args.dataset, source_phase=args.source_phase)
     elif args.command == "run":
         run(output, args.dataset, args.index)
     else:

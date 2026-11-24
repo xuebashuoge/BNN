@@ -3,6 +3,27 @@ set -euo pipefail
 
 primary=$(cd -- "${1:?Pass the primary campaign directory}" && pwd -P)
 output=${2:?Pass a new seed sweep directory}
+mode=${3:-}
+if [[ $# -gt 3 || ( -n "$mode" && "$mode" != --regularization ) ]]; then
+    printf 'Usage: %s TRAINING_CAMPAIGN NEW_SEED_CAMPAIGN [--regularization]\n' "$0" >&2
+    exit 2
+fi
+datasets=(moons mnist fashionmnist cifar10)
+plan_stage=seed-plan
+if [[ "$mode" == --regularization ]]; then
+    datasets=()
+    {
+        read -r validation_source
+        while IFS= read -r dataset; do
+            case "$dataset" in
+                moons|mnist|fashionmnist|cifar10) datasets+=("$dataset") ;;
+                *) printf 'Unknown regularization dataset: %s\n' "$dataset" >&2; exit 2 ;;
+            esac
+        done
+    } < "$primary/regularization-plan.txt"
+    [[ ${#datasets[@]} -gt 0 ]] || { printf 'No regularization datasets were planned\n' >&2; exit 2; }
+    plan_stage=seed-regularization-plan
+fi
 repo=$(git -C "$(dirname -- "$0")" rev-parse --show-toplevel)
 export DATASET
 DATASET=$(cat "$primary/dataset-dir.txt")
@@ -36,15 +57,22 @@ submit() {
 }
 
 evaluations=()
-for dataset in moons mnist fashionmnist cifar10; do
-    # Wait for this dataset to release its CPU allocation in the primary sweep.
+for dataset in "${datasets[@]}"; do
+    # Wait for this dataset to release its training CPU allocation.
     confirmation=$(awk -v name="sweep-$dataset-confirmation" '$1 == name { id = $2 } END { print id }' "$primary/jobs.tsv")
     [[ "$confirmation" =~ ^[0-9]+$ ]] || { printf 'Missing primary confirmation job for %s\n' "$dataset" >&2; exit 1; }
     concurrency=4
     [[ "$dataset" != moons ]] || concurrency=2
-    plan=$(submit "seed-$dataset-plan" "afterany:$confirmation" '' 1 00:05:00 seed-plan "$dataset" "$primary/performance")
-    evaluations+=("$(submit "seed-$dataset-test" "afterok:$plan" "0-3%$concurrency" 2 00:15:00 seed-run "$dataset")")
+    plan=$(submit "seed-$dataset-plan" "afterany:$confirmation" '' 1 00:05:00 "$plan_stage" "$dataset" "$primary/performance")
+    test_job=$(submit "seed-$dataset-test" "afterok:$plan" "0-3%$concurrency" 2 00:15:00 seed-run "$dataset")
+    if [[ "$mode" == --regularization ]]; then
+        submit "seed-$dataset-summary" "afterany:$test_job" '' 1 00:05:00 seed-summary "$dataset" >/dev/null
+    else
+        evaluations+=("$test_job")
+    fi
 done
-dependencies=$(IFS=:; printf '%s' "${evaluations[*]}")
-submit seed-summary "afterany:$dependencies" '' 1 00:05:00 seed-summary >/dev/null
+if [[ -z "$mode" ]]; then
+    dependencies=$(IFS=:; printf '%s' "${evaluations[*]}")
+    submit seed-summary "afterany:$dependencies" '' 1 00:05:00 seed-summary >/dev/null
+fi
 printf 'Submitted seed sweep jobs recorded in %s/jobs.tsv\n' "$run_dir"

@@ -109,17 +109,21 @@ case "$stage" in
         fi
         exec "${summary[@]}"
         ;;
-    seed-plan)
+    seed-plan|seed-regularization-plan)
+        source_phase=refine
+        if [[ "$stage" == seed-regularization-plan ]]; then source_phase=search; fi
         exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep plan \
-            --output "$performance_dir" --source "$detail" --dataset "$target"
+            --output "$performance_dir" --source "$detail" --source-phase "$source_phase" --dataset "$target"
         ;;
     seed-run)
         exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep run \
             --output "$performance_dir" --dataset "$target" --index "$SLURM_ARRAY_TASK_ID"
         ;;
     seed-summary)
-        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep summarize \
-            --output "$performance_dir"
+        summary=("${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_seed_sweep summarize
+                 --output "$performance_dir")
+        if [[ -n "$target" ]]; then summary+=(--dataset "$target"); fi
+        exec "${summary[@]}"
         ;;
     *) printf 'Unknown job stage: %s\n' "$stage" >&2; exit 2 ;;
 esac

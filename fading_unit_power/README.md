@@ -59,3 +59,9 @@ Once the primary and exploratory seed jobs have finished, submit the follow-up f
 bash -l fading_unit_power/submit_sweep_spartan.sh "$followup_run" \
   --regularization-from "$primary_run/performance" moons mnist fashionmnist
 ```
+
+The exploratory seed check can also use these regularization candidates. It selects one shared seed and each method's best profile at that seed using regularization validation accuracy. The four frozen checkpoints then receive 128 held-out deployment draws. Each dataset's evaluation starts after its regularization confirmation releases the CPU allocation.
+
+```bash
+bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$followup_run" "$followup_seed_run" --regularization
+```
