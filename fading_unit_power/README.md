@@ -68,7 +68,7 @@ bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$followup_run" "$followu
 
 ### Fixed channel-bank comparison
 
-Pass a shared bank size when every selected fit must use the same (m). The regularization follow-up anchors each method to its validation winner at that bank and uses six paired validation seeds. The bank is recorded in the plan and checked before confirmation.
+Pass a shared bank size when every selected fit must use the same $m$. The regularization follow-up anchors each method to its validation winner at that bank and uses six paired validation seeds. The bank is recorded in the plan and checked before confirmation.
 
 ```bash
 bash -l fading_unit_power/submit_sweep_spartan.sh "$fixed_run" \
@@ -77,3 +77,5 @@ bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$fixed_run" "$fixed_seed
 ```
 
 The seed planner also accepts `--bank-size 2000` to select among existing checkpoints at that bank. For an initial search campaign, pass `--source-phase search` with the fixed bank. The planner verifies the archived validation scores and evaluates the selected checkpoints in a separate Slurm stage.
+
+For Two moons, `--bank-size 2000 --schedule-panel` starts from a completed fixed-bank regularization run and evaluates three training schedules on twelve fresh paired validation seeds. Pass that run's `performance` directory to `--regularization-from`.

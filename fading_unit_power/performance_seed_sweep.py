@@ -60,23 +60,25 @@ def validation_design(source, dataset, manifest, source_phase, bank_size, entry_
     planned = performance.read_json(planned_path)
     m = planned["bank_size"]
     fixed_source = "fixed_bank_size" in planned
-    validation_seeds, _ = regularization.seed_sets(fixed_source)
+    validation_seeds, _, profile_count = regularization.search_design(planned)
     if (planned["dataset"] != dataset or
             (fixed_source and planned["fixed_bank_size"] != m) or
             (not fixed_source and m not in sweep.BANK_SIZES) or
-            entry_count != regularization.count("search", fixed_bank=fixed_source) or
+            entry_count != len(sweep.METHODS) * profile_count * len(validation_seeds) or
             planned["search_manifest_sha256"] != manifest_hash or
             tuple(planned["validation_seeds"]) != validation_seeds):
         raise ValueError(f"Regularization search plan differs from the manifest for {dataset}")
     profiles = {method: set(names) for method, names in planned["profiles"].items()}
     if profiles.keys() != set(sweep.METHODS) or any(
-            len(names) != regularization.PROFILE_COUNT or len(profiles[method]) != len(names)
+            len(names) != profile_count or len(profiles[method]) != len(names)
             for method, names in planned["profiles"].items()):
-        raise ValueError(f"Expected six regularization profiles per method for {dataset}")
+        raise ValueError(f"Expected {profile_count} profiles per method for {dataset}")
     provenance = dict(source_phase="search", search_manifest_sha256=manifest_hash,
                       search_plan_sha256=sweep.sha256(planned_path))
     if fixed_source:
         provenance["fixed_bank_size"] = m
+    if planned.get("schedule_panel"):
+        provenance["search_origin"] = "schedule-panel"
     return (m,), validation_seeds, {(m, method): names for method, names in profiles.items()}, provenance
 
 
@@ -245,7 +247,8 @@ def summarize(output, dataset=None):
         phase = selection.get("source_phase", "refine")
         origin = selection.get("search_origin")
         source = {("refine", None): "refinement", ("search", None): "regularization",
-                  ("search", "initial"): "initial search"}.get((phase, origin))
+                  ("search", "initial"): "initial search",
+                  ("search", "schedule-panel"): "schedule panel"}.get((phase, origin))
         if source is None or (validation_source is not None and source != validation_source):
             raise ValueError(f"Inconsistent validation source phase for {current}")
         validation_source = source
