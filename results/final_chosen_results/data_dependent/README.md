@@ -1,5 +1,16 @@
 # T1 with a data-dependent channel prior Q_{W|S}
 
+> **Final results for the paper: [`only_fresh/`](only_fresh).** These are T1 with the `fresh`
+> stage-1 prior, which trains on new P_tr draws every minibatch and never uses U:
+>
+> * table: `only_fresh/performance/performance_table.tex`
+> * MNIST figure: `only_fresh/mnist_analog_finite_channel_generalization.*`
+> * CIFAR-10 figure: `only_fresh/cifar10_channel_mismatch_all_methods.*`
+> * bound figure: `only_fresh/bound_decomposition_d8_t1_t2_both_channels.*` (K = 6)
+>
+> When writing these up, state that stage 1 sees fresh simulated channel draws that ERM, L2 and T2 do
+> not, and that T1 trains twice. The other folders are kept for comparison.
+
 These are the four paper studies rerun with the revised Theorem 1. Its channel complexity uses
 D(P_{W|US} || Q_{W|S}) with Q_{W|S} = N(mu_S, s^2 I), and its sample complexity keeps the fixed prior
 Q_W = N(0, prior_std^2 I). Each T1 fit has two stages:
