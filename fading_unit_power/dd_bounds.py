@@ -146,7 +146,7 @@ def certificate(root: Path, task: dict, stage1_dirs: dict, seed: int):
                 family=family, best=best, count=count, bank_hash=metadata["training_channel_bank_hash"])
 
 
-def pipeline(root: Path, workers: int, constructions=None):
+def pipeline(root: Path, workers: int, constructions=None, publish: Path | None = None):
     """Certify T1; with ``constructions`` both the candidates and the prior family use only those.
 
     A restricted certificate has K = len(constructions) * len(CERTIFICATE_STD_MULTIPLIERS), so it
@@ -154,12 +154,14 @@ def pipeline(root: Path, workers: int, constructions=None):
     over separately restricted certificates would need the full-family union bound instead.
     """
     constructions = tuple(constructions or campaign.CONSTRUCTIONS)
+    # Passed in because the CLI runs data_dependent as __main__, whose PUBLISH differs from campaign's.
+    publish = publish or campaign.PUBLISH
     tasks_path = root / "manifests" / "tasks.jsonl"
     if not tasks_path.exists():
         campaign.write_manifest(tasks_path, plan(root))
     tasks = campaign.read_manifest(tasks_path)
     campaign.run_pool(tasks, root, workers)
-    output = campaign.PUBLISH / "bounds"
+    output = publish / "bounds"
     summary = []
     for family, regime in CASES:
         _, old = base_config(family, regime)
@@ -217,6 +219,6 @@ def pipeline(root: Path, workers: int, constructions=None):
     campaign.write_json(output / "summary.json", summary)
     from results.final_chosen_results import plot_bound_decomposition_d8 as plotting
     plotting.BOUNDS = output
-    plotting.STEM = campaign.PUBLISH / "bound_decomposition_d8_t1_t2_both_channels"
+    plotting.STEM = publish / "bound_decomposition_d8_t1_t2_both_channels"
     plotting.main()
     print(json.dumps(summary, indent=1))

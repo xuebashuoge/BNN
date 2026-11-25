@@ -596,7 +596,7 @@ def pipeline(study: str, root: Path, workers: int, stop_after: str | None = None
     root.mkdir(parents=True, exist_ok=True)
     if study == "bounds":
         from . import dd_bounds
-        dd_bounds.pipeline(root, workers, constructions)
+        dd_bounds.pipeline(root, workers, constructions, PUBLISH)
         return
     planner, summarize, group = STUDIES[study]
     tune_path = root / "manifests" / "tune.jsonl"
