@@ -1,0 +1,62 @@
+{
+  "dataset": "moons",
+  "bank_size": 2000,
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125/performance",
+  "source_fingerprints": {
+    "regularization_search_manifest_sha256": "c97bdb9bdd768ad6b31d1bcbdbb9f7806848dda8c752c588f30ef29cbacb3266",
+    "regularization_plan_sha256": "00e00e242f3fb7bf7240b0ba4525cbac70e74b1ff80c08cae95a7ab87508e89a",
+    "regularization_selection_sha256": "c615618c979f28e125b61cc2db887ef7b6142d0883ccd69f11177a5ff09d64c5"
+  },
+  "anchor_tasks": {
+    "ERM-Matched": "moons-ERM-Matched-regularization-m2000-current-fast-scale-s26112501",
+    "L2-Matched": "moons-L2-Matched-regularization-m2000-l2-strong-s26112501",
+    "T1-Matched": "moons-T1-Matched-regularization-m2000-incumbent-s26112501",
+    "T2-Matched": "moons-T2-Matched-regularization-m2000-incumbent-s26112501"
+  },
+  "validation_seeds": [
+    26112521,
+    26112522,
+    26112523,
+    26112524,
+    26112525,
+    26112526,
+    26112527,
+    26112528,
+    26112529,
+    26112530,
+    26112531,
+    26112532
+  ],
+  "confirmation_seeds": [
+    26112541,
+    26112542,
+    26112543,
+    26112544,
+    26112545
+  ],
+  "profiles": {
+    "ERM-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-schedule-240-k2",
+      "regularization-m2000-schedule-300-k1"
+    ],
+    "L2-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-schedule-240-k2",
+      "regularization-m2000-schedule-300-k1"
+    ],
+    "T1-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-schedule-240-k2",
+      "regularization-m2000-schedule-300-k1"
+    ],
+    "T2-Matched": [
+      "regularization-m2000-incumbent",
+      "regularization-m2000-schedule-240-k2",
+      "regularization-m2000-schedule-300-k1"
+    ]
+  },
+  "search_manifest_sha256": "a30ef6102ee5e31685b719f0967791cf3dcfc60cee9dcc5fcf68ff43f037d392",
+  "fixed_bank_size": 2000,
+  "schedule_panel": true
+}

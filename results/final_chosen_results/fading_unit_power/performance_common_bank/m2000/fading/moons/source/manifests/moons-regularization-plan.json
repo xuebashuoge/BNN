@@ -1,62 +1,75 @@
 {
   "dataset": "moons",
   "bank_size": 2000,
-  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125/performance",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125-schedule-panel/performance",
   "source_fingerprints": {
-    "regularization_search_manifest_sha256": "c97bdb9bdd768ad6b31d1bcbdbb9f7806848dda8c752c588f30ef29cbacb3266",
-    "regularization_plan_sha256": "00e00e242f3fb7bf7240b0ba4525cbac70e74b1ff80c08cae95a7ab87508e89a",
-    "regularization_selection_sha256": "c615618c979f28e125b61cc2db887ef7b6142d0883ccd69f11177a5ff09d64c5"
+    "schedule_search_manifest_sha256": "a30ef6102ee5e31685b719f0967791cf3dcfc60cee9dcc5fcf68ff43f037d392",
+    "schedule_plan_sha256": "ab373f46d72ba34d6a3dad34d5ebf3f598a6cdec9e418a075a745bf4da9f899c",
+    "schedule_selection_sha256": "0020572385873b77f8834bf160b9d281477bac4f300cbb037ee7407a5fee8aeb"
   },
   "anchor_tasks": {
-    "ERM-Matched": "moons-ERM-Matched-regularization-m2000-current-fast-scale-s26112501",
-    "L2-Matched": "moons-L2-Matched-regularization-m2000-l2-strong-s26112501",
-    "T1-Matched": "moons-T1-Matched-regularization-m2000-incumbent-s26112501",
-    "T2-Matched": "moons-T2-Matched-regularization-m2000-incumbent-s26112501"
+    "ERM-Matched": "moons-ERM-Matched-regularization-m2000-schedule-300-k1-s26112521",
+    "L2-Matched": "moons-L2-Matched-regularization-m2000-schedule-240-k2-s26112521",
+    "T1-Matched": "moons-T1-Matched-regularization-m2000-schedule-300-k1-s26112521",
+    "T2-Matched": "moons-T2-Matched-regularization-m2000-schedule-300-k1-s26112521"
   },
   "validation_seeds": [
-    26112521,
-    26112522,
-    26112523,
-    26112524,
-    26112525,
-    26112526,
-    26112527,
-    26112528,
-    26112529,
-    26112530,
-    26112531,
-    26112532
+    26112551,
+    26112552,
+    26112553,
+    26112554,
+    26112555,
+    26112556,
+    26112557,
+    26112558,
+    26112559,
+    26112560,
+    26112561,
+    26112562,
+    26112563,
+    26112564,
+    26112565,
+    26112566
   ],
   "confirmation_seeds": [
-    26112541,
-    26112542,
-    26112543,
-    26112544,
-    26112545
+    26112571,
+    26112572,
+    26112573,
+    26112574,
+    26112575
   ],
   "profiles": {
     "ERM-Matched": [
       "regularization-m2000-incumbent",
-      "regularization-m2000-schedule-240-k2",
-      "regularization-m2000-schedule-300-k1"
+      "regularization-m2000-strength-weak",
+      "regularization-m2000-strength-medium",
+      "regularization-m2000-strength-strong"
     ],
     "L2-Matched": [
       "regularization-m2000-incumbent",
-      "regularization-m2000-schedule-240-k2",
-      "regularization-m2000-schedule-300-k1"
+      "regularization-m2000-strength-weak",
+      "regularization-m2000-strength-medium",
+      "regularization-m2000-strength-strong"
     ],
     "T1-Matched": [
       "regularization-m2000-incumbent",
-      "regularization-m2000-schedule-240-k2",
-      "regularization-m2000-schedule-300-k1"
+      "regularization-m2000-strength-weak",
+      "regularization-m2000-strength-medium",
+      "regularization-m2000-strength-strong"
     ],
     "T2-Matched": [
       "regularization-m2000-incumbent",
-      "regularization-m2000-schedule-240-k2",
-      "regularization-m2000-schedule-300-k1"
+      "regularization-m2000-strength-weak",
+      "regularization-m2000-strength-medium",
+      "regularization-m2000-strength-strong"
     ]
   },
-  "search_manifest_sha256": "a30ef6102ee5e31685b719f0967791cf3dcfc60cee9dcc5fcf68ff43f037d392",
+  "search_manifest_sha256": "7041fc4cd80ac08faddb256f9cc1f52399cfefc8925e0ce5dc4c88eb6a0a9139",
   "fixed_bank_size": 2000,
-  "schedule_panel": true
+  "strength_panel": true,
+  "validation_evaluation": {
+    "eval_draws": 64,
+    "moons_eval_data_seed": 261125900,
+    "moons_eval_size": 12000
+  }
 }

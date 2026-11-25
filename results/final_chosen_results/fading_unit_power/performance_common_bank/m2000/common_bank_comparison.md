@@ -6,7 +6,7 @@ Accuracy is in percent. The gap subtracts the stronger test baseline from the va
 
 | Dataset | Channel | Training seeds | ERM | L2 | T1 | T2 | Proposed | Gap (pp) |
 |---|---|---:|---:|---:|---:|---:|---|---:|
-| Two moons | Fading | 1 | 71.519 | 71.294 | 71.272 | 71.272 | T2 | -0.247 |
+| Two moons | Fading | 1 | 71.520 | 71.367 | 71.640 | 71.640 | T1 | +0.121 |
 | Two moons | Erasure | 5 | 86.866 | 86.867 | 87.102 | 87.150 | T2 | +0.283 |
 | MNIST | Fading | 1 | 78.243 | 78.455 | 78.622 | 78.655 | T2 | +0.200 |
 | MNIST | Erasure | 5 | 96.239 | 96.239 | 96.289 | 96.229 | T1 | +0.051 |

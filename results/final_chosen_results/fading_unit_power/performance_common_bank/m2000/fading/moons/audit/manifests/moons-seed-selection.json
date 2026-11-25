@@ -1,0 +1,2377 @@
+{
+  "dataset": "moons",
+  "source": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125-strength-panel/performance",
+  "source_phase": "search",
+  "search_manifest_sha256": "7041fc4cd80ac08faddb256f9cc1f52399cfefc8925e0ce5dc4c88eb6a0a9139",
+  "search_plan_sha256": "89020ac02fd1a4963b2821cb81b8e3a024cd8d904ed870630b4572ca9fd306fa",
+  "fixed_bank_size": 2000,
+  "search_origin": "strength-panel",
+  "validation_evaluation": {
+    "eval_draws": 64,
+    "moons_eval_data_seed": 261125900,
+    "moons_eval_size": 12000
+  },
+  "audit_population": {
+    "moons_eval_data_seed": 261125901,
+    "moons_eval_size": 30000
+  },
+  "selected": {
+    "m": 2000,
+    "seed": 26112551,
+    "proposed": "T1-Matched",
+    "baseline": "ERM-Matched",
+    "validation_gap_pp": 0.08776041666666012,
+    "winners": {
+      "ERM-Matched": {
+        "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112551",
+        "accuracy": 0.7155416666666667,
+        "cross_entropy": 0.5686652335077524
+      },
+      "L2-Matched": {
+        "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112551",
+        "accuracy": 0.7139505208333333,
+        "cross_entropy": 0.569534314935406
+      },
+      "T1-Matched": {
+        "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112551",
+        "accuracy": 0.7164192708333333,
+        "cross_entropy": 0.5671183710793655
+      },
+      "T2-Matched": {
+        "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112551",
+        "accuracy": 0.7164192708333333,
+        "cross_entropy": 0.5671183768560489
+      }
+    },
+    "trials": {
+      "ERM-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112551",
+          "accuracy": 0.71389453125,
+          "cross_entropy": 0.5685034975955883
+        },
+        "regularization-m2000-strength-weak": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112551",
+          "accuracy": 0.7155416666666667,
+          "cross_entropy": 0.5686652335077524
+        },
+        "regularization-m2000-strength-medium": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112551",
+          "accuracy": 0.7140989583333333,
+          "cross_entropy": 0.5705255659470956
+        },
+        "regularization-m2000-strength-strong": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112551",
+          "accuracy": 0.7107460937500001,
+          "cross_entropy": 0.5723462272435427
+        }
+      },
+      "L2-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112551",
+          "accuracy": 0.7110299479166666,
+          "cross_entropy": 0.57061463877062
+        },
+        "regularization-m2000-strength-weak": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112551",
+          "accuracy": 0.7139505208333333,
+          "cross_entropy": 0.569534314935406
+        },
+        "regularization-m2000-strength-medium": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112551",
+          "accuracy": 0.7133515625,
+          "cross_entropy": 0.5698756857613723
+        },
+        "regularization-m2000-strength-strong": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112551",
+          "accuracy": 0.7054244791666667,
+          "cross_entropy": 0.580296347245574
+        }
+      },
+      "T1-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112551",
+          "accuracy": 0.7164192708333333,
+          "cross_entropy": 0.5671183710793655
+        },
+        "regularization-m2000-strength-weak": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112551",
+          "accuracy": 0.71537890625,
+          "cross_entropy": 0.5685966263413429
+        },
+        "regularization-m2000-strength-medium": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112551",
+          "accuracy": 0.7109505208333333,
+          "cross_entropy": 0.5721469160268704
+        },
+        "regularization-m2000-strength-strong": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112551",
+          "accuracy": 0.6774140625,
+          "cross_entropy": 0.6139429224332174
+        }
+      },
+      "T2-Matched": {
+        "regularization-m2000-incumbent": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112551",
+          "accuracy": 0.7164192708333333,
+          "cross_entropy": 0.5671183768560489
+        },
+        "regularization-m2000-strength-weak": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112551",
+          "accuracy": 0.7154049479166666,
+          "cross_entropy": 0.5685854567239681
+        },
+        "regularization-m2000-strength-medium": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112551",
+          "accuracy": 0.7105286458333333,
+          "cross_entropy": 0.5727853581557671
+        },
+        "regularization-m2000-strength-strong": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112551",
+          "accuracy": 0.6777174479166668,
+          "cross_entropy": 0.613701526860396
+        }
+      }
+    }
+  },
+  "leaderboard": [
+    {
+      "m": 2000,
+      "seed": 26112551,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": 0.08776041666666012,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112551",
+          "accuracy": 0.7155416666666667,
+          "cross_entropy": 0.5686652335077524
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112551",
+          "accuracy": 0.7139505208333333,
+          "cross_entropy": 0.569534314935406
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112551",
+          "accuracy": 0.7164192708333333,
+          "cross_entropy": 0.5671183710793655
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112551",
+          "accuracy": 0.7164192708333333,
+          "cross_entropy": 0.5671183768560489
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112551",
+            "accuracy": 0.71389453125,
+            "cross_entropy": 0.5685034975955883
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112551",
+            "accuracy": 0.7155416666666667,
+            "cross_entropy": 0.5686652335077524
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112551",
+            "accuracy": 0.7140989583333333,
+            "cross_entropy": 0.5705255659470956
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112551",
+            "accuracy": 0.7107460937500001,
+            "cross_entropy": 0.5723462272435427
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112551",
+            "accuracy": 0.7110299479166666,
+            "cross_entropy": 0.57061463877062
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112551",
+            "accuracy": 0.7139505208333333,
+            "cross_entropy": 0.569534314935406
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112551",
+            "accuracy": 0.7133515625,
+            "cross_entropy": 0.5698756857613723
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112551",
+            "accuracy": 0.7054244791666667,
+            "cross_entropy": 0.580296347245574
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112551",
+            "accuracy": 0.7164192708333333,
+            "cross_entropy": 0.5671183710793655
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112551",
+            "accuracy": 0.71537890625,
+            "cross_entropy": 0.5685966263413429
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112551",
+            "accuracy": 0.7109505208333333,
+            "cross_entropy": 0.5721469160268704
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112551",
+            "accuracy": 0.6774140625,
+            "cross_entropy": 0.6139429224332174
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112551",
+            "accuracy": 0.7164192708333333,
+            "cross_entropy": 0.5671183768560489
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112551",
+            "accuracy": 0.7154049479166666,
+            "cross_entropy": 0.5685854567239681
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112551",
+            "accuracy": 0.7105286458333333,
+            "cross_entropy": 0.5727853581557671
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112551",
+            "accuracy": 0.6777174479166668,
+            "cross_entropy": 0.613701526860396
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112552,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.2932291666666753,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112552",
+          "accuracy": 0.7112083333333333,
+          "cross_entropy": 0.5692499679028988
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112552",
+          "accuracy": 0.71278515625,
+          "cross_entropy": 0.5691715860664844
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112552",
+          "accuracy": 0.7097929687500001,
+          "cross_entropy": 0.5729358011136452
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112552",
+          "accuracy": 0.7098528645833333,
+          "cross_entropy": 0.57251942503949
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112552",
+            "accuracy": 0.6998828125000001,
+            "cross_entropy": 0.5810417940368255
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112552",
+            "accuracy": 0.7101119791666667,
+            "cross_entropy": 0.5729424469520649
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112552",
+            "accuracy": 0.7112083333333333,
+            "cross_entropy": 0.5692499679028988
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112552",
+            "accuracy": 0.7081888020833333,
+            "cross_entropy": 0.5745323557555675
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112552",
+            "accuracy": 0.7125442708333334,
+            "cross_entropy": 0.5682854753086963
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112552",
+            "accuracy": 0.7098932291666666,
+            "cross_entropy": 0.5728546906709672
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112552",
+            "accuracy": 0.7095169270833334,
+            "cross_entropy": 0.5691301096975804
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112552",
+            "accuracy": 0.71278515625,
+            "cross_entropy": 0.5691715860664844
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112552",
+            "accuracy": 0.6998138020833333,
+            "cross_entropy": 0.5811178291241328
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112552",
+            "accuracy": 0.7097929687500001,
+            "cross_entropy": 0.5729358011136452
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112552",
+            "accuracy": 0.7092122395833333,
+            "cross_entropy": 0.5721696735570828
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112552",
+            "accuracy": 0.67237109375,
+            "cross_entropy": 0.6137173942128817
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112552",
+            "accuracy": 0.6998138020833333,
+            "cross_entropy": 0.581117830812931
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112552",
+            "accuracy": 0.7098528645833333,
+            "cross_entropy": 0.57251942503949
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112552",
+            "accuracy": 0.7053151041666667,
+            "cross_entropy": 0.5743577406654755
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112552",
+            "accuracy": 0.67509765625,
+            "cross_entropy": 0.6123332185596227
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112553,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.15898437499999307,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112553",
+          "accuracy": 0.7096536458333333,
+          "cross_entropy": 0.5706473584671814
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112553",
+          "accuracy": 0.7075026041666667,
+          "cross_entropy": 0.5724561012784639
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112553",
+          "accuracy": 0.7080638020833334,
+          "cross_entropy": 0.5757851716180642
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112553",
+          "accuracy": 0.7080638020833334,
+          "cross_entropy": 0.5757851584851742
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112553",
+            "accuracy": 0.7096536458333333,
+            "cross_entropy": 0.5706473584671814
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112553",
+            "accuracy": 0.7058020833333333,
+            "cross_entropy": 0.5761032714992762
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112553",
+            "accuracy": 0.7053671875,
+            "cross_entropy": 0.5799902184059222
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112553",
+            "accuracy": 0.6989609375,
+            "cross_entropy": 0.5871880523910125
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112553",
+            "accuracy": 0.7075026041666667,
+            "cross_entropy": 0.5724561012784639
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112553",
+            "accuracy": 0.7054778645833333,
+            "cross_entropy": 0.5762505930860837
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112553",
+            "accuracy": 0.703859375,
+            "cross_entropy": 0.5787616557727258
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112553",
+            "accuracy": 0.6922174479166666,
+            "cross_entropy": 0.5921815293133259
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112553",
+            "accuracy": 0.7080638020833334,
+            "cross_entropy": 0.5757851716180642
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112553",
+            "accuracy": 0.7055703124999999,
+            "cross_entropy": 0.5753450336257617
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112553",
+            "accuracy": 0.70412109375,
+            "cross_entropy": 0.5767346159666776
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112553",
+            "accuracy": 0.6657213541666667,
+            "cross_entropy": 0.6240582763502995
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112553",
+            "accuracy": 0.7080638020833334,
+            "cross_entropy": 0.5757851584851742
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112553",
+            "accuracy": 0.7056614583333333,
+            "cross_entropy": 0.5753282290995121
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112553",
+            "accuracy": 0.70430859375,
+            "cross_entropy": 0.5759731898605822
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112553",
+            "accuracy": 0.6658919270833333,
+            "cross_entropy": 0.623762294113636
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112554,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.04401041666667327,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112554",
+          "accuracy": 0.7113828124999999,
+          "cross_entropy": 0.5738435137619575
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112554",
+          "accuracy": 0.7120911458333333,
+          "cross_entropy": 0.5701289946287871
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112554",
+          "accuracy": 0.7116510416666666,
+          "cross_entropy": 0.5741876982053121
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112554",
+          "accuracy": 0.7116510416666666,
+          "cross_entropy": 0.5741876968840758
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112554",
+            "accuracy": 0.7113828124999999,
+            "cross_entropy": 0.5738435137619575
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112554",
+            "accuracy": 0.70996875,
+            "cross_entropy": 0.5726751992801826
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112554",
+            "accuracy": 0.71118359375,
+            "cross_entropy": 0.5720999580969413
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112554",
+            "accuracy": 0.7094544270833333,
+            "cross_entropy": 0.5724933699021737
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112554",
+            "accuracy": 0.7120911458333333,
+            "cross_entropy": 0.5701289946287871
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112554",
+            "accuracy": 0.7102421875,
+            "cross_entropy": 0.5723265297015507
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112554",
+            "accuracy": 0.70351953125,
+            "cross_entropy": 0.5814484130193791
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112554",
+            "accuracy": 0.7058971354166667,
+            "cross_entropy": 0.5790202002674342
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112554",
+            "accuracy": 0.7116510416666666,
+            "cross_entropy": 0.5741876982053121
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112554",
+            "accuracy": 0.7100546875,
+            "cross_entropy": 0.5731702284862599
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112554",
+            "accuracy": 0.7071679687499999,
+            "cross_entropy": 0.5778949007391929
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112554",
+            "accuracy": 0.6774283854166666,
+            "cross_entropy": 0.6135171939929327
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112554",
+            "accuracy": 0.7116510416666666,
+            "cross_entropy": 0.5741876968840758
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112554",
+            "accuracy": 0.7098671875,
+            "cross_entropy": 0.5726938042342662
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112554",
+            "accuracy": 0.70710546875,
+            "cross_entropy": 0.5778025358617306
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112554",
+            "accuracy": 0.6776536458333333,
+            "cross_entropy": 0.613154518644015
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112555,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.010677083333332504,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112555",
+          "accuracy": 0.7162239583333334,
+          "cross_entropy": 0.562695336903135
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112555",
+          "accuracy": 0.7162239583333334,
+          "cross_entropy": 0.5654596150964499
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112555",
+          "accuracy": 0.7161171875000001,
+          "cross_entropy": 0.5655786368052165
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112555",
+          "accuracy": 0.7145533854166667,
+          "cross_entropy": 0.5641914509435495
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112555",
+            "accuracy": 0.7162239583333334,
+            "cross_entropy": 0.562695336903135
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112555",
+            "accuracy": 0.7081367187500001,
+            "cross_entropy": 0.5745118564466636
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112555",
+            "accuracy": 0.7129361979166666,
+            "cross_entropy": 0.5677940078725416
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112555",
+            "accuracy": 0.7135898437500001,
+            "cross_entropy": 0.5706941667050123
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112555",
+            "accuracy": 0.71602734375,
+            "cross_entropy": 0.564250206882755
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112555",
+            "accuracy": 0.7162239583333334,
+            "cross_entropy": 0.5654596150964499
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112555",
+            "accuracy": 0.7146276041666666,
+            "cross_entropy": 0.5671727712750435
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112555",
+            "accuracy": 0.7132369791666666,
+            "cross_entropy": 0.5695598963101705
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112555",
+            "accuracy": 0.7145533854166667,
+            "cross_entropy": 0.5641914511471986
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112555",
+            "accuracy": 0.7161171875000001,
+            "cross_entropy": 0.5655786368052165
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112555",
+            "accuracy": 0.7111536458333333,
+            "cross_entropy": 0.5709323135962089
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112555",
+            "accuracy": 0.6862760416666667,
+            "cross_entropy": 0.6013700430989265
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112555",
+            "accuracy": 0.7145533854166667,
+            "cross_entropy": 0.5641914509435495
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112555",
+            "accuracy": 0.7125585937500001,
+            "cross_entropy": 0.5682652146170537
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112555",
+            "accuracy": 0.7111302083333333,
+            "cross_entropy": 0.5710027227252722
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112555",
+            "accuracy": 0.6857825520833333,
+            "cross_entropy": 0.6024452223976453
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112556,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.41328124999999716,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112556",
+          "accuracy": 0.7076979166666667,
+          "cross_entropy": 0.5726010735929012
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112556",
+          "accuracy": 0.7128971354166667,
+          "cross_entropy": 0.5676005648225546
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112556",
+          "accuracy": 0.7087643229166667,
+          "cross_entropy": 0.5709928318113089
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112556",
+          "accuracy": 0.7087643229166667,
+          "cross_entropy": 0.5709928341805934
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112556",
+            "accuracy": 0.7076979166666667,
+            "cross_entropy": 0.5726010735929012
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112556",
+            "accuracy": 0.7069947916666666,
+            "cross_entropy": 0.5727102386752765
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112556",
+            "accuracy": 0.7034205729166666,
+            "cross_entropy": 0.5757863309780757
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112556",
+            "accuracy": 0.7052057291666667,
+            "cross_entropy": 0.5762210607628027
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112556",
+            "accuracy": 0.7128971354166667,
+            "cross_entropy": 0.5676005648225546
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112556",
+            "accuracy": 0.7022057291666667,
+            "cross_entropy": 0.576389868264397
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112556",
+            "accuracy": 0.7020403645833334,
+            "cross_entropy": 0.5778038334101439
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112556",
+            "accuracy": 0.7046692708333333,
+            "cross_entropy": 0.5776396643171708
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112556",
+            "accuracy": 0.7087643229166667,
+            "cross_entropy": 0.5709928318113089
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112556",
+            "accuracy": 0.699359375,
+            "cross_entropy": 0.5804653385132551
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112556",
+            "accuracy": 0.699359375,
+            "cross_entropy": 0.5813988376011451
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112556",
+            "accuracy": 0.6662721354166667,
+            "cross_entropy": 0.6201963446587324
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112556",
+            "accuracy": 0.7087643229166667,
+            "cross_entropy": 0.5709928341805934
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112556",
+            "accuracy": 0.699359375,
+            "cross_entropy": 0.5804653587241968
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112556",
+            "accuracy": 0.70051953125,
+            "cross_entropy": 0.5812646334817012
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112556",
+            "accuracy": 0.6662877604166667,
+            "cross_entropy": 0.620163445432981
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112557,
+      "proposed": "T2-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.04557291666666963,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112557",
+          "accuracy": 0.71487109375,
+          "cross_entropy": 0.5659442840615908
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112557",
+          "accuracy": 0.7146328125000001,
+          "cross_entropy": 0.5673107467144728
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112557",
+          "accuracy": 0.7143815104166666,
+          "cross_entropy": 0.5674870277593533
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112557",
+          "accuracy": 0.7144153645833333,
+          "cross_entropy": 0.5674943255583444
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112557",
+            "accuracy": 0.7118229166666667,
+            "cross_entropy": 0.5678127770771583
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112557",
+            "accuracy": 0.71487109375,
+            "cross_entropy": 0.5659442840615908
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112557",
+            "accuracy": 0.7133463541666667,
+            "cross_entropy": 0.5702290519525608
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112557",
+            "accuracy": 0.71371875,
+            "cross_entropy": 0.5686461139619351
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112557",
+            "accuracy": 0.7140638020833334,
+            "cross_entropy": 0.5668966066936652
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112557",
+            "accuracy": 0.7146328125000001,
+            "cross_entropy": 0.5673107467144728
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112557",
+            "accuracy": 0.7136145833333334,
+            "cross_entropy": 0.5679261492689451
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112557",
+            "accuracy": 0.70634765625,
+            "cross_entropy": 0.5751567620436351
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112557",
+            "accuracy": 0.7131080729166667,
+            "cross_entropy": 0.5641419520874819
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112557",
+            "accuracy": 0.7143815104166666,
+            "cross_entropy": 0.5674870277593533
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112557",
+            "accuracy": 0.70835546875,
+            "cross_entropy": 0.572320965245366
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112557",
+            "accuracy": 0.6795494791666666,
+            "cross_entropy": 0.6050332194368044
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112557",
+            "accuracy": 0.7131080729166667,
+            "cross_entropy": 0.5641419514765342
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112557",
+            "accuracy": 0.7144153645833333,
+            "cross_entropy": 0.5674943255583444
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112557",
+            "accuracy": 0.7079843750000001,
+            "cross_entropy": 0.5730802837957938
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112557",
+            "accuracy": 0.6790065104166667,
+            "cross_entropy": 0.6057669831415018
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112558,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.05963541666665906,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112558",
+          "accuracy": 0.7134700520833333,
+          "cross_entropy": 0.5678162453919648
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112558",
+          "accuracy": 0.7116940104166667,
+          "cross_entropy": 0.569025372977058
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112558",
+          "accuracy": 0.7128736979166667,
+          "cross_entropy": 0.5677320508261522
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112558",
+          "accuracy": 0.7128736979166667,
+          "cross_entropy": 0.5677320521523556
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112558",
+            "accuracy": 0.7134700520833333,
+            "cross_entropy": 0.5678162453919648
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112558",
+            "accuracy": 0.7085247395833333,
+            "cross_entropy": 0.5753421367456515
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112558",
+            "accuracy": 0.7103619791666667,
+            "cross_entropy": 0.5709427693734566
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112558",
+            "accuracy": 0.7087434895833333,
+            "cross_entropy": 0.5746321158260107
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112558",
+            "accuracy": 0.7105781250000001,
+            "cross_entropy": 0.5724134977608919
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112558",
+            "accuracy": 0.7092096354166666,
+            "cross_entropy": 0.5745138066609701
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112558",
+            "accuracy": 0.7116940104166667,
+            "cross_entropy": 0.569025372977058
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112558",
+            "accuracy": 0.70157421875,
+            "cross_entropy": 0.582419449691971
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112558",
+            "accuracy": 0.7128736979166667,
+            "cross_entropy": 0.5677320508261522
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112558",
+            "accuracy": 0.7071341145833333,
+            "cross_entropy": 0.5762356565197309
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112558",
+            "accuracy": 0.70496484375,
+            "cross_entropy": 0.5776434154162804
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112558",
+            "accuracy": 0.66682421875,
+            "cross_entropy": 0.6196725363731385
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112558",
+            "accuracy": 0.7128736979166667,
+            "cross_entropy": 0.5677320521523556
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112558",
+            "accuracy": 0.7071692708333334,
+            "cross_entropy": 0.5761975257049003
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112558",
+            "accuracy": 0.7050052083333334,
+            "cross_entropy": 0.5776321597844363
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112558",
+            "accuracy": 0.6670494791666668,
+            "cross_entropy": 0.6193295029948155
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112559,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": -0.00872395833333428,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112559",
+          "accuracy": 0.7205794270833334,
+          "cross_entropy": 0.5615469833662112
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112559",
+          "accuracy": 0.7185559895833333,
+          "cross_entropy": 0.5628546637247006
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112559",
+          "accuracy": 0.7204921875000001,
+          "cross_entropy": 0.5610267841319243
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112559",
+          "accuracy": 0.7204921875000001,
+          "cross_entropy": 0.5610267864366373
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112559",
+            "accuracy": 0.7205794270833334,
+            "cross_entropy": 0.5615469833662112
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112559",
+            "accuracy": 0.7165481770833333,
+            "cross_entropy": 0.566300495967269
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112559",
+            "accuracy": 0.7122447916666668,
+            "cross_entropy": 0.5712106478661299
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112559",
+            "accuracy": 0.7183932291666666,
+            "cross_entropy": 0.5652970602264007
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112559",
+            "accuracy": 0.7185559895833333,
+            "cross_entropy": 0.5628546637247006
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112559",
+            "accuracy": 0.7167473958333334,
+            "cross_entropy": 0.5663261811435223
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112559",
+            "accuracy": 0.7171393229166667,
+            "cross_entropy": 0.5645182000100613
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112559",
+            "accuracy": 0.7046861979166666,
+            "cross_entropy": 0.5792568940023581
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112559",
+            "accuracy": 0.7204921875000001,
+            "cross_entropy": 0.5610267841319243
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112559",
+            "accuracy": 0.7166744791666666,
+            "cross_entropy": 0.566403029302756
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112559",
+            "accuracy": 0.7065755208333333,
+            "cross_entropy": 0.5762854646493991
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112559",
+            "accuracy": 0.67499609375,
+            "cross_entropy": 0.6112363701065381
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112559",
+            "accuracy": 0.7204921875000001,
+            "cross_entropy": 0.5610267864366373
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112559",
+            "accuracy": 0.7167096354166667,
+            "cross_entropy": 0.5663951421380042
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112559",
+            "accuracy": 0.7066119791666667,
+            "cross_entropy": 0.5762857620964448
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112559",
+            "accuracy": 0.6752786458333334,
+            "cross_entropy": 0.6109427646895249
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112560,
+      "proposed": "T1-Matched",
+      "baseline": "ERM-Matched",
+      "validation_gap_pp": 0.06497395833333641,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112560",
+          "accuracy": 0.7116666666666667,
+          "cross_entropy": 0.5661704225987196
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112560",
+          "accuracy": 0.7109973958333333,
+          "cross_entropy": 0.5693352283835411
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112560",
+          "accuracy": 0.71231640625,
+          "cross_entropy": 0.5646482421010732
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112560",
+          "accuracy": 0.71231640625,
+          "cross_entropy": 0.5646482424388329
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112560",
+            "accuracy": 0.7116666666666667,
+            "cross_entropy": 0.5661704225987196
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112560",
+            "accuracy": 0.7078424479166667,
+            "cross_entropy": 0.5714075459887584
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112560",
+            "accuracy": 0.7037890625000001,
+            "cross_entropy": 0.5780636557936668
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112560",
+            "accuracy": 0.7065989583333333,
+            "cross_entropy": 0.5751643862475951
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112560",
+            "accuracy": 0.709875,
+            "cross_entropy": 0.5677240861207247
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112560",
+            "accuracy": 0.70867578125,
+            "cross_entropy": 0.5715293962905804
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112560",
+            "accuracy": 0.7109973958333333,
+            "cross_entropy": 0.5693352283835411
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112560",
+            "accuracy": 0.7092721354166667,
+            "cross_entropy": 0.5723227318475643
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112560",
+            "accuracy": 0.71231640625,
+            "cross_entropy": 0.5646482421010732
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112560",
+            "accuracy": 0.7087109375,
+            "cross_entropy": 0.5716963587403298
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112560",
+            "accuracy": 0.7042278645833333,
+            "cross_entropy": 0.5799597681860129
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112560",
+            "accuracy": 0.6755299479166667,
+            "cross_entropy": 0.6119937667747339
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112560",
+            "accuracy": 0.71231640625,
+            "cross_entropy": 0.5646482424388329
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112560",
+            "accuracy": 0.7086875,
+            "cross_entropy": 0.5717012561062972
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112560",
+            "accuracy": 0.7042578125000001,
+            "cross_entropy": 0.5800335823595524
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112560",
+            "accuracy": 0.6755598958333333,
+            "cross_entropy": 0.6119762808283171
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112561,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.08307291666665995,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112561",
+          "accuracy": 0.71354296875,
+          "cross_entropy": 0.5655572545876105
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112561",
+          "accuracy": 0.71476953125,
+          "cross_entropy": 0.5668227173388003
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112561",
+          "accuracy": 0.7139388020833334,
+          "cross_entropy": 0.5652111961990596
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112561",
+          "accuracy": 0.7137591145833334,
+          "cross_entropy": 0.5652008579522371
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112561",
+            "accuracy": 0.71354296875,
+            "cross_entropy": 0.5655572545876105
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112561",
+            "accuracy": 0.7121848958333333,
+            "cross_entropy": 0.5699662084927162
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112561",
+            "accuracy": 0.71168359375,
+            "cross_entropy": 0.570124482875069
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112561",
+            "accuracy": 0.7098294270833334,
+            "cross_entropy": 0.5730453283836444
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112561",
+            "accuracy": 0.71476953125,
+            "cross_entropy": 0.5668227173388003
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112561",
+            "accuracy": 0.7132838541666666,
+            "cross_entropy": 0.5703443100750447
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112561",
+            "accuracy": 0.7126419270833334,
+            "cross_entropy": 0.5694697429090738
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112561",
+            "accuracy": 0.70940625,
+            "cross_entropy": 0.5745540853192409
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112561",
+            "accuracy": 0.7139388020833334,
+            "cross_entropy": 0.5652111961990596
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112561",
+            "accuracy": 0.7122890625,
+            "cross_entropy": 0.5700312060266732
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112561",
+            "accuracy": 0.7104179687500001,
+            "cross_entropy": 0.5734668917308251
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112561",
+            "accuracy": 0.6646341145833333,
+            "cross_entropy": 0.6274813571075598
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112561",
+            "accuracy": 0.7137591145833334,
+            "cross_entropy": 0.5652008579522371
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112561",
+            "accuracy": 0.7121666666666666,
+            "cross_entropy": 0.5700418148984512
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112561",
+            "accuracy": 0.7060846354166666,
+            "cross_entropy": 0.5796212865312894
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112561",
+            "accuracy": 0.66525390625,
+            "cross_entropy": 0.6268051689664522
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112562,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.2045572916666738,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112562",
+          "accuracy": 0.7038203125,
+          "cross_entropy": 0.5790941919734081
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112562",
+          "accuracy": 0.70599609375,
+          "cross_entropy": 0.5762225094238917
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112562",
+          "accuracy": 0.70384765625,
+          "cross_entropy": 0.5797732767462731
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112562",
+          "accuracy": 0.7039505208333333,
+          "cross_entropy": 0.5766151246080796
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112562",
+            "accuracy": 0.7009375,
+            "cross_entropy": 0.5835811818341414
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112562",
+            "accuracy": 0.7026770833333333,
+            "cross_entropy": 0.5776140207201242
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112562",
+            "accuracy": 0.7016041666666667,
+            "cross_entropy": 0.5797859488576651
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112562",
+            "accuracy": 0.7038203125,
+            "cross_entropy": 0.5790941919734081
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112562",
+            "accuracy": 0.7020481770833333,
+            "cross_entropy": 0.5768551790416241
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112562",
+            "accuracy": 0.7026236979166667,
+            "cross_entropy": 0.5782999111215272
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112562",
+            "accuracy": 0.70599609375,
+            "cross_entropy": 0.5762225094238917
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112562",
+            "accuracy": 0.7037174479166667,
+            "cross_entropy": 0.5773119854380687
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112562",
+            "accuracy": 0.70116796875,
+            "cross_entropy": 0.581729415828983
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112562",
+            "accuracy": 0.70282421875,
+            "cross_entropy": 0.578768126954635
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112562",
+            "accuracy": 0.70384765625,
+            "cross_entropy": 0.5797732767462731
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112562",
+            "accuracy": 0.6717903645833334,
+            "cross_entropy": 0.6141524787396193
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112562",
+            "accuracy": 0.7011770833333333,
+            "cross_entropy": 0.5817267292141914
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112562",
+            "accuracy": 0.7028033854166666,
+            "cross_entropy": 0.578773562848568
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112562",
+            "accuracy": 0.7039505208333333,
+            "cross_entropy": 0.5766151246080796
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112562",
+            "accuracy": 0.6719570312500001,
+            "cross_entropy": 0.6140539073199034
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112563,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.04557291666666963,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112563",
+          "accuracy": 0.7168059895833333,
+          "cross_entropy": 0.5651534671882789
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112563",
+          "accuracy": 0.7174778645833333,
+          "cross_entropy": 0.5645391014367341
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112563",
+          "accuracy": 0.7170208333333333,
+          "cross_entropy": 0.565509222442905
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112563",
+          "accuracy": 0.7170221354166666,
+          "cross_entropy": 0.5655090295424063
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112563",
+            "accuracy": 0.71527734375,
+            "cross_entropy": 0.5675438472777605
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112563",
+            "accuracy": 0.7168059895833333,
+            "cross_entropy": 0.5651534671882789
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112563",
+            "accuracy": 0.7155091145833333,
+            "cross_entropy": 0.5704970947504044
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112563",
+            "accuracy": 0.71244921875,
+            "cross_entropy": 0.57101054593424
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112563",
+            "accuracy": 0.7159986979166667,
+            "cross_entropy": 0.5653749936769406
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112563",
+            "accuracy": 0.7170299479166666,
+            "cross_entropy": 0.5652089255551498
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112563",
+            "accuracy": 0.7119752604166667,
+            "cross_entropy": 0.5723274081448714
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112563",
+            "accuracy": 0.7174778645833333,
+            "cross_entropy": 0.5645391014367341
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112563",
+            "accuracy": 0.7153033854166666,
+            "cross_entropy": 0.5675624926785627
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112563",
+            "accuracy": 0.7170208333333333,
+            "cross_entropy": 0.565509222442905
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112563",
+            "accuracy": 0.7129921875,
+            "cross_entropy": 0.5694223350981871
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112563",
+            "accuracy": 0.6843450520833334,
+            "cross_entropy": 0.6022782650937637
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112563",
+            "accuracy": 0.7153033854166666,
+            "cross_entropy": 0.5675624924798806
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112563",
+            "accuracy": 0.7170221354166666,
+            "cross_entropy": 0.5655090295424063
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112563",
+            "accuracy": 0.7129947916666667,
+            "cross_entropy": 0.569427128612995
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112563",
+            "accuracy": 0.6838138020833333,
+            "cross_entropy": 0.602737896506985
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112564,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.13411458333333348,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112564",
+          "accuracy": 0.7161510416666667,
+          "cross_entropy": 0.5639330658763646
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112564",
+          "accuracy": 0.7185247395833333,
+          "cross_entropy": 0.561562144095699
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112564",
+          "accuracy": 0.7171210937499999,
+          "cross_entropy": 0.5637057864914339
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112564",
+          "accuracy": 0.71718359375,
+          "cross_entropy": 0.5637422048300504
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112564",
+            "accuracy": 0.71589453125,
+            "cross_entropy": 0.5604736644079288
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112564",
+            "accuracy": 0.7128059895833334,
+            "cross_entropy": 0.5671046272615592
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112564",
+            "accuracy": 0.7161510416666667,
+            "cross_entropy": 0.5639330658763646
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112564",
+            "accuracy": 0.71603125,
+            "cross_entropy": 0.563806121468544
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112564",
+            "accuracy": 0.7185247395833333,
+            "cross_entropy": 0.561562144095699
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112564",
+            "accuracy": 0.71533203125,
+            "cross_entropy": 0.564814799229304
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112564",
+            "accuracy": 0.7131158854166667,
+            "cross_entropy": 0.5683553903053205
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112564",
+            "accuracy": 0.6968177083333333,
+            "cross_entropy": 0.5861443370779356
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112564",
+            "accuracy": 0.7161106770833333,
+            "cross_entropy": 0.5610555473466714
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112564",
+            "accuracy": 0.7171210937499999,
+            "cross_entropy": 0.5637057864914339
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112564",
+            "accuracy": 0.7107552083333333,
+            "cross_entropy": 0.572752900665005
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112564",
+            "accuracy": 0.6811432291666666,
+            "cross_entropy": 0.6014406039317448
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112564",
+            "accuracy": 0.7161106770833333,
+            "cross_entropy": 0.5610555468499661
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112564",
+            "accuracy": 0.71718359375,
+            "cross_entropy": 0.5637422048300504
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112564",
+            "accuracy": 0.7097955729166667,
+            "cross_entropy": 0.5706363587230444
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112564",
+            "accuracy": 0.68119140625,
+            "cross_entropy": 0.6014131330599388
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112565,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.43385416666666954,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112565",
+          "accuracy": 0.7141588541666667,
+          "cross_entropy": 0.5682754126439491
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112565",
+          "accuracy": 0.7174583333333333,
+          "cross_entropy": 0.5651264721353849
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112565",
+          "accuracy": 0.7131197916666666,
+          "cross_entropy": 0.569640542641282
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112565",
+          "accuracy": 0.7128111979166667,
+          "cross_entropy": 0.5702539641956488
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112565",
+            "accuracy": 0.7119843750000001,
+            "cross_entropy": 0.5683053582956393
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112565",
+            "accuracy": 0.7141588541666667,
+            "cross_entropy": 0.5682754126439491
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112565",
+            "accuracy": 0.71103125,
+            "cross_entropy": 0.5724952005644639
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112565",
+            "accuracy": 0.7089947916666667,
+            "cross_entropy": 0.5755277493298054
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112565",
+            "accuracy": 0.7134375,
+            "cross_entropy": 0.568014537682136
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112565",
+            "accuracy": 0.7123098958333334,
+            "cross_entropy": 0.5716502943734327
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112565",
+            "accuracy": 0.7141992187499999,
+            "cross_entropy": 0.5679218303114175
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112565",
+            "accuracy": 0.7174583333333333,
+            "cross_entropy": 0.5651264721353849
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112565",
+            "accuracy": 0.71213671875,
+            "cross_entropy": 0.5685755521555741
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112565",
+            "accuracy": 0.7131197916666666,
+            "cross_entropy": 0.569640542641282
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112565",
+            "accuracy": 0.7109869791666668,
+            "cross_entropy": 0.5712937942395608
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112565",
+            "accuracy": 0.6739049479166668,
+            "cross_entropy": 0.6092017239232859
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112565",
+            "accuracy": 0.7121380208333332,
+            "cross_entropy": 0.5685755290389061
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112565",
+            "accuracy": 0.7128111979166667,
+            "cross_entropy": 0.5702539641956488
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112565",
+            "accuracy": 0.7106028645833333,
+            "cross_entropy": 0.5712808519055447
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112565",
+            "accuracy": 0.67396875,
+            "cross_entropy": 0.6091503408600887
+          }
+        }
+      }
+    },
+    {
+      "m": 2000,
+      "seed": 26112566,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "validation_gap_pp": -0.23164062499999583,
+      "winners": {
+        "ERM-Matched": {
+          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112566",
+          "accuracy": 0.7110794270833333,
+          "cross_entropy": 0.5683801607539256
+        },
+        "L2-Matched": {
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112566",
+          "accuracy": 0.71362890625,
+          "cross_entropy": 0.5690543044110139
+        },
+        "T1-Matched": {
+          "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112566",
+          "accuracy": 0.7103203124999999,
+          "cross_entropy": 0.572295834283034
+        },
+        "T2-Matched": {
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112566",
+          "accuracy": 0.7113125,
+          "cross_entropy": 0.5681980050156514
+        }
+      },
+      "trials": {
+        "ERM-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112566",
+            "accuracy": 0.7110794270833333,
+            "cross_entropy": 0.5683801607539256
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112566",
+            "accuracy": 0.7070911458333333,
+            "cross_entropy": 0.5752626953373353
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-medium-s26112566",
+            "accuracy": 0.7057747395833334,
+            "cross_entropy": 0.5761857948750257
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-ERM-Matched-regularization-m2000-strength-strong-s26112566",
+            "accuracy": 0.7085807291666667,
+            "cross_entropy": 0.5733015843182803
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-L2-Matched-regularization-m2000-incumbent-s26112566",
+            "accuracy": 0.7112513020833333,
+            "cross_entropy": 0.5684186624586582
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112566",
+            "accuracy": 0.7074231770833332,
+            "cross_entropy": 0.5747243947039048
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-medium-s26112566",
+            "accuracy": 0.71362890625,
+            "cross_entropy": 0.5690543044110139
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-L2-Matched-regularization-m2000-strength-strong-s26112566",
+            "accuracy": 0.7094765624999999,
+            "cross_entropy": 0.5733231531431278
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112566",
+            "accuracy": 0.7093229166666667,
+            "cross_entropy": 0.5690692311873038
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-weak-s26112566",
+            "accuracy": 0.7084335937499999,
+            "cross_entropy": 0.5712840903798739
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-medium-s26112566",
+            "accuracy": 0.7103203124999999,
+            "cross_entropy": 0.572295834283034
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T1-Matched-regularization-m2000-strength-strong-s26112566",
+            "accuracy": 0.6747408854166668,
+            "cross_entropy": 0.6151033936490615
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-incumbent": {
+            "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112566",
+            "accuracy": 0.7113125,
+            "cross_entropy": 0.5681980050156514
+          },
+          "regularization-m2000-strength-weak": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-weak-s26112566",
+            "accuracy": 0.7084440104166667,
+            "cross_entropy": 0.5712648602326711
+          },
+          "regularization-m2000-strength-medium": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-medium-s26112566",
+            "accuracy": 0.7101445312499999,
+            "cross_entropy": 0.5724100045313437
+          },
+          "regularization-m2000-strength-strong": {
+            "task_id": "moons-T2-Matched-regularization-m2000-strength-strong-s26112566",
+            "accuracy": 0.6748932291666667,
+            "cross_entropy": 0.6149019321699938
+          }
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "entry": {
+        "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112551",
+        "phase": "confirmation",
+        "method": "ERM-Matched",
+        "candidate": "regularization-m2000-strength-weak",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "erm",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 240,
+          "lr": 0.003125,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 0.1,
+          "posterior_std": 0.025,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 1.0,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.993288573061084,
+          "train_mc": 2,
+          "seed": 26112551,
+          "channel_seed": 26122551,
+          "eval_seed": 26132551
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 29112570,
+          "moons_eval_data_seed": 261125901,
+          "moons_eval_size": 30000
+        },
+        "source": {
+          "schedule_search_task": "moons-ERM-Matched-regularization-m2000-schedule-300-k1-s26112521",
+          "profile": "strength-weak",
+          "calibration": {},
+          "schedule_search_manifest_sha256": "a30ef6102ee5e31685b719f0967791cf3dcfc60cee9dcc5fcf68ff43f037d392",
+          "schedule_plan_sha256": "ab373f46d72ba34d6a3dad34d5ebf3f598a6cdec9e418a075a745bf4da9f899c",
+          "schedule_selection_sha256": "0020572385873b77f8834bf160b9d281477bac4f300cbb037ee7407a5fee8aeb"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125-strength-panel/performance/search/moons-ERM-Matched-regularization-m2000-strength-weak-s26112551",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "b2f408411c815260e4838f437de4aabc341806e7762a5eef4c4ad5de01623868",
+          "bytes": 259131
+        },
+        "metadata": {
+          "sha256": "ea7429d04c46bb511d6460b8cd4fa6b9f378ffe58d9e3f9b9b4e0364a6e2cb74",
+          "bytes": 4364
+        }
+      },
+      "validation_report_sha256": "644206681a7c41907c9568b722b6c6a6ccca3e1ed6b89847c4bc7d2219042138",
+      "selected_epoch": 168
+    },
+    {
+      "entry": {
+        "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112551",
+        "phase": "confirmation",
+        "method": "L2-Matched",
+        "candidate": "regularization-m2000-strength-weak",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "l2",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 240,
+          "lr": 0.003125,
+          "eta_channel": 0.001,
+          "eta_data": 0.01,
+          "prior_std": 0.1,
+          "posterior_std": 0.025,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 0.0001,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 1.0,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.993288573061084,
+          "train_mc": 2,
+          "seed": 26112551,
+          "channel_seed": 26122551,
+          "eval_seed": 26132551
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 29112570,
+          "moons_eval_data_seed": 261125901,
+          "moons_eval_size": 30000
+        },
+        "source": {
+          "schedule_search_task": "moons-L2-Matched-regularization-m2000-schedule-240-k2-s26112521",
+          "profile": "strength-weak",
+          "calibration": {},
+          "schedule_search_manifest_sha256": "a30ef6102ee5e31685b719f0967791cf3dcfc60cee9dcc5fcf68ff43f037d392",
+          "schedule_plan_sha256": "ab373f46d72ba34d6a3dad34d5ebf3f598a6cdec9e418a075a745bf4da9f899c",
+          "schedule_selection_sha256": "0020572385873b77f8834bf160b9d281477bac4f300cbb037ee7407a5fee8aeb"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125-strength-panel/performance/search/moons-L2-Matched-regularization-m2000-strength-weak-s26112551",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "76cf7ff3175aef86bb0ba4b7e77aa5a630bbf5d79fd50adc6d3787b7f35d70ea",
+          "bytes": 259131
+        },
+        "metadata": {
+          "sha256": "04d915a70f88edaf95604f5c5499f6b01c6007dd7f4dcf97e12fa71dfd812ceb",
+          "bytes": 4433
+        }
+      },
+      "validation_report_sha256": "122f07467cf1ec4eb1cf91a6dfc5f2b9adfa4d4b7e19bffe57bfbab1d6631ed0",
+      "selected_epoch": 120
+    },
+    {
+      "entry": {
+        "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112551",
+        "phase": "confirmation",
+        "method": "T1-Matched",
+        "candidate": "regularization-m2000-incumbent",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "proposed",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 300,
+          "lr": 0.00625,
+          "eta_channel": 3e-05,
+          "eta_data": 1.8966545941010614e-05,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9942813025596521,
+          "train_mc": 1,
+          "seed": 26112551,
+          "channel_seed": 26122551,
+          "eval_seed": 26132551
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 29112570,
+          "moons_eval_data_seed": 261125901,
+          "moons_eval_size": 30000
+        },
+        "source": {
+          "schedule_search_task": "moons-T1-Matched-regularization-m2000-schedule-300-k1-s26112521",
+          "profile": "incumbent",
+          "calibration": {},
+          "schedule_search_manifest_sha256": "a30ef6102ee5e31685b719f0967791cf3dcfc60cee9dcc5fcf68ff43f037d392",
+          "schedule_plan_sha256": "ab373f46d72ba34d6a3dad34d5ebf3f598a6cdec9e418a075a745bf4da9f899c",
+          "schedule_selection_sha256": "0020572385873b77f8834bf160b9d281477bac4f300cbb037ee7407a5fee8aeb"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125-strength-panel/performance/search/moons-T1-Matched-regularization-m2000-incumbent-s26112551",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "032af4b2be5ec244befb15cc6172c55b9ea782e8ca0e8119a14d46a6d0b5096c",
+          "bytes": 259131
+        },
+        "metadata": {
+          "sha256": "73852a8ad10af0c29f4d06c4c1b32fe0ef8b89ad3ae7e09f6c2edff76b1b290d",
+          "bytes": 4562
+        }
+      },
+      "validation_report_sha256": "75bb70fd93661fd7ef610d5699ffc88be902ca92c7defdcac0e650cff4c63fb0",
+      "selected_epoch": 248
+    },
+    {
+      "entry": {
+        "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112551",
+        "phase": "confirmation",
+        "method": "T2-Matched",
+        "candidate": "regularization-m2000-incumbent",
+        "config": {
+          "dataset": "moons",
+          "architecture": "mlp",
+          "method": "joint",
+          "predictor": "gaussian",
+          "training_loss": "bounded_ce_smooth",
+          "loss_epsilon": 0.01,
+          "selection_metric": "accuracy",
+          "validation_seed_policy": "fixed",
+          "width": 16,
+          "train_size": 800,
+          "val_size": 200,
+          "batch_size": 128,
+          "epochs": 300,
+          "lr": 0.00625,
+          "eta_channel": 0.0,
+          "eta_data": 3.2062751196613274e-05,
+          "prior_std": 1.0,
+          "posterior_std": 0.001,
+          "m": 2000,
+          "data_seed": 20261118,
+          "eval_draws": 40,
+          "val_draws": 3,
+          "clip_ce": 10.0,
+          "delta": 0.05,
+          "l2": 1e-05,
+          "device": "cpu",
+          "threads": 2,
+          "cpu_flush_denormal": true,
+          "rho_lr_scale": 0.1,
+          "download": false,
+          "moon_noise": 0.3,
+          "moons_sampler": "iid",
+          "train_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "deployment_channel": {
+            "kind": "diagonal_fading",
+            "rho_c": 0.35
+          },
+          "transmit_unit_power": true,
+          "lr_decay": 0.9942813025596521,
+          "train_mc": 1,
+          "seed": 26112551,
+          "channel_seed": 26122551,
+          "eval_seed": 26132551
+        },
+        "evaluation": {
+          "eval_draws": 128,
+          "eval_seed": 29112570,
+          "moons_eval_data_seed": 261125901,
+          "moons_eval_size": 30000
+        },
+        "source": {
+          "schedule_search_task": "moons-T2-Matched-regularization-m2000-schedule-300-k1-s26112521",
+          "profile": "incumbent",
+          "calibration": {},
+          "schedule_search_manifest_sha256": "a30ef6102ee5e31685b719f0967791cf3dcfc60cee9dcc5fcf68ff43f037d392",
+          "schedule_plan_sha256": "ab373f46d72ba34d6a3dad34d5ebf3f598a6cdec9e418a075a745bf4da9f899c",
+          "schedule_selection_sha256": "0020572385873b77f8834bf160b9d281477bac4f300cbb037ee7407a5fee8aeb"
+        }
+      },
+      "checkpoint": "/data/gpfs/projects/punim2792/yangshuo/unit-power-common-m2000-20261125-strength-panel/performance/search/moons-T2-Matched-regularization-m2000-incumbent-s26112551",
+      "checkpoint_fingerprints": {
+        "weights": {
+          "sha256": "094b0aabdefcaf6f8dc82eb765dd4d547ff71683d3474cc1044974f09ec345f9",
+          "bytes": 259131
+        },
+        "metadata": {
+          "sha256": "64c955a29c126fddb0aefb07f4488de3ceaed9a690cee8783e36ecaec6cee50c",
+          "bytes": 4557
+        }
+      },
+      "validation_report_sha256": "b631e7d6c12540288381c273dd99397a1ed9c205eabf084105a51aeb7d4f743e",
+      "selected_epoch": 248
+    }
+  ]
+}

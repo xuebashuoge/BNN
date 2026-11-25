@@ -1,0 +1,4 @@
+stage	job_id	dependency	array
+seed-moons-plan	35658262	afterany:35658257	
+seed-moons-test	35658263	afterok:35658262	0-3%2
+seed-moons-summary	35658264	afterany:35658263	

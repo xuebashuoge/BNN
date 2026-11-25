@@ -1,0 +1,364 @@
+{
+  "channel": "Unit-power diagonal fading",
+  "paired_interval": {
+    "level": 0.95,
+    "method": "percentile bootstrap of paired training seeds",
+    "resamples": 10000,
+    "seed": 18171,
+    "multiplicity_adjusted": false
+  },
+  "all_reported_datasets_have_validation_selected_proposed_wins": false,
+  "datasets": {
+    "moons": {
+      "bank_size": 2000,
+      "paired_test_seeds": [
+        26112571,
+        26112572,
+        26112573,
+        26112574,
+        26112575
+      ],
+      "methods": {
+        "ERM-Matched": {
+          "mean_accuracy_pct": 71.0751875,
+          "sample_sd_accuracy_pct": 0.5959839286941543,
+          "candidate": "regularization-m2000-incumbent",
+          "selected_config": {
+            "dataset": "moons",
+            "architecture": "mlp",
+            "method": "erm",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 16,
+            "train_size": 800,
+            "val_size": 200,
+            "batch_size": 128,
+            "epochs": 300,
+            "lr": 0.00625,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 1.0,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.9942813025596521,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "26112571": 74,
+            "26112572": 272,
+            "26112573": 22,
+            "26112574": 58,
+            "26112575": 203
+          }
+        },
+        "L2-Matched": {
+          "mean_accuracy_pct": 70.9189375,
+          "sample_sd_accuracy_pct": 0.731757748066581,
+          "candidate": "regularization-m2000-incumbent",
+          "selected_config": {
+            "dataset": "moons",
+            "architecture": "mlp",
+            "method": "l2",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 16,
+            "train_size": 800,
+            "val_size": 200,
+            "batch_size": 128,
+            "epochs": 240,
+            "lr": 0.003125,
+            "eta_channel": 0.001,
+            "eta_data": 0.01,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 2.9999999999999997e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 0.1,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.993288573061084,
+            "train_mc": 2
+          },
+          "selected_epoch_by_seed": {
+            "26112571": 159,
+            "26112572": 212,
+            "26112573": 207,
+            "26112574": 24,
+            "26112575": 133
+          }
+        },
+        "T1-Matched": {
+          "mean_accuracy_pct": 71.08296875,
+          "sample_sd_accuracy_pct": 0.5977332160408946,
+          "candidate": "regularization-m2000-incumbent",
+          "selected_config": {
+            "dataset": "moons",
+            "architecture": "mlp",
+            "method": "proposed",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 16,
+            "train_size": 800,
+            "val_size": 200,
+            "batch_size": 128,
+            "epochs": 300,
+            "lr": 0.00625,
+            "eta_channel": 3e-05,
+            "eta_data": 1.8966545941010614e-05,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 0.1,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.9942813025596521,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "26112571": 86,
+            "26112572": 237,
+            "26112573": 22,
+            "26112574": 61,
+            "26112575": 201
+          }
+        },
+        "T2-Matched": {
+          "mean_accuracy_pct": 71.07025,
+          "sample_sd_accuracy_pct": 0.5949013466993358,
+          "candidate": "regularization-m2000-incumbent",
+          "selected_config": {
+            "dataset": "moons",
+            "architecture": "mlp",
+            "method": "joint",
+            "predictor": "gaussian",
+            "training_loss": "bounded_ce_smooth",
+            "loss_epsilon": 0.01,
+            "selection_metric": "accuracy",
+            "validation_seed_policy": "fixed",
+            "width": 16,
+            "train_size": 800,
+            "val_size": 200,
+            "batch_size": 128,
+            "epochs": 300,
+            "lr": 0.00625,
+            "eta_channel": 0.0,
+            "eta_data": 3.2062751196613274e-05,
+            "prior_std": 1.0,
+            "posterior_std": 0.001,
+            "m": 2000,
+            "data_seed": 20261118,
+            "eval_draws": 64,
+            "val_draws": 3,
+            "clip_ce": 10.0,
+            "delta": 0.05,
+            "l2": 1e-05,
+            "device": "cpu",
+            "threads": 2,
+            "cpu_flush_denormal": true,
+            "rho_lr_scale": 0.1,
+            "download": false,
+            "moon_noise": 0.3,
+            "moons_sampler": "iid",
+            "train_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "deployment_channel": {
+              "kind": "diagonal_fading",
+              "rho_c": 0.35
+            },
+            "transmit_unit_power": true,
+            "lr_decay": 0.9942813025596521,
+            "train_mc": 1
+          },
+          "selected_epoch_by_seed": {
+            "26112571": 86,
+            "26112572": 237,
+            "26112573": 22,
+            "26112574": 61,
+            "26112575": 213
+          }
+        }
+      },
+      "paired_differences": {
+        "T1-Matched": {
+          "ERM-Matched": {
+            "mean_pp": 0.00778125000000216,
+            "sample_sd_pp": 0.11657472079032631,
+            "paired_bootstrap_95_interval_pp": [
+              -0.09228124999999351,
+              0.09849999999999567
+            ],
+            "wins": 4,
+            "ties": 0,
+            "losses": 1,
+            "by_seed_pp": {
+              "26112571": 0.036718750000005684,
+              "26112572": -0.17078124999999034,
+              "26112573": 0.004062500000003411,
+              "26112574": 0.15468749999999432,
+              "26112575": 0.014218749999997726
+            }
+          },
+          "L2-Matched": {
+            "mean_pp": 0.164031250000005,
+            "sample_sd_pp": 1.0874358559118134,
+            "paired_bootstrap_95_interval_pp": [
+              -0.6600937499999958,
+              1.0650937500000026
+            ],
+            "wins": 3,
+            "ties": 0,
+            "losses": 2,
+            "by_seed_pp": {
+              "26112571": 0.28812500000000796,
+              "26112572": -0.29046874999998806,
+              "26112573": -1.2145312500000074,
+              "26112574": 1.7759374999999977,
+              "26112575": 0.2610937500000148
+            }
+          }
+        },
+        "T2-Matched": {
+          "ERM-Matched": {
+            "mean_pp": -0.004937499999999773,
+            "sample_sd_pp": 0.11917761208656431,
+            "paired_bootstrap_95_interval_pp": [
+              -0.09790625000000261,
+              0.09031249999999602
+            ],
+            "wins": 3,
+            "ties": 0,
+            "losses": 2,
+            "by_seed_pp": {
+              "26112571": 0.036718750000005684,
+              "26112572": -0.17093749999999375,
+              "26112573": 0.004062500000003411,
+              "26112574": 0.15468749999999432,
+              "26112575": -0.049218750000008527
+            }
+          },
+          "L2-Matched": {
+            "mean_pp": 0.15131250000000307,
+            "sample_sd_pp": 1.0864057365075022,
+            "paired_bootstrap_95_interval_pp": [
+              -0.6601874999999978,
+              1.065062500000002
+            ],
+            "wins": 3,
+            "ties": 0,
+            "losses": 2,
+            "by_seed_pp": {
+              "26112571": 0.28812500000000796,
+              "26112572": -0.2906249999999915,
+              "26112573": -1.2145312500000074,
+              "26112574": 1.7759374999999977,
+              "26112575": 0.19765625000000853
+            }
+          }
+        }
+      },
+      "validation_selection_path": "manifests/moons-sweep-selection.json",
+      "validation_selection_sha256": "4d30aa1b83552a2619c0913ff5160d95c889d88da1268ddc7c515f285f411f32",
+      "confirmation_manifest_sha256": "6570bc5774918ac7460529e3e549e64810de2243321e89849e9571178b407587",
+      "validation_selected": {
+        "proposed": "T2-Matched",
+        "baseline": "L2-Matched",
+        "paired_gap": {
+          "mean_pp": 0.15131250000000307,
+          "sample_sd_pp": 1.0864057365075022,
+          "paired_bootstrap_95_interval_pp": [
+            -0.6601874999999978,
+            1.065062500000002
+          ],
+          "wins": 3,
+          "ties": 0,
+          "losses": 2,
+          "by_seed_pp": {
+            "26112571": 0.28812500000000796,
+            "26112572": -0.2906249999999915,
+            "26112573": -1.2145312500000074,
+            "26112574": 1.7759374999999977,
+            "26112575": 0.19765625000000853
+          }
+        },
+        "strongest_test_baseline": "ERM-Matched",
+        "gap_to_strongest_test_baseline_pp": -0.004937499999999773,
+        "beats_both_baselines": false
+      },
+      "descriptive_test_best": {
+        "proposed": "T1-Matched",
+        "baseline": "ERM-Matched",
+        "mean_gap_pp": 0.00778125000000216
+      }
+    }
+  }
+}

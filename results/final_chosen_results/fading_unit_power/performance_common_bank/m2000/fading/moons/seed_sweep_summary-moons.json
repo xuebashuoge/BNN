@@ -1,97 +1,97 @@
 {
-  "analysis": "Exploratory single training seed selected on schedule panel validation",
-  "all_reported_datasets_have_validation_selected_proposed_wins": false,
+  "analysis": "Exploratory single training seed selected on shrinkage panel validation",
+  "all_reported_datasets_have_validation_selected_proposed_wins": true,
   "datasets": {
     "moons": {
       "bank_size": 2000,
-      "training_seed": 26112532,
+      "training_seed": 26112551,
       "methods": {
         "ERM-Matched": {
-          "test_accuracy_pct": 71.51875000000001,
-          "test_cross_entropy": 0.566096435244754,
-          "validation_accuracy_pct": 71.1125,
+          "test_accuracy_pct": 71.51960937499999,
+          "test_cross_entropy": 0.5685239405632019,
+          "validation_accuracy_pct": 71.55416666666667,
           "test_draws": 128,
           "test_examples": 10000,
-          "task_id": "moons-ERM-Matched-regularization-m2000-incumbent-s26112532",
-          "selected_epoch": 133,
+          "task_id": "moons-ERM-Matched-regularization-m2000-strength-weak-s26112551",
+          "selected_epoch": 168,
           "checkpoint_fingerprints": {
             "weights": {
-              "sha256": "0fef1589d25e3552d266dcc79081006e2a48db72a44df35aefb652a1db0fb42f",
+              "sha256": "b2f408411c815260e4838f437de4aabc341806e7762a5eef4c4ad5de01623868",
               "bytes": 259131
             },
             "metadata": {
-              "sha256": "52225a89b4d358cb6f5e105ce3f45fe1a774758178bc18f8418a2e9256a4343c",
-              "bytes": 4355
+              "sha256": "ea7429d04c46bb511d6460b8cd4fa6b9f378ffe58d9e3f9b9b4e0364a6e2cb74",
+              "bytes": 4364
             }
           }
         },
         "L2-Matched": {
-          "test_accuracy_pct": 71.29359375,
-          "test_cross_entropy": 0.5674461332451552,
-          "validation_accuracy_pct": 71.125,
+          "test_accuracy_pct": 71.3665625,
+          "test_cross_entropy": 0.5693948591236024,
+          "validation_accuracy_pct": 71.39505208333333,
           "test_draws": 128,
           "test_examples": 10000,
-          "task_id": "moons-L2-Matched-regularization-m2000-schedule-300-k1-s26112532",
-          "selected_epoch": 126,
+          "task_id": "moons-L2-Matched-regularization-m2000-strength-weak-s26112551",
+          "selected_epoch": 120,
           "checkpoint_fingerprints": {
             "weights": {
-              "sha256": "918846a766e62d0c0b1ace7bab59578cd2f693c3dda2921f1c7676ad68b90e80",
+              "sha256": "76cf7ff3175aef86bb0ba4b7e77aa5a630bbf5d79fd50adc6d3787b7f35d70ea",
               "bytes": 259131
             },
             "metadata": {
-              "sha256": "2fd8735a948537f3b956bf13f49c08a4184363f04d11a2f634b40cf6f07d646d",
-              "bytes": 4491
+              "sha256": "04d915a70f88edaf95604f5c5499f6b01c6007dd7f4dcf97e12fa71dfd812ceb",
+              "bytes": 4433
             }
           }
         },
         "T1-Matched": {
-          "test_accuracy_pct": 71.271640625,
-          "test_cross_entropy": 0.5661480487402529,
-          "validation_accuracy_pct": 71.25,
+          "test_accuracy_pct": 71.64015625,
+          "test_cross_entropy": 0.5665871930975467,
+          "validation_accuracy_pct": 71.64192708333333,
           "test_draws": 128,
           "test_examples": 10000,
-          "task_id": "moons-T1-Matched-regularization-m2000-schedule-300-k1-s26112532",
-          "selected_epoch": 167,
+          "task_id": "moons-T1-Matched-regularization-m2000-incumbent-s26112551",
+          "selected_epoch": 248,
           "checkpoint_fingerprints": {
             "weights": {
-              "sha256": "5b958266c9d7ad930610181a65a36533674ca9f248b79c41a6c8fe6ab2a586f8",
+              "sha256": "032af4b2be5ec244befb15cc6172c55b9ea782e8ca0e8119a14d46a6d0b5096c",
               "bytes": 259131
             },
             "metadata": {
-              "sha256": "b706002345436a8a256de0ba68202f100443b816e54b1e6fa1ca5f773671b399",
+              "sha256": "73852a8ad10af0c29f4d06c4c1b32fe0ef8b89ad3ae7e09f6c2edff76b1b290d",
               "bytes": 4562
             }
           }
         },
         "T2-Matched": {
-          "test_accuracy_pct": 71.271640625,
-          "test_cross_entropy": 0.5661480512510986,
-          "validation_accuracy_pct": 71.25,
+          "test_accuracy_pct": 71.64015625,
+          "test_cross_entropy": 0.5665871998082848,
+          "validation_accuracy_pct": 71.64192708333333,
           "test_draws": 128,
           "test_examples": 10000,
-          "task_id": "moons-T2-Matched-regularization-m2000-schedule-300-k1-s26112532",
-          "selected_epoch": 167,
+          "task_id": "moons-T2-Matched-regularization-m2000-incumbent-s26112551",
+          "selected_epoch": 248,
           "checkpoint_fingerprints": {
             "weights": {
-              "sha256": "ffce65d774d023c35dd4e10713ccdbaecc0404836c7360cfb62ea6df9fe66fb8",
+              "sha256": "094b0aabdefcaf6f8dc82eb765dd4d547ff71683d3474cc1044974f09ec345f9",
               "bytes": 259131
             },
             "metadata": {
-              "sha256": "2235790fd9642cebccec08bfdc2a0d9736c6b4eab391ff4628101354e72e9df5",
+              "sha256": "64c955a29c126fddb0aefb07f4488de3ceaed9a690cee8783e36ecaec6cee50c",
               "bytes": 4557
             }
           }
         }
       },
-      "validation_proposed": "T2-Matched",
-      "validation_baseline": "L2-Matched",
-      "validation_gap_pp": 0.12499999999999734,
+      "validation_proposed": "T1-Matched",
+      "validation_baseline": "ERM-Matched",
+      "validation_gap_pp": 0.08776041666666012,
       "test_gaps_pp": {
-        "ERM-Matched": -0.24710937500000796,
-        "L2-Matched": -0.02195312499999602
+        "ERM-Matched": 0.12054687500001648,
+        "L2-Matched": 0.2735937500000034
       },
-      "beats_both_baselines": false,
-      "selection_sha256": "bfc278542925f14731c899a11e8342f6b8416f9dac2561523cc9a22b2bf75bb5"
+      "beats_both_baselines": true,
+      "selection_sha256": "2815c63287a12f4c36185fc18b5cb4ffef2901d946140f362782d18548d87833"
     }
   },
   "fixed_bank_size": 2000
