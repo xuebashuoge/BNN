@@ -1,0 +1,883 @@
+{
+  "dataset": "mnist",
+  "scope": "validation only",
+  "mode": "margin search",
+  "control_m": 2000,
+  "training_seeds": [
+    26112591,
+    26112592,
+    26112593
+  ],
+  "validation_draws": 40,
+  "manifest_sha256": "2fc22afdc6bf001599aab92e226be1519e626a5091797566ee022d0c5ca7e74b",
+  "rows": [
+    {
+      "m": 200,
+      "proposed": "T1-Matched",
+      "baseline": "L2-Matched",
+      "methods": {
+        "ERM-Matched": {
+          "candidate": "regularization-m200-margin-slow-cold",
+          "mean_accuracy_pct": 72.23916666666666,
+          "accuracy_pct_by_seed": {
+            "26112591": 71.99,
+            "26112592": 72.53349999999999,
+            "26112593": 72.194
+          }
+        },
+        "L2-Matched": {
+          "candidate": "regularization-m200-margin-slow-cold",
+          "mean_accuracy_pct": 72.279,
+          "accuracy_pct_by_seed": {
+            "26112591": 71.9765,
+            "26112592": 72.68549999999999,
+            "26112593": 72.17499999999998
+          }
+        },
+        "T1-Matched": {
+          "candidate": "regularization-m200-margin-slow-cold",
+          "mean_accuracy_pct": 72.18983333333333,
+          "accuracy_pct_by_seed": {
+            "26112591": 72.0285,
+            "26112592": 72.4795,
+            "26112593": 72.0615
+          }
+        },
+        "T2-Matched": {
+          "candidate": "regularization-m200-margin-slow-cold",
+          "mean_accuracy_pct": 72.178,
+          "accuracy_pct_by_seed": {
+            "26112591": 71.9265,
+            "26112592": 72.53550000000001,
+            "26112593": 72.072
+          }
+        }
+      },
+      "mean_gap_pp": -0.08916666666667084,
+      "paired_gap_pp": {
+        "26112591": 0.0519999999999925,
+        "26112592": -0.20599999999998886,
+        "26112593": -0.11349999999998772
+      },
+      "paired_gap_to_both_baselines_pp": {
+        "26112591": 0.03849999999999909,
+        "26112592": -0.20599999999998886,
+        "26112593": -0.1325000000000074
+      },
+      "best_seed": {
+        "seed": 26112591,
+        "proposed": "T1-Matched",
+        "baseline": "ERM-Matched",
+        "methods": {
+          "ERM-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 71.99
+          },
+          "L2-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 71.9765
+          },
+          "T1-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 72.0285
+          },
+          "T2-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 71.9265
+          }
+        },
+        "gap_pp": 0.03849999999999909,
+        "pairwise_gaps_pp": {
+          "T1_vs_ERM": 0.03849999999999909,
+          "T1_vs_L2": 0.0519999999999925,
+          "T2_vs_ERM": -0.06349999999999056,
+          "T2_vs_L2": -0.04999999999999716
+        },
+        "gap_to_strongest_baseline_pp": {
+          "T1-Matched": 0.03849999999999909,
+          "T2-Matched": -0.06349999999999056
+        },
+        "both_floor_pp": -0.06349999999999056,
+        "either_floor_pp": 0.03849999999999909
+      },
+      "candidate_validation": {
+        "ERM-Matched": {
+          "regularization-m200-margin-incumbent": {
+            "mean_accuracy": 0.7170433333333334,
+            "mean_cross_entropy": 1.1999856222407024,
+            "accuracy_by_seed": {
+              "26112591": 0.71672,
+              "26112592": 0.720265,
+              "26112593": 0.714145
+            }
+          },
+          "regularization-m200-margin-slow-cold": {
+            "mean_accuracy": 0.7223916666666667,
+            "mean_cross_entropy": 1.0795800865427652,
+            "accuracy_by_seed": {
+              "26112591": 0.7199,
+              "26112592": 0.725335,
+              "26112593": 0.72194
+            }
+          },
+          "regularization-m200-margin-decay-low": {
+            "mean_accuracy": 0.715815,
+            "mean_cross_entropy": 1.071247530110677,
+            "accuracy_by_seed": {
+              "26112591": 0.71317,
+              "26112592": 0.7196100000000001,
+              "26112593": 0.7146649999999999
+            }
+          },
+          "regularization-m200-margin-mc2-medium": {
+            "mean_accuracy": 0.7100816666666666,
+            "mean_cross_entropy": 1.1586295056406657,
+            "accuracy_by_seed": {
+              "26112591": 0.7106299999999999,
+              "26112592": 0.713485,
+              "26112593": 0.70613
+            }
+          },
+          "regularization-m200-margin-warm-decay": {
+            "mean_accuracy": 0.7071016666666666,
+            "mean_cross_entropy": 1.2614389343007406,
+            "accuracy_by_seed": {
+              "26112591": 0.70727,
+              "26112592": 0.714175,
+              "26112593": 0.6998599999999999
+            }
+          },
+          "regularization-m200-margin-warm-strong": {
+            "mean_accuracy": 0.7012200000000001,
+            "mean_cross_entropy": 1.4646016045633952,
+            "accuracy_by_seed": {
+              "26112591": 0.6999850000000001,
+              "26112592": 0.704045,
+              "26112593": 0.69963
+            }
+          }
+        },
+        "L2-Matched": {
+          "regularization-m200-margin-incumbent": {
+            "mean_accuracy": 0.7203016666666667,
+            "mean_cross_entropy": 1.0557473794047036,
+            "accuracy_by_seed": {
+              "26112591": 0.718,
+              "26112592": 0.723125,
+              "26112593": 0.7197800000000001
+            }
+          },
+          "regularization-m200-margin-slow-cold": {
+            "mean_accuracy": 0.7227899999999999,
+            "mean_cross_entropy": 1.0908746473058064,
+            "accuracy_by_seed": {
+              "26112591": 0.719765,
+              "26112592": 0.7268549999999999,
+              "26112593": 0.7217499999999999
+            }
+          },
+          "regularization-m200-margin-decay-low": {
+            "mean_accuracy": 0.716345,
+            "mean_cross_entropy": 1.1698981899261476,
+            "accuracy_by_seed": {
+              "26112591": 0.7148,
+              "26112592": 0.72203,
+              "26112593": 0.712205
+            }
+          },
+          "regularization-m200-margin-mc2-medium": {
+            "mean_accuracy": 0.7102266666666667,
+            "mean_cross_entropy": 1.1793235699971516,
+            "accuracy_by_seed": {
+              "26112591": 0.7106399999999999,
+              "26112592": 0.71312,
+              "26112593": 0.70692
+            }
+          },
+          "regularization-m200-margin-warm-decay": {
+            "mean_accuracy": 0.7015466666666667,
+            "mean_cross_entropy": 1.246694921213786,
+            "accuracy_by_seed": {
+              "26112591": 0.699425,
+              "26112592": 0.709185,
+              "26112593": 0.69603
+            }
+          },
+          "regularization-m200-margin-warm-strong": {
+            "mean_accuracy": 0.6797533333333333,
+            "mean_cross_entropy": 1.344052437133789,
+            "accuracy_by_seed": {
+              "26112591": 0.680675,
+              "26112592": 0.6794800000000001,
+              "26112593": 0.6791050000000001
+            }
+          }
+        },
+        "T1-Matched": {
+          "regularization-m200-margin-incumbent": {
+            "mean_accuracy": 0.6937533333333334,
+            "mean_cross_entropy": 1.250506513849894,
+            "accuracy_by_seed": {
+              "26112591": 0.6999500000000001,
+              "26112592": 0.6883950000000001,
+              "26112593": 0.692915
+            }
+          },
+          "regularization-m200-margin-slow-cold": {
+            "mean_accuracy": 0.7218983333333333,
+            "mean_cross_entropy": 1.0309824545288087,
+            "accuracy_by_seed": {
+              "26112591": 0.720285,
+              "26112592": 0.724795,
+              "26112593": 0.720615
+            }
+          },
+          "regularization-m200-margin-decay-low": {
+            "mean_accuracy": 0.71639,
+            "mean_cross_entropy": 1.2229904798889162,
+            "accuracy_by_seed": {
+              "26112591": 0.71395,
+              "26112592": 0.72163,
+              "26112593": 0.7135900000000001
+            }
+          },
+          "regularization-m200-margin-mc2-medium": {
+            "mean_accuracy": 0.710535,
+            "mean_cross_entropy": 1.3695234551239015,
+            "accuracy_by_seed": {
+              "26112591": 0.7101,
+              "26112592": 0.712315,
+              "26112593": 0.7091899999999999
+            }
+          },
+          "regularization-m200-margin-warm-decay": {
+            "mean_accuracy": 0.6955883333333334,
+            "mean_cross_entropy": 1.1608462627156575,
+            "accuracy_by_seed": {
+              "26112591": 0.69398,
+              "26112592": 0.703415,
+              "26112593": 0.68937
+            }
+          },
+          "regularization-m200-margin-warm-strong": {
+            "mean_accuracy": 0.66891,
+            "mean_cross_entropy": 1.2565375113805135,
+            "accuracy_by_seed": {
+              "26112591": 0.670005,
+              "26112592": 0.670355,
+              "26112593": 0.66637
+            }
+          }
+        },
+        "T2-Matched": {
+          "regularization-m200-margin-incumbent": {
+            "mean_accuracy": 0.6950949999999999,
+            "mean_cross_entropy": 1.2111421924972534,
+            "accuracy_by_seed": {
+              "26112591": 0.698525,
+              "26112592": 0.694005,
+              "26112593": 0.6927549999999999
+            }
+          },
+          "regularization-m200-margin-slow-cold": {
+            "mean_accuracy": 0.72178,
+            "mean_cross_entropy": 1.0666830820337931,
+            "accuracy_by_seed": {
+              "26112591": 0.719265,
+              "26112592": 0.7253550000000001,
+              "26112593": 0.72072
+            }
+          },
+          "regularization-m200-margin-decay-low": {
+            "mean_accuracy": 0.7154183333333334,
+            "mean_cross_entropy": 1.1977024923197428,
+            "accuracy_by_seed": {
+              "26112591": 0.71298,
+              "26112592": 0.722095,
+              "26112593": 0.7111799999999999
+            }
+          },
+          "regularization-m200-margin-mc2-medium": {
+            "mean_accuracy": 0.7104683333333334,
+            "mean_cross_entropy": 1.3494617959340414,
+            "accuracy_by_seed": {
+              "26112591": 0.708565,
+              "26112592": 0.7122550000000001,
+              "26112593": 0.710585
+            }
+          },
+          "regularization-m200-margin-warm-decay": {
+            "mean_accuracy": 0.6956883333333334,
+            "mean_cross_entropy": 1.1606173397699993,
+            "accuracy_by_seed": {
+              "26112591": 0.69408,
+              "26112592": 0.7034,
+              "26112593": 0.6895849999999999
+            }
+          },
+          "regularization-m200-margin-warm-strong": {
+            "mean_accuracy": 0.6690516666666667,
+            "mean_cross_entropy": 1.2732725067901611,
+            "accuracy_by_seed": {
+              "26112591": 0.670415,
+              "26112592": 0.670655,
+              "26112593": 0.666085
+            }
+          }
+        }
+      },
+      "pairwise_gaps_pp": {
+        "T1_vs_ERM": -0.04933333333333678,
+        "T1_vs_L2": -0.08916666666667084,
+        "T2_vs_ERM": -0.06116666666666504,
+        "T2_vs_L2": -0.10099999999999909
+      },
+      "gap_to_strongest_baseline_pp": {
+        "T1-Matched": -0.08916666666667084,
+        "T2-Matched": -0.10099999999999909
+      },
+      "both_floor_pp": -0.10099999999999909,
+      "either_floor_pp": -0.08916666666667084,
+      "paired_diagnostics": {
+        "26112591": {
+          "accuracy_pct": {
+            "ERM-Matched": 71.99,
+            "L2-Matched": 71.9765,
+            "T1-Matched": 72.0285,
+            "T2-Matched": 71.9265
+          },
+          "pairwise_gaps_pp": {
+            "T1_vs_ERM": 0.03849999999999909,
+            "T1_vs_L2": 0.0519999999999925,
+            "T2_vs_ERM": -0.06349999999999056,
+            "T2_vs_L2": -0.04999999999999716
+          },
+          "gap_to_strongest_baseline_pp": {
+            "T1-Matched": 0.03849999999999909,
+            "T2-Matched": -0.06349999999999056
+          },
+          "both_floor_pp": -0.06349999999999056,
+          "either_floor_pp": 0.03849999999999909
+        },
+        "26112592": {
+          "accuracy_pct": {
+            "ERM-Matched": 72.53349999999999,
+            "L2-Matched": 72.68549999999999,
+            "T1-Matched": 72.4795,
+            "T2-Matched": 72.53550000000001
+          },
+          "pairwise_gaps_pp": {
+            "T1_vs_ERM": -0.053999999999987836,
+            "T1_vs_L2": -0.20599999999998886,
+            "T2_vs_ERM": 0.0020000000000237605,
+            "T2_vs_L2": -0.14999999999997726
+          },
+          "gap_to_strongest_baseline_pp": {
+            "T1-Matched": -0.20599999999998886,
+            "T2-Matched": -0.14999999999997726
+          },
+          "both_floor_pp": -0.20599999999998886,
+          "either_floor_pp": -0.14999999999997726
+        },
+        "26112593": {
+          "accuracy_pct": {
+            "ERM-Matched": 72.194,
+            "L2-Matched": 72.17499999999998,
+            "T1-Matched": 72.0615,
+            "T2-Matched": 72.072
+          },
+          "pairwise_gaps_pp": {
+            "T1_vs_ERM": -0.1325000000000074,
+            "T1_vs_L2": -0.11349999999998772,
+            "T2_vs_ERM": -0.12199999999999989,
+            "T2_vs_L2": -0.10299999999998022
+          },
+          "gap_to_strongest_baseline_pp": {
+            "T1-Matched": -0.1325000000000074,
+            "T2-Matched": -0.12199999999999989
+          },
+          "both_floor_pp": -0.1325000000000074,
+          "either_floor_pp": -0.12199999999999989
+        }
+      },
+      "best_pairwise_seed": {
+        "seed": 26112591,
+        "proposed": "T1-Matched",
+        "baseline": "ERM-Matched",
+        "methods": {
+          "ERM-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 71.99
+          },
+          "L2-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 71.9765
+          },
+          "T1-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 72.0285
+          },
+          "T2-Matched": {
+            "candidate": "regularization-m200-margin-slow-cold",
+            "accuracy_pct": 71.9265
+          }
+        },
+        "gap_pp": 0.03849999999999909,
+        "pairwise_gaps_pp": {
+          "T1_vs_ERM": 0.03849999999999909,
+          "T1_vs_L2": 0.0519999999999925,
+          "T2_vs_ERM": -0.06349999999999056,
+          "T2_vs_L2": -0.04999999999999716
+        },
+        "gap_to_strongest_baseline_pp": {
+          "T1-Matched": 0.03849999999999909,
+          "T2-Matched": -0.06349999999999056
+        },
+        "both_floor_pp": -0.06349999999999056,
+        "either_floor_pp": 0.03849999999999909
+      },
+      "pairwise_delta_vs_control_pp": {
+        "T1_vs_ERM": -0.00916666666667254,
+        "T1_vs_L2": 0.018999999999991246,
+        "T2_vs_ERM": -0.19549999999998136,
+        "T2_vs_L2": -0.16733333333331757
+      },
+      "both_floor_delta_vs_control_pp": 0.007166666666662991,
+      "either_floor_delta_vs_control_pp": -0.1554999999999893
+    },
+    {
+      "m": 2000,
+      "proposed": "T2-Matched",
+      "baseline": "L2-Matched",
+      "methods": {
+        "ERM-Matched": {
+          "candidate": "regularization-m2000-margin-decay-low",
+          "mean_accuracy_pct": 78.12233333333333,
+          "accuracy_pct_by_seed": {
+            "26112591": 78.27499999999999,
+            "26112592": 78.178,
+            "26112593": 77.91399999999999
+          }
+        },
+        "L2-Matched": {
+          "candidate": "regularization-m2000-margin-decay-low",
+          "mean_accuracy_pct": 78.19033333333333,
+          "accuracy_pct_by_seed": {
+            "26112591": 78.382,
+            "26112592": 78.1405,
+            "26112593": 78.0485
+          }
+        },
+        "T1-Matched": {
+          "candidate": "regularization-m2000-margin-decay-low",
+          "mean_accuracy_pct": 78.08216666666667,
+          "accuracy_pct_by_seed": {
+            "26112591": 78.1275,
+            "26112592": 78.10549999999999,
+            "26112593": 78.01350000000001
+          }
+        },
+        "T2-Matched": {
+          "candidate": "regularization-m2000-margin-decay-low",
+          "mean_accuracy_pct": 78.25666666666665,
+          "accuracy_pct_by_seed": {
+            "26112591": 78.33200000000001,
+            "26112592": 78.2735,
+            "26112593": 78.16449999999999
+          }
+        }
+      },
+      "mean_gap_pp": 0.06633333333331848,
+      "paired_gap_pp": {
+        "26112591": -0.04999999999999716,
+        "26112592": 0.13299999999999557,
+        "26112593": 0.11599999999998545
+      },
+      "paired_gap_to_both_baselines_pp": {
+        "26112591": -0.04999999999999716,
+        "26112592": 0.09550000000000125,
+        "26112593": 0.11599999999998545
+      },
+      "best_seed": {
+        "seed": 26112592,
+        "proposed": "T2-Matched",
+        "baseline": "L2-Matched",
+        "methods": {
+          "ERM-Matched": {
+            "candidate": "regularization-m2000-margin-decay-low",
+            "accuracy_pct": 78.178
+          },
+          "L2-Matched": {
+            "candidate": "regularization-m2000-margin-incumbent",
+            "accuracy_pct": 78.1845
+          },
+          "T1-Matched": {
+            "candidate": "regularization-m2000-margin-slow-cold",
+            "accuracy_pct": 78.1195
+          },
+          "T2-Matched": {
+            "candidate": "regularization-m2000-margin-decay-low",
+            "accuracy_pct": 78.2735
+          }
+        },
+        "gap_pp": 0.08899999999999864,
+        "pairwise_gaps_pp": {
+          "T1_vs_ERM": -0.05849999999999511,
+          "T1_vs_L2": -0.06499999999999773,
+          "T2_vs_ERM": 0.09550000000000125,
+          "T2_vs_L2": 0.08899999999999864
+        },
+        "gap_to_strongest_baseline_pp": {
+          "T1-Matched": -0.06499999999999773,
+          "T2-Matched": 0.08899999999999864
+        },
+        "both_floor_pp": -0.06499999999999773,
+        "either_floor_pp": 0.08899999999999864
+      },
+      "candidate_validation": {
+        "ERM-Matched": {
+          "regularization-m2000-margin-incumbent": {
+            "mean_accuracy": 0.7800733333333335,
+            "mean_cross_entropy": 0.8207651839065552,
+            "accuracy_by_seed": {
+              "26112591": 0.77849,
+              "26112592": 0.7801400000000001,
+              "26112593": 0.7815900000000001
+            }
+          },
+          "regularization-m2000-margin-slow-cold": {
+            "mean_accuracy": 0.7811333333333333,
+            "mean_cross_entropy": 0.8176672531763712,
+            "accuracy_by_seed": {
+              "26112591": 0.781925,
+              "26112592": 0.780205,
+              "26112593": 0.7812699999999999
+            }
+          },
+          "regularization-m2000-margin-decay-low": {
+            "mean_accuracy": 0.7812233333333333,
+            "mean_cross_entropy": 0.8243215673065185,
+            "accuracy_by_seed": {
+              "26112591": 0.78275,
+              "26112592": 0.78178,
+              "26112593": 0.7791399999999999
+            }
+          },
+          "regularization-m2000-margin-mc2-medium": {
+            "mean_accuracy": 0.7777633333333333,
+            "mean_cross_entropy": 0.8391048460006715,
+            "accuracy_by_seed": {
+              "26112591": 0.77863,
+              "26112592": 0.7748649999999999,
+              "26112593": 0.779795
+            }
+          },
+          "regularization-m2000-margin-warm-decay": {
+            "mean_accuracy": 0.7730250000000001,
+            "mean_cross_entropy": 0.8572308747990927,
+            "accuracy_by_seed": {
+              "26112591": 0.7728200000000001,
+              "26112592": 0.77289,
+              "26112593": 0.7733650000000001
+            }
+          },
+          "regularization-m2000-margin-warm-strong": {
+            "mean_accuracy": 0.7667,
+            "mean_cross_entropy": 0.9081429365285238,
+            "accuracy_by_seed": {
+              "26112591": 0.764845,
+              "26112592": 0.76619,
+              "26112593": 0.769065
+            }
+          }
+        },
+        "L2-Matched": {
+          "regularization-m2000-margin-incumbent": {
+            "mean_accuracy": 0.7811783333333334,
+            "mean_cross_entropy": 0.81539689868927,
+            "accuracy_by_seed": {
+              "26112591": 0.78321,
+              "26112592": 0.781845,
+              "26112593": 0.77848
+            }
+          },
+          "regularization-m2000-margin-slow-cold": {
+            "mean_accuracy": 0.7803800000000001,
+            "mean_cross_entropy": 0.814083338101705,
+            "accuracy_by_seed": {
+              "26112591": 0.7810250000000001,
+              "26112592": 0.780555,
+              "26112593": 0.77956
+            }
+          },
+          "regularization-m2000-margin-decay-low": {
+            "mean_accuracy": 0.7819033333333333,
+            "mean_cross_entropy": 0.8204103846232096,
+            "accuracy_by_seed": {
+              "26112591": 0.7838200000000001,
+              "26112592": 0.781405,
+              "26112593": 0.780485
+            }
+          },
+          "regularization-m2000-margin-mc2-medium": {
+            "mean_accuracy": 0.77976,
+            "mean_cross_entropy": 0.8327005540084839,
+            "accuracy_by_seed": {
+              "26112591": 0.77986,
+              "26112592": 0.778415,
+              "26112593": 0.7810050000000001
+            }
+          },
+          "regularization-m2000-margin-warm-decay": {
+            "mean_accuracy": 0.7661383333333333,
+            "mean_cross_entropy": 0.8729694633102417,
+            "accuracy_by_seed": {
+              "26112591": 0.7662899999999999,
+              "26112592": 0.766205,
+              "26112593": 0.76592
+            }
+          },
+          "regularization-m2000-margin-warm-strong": {
+            "mean_accuracy": 0.7412583333333335,
+            "mean_cross_entropy": 0.9551987767155966,
+            "accuracy_by_seed": {
+              "26112591": 0.7415900000000001,
+              "26112592": 0.7414850000000001,
+              "26112593": 0.7407
+            }
+          }
+        },
+        "T1-Matched": {
+          "regularization-m2000-margin-incumbent": {
+            "mean_accuracy": 0.7733716666666667,
+            "mean_cross_entropy": 0.8633111977132161,
+            "accuracy_by_seed": {
+              "26112591": 0.773335,
+              "26112592": 0.7716700000000001,
+              "26112593": 0.77511
+            }
+          },
+          "regularization-m2000-margin-slow-cold": {
+            "mean_accuracy": 0.7802000000000001,
+            "mean_cross_entropy": 0.8179716998926798,
+            "accuracy_by_seed": {
+              "26112591": 0.7818400000000001,
+              "26112592": 0.781195,
+              "26112593": 0.777565
+            }
+          },
+          "regularization-m2000-margin-decay-low": {
+            "mean_accuracy": 0.7808216666666666,
+            "mean_cross_entropy": 0.8217647653325398,
+            "accuracy_by_seed": {
+              "26112591": 0.7812749999999999,
+              "26112592": 0.7810549999999999,
+              "26112593": 0.780135
+            }
+          },
+          "regularization-m2000-margin-mc2-medium": {
+            "mean_accuracy": 0.7789266666666667,
+            "mean_cross_entropy": 0.83326631468455,
+            "accuracy_by_seed": {
+              "26112591": 0.77895,
+              "26112592": 0.7770949999999999,
+              "26112593": 0.780735
+            }
+          },
+          "regularization-m2000-margin-warm-decay": {
+            "mean_accuracy": 0.7517333333333333,
+            "mean_cross_entropy": 0.9089880018107097,
+            "accuracy_by_seed": {
+              "26112591": 0.7511599999999999,
+              "26112592": 0.7520450000000001,
+              "26112593": 0.751995
+            }
+          },
+          "regularization-m2000-margin-warm-strong": {
+            "mean_accuracy": 0.723595,
+            "mean_cross_entropy": 1.0014389599990843,
+            "accuracy_by_seed": {
+              "26112591": 0.7242749999999999,
+              "26112592": 0.723095,
+              "26112593": 0.7234149999999999
+            }
+          }
+        },
+        "T2-Matched": {
+          "regularization-m2000-margin-incumbent": {
+            "mean_accuracy": 0.7716833333333334,
+            "mean_cross_entropy": 0.8697477847162883,
+            "accuracy_by_seed": {
+              "26112591": 0.7718900000000001,
+              "26112592": 0.769615,
+              "26112593": 0.773545
+            }
+          },
+          "regularization-m2000-margin-slow-cold": {
+            "mean_accuracy": 0.7816266666666666,
+            "mean_cross_entropy": 0.8136587169520061,
+            "accuracy_by_seed": {
+              "26112591": 0.7814,
+              "26112592": 0.781965,
+              "26112593": 0.781515
+            }
+          },
+          "regularization-m2000-margin-decay-low": {
+            "mean_accuracy": 0.7825666666666665,
+            "mean_cross_entropy": 0.8179404100672404,
+            "accuracy_by_seed": {
+              "26112591": 0.78332,
+              "26112592": 0.782735,
+              "26112593": 0.7816449999999999
+            }
+          },
+          "regularization-m2000-margin-mc2-medium": {
+            "mean_accuracy": 0.7792266666666666,
+            "mean_cross_entropy": 0.8335004970932006,
+            "accuracy_by_seed": {
+              "26112591": 0.77911,
+              "26112592": 0.77748,
+              "26112593": 0.7810900000000001
+            }
+          },
+          "regularization-m2000-margin-warm-decay": {
+            "mean_accuracy": 0.75222,
+            "mean_cross_entropy": 0.9079789543024698,
+            "accuracy_by_seed": {
+              "26112591": 0.75236,
+              "26112592": 0.752285,
+              "26112593": 0.752015
+            }
+          },
+          "regularization-m2000-margin-warm-strong": {
+            "mean_accuracy": 0.7238633333333334,
+            "mean_cross_entropy": 1.0026457696787516,
+            "accuracy_by_seed": {
+              "26112591": 0.7242,
+              "26112592": 0.72339,
+              "26112593": 0.724
+            }
+          }
+        }
+      },
+      "pairwise_gaps_pp": {
+        "T1_vs_ERM": -0.04016666666666424,
+        "T1_vs_L2": -0.10816666666666208,
+        "T2_vs_ERM": 0.13433333333331632,
+        "T2_vs_L2": 0.06633333333331848
+      },
+      "gap_to_strongest_baseline_pp": {
+        "T1-Matched": -0.10816666666666208,
+        "T2-Matched": 0.06633333333331848
+      },
+      "both_floor_pp": -0.10816666666666208,
+      "either_floor_pp": 0.06633333333331848,
+      "paired_diagnostics": {
+        "26112591": {
+          "accuracy_pct": {
+            "ERM-Matched": 78.27499999999999,
+            "L2-Matched": 78.382,
+            "T1-Matched": 78.1275,
+            "T2-Matched": 78.33200000000001
+          },
+          "pairwise_gaps_pp": {
+            "T1_vs_ERM": -0.14749999999999375,
+            "T1_vs_L2": -0.2545000000000073,
+            "T2_vs_ERM": 0.05700000000001637,
+            "T2_vs_L2": -0.04999999999999716
+          },
+          "gap_to_strongest_baseline_pp": {
+            "T1-Matched": -0.2545000000000073,
+            "T2-Matched": -0.04999999999999716
+          },
+          "both_floor_pp": -0.2545000000000073,
+          "either_floor_pp": -0.04999999999999716
+        },
+        "26112592": {
+          "accuracy_pct": {
+            "ERM-Matched": 78.178,
+            "L2-Matched": 78.1405,
+            "T1-Matched": 78.10549999999999,
+            "T2-Matched": 78.2735
+          },
+          "pairwise_gaps_pp": {
+            "T1_vs_ERM": -0.07250000000000512,
+            "T1_vs_L2": -0.0350000000000108,
+            "T2_vs_ERM": 0.09550000000000125,
+            "T2_vs_L2": 0.13299999999999557
+          },
+          "gap_to_strongest_baseline_pp": {
+            "T1-Matched": -0.07250000000000512,
+            "T2-Matched": 0.09550000000000125
+          },
+          "both_floor_pp": -0.07250000000000512,
+          "either_floor_pp": 0.09550000000000125
+        },
+        "26112593": {
+          "accuracy_pct": {
+            "ERM-Matched": 77.91399999999999,
+            "L2-Matched": 78.0485,
+            "T1-Matched": 78.01350000000001,
+            "T2-Matched": 78.16449999999999
+          },
+          "pairwise_gaps_pp": {
+            "T1_vs_ERM": 0.09950000000002035,
+            "T1_vs_L2": -0.03499999999999659,
+            "T2_vs_ERM": 0.2505000000000024,
+            "T2_vs_L2": 0.11599999999998545
+          },
+          "gap_to_strongest_baseline_pp": {
+            "T1-Matched": -0.03499999999999659,
+            "T2-Matched": 0.11599999999998545
+          },
+          "both_floor_pp": -0.03499999999999659,
+          "either_floor_pp": 0.11599999999998545
+        }
+      },
+      "best_pairwise_seed": {
+        "seed": 26112592,
+        "proposed": "T2-Matched",
+        "baseline": "L2-Matched",
+        "methods": {
+          "ERM-Matched": {
+            "candidate": "regularization-m2000-margin-decay-low",
+            "accuracy_pct": 78.178
+          },
+          "L2-Matched": {
+            "candidate": "regularization-m2000-margin-incumbent",
+            "accuracy_pct": 78.1845
+          },
+          "T1-Matched": {
+            "candidate": "regularization-m2000-margin-slow-cold",
+            "accuracy_pct": 78.1195
+          },
+          "T2-Matched": {
+            "candidate": "regularization-m2000-margin-decay-low",
+            "accuracy_pct": 78.2735
+          }
+        },
+        "gap_pp": 0.08899999999999864,
+        "pairwise_gaps_pp": {
+          "T1_vs_ERM": -0.05849999999999511,
+          "T1_vs_L2": -0.06499999999999773,
+          "T2_vs_ERM": 0.09550000000000125,
+          "T2_vs_L2": 0.08899999999999864
+        },
+        "gap_to_strongest_baseline_pp": {
+          "T1-Matched": -0.06499999999999773,
+          "T2-Matched": 0.08899999999999864
+        },
+        "both_floor_pp": -0.06499999999999773,
+        "either_floor_pp": 0.08899999999999864
+      },
+      "pairwise_delta_vs_control_pp": {
+        "T1_vs_ERM": 0.0,
+        "T1_vs_L2": 0.0,
+        "T2_vs_ERM": 0.0,
+        "T2_vs_L2": 0.0
+      },
+      "both_floor_delta_vs_control_pp": 0.0,
+      "either_floor_delta_vs_control_pp": 0.0
+    }
+  ]
+}

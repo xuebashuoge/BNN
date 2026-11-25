@@ -1,0 +1,3 @@
+stage	job_id	dependency	array
+mnist-bank-margin	35681818		0-143%32
+mnist-margin-summary	35681832	afterany:35681818	
