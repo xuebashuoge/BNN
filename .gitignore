@@ -11,3 +11,9 @@ __pycache__
 !/results/final_chosen_results/
 !/results/final_chosen_results/data/
 /results/final_chosen_results/models/
+
+# Frozen follow-up inputs and complete reports; checkpoint binaries stay local.
+!/results/fair_small_bank_20261123/
+/results/fair_small_bank_20261123/models/
+/results/fair_small_bank_20261123/*.lock
+/results/fair_small_bank_20261123/*.tmp
