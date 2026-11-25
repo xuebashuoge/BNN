@@ -1,0 +1,82 @@
+[
+  {
+    "dataset": "moons",
+    "channel": "Fading",
+    "t1_data_dependent": 70.595,
+    "t1_fixed_prior": 70.74766666666666,
+    "ERM-Matched": 70.4905,
+    "L2-Matched": 70.7865,
+    "T2-Matched": 70.74766666666666,
+    "gap_to_best_other": -0.1915000000000049
+  },
+  {
+    "dataset": "moons",
+    "channel": "Erasure",
+    "t1_data_dependent": 86.6738,
+    "t1_fixed_prior": 87.10170000000001,
+    "ERM-Matched": 86.8664,
+    "L2-Matched": 86.86689999999999,
+    "T2-Matched": 87.1497,
+    "gap_to_best_other": -0.47589999999999577
+  },
+  {
+    "dataset": "mnist",
+    "channel": "Fading",
+    "t1_data_dependent": 76.74650000000001,
+    "t1_fixed_prior": 77.35333333333334,
+    "ERM-Matched": 77.56500000000001,
+    "L2-Matched": 77.63483333333333,
+    "T2-Matched": 77.23,
+    "gap_to_best_other": -0.8883333333333212
+  },
+  {
+    "dataset": "mnist",
+    "channel": "Erasure",
+    "t1_data_dependent": 96.31099999999999,
+    "t1_fixed_prior": 96.2894,
+    "ERM-Matched": 96.23850000000002,
+    "L2-Matched": 96.2386,
+    "T2-Matched": 96.22930000000001,
+    "gap_to_best_other": 0.07239999999998759
+  },
+  {
+    "dataset": "fashionmnist",
+    "channel": "Fading",
+    "t1_data_dependent": 70.19449999999999,
+    "t1_fixed_prior": 70.1245,
+    "ERM-Matched": 70.08383333333335,
+    "L2-Matched": 70.16866666666668,
+    "T2-Matched": 70.11666666666666,
+    "gap_to_best_other": 0.025833333333309838
+  },
+  {
+    "dataset": "fashionmnist",
+    "channel": "Erasure",
+    "t1_data_dependent": 86.40883333333335,
+    "t1_fixed_prior": 86.27327777777778,
+    "ERM-Matched": 86.2975,
+    "L2-Matched": 86.22927777777778,
+    "T2-Matched": 86.31916666666667,
+    "gap_to_best_other": 0.08966666666667322
+  },
+  {
+    "dataset": "cifar10",
+    "channel": "Fading",
+    "t1_data_dependent": 58.646166666666666,
+    "t1_fixed_prior": 55.131499999999996,
+    "ERM-Matched": 54.60499999999999,
+    "L2-Matched": 55.689666666666675,
+    "T2-Matched": 55.24283333333333,
+    "gap_to_best_other": 2.9564999999999912
+  },
+  {
+    "dataset": "cifar10",
+    "channel": "Erasure",
+    "t1_data_dependent": 65.21889999999999,
+    "t1_fixed_prior": 65.2258,
+    "ERM-Matched": 65.2273,
+    "L2-Matched": 65.1009,
+    "T2-Matched": 65.33619999999999,
+    "gap_to_best_other": -0.11730000000000018
+  }
+]

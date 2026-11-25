@@ -1,6 +1,7 @@
 """Draw CIFAR-10 deployment accuracy from the m=2000 channel-mismatch sweep."""
 
 import csv
+import math
 from collections import defaultdict
 from pathlib import Path
 from statistics import mean
@@ -73,8 +74,10 @@ def draw(accuracies):
     axis.set_ylabel("Deployment accuracy (%)")
     axis.set_xlabel(r"Training outage probability $p_{\mathrm{tr}}$")
     axis.set_xlim(-0.024, 0.923)
-    axis.set_ylim(29, 55)
-    axis.set_yticks([30, 35, 40, 45, 50, 55])
+    # The archived figure tops out at 55%; extend in 5% steps only if a curve exceeds it.
+    top = max(55, 5 * math.ceil((max(accuracies.values()) + 0.5) / 5))
+    axis.set_ylim(29, top)
+    axis.set_yticks(range(30, top + 1, 5))
     axis.set_xticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
     axis.spines[["top", "right"]].set_visible(False)
     legend_handles.append(Line2D([], [], color="#474A50", linestyle=":", label="Matched law"))
