@@ -29,12 +29,12 @@ from torch.utils.data import DataLoader, Subset, TensorDataset
 
 try:
     from .full_fading import validate_fading_dimensions
-    from .theorem1 import (ChannelBank, GaussianMLP, channel_shift_diagnostic, gaussian_kl, joint_complexity,
-                           theorem1_terms, validate_channel)
+    from .theorem1 import (ChannelBank, GaussianMLP, channel_shift_diagnostic, gaussian_kl, gaussian_kl_to_prior,
+                           joint_complexity, theorem1_terms, validate_channel)
 except ImportError:
     from full_fading import validate_fading_dimensions
-    from theorem1 import (ChannelBank, GaussianMLP, channel_shift_diagnostic, gaussian_kl, joint_complexity,
-                          theorem1_terms, validate_channel)
+    from theorem1 import (ChannelBank, GaussianMLP, channel_shift_diagnostic, gaussian_kl, gaussian_kl_to_prior,
+                          joint_complexity, theorem1_terms, validate_channel)
 
 
 DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", predictor="legacy", training_loss="raw_ce", loss_epsilon=.01,
@@ -50,6 +50,20 @@ DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", predicto
 BOUNDED_MODEL_DEFAULTS = dict(bounded_feature_norm=1., bounded_receiver_norm=.3, posterior_mean_clip=0.)
 # Omitted settings keep the normalized configuration and hash of older runs.
 OPTIONAL_OPTIMIZATION_DEFAULTS = dict(lr_decay=1., train_mc=1)
+# Data-dependent channel prior Q_{W|S} = N(mu_S, channel_prior_std^2 I) for the
+# channel complexity of Theorem 1. mu_S is the posterior mean of a frozen
+# stage-1 checkpoint trained on the same S without the stage-2 bank U:
+#   perfect           stage 1 over the noiseless channel (no channel samples);
+#   independent_bank  stage 1 over an independently seeded bank U' ~ P_tr^m;
+#   fresh             stage 1 with fresh P_tr draws for every minibatch.
+# The sample complexity always keeps the fixed N(0, prior_std^2 I) prior.
+# Omitted fields keep the configuration and hash of older runs.
+OPTIONAL_PRIOR_DEFAULTS = dict(channel_prior="fixed", channel_prior_std=None, channel_prior_checkpoint=None,
+                               channel_prior_count=1, init_from_prior=True, train_channel_source="bank")
+CHANNEL_PRIORS = {"fixed", "perfect", "independent_bank", "fresh"}
+PRIOR_COMPATIBILITY_KEYS = ("dataset", "architecture", "width", "train_size", "val_size", "data_seed",
+                            "moon_noise", "moons_sampler", "transmit_unit_power", "training_loss",
+                            "loss_epsilon", "prior_std", *BOUNDED_MODEL_DEFAULTS)
 MOONS_EVALUATION_OVERRIDES = ("moons_eval_data_seed", "moons_eval_size")
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
 CNN_ARCHITECTURES = {"cnn", "cnn_mid", "cnn_mid_relu", "cnn_rxconv", "cnn_spatial3"}
@@ -126,7 +140,8 @@ def read_config(path: str | None) -> dict:
 
 
 def normalize_config(supplied: dict) -> dict:
-    unknown = supplied.keys() - DEFAULTS.keys() - BOUNDED_MODEL_DEFAULTS.keys() - OPTIONAL_OPTIMIZATION_DEFAULTS.keys()
+    unknown = (supplied.keys() - DEFAULTS.keys() - BOUNDED_MODEL_DEFAULTS.keys()
+               - OPTIONAL_OPTIMIZATION_DEFAULTS.keys() - OPTIONAL_PRIOR_DEFAULTS.keys())
     if unknown:
         raise ValueError(f"Unknown config fields: {sorted(unknown)}")
     config = {**DEFAULTS, **supplied}
@@ -191,7 +206,97 @@ def normalize_config(supplied: dict) -> dict:
         raise ValueError("Require 0<delta<1 and nonnegative regularization coefficients")
     if config["m"] <= 1 and config["train_channel"]["kind"] != "perfect":
         raise ValueError("Nonperfect training requires m>1")
+    validate_prior_config(config)
     return config
+
+
+def prior_setting(config: dict, key: str):
+    return config.get(key, OPTIONAL_PRIOR_DEFAULTS[key])
+
+
+def validate_prior_config(config: dict) -> None:
+    kind = prior_setting(config, "channel_prior")
+    if kind not in CHANNEL_PRIORS:
+        raise ValueError(f"channel_prior must be one of {sorted(CHANNEL_PRIORS)}")
+    if prior_setting(config, "train_channel_source") not in {"bank", "fresh"}:
+        raise ValueError("train_channel_source must be bank or fresh")
+    if not isinstance(prior_setting(config, "init_from_prior"), bool):
+        raise ValueError("init_from_prior must be a boolean")
+    count = prior_setting(config, "channel_prior_count")
+    if not isinstance(count, int) or isinstance(count, bool) or count < 1:
+        raise ValueError("channel_prior_count must be a positive integer")
+    std, path = prior_setting(config, "channel_prior_std"), prior_setting(config, "channel_prior_checkpoint")
+    if kind == "fixed":
+        if std is not None or path is not None:
+            raise ValueError("A fixed channel prior takes no channel_prior_std or checkpoint")
+        return
+    if (not isinstance(std, (int, float)) or isinstance(std, bool) or not math.isfinite(std) or std <= 0):
+        raise ValueError("A data-dependent channel prior requires a positive channel_prior_std")
+    if not isinstance(path, str) or not path:
+        raise ValueError("A data-dependent channel prior requires channel_prior_checkpoint")
+    if config["train_channel"]["kind"] == "perfect":
+        raise ValueError("Perfect training has no channel complexity; use channel_prior='fixed'")
+    if prior_setting(config, "train_channel_source") != "bank":
+        raise ValueError("The stage-2 posterior must train on its channel bank U")
+
+
+def load_channel_prior(config: dict, split: dict | None = None):
+    """Return the frozen prior mean mu_S and a verifiable record of its source.
+
+    Validity of Theorem 1 needs Q_{W|S} independent of the bank U. Stage 1
+    therefore must share S (same split hashes) and must not train on the
+    stage-2 bank: it uses the perfect channel, a different bank seed, or fresh
+    simulator draws, according to the declared construction.
+    """
+    kind = prior_setting(config, "channel_prior")
+    if kind == "fixed":
+        return None, None
+    checkpoint = Path(prior_setting(config, "channel_prior_checkpoint"))
+    metadata = json.loads((checkpoint / "metadata.json").read_text())
+    prior_config = normalize_config(metadata["config"])
+    for key in PRIOR_COMPATIBILITY_KEYS:
+        if prior_config.get(key) != config.get(key):
+            raise ValueError(f"Channel-prior checkpoint differs from the posterior in {key}")
+    if prior_setting(prior_config, "channel_prior") != "fixed":
+        raise ValueError("A channel-prior checkpoint must itself use the fixed prior")
+    source = prior_setting(prior_config, "train_channel_source")
+    if kind == "perfect":
+        valid = prior_config["train_channel"]["kind"] == "perfect"
+    elif kind == "independent_bank":
+        valid = (source == "bank" and prior_config["train_channel"] == config["train_channel"]
+                 and prior_config["channel_seed"] != config["channel_seed"])
+    else:
+        valid = source == "fresh" and prior_config["train_channel"] == config["train_channel"]
+    if not valid:
+        raise ValueError(f"Channel-prior checkpoint does not implement the {kind} construction")
+    if split is not None:
+        for key in ("train_indices_hash", "validation_indices_hash"):
+            if metadata["split"][key] != split[key]:
+                raise ValueError(f"Channel-prior checkpoint uses a different data split: {key}")
+    state = torch.load(checkpoint / "weights.pt", map_location=config["device"], weights_only=True)
+    prior_mu = state["model"]["mu"].detach().clone()
+    record = dict(construction=kind, checkpoint=str(checkpoint.resolve()),
+                  weights=file_fingerprint(checkpoint / "weights.pt"),
+                  metadata=file_fingerprint(checkpoint / "metadata.json"),
+                  stage1_config_hash=digest(prior_config), stage1_selected_epoch=metadata.get("selected_epoch"),
+                  stage1_train_channel=prior_config["train_channel"], stage1_channel_seed=prior_config["channel_seed"],
+                  stage1_train_channel_source=source, prior_std=prior_setting(config, "channel_prior_std"),
+                  candidate_count=prior_setting(config, "channel_prior_count"))
+    return prior_mu, record
+
+
+def attach_channel_prior(model, config: dict, split: dict | None = None, expected: dict | None = None):
+    prior_mu, record = load_channel_prior(config, split)
+    if prior_mu is None:
+        model.channel_prior_mu = None
+        return None
+    if prior_mu.shape != model.mu.shape:
+        raise ValueError("Channel-prior mean has a different parameter count")
+    if expected is not None and (record["weights"] != expected["weights"]
+                                 or record["metadata"] != expected["metadata"]):
+        raise ValueError("Channel-prior checkpoint changed after the posterior was trained")
+    model.channel_prior_mu = prior_mu.to(model.mu)
+    return record
 
 
 def sample_moons_iid(n_samples: int, noise: float, seed: int):
@@ -370,8 +475,14 @@ def complexities(model, config: dict) -> dict:
     kl = gaussian_kl(model.mu, model.rho, config["prior_std"])
     kwargs = dict(n=config["train_size"], m=config["m"], delta=config["delta"],
                   perfect_training=config["train_channel"]["kind"] == "perfect")
-    terms = theorem1_terms(kl, **kwargs)
-    return {"kl": kl, **terms, "joint_complexity": joint_complexity(kl, **kwargs)}
+    prior_mu = getattr(model, "channel_prior_mu", None)
+    if prior_mu is None:
+        terms = theorem1_terms(kl, **kwargs)
+        return {"kl": kl, **terms, "joint_complexity": joint_complexity(kl, **kwargs)}
+    channel_kl = gaussian_kl_to_prior(model.mu, model.rho, prior_mu, prior_setting(config, "channel_prior_std"))
+    terms = theorem1_terms(kl, **kwargs, channel_kl=channel_kl,
+                           channel_prior_count=prior_setting(config, "channel_prior_count"))
+    return {"kl": kl, "channel_kl": channel_kl, **terms, "joint_complexity": joint_complexity(kl, **kwargs)}
 
 
 def bounded_losses_from_ce(losses: torch.Tensor, config: dict) -> torch.Tensor:
@@ -544,6 +655,11 @@ def train(config: dict, output: Path):
     train_data, val_data, _, input_dim, classes, split = load_data(config, include_test=False)
     train_loader, val_loader = make_loader(train_data, config, True), make_loader(val_data, config)
     model, bank = make_models(config, input_dim, classes)
+    prior_record = attach_channel_prior(model, config, split)
+    if prior_record is not None and prior_setting(config, "init_from_prior"):
+        with torch.no_grad():
+            model.mu.copy_(model.channel_prior_mu)
+    fresh_training = prior_setting(config, "train_channel_source") == "fresh"
     mean_clip = config.get("posterior_mean_clip", 0.)
     if mean_clip:
         with torch.no_grad():
@@ -572,6 +688,12 @@ def train(config: dict, output: Path):
         rho_learning_rate=(config["lr"] * config["rho_lr_scale"] if model.rho.requires_grad else 0.))
     metadata["optimizer_schedule"] = dict(initial_learning_rates=[group["lr"] for group in optimizer.param_groups],
                                           epoch_multiplier=lr_decay)
+    if prior_record is not None:
+        metadata["prior"] = ("sample complexity: fixed N(0,prior_std^2 I); channel complexity: "
+                             "data-dependent N(mu_S, channel_prior_std^2 I) independent of the bank U")
+        metadata["channel_prior"] = dict(prior_record, initialized_posterior_mean=prior_setting(config, "init_from_prior"))
+    if fresh_training:
+        metadata["training_channel_source"] = "fresh draws from train_channel for every example and minibatch; bank unused"
     metadata["training_monte_carlo"] = dict(draws_per_minibatch=train_mc,
                                            empirical_reduction="mean of independent posterior and channel draws",
                                            penalty_applications_per_minibatch=1)
@@ -589,7 +711,10 @@ def train(config: dict, output: Path):
             batch_ce, batch_empirical, batch_objective = 0., 0., 0.
             for draw in range(train_mc):
                 theta = model.sample()
-                logits = model(x, theta, bank, "bank", generator=channel_generator)
+                if fresh_training:
+                    logits = model(x, theta, bank, "deployment", config["train_channel"], channel_generator)
+                else:
+                    logits = model(x, theta, bank, "bank", generator=channel_generator)
                 ce = F.cross_entropy(logits, y)
                 empirical = empirical_objective(logits, y, config)
                 loss = empirical if train_mc == 1 else empirical / train_mc
@@ -712,6 +837,7 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
             if not split_matches[key]:
                 raise ValueError(f"Data split no longer matches checkpoint: {key}")
     model, bank = make_models(config, input_dim, classes)
+    attach_channel_prior(model, config, split, metadata.get("channel_prior"))
     state = torch.load(checkpoint / "weights.pt", map_location=config["device"], weights_only=True)
     model.load_state_dict(state["model"])
     bank.load_state_dict(checkpoint_bank_state(state, config, regenerated_bank=bank))

@@ -31,10 +31,31 @@ def gaussian_kl(mu: torch.Tensor, rho: torch.Tensor, prior_std: float = 1.0) -> 
     return .5 * (variance_ratio + (mu / prior_std).square() - 1 - variance_ratio.log()).sum()
 
 
+def gaussian_kl_to_prior(mu: torch.Tensor, rho: torch.Tensor, prior_mu: torch.Tensor,
+                         prior_std: float) -> torch.Tensor:
+    """Exact KL(N(mu, softplus(rho)^2) || N(prior_mu, prior_std^2 I)).
+
+    The prior mean is a frozen tensor; gradients flow only to (mu, rho).
+    """
+    if prior_std <= 0:
+        raise ValueError("prior_std must be positive")
+    variance_ratio = (F.softplus(rho) / prior_std).square()
+    shift = ((mu - prior_mu.detach()) / prior_std).square()
+    return .5 * (variance_ratio + shift - 1 - variance_ratio.log()).sum()
+
+
 def theorem1_terms(kl: torch.Tensor, n: int, m: int, delta: float = .05,
                    sigma_data_sq: float = .25, sigma_channel_sq: float = .25,
-                   perfect_training: bool = False) -> dict[str, torch.Tensor]:
-    """Separated conditioned terms, using a union-bound confidence allocation.
+                   perfect_training: bool = False, channel_kl: torch.Tensor | None = None,
+                   channel_prior_count: int = 1) -> dict[str, torch.Tensor]:
+    """Separated conditioned terms of Theorem 1, eps_1 = eps_2 = delta/2.
+
+    ``kl`` is D(P_{W|US} || Q_W) for a prior independent of (U, S), used by the
+    sample complexity.  ``channel_kl`` is D(P_{W|US} || Q_{W|S}) for a prior
+    that may depend on S but not on U; it defaults to ``kl`` (Q_{W|S} = Q_W).
+    ``channel_prior_count`` is the size of a finite family of candidate
+    Q_{W|S} fixed before U is observed; a union bound replaces eps_1 by
+    eps_1 / count so the minimum over the family remains valid.
 
     Perfect training has a deterministic channel bank: its channel complexity
     is exactly zero.  A deployment-shift term is a separate question.
@@ -43,12 +64,15 @@ def theorem1_terms(kl: torch.Tensor, n: int, m: int, delta: float = .05,
         raise ValueError("Require n>1, m>1 (unless perfect), and 0<delta<1")
     if min(sigma_data_sq, sigma_channel_sq) < 0:
         raise ValueError("Sub-Gaussian variance proxies must be nonnegative")
+    if channel_prior_count < 1:
+        raise ValueError("channel_prior_count must be positive")
+    channel_kl = kl if channel_kl is None else channel_kl
     eps_data = delta if perfect_training else delta / 2
     sample = torch.sqrt(2 * sigma_data_sq / (n - 1) *
                         (kl + math.log(math.sqrt(n) / eps_data)))
     channel = kl.new_zeros(()) if perfect_training else torch.sqrt(
         2 * sigma_channel_sq / (m - 1) *
-        (kl + math.log(math.sqrt(m) / (delta / 2))))
+        (channel_kl + math.log(math.sqrt(m) * channel_prior_count / (delta / 2))))
     return {"channel_complexity": channel, "sample_complexity": sample}
 
 

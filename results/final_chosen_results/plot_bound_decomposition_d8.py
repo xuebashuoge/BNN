@@ -23,12 +23,14 @@ COMPONENTS = [
 ]
 STACK_ORDER = (0, 1, 2, 3, 4)
 
+BOUNDS = Path(__file__).resolve().parent / "data" / "bounds"
+STEM = Path(__file__).with_name("bound_decomposition_d8_t1_t2_both_channels")
 CASES = ("perfect", "t1_matched", "t2_matched", "t1_mismatch", "t2_mismatch")
 FIELDS = ("empirical", "sample", "channel", "joint", "shift")
 
 
 def read_panel(family):
-    directory = Path(__file__).resolve().parent / "data" / "bounds" / family
+    directory = BOUNDS / family
     rows, heldout = [], []
     parameter, matched, mismatch = (("rho_c", 0.35, 0.15) if family == "fading"
                                     else ("outage_prob", 0.50, 0.45))
@@ -100,7 +102,7 @@ def main():
         loc="upper center", bbox_to_anchor=(.54, .985), ncol=3,
         frameon=False, fontsize=7, labelspacing=.24, columnspacing=.8, handlelength=1.2,
     )
-    stem = Path(__file__).with_name("bound_decomposition_d8_t1_t2_both_channels")
+    stem = STEM
     for extension in ("png", "pdf"):
         fig.savefig(stem.with_suffix("." + extension), dpi=300, facecolor="white", bbox_inches="tight", pad_inches=.035)
     plt.close(fig)
