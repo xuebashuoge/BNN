@@ -79,3 +79,14 @@ bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$fixed_run" "$fixed_seed
 The seed planner also accepts `--bank-size 2000` to select among existing checkpoints at that bank. For an initial search campaign, pass `--source-phase search` with the fixed bank. The planner verifies the archived validation scores and evaluates the selected checkpoints in a separate Slurm stage.
 
 For Two moons, `--bank-size 2000 --schedule-panel` starts from a completed fixed-bank regularization run and evaluates three training schedules on twelve fresh paired validation seeds. Pass that run's `performance` directory to `--regularization-from`.
+
+The Two moons `--bank-size 2000 --strength-panel` follow-up starts from the schedule panel and evaluates four profiles per method on sixteen paired training seeds. It scores validation on a separate 12,000-example IID sample from the same population. The training split, checkpoint selection within each fit, and standard test split retain their original settings.
+
+```bash
+bash -l fading_unit_power/submit_sweep_spartan.sh "$strength_run" \
+  --regularization-from "$schedule_run/performance" --bank-size 2000 --strength-panel moons
+bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$strength_run" "$seed_run" --regularization
+bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$strength_run" "$audit_run" --strength-audit
+```
+
+The two seed campaigns select the same checkpoints using validation. The audit runs 128 deployment draws on a separately seeded 30,000-example IID test sample.

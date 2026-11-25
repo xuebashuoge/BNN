@@ -17,6 +17,9 @@ FIXED_BANK_CONFIRMATION_SEEDS = tuple(range(26112511, 26112516))
 SCHEDULE_VALIDATION_SEEDS = tuple(range(26112521, 26112533))
 SCHEDULE_CONFIRMATION_SEEDS = tuple(range(26112541, 26112546))
 SCHEDULE_PROFILES = ("incumbent", "schedule-240-k2", "schedule-300-k1")
+STRENGTH_VALIDATION_SEEDS = tuple(range(26112551, 26112567))
+STRENGTH_CONFIRMATION_SEEDS = tuple(range(26112571, 26112576))
+STRENGTH_PROFILES = ("incumbent", "strength-weak", "strength-medium", "strength-strong")
 PROFILE_COUNT = 6
 EVAL_DRAWS = {"search": 40, "confirmation": 64}
 SEED_FIELDS = {"seed", "channel_seed", "eval_seed"}
@@ -35,7 +38,13 @@ def selection_path(output, dataset):
     return output / "manifests" / f"{dataset}-sweep-selection.json"
 
 
-def seed_sets(fixed_bank, schedule_panel=False):
+def strength_validation_evaluation():
+    return dict(eval_draws=64, moons_eval_data_seed=261125900, moons_eval_size=12000)
+
+
+def seed_sets(fixed_bank, schedule_panel=False, strength_panel=False):
+    if strength_panel:
+        return STRENGTH_VALIDATION_SEEDS, STRENGTH_CONFIRMATION_SEEDS
     if schedule_panel:
         return SCHEDULE_VALIDATION_SEEDS, SCHEDULE_CONFIRMATION_SEEDS
     if fixed_bank:
@@ -43,9 +52,10 @@ def seed_sets(fixed_bank, schedule_panel=False):
     return VALIDATION_SEEDS, CONFIRMATION_SEEDS
 
 
-def count(phase, *, fixed_bank=False, schedule_panel=False):
-    validation_seeds, confirmation_seeds = seed_sets(fixed_bank, schedule_panel)
-    profiles_per_method = len(SCHEDULE_PROFILES) if schedule_panel else PROFILE_COUNT
+def count(phase, *, fixed_bank=False, schedule_panel=False, strength_panel=False):
+    validation_seeds, confirmation_seeds = seed_sets(fixed_bank, schedule_panel, strength_panel)
+    panel_profiles = STRENGTH_PROFILES if strength_panel else SCHEDULE_PROFILES if schedule_panel else None
+    profiles_per_method = len(panel_profiles) if panel_profiles else PROFILE_COUNT
     per_method = profiles_per_method * len(validation_seeds) if phase == "search" else len(confirmation_seeds)
     return len(primary.METHODS) * per_method
 
@@ -55,13 +65,19 @@ def search_design(planned):
     dataset, m = planned["dataset"], planned["bank_size"]
     fixed_bank = "fixed_bank_size" in planned
     schedule_panel = "schedule_panel" in planned
+    strength_panel = "strength_panel" in planned
     if dataset not in primary.DATASETS or m not in primary.BANK_SIZES or planned.get("fixed_bank_size", m) != m:
         raise ValueError("Invalid regularization dataset or bank")
     if schedule_panel and (planned["schedule_panel"] is not True or not fixed_bank or (dataset, m) != ("moons", 2000)):
         raise ValueError("The schedule panel requires fixed m=2000 on Two moons")
+    if strength_panel and (planned["strength_panel"] is not True or schedule_panel or
+                           not fixed_bank or (dataset, m) != ("moons", 2000) or
+                           planned.get("validation_evaluation") != strength_validation_evaluation()):
+        raise ValueError("The strength panel requires fixed m=2000 and the independent Two moons validation population")
 
-    validation_seeds, confirmation_seeds = seed_sets(fixed_bank, schedule_panel)
-    profiles_per_method = len(SCHEDULE_PROFILES) if schedule_panel else PROFILE_COUNT
+    validation_seeds, confirmation_seeds = seed_sets(fixed_bank, schedule_panel, strength_panel)
+    panel_profiles = STRENGTH_PROFILES if strength_panel else SCHEDULE_PROFILES if schedule_panel else None
+    profiles_per_method = len(panel_profiles) if panel_profiles else PROFILE_COUNT
     if (tuple(planned["validation_seeds"]), tuple(planned["confirmation_seeds"])) != (
             validation_seeds, confirmation_seeds):
         raise ValueError(f"Unexpected regularization seeds for {dataset}")
@@ -72,8 +88,8 @@ def search_design(planned):
         if (not isinstance(names, (list, tuple)) or any(not isinstance(name, str) or not name for name in names)
                 or len(names) != profiles_per_method or len(set(names)) != len(names)):
             raise ValueError(f"Unexpected regularization profiles for {dataset}/{method}")
-        if schedule_panel and tuple(names) != tuple(f"regularization-m{m}-{name}" for name in SCHEDULE_PROFILES):
-            raise ValueError(f"Unexpected schedule profiles for {dataset}/{method}")
+        if panel_profiles and tuple(names) != tuple(f"regularization-m{m}-{name}" for name in panel_profiles):
+            raise ValueError(f"Unexpected panel profiles for {dataset}/{method}")
     return validation_seeds, confirmation_seeds, profiles_per_method
 
 
@@ -217,39 +233,51 @@ def profiles(method, config, l2_anchor, hot_posterior, tight_prior):
             yield name, {**config, **settings, **coefficients}, calibration
 
 
-def task(phase, method, name, config, source, seed):
+def task(phase, method, name, config, source, seed, *, evaluation_overrides=None):
     draws = EVAL_DRAWS[phase]
     values = {**config, "seed": seed, "channel_seed": seed + 10_000,
               "eval_seed": seed + 20_000, "eval_draws": draws}
     evaluation = dict(eval_draws=draws, eval_seed=seed + 1_000_003)
+    if evaluation_overrides:
+        evaluation.update(evaluation_overrides)
     candidate = f"regularization-m{config['m']}-{name}"
     return performance.task_entry(phase, method, candidate, values, evaluation, source)
 
 
-def schedule_anchors(source, dataset, bank_size):
+def frozen_panel_anchors(source, dataset, bank_size, *, from_schedule=False):
     source_plan = plan_path(source, dataset)
     planned = performance.read_json(source_plan)
-    if planned.get("fixed_bank_size") != bank_size or "schedule_panel" in planned:
-        raise ValueError(f"Expected the fixed-bank regularization search for {dataset}")
+    source_kind = "schedule" if from_schedule else "regularization"
+    if (planned.get("fixed_bank_size") != bank_size or "strength_panel" in planned or
+            ("schedule_panel" in planned) != from_schedule):
+        raise ValueError(f"Expected the fixed-bank {source_kind} search for {dataset}")
     anchors, confirmation, replayed = replay_selection(source, dataset)
     selection = selection_path(source, dataset)
     confirmation_manifest = performance.manifest_path(source, dataset, "confirmation")
     replayed["confirmation_manifest_sha256"] = primary.sha256(confirmation_manifest)
     if (performance.read_json(selection) != replayed or
             performance.read_manifest(confirmation_manifest) != confirmation):
-        raise ValueError(f"Prior regularization selection differs from validation replay for {dataset}")
-    fingerprints = dict(
-        regularization_search_manifest_sha256=replayed["search_manifest_sha256"],
-        regularization_plan_sha256=replayed["search_plan_sha256"],
-        regularization_selection_sha256=primary.sha256(selection),
-    )
+        raise ValueError(f"Prior {source_kind} selection differs from validation replay for {dataset}")
+    fingerprints = {
+        f"{source_kind}_search_manifest_sha256": replayed["search_manifest_sha256"],
+        f"{source_kind}_plan_sha256": replayed["search_plan_sha256"],
+        f"{source_kind}_selection_sha256": primary.sha256(selection),
+    }
     return anchors, fingerprints
+
+
+def validate_matched_anchor(base, common, dataset, method, bank_size):
+    if ((base["method"], base["m"], base["predictor"], base["train_channel"],
+            base["deployment_channel"], base["transmit_unit_power"]) != (
+            primary.METHOD_OBJECTIVE[method], bank_size, "gaussian", performance.FADING, performance.FADING, True)
+            or any(base.get(field) != common.get(field) for field in MATCHED_FIELDS)):
+        raise ValueError(f"Unmatched prior regularization anchor for {dataset}/{method}")
 
 
 def plan_schedule_panel(output, source, dataset, bank_size):
     if (dataset, bank_size) != ("moons", 2000):
         raise ValueError("The schedule panel requires --dataset moons --bank-size 2000")
-    anchors, fingerprints = schedule_anchors(source, dataset, bank_size)
+    anchors, fingerprints = frozen_panel_anchors(source, dataset, bank_size)
     variants = (
         {},
         dict(epochs=240, lr=.003125, lr_decay=.20 ** (1 / 239), train_mc=2),
@@ -259,11 +287,7 @@ def plan_schedule_panel(output, source, dataset, bank_size):
     common = anchors[primary.METHODS[0]]["config"]
     for method, anchor in anchors.items():
         base = anchor["config"]
-        if ((base["method"], base["m"], base["predictor"], base["train_channel"],
-                base["deployment_channel"], base["transmit_unit_power"]) != (
-                primary.METHOD_OBJECTIVE[method], bank_size, "gaussian", performance.FADING, performance.FADING, True)
-                or any(base.get(field) != common.get(field) for field in MATCHED_FIELDS)):
-            raise ValueError(f"Unmatched prior regularization anchor for {dataset}/{method}")
+        validate_matched_anchor(base, common, dataset, method, bank_size)
         configs = [{**base, **update} for update in variants]
         if any(config in configs[:i] for i, config in enumerate(configs)):
             raise ValueError(f"Expected distinct schedules for {dataset}/{method}")
@@ -286,9 +310,67 @@ def plan_schedule_panel(output, source, dataset, bank_size):
     print(f"{manifest} ({len(rows)} tasks), m={bank_size}")
 
 
-def plan(output, source, dataset, *, bank_size=None, schedule_panel=False):
+def strength_profiles(base, method):
+    yield "incumbent", base, {}
+    shared_profiles = (
+        (.0001, .10, .025, .25, 240, .003125, .20, 2),
+        (.0005, .16, .035, .50, 300, .00625, .18, 1),
+        (.002, .25, .050, .75, 300, .004, .30, 2),
+    )
+    for name, (strength, prior, posterior, share, epochs, lr, end_lr, draws) in zip(
+            STRENGTH_PROFILES[1:], shared_profiles):
+        config = {**base, "prior_std": prior, "posterior_std": posterior, "rho_lr_scale": 1.,
+                  "epochs": epochs, "lr": lr, "lr_decay": end_lr ** (1 / (epochs - 1)), "train_mc": draws}
+        calibration = {}
+        if method in primary.PROPOSED:
+            config.update(calibrated_penalty(config, method, prior, posterior, strength, share))
+            calibration = dict(initial_l2_target=strength,
+                               initial_channel_gradient_share=share if method == "T1-Matched" else None)
+        elif method == "L2-Matched":
+            config["l2"] = strength
+        yield name, config, calibration
+
+
+def plan_strength_panel(output, source, dataset, bank_size):
+    if (dataset, bank_size) != ("moons", 2000):
+        raise ValueError("The strength panel requires --dataset moons --bank-size 2000")
+    anchors, fingerprints = frozen_panel_anchors(source, dataset, bank_size, from_schedule=True)
+    validation_evaluation = strength_validation_evaluation()
+    rows, planned = [], {}
+    common = anchors[primary.METHODS[0]]["config"]
+    for method, anchor in anchors.items():
+        base = anchor["config"]
+        validate_matched_anchor(base, common, dataset, method, bank_size)
+        planned[method] = []
+        for name, config, calibration in strength_profiles(base, method):
+            provenance = dict(schedule_search_task=anchor["task_id"], profile=name, calibration=calibration,
+                              **fingerprints)
+            entries = [task("search", method, name, config, provenance, seed,
+                            evaluation_overrides=validation_evaluation)
+                       for seed in STRENGTH_VALIDATION_SEEDS]
+            planned[method].append(entries[0]["candidate"])
+            rows.extend(entries)
+
+    manifest = performance.manifest_path(output, dataset, "search")
+    performance.write_manifest(manifest, rows)
+    performance.write_json(plan_path(output, dataset), dict(
+        dataset=dataset, bank_size=bank_size, source=str(source), source_fingerprints=fingerprints,
+        anchor_tasks={method: row["task_id"] for method, row in anchors.items()},
+        validation_seeds=STRENGTH_VALIDATION_SEEDS, confirmation_seeds=STRENGTH_CONFIRMATION_SEEDS,
+        profiles=planned, search_manifest_sha256=primary.sha256(manifest),
+        fixed_bank_size=bank_size, strength_panel=True, validation_evaluation=validation_evaluation,
+    ), frozen=True)
+    print(f"{manifest} ({len(rows)} tasks), m={bank_size}")
+
+
+def plan(output, source, dataset, *, bank_size=None, schedule_panel=False, strength_panel=False):
     if output == source or source in output.parents or output in source.parents:
         raise ValueError("Use a follow-up directory separate from the primary performance directory")
+    if schedule_panel and strength_panel:
+        raise ValueError("Choose one panel for the regularization launch")
+    if strength_panel:
+        plan_strength_panel(output, source, dataset, bank_size)
+        return
     if schedule_panel:
         plan_schedule_panel(output, source, dataset, bank_size)
         return
@@ -338,6 +420,7 @@ def replay_selection(output, dataset):
     full_count = len(primary.METHODS) * profiles_per_method * len(validation_seeds)
     if (planned["dataset"], planned["search_manifest_sha256"], len(rows)) != (dataset, manifest_hash, full_count):
         raise ValueError(f"Incomplete or inconsistent search plan for {dataset}")
+    validation_evaluation = strength_validation_evaluation() if planned.get("strength_panel") else None
 
     groups = defaultdict(lambda: defaultdict(list))
     for row in rows:
@@ -345,6 +428,9 @@ def replay_selection(output, dataset):
         if ((row["phase"], config["dataset"], config["m"]) != ("search", dataset, m) or
                 row["method"] not in primary.METHODS):
             raise ValueError(f"Invalid regularization validation row {row['task_id']}")
+        if validation_evaluation and row["evaluation"] != dict(
+                eval_seed=config["seed"] + 1_000_003, **validation_evaluation):
+            raise ValueError(f"Strength-panel validation differs for {row['task_id']}")
         groups[row["method"]][row["candidate"]].append(row)
 
     scores, winners = {}, {}
@@ -360,6 +446,9 @@ def replay_selection(output, dataset):
                     any(config != configs[0] for config in configs)):
                 raise ValueError(f"Unpaired regularization validation entries for {dataset}/{candidate}")
             metrics = [performance.evaluate_result(output, entry)["heldout_gibbs_mc"] for entry in entries]
+            if validation_evaluation and any(metric["examples"] != validation_evaluation["moons_eval_size"]
+                                             for metric in metrics):
+                raise ValueError(f"Invalid strength-panel validation example count for {dataset}/{candidate}")
             scores[method][candidate] = dict(
                 mean_accuracy=statistics.fmean(metric["accuracy"] for metric in metrics),
                 mean_cross_entropy=statistics.fmean(metric["cross_entropy"] for metric in metrics),
@@ -403,7 +492,9 @@ def main():
     commands = parser.add_subparsers(dest="command", required=True)
     count_command = commands.add_parser("count")
     count_command.add_argument("--phase", choices=("search", "confirmation"), required=True)
-    count_command.add_argument("--schedule-panel", action="store_true")
+    count_panel = count_command.add_mutually_exclusive_group()
+    count_panel.add_argument("--schedule-panel", action="store_true")
+    count_panel.add_argument("--strength-panel", action="store_true")
     for name in ("plan", "select"):
         command = commands.add_parser(name)
         command.add_argument("--output", type=Path, required=True)
@@ -411,14 +502,17 @@ def main():
     commands.choices["plan"].add_argument("--source", type=Path, required=True, help="Primary performance directory")
     commands.choices["plan"].add_argument("--bank-size", type=int, choices=primary.BANK_SIZES,
                                          help="Use the same validated bank for all requested datasets")
-    commands.choices["plan"].add_argument("--schedule-panel", action="store_true",
-                                         help="Use fixed-bank regularization validation as the Two moons schedule anchor")
+    plan_panel = commands.choices["plan"].add_mutually_exclusive_group()
+    plan_panel.add_argument("--schedule-panel", action="store_true",
+                            help="Use fixed-bank regularization validation as the Two moons schedule anchor")
+    plan_panel.add_argument("--strength-panel", action="store_true",
+                            help="Use fixed-bank schedule validation as the Two moons strength anchor")
     args = parser.parse_args()
     if args.command == "count":
-        print(count(args.phase, schedule_panel=args.schedule_panel))
+        print(count(args.phase, schedule_panel=args.schedule_panel, strength_panel=args.strength_panel))
     elif args.command == "plan":
         plan(args.output.resolve(), args.source.resolve(), args.dataset, bank_size=args.bank_size,
-             schedule_panel=args.schedule_panel)
+             schedule_panel=args.schedule_panel, strength_panel=args.strength_panel)
     else:
         select(args.output.resolve(), args.dataset)
 

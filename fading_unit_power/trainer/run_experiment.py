@@ -50,6 +50,7 @@ DEFAULTS = dict(dataset="mnist", architecture="mlp", method="proposed", predicto
 BOUNDED_MODEL_DEFAULTS = dict(bounded_feature_norm=1., bounded_receiver_norm=.3, posterior_mean_clip=0.)
 # Omitted settings keep the normalized configuration and hash of older runs.
 OPTIONAL_OPTIMIZATION_DEFAULTS = dict(lr_decay=1., train_mc=1)
+MOONS_EVALUATION_OVERRIDES = ("moons_eval_data_seed", "moons_eval_size")
 METHODS = {"erm", "l2", "stochastic_erm", "pac_bayes", "proposed", "joint"}
 CNN_ARCHITECTURES = {"cnn", "cnn_mid", "cnn_mid_relu", "cnn_rxconv", "cnn_spatial3"}
 _CPU_FLUSH_DENORMAL_SUPPORTED: bool | None = None
@@ -656,6 +657,21 @@ def train(config: dict, output: Path):
                       "seconds": metadata["total_seconds"], "peak_rss_mb": metadata["peak_rss_mb"]}), flush=True)
 
 
+def validate_moons_evaluation(config: dict, overrides: dict, split_name: str, risk_scope: str) -> None:
+    if set(overrides) != set(MOONS_EVALUATION_OVERRIDES):
+        raise ValueError("moons_eval_data_seed and moons_eval_size must be provided together")
+    if (config["dataset"] != "moons" or config["moons_sampler"] != "iid" or
+            split_name not in {"validation", "test"} or risk_scope != "deployment"):
+        raise ValueError("Custom Two moons samples require IID data and deployment validation or test evaluation")
+    seed, size = (overrides[key] for key in MOONS_EVALUATION_OVERRIDES)
+    if type(seed) is not int or not 0 <= seed < 2**63:
+        raise ValueError("moons_eval_data_seed must be a nonnegative signed 64-bit integer")
+    if seed in (config["data_seed"], config["data_seed"] + 1):
+        raise ValueError("moons_eval_data_seed must differ from the training pool and original test seeds")
+    if type(size) is not int or size <= 0:
+        raise ValueError("moons_eval_size must be a positive integer")
+
+
 def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Path, split_name: str,
                         risk_scope: str = "full"):
     if risk_scope not in {"deployment", "full"}:
@@ -676,14 +692,18 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
     if config["dataset"] == "moons" and "moons_sampler" not in config:
         config["moons_sampler"] = "legacy_grid"
     overrides = {} if overrides_path is None else json.loads(Path(overrides_path).read_text())
-    allowed = {"deployment_channel", "eval_draws", "eval_seed", "device", "threads", "batch_size", "download"}
+    allowed = {"deployment_channel", "eval_draws", "eval_seed", "device", "threads", "batch_size", "download",
+               *MOONS_EVALUATION_OVERRIDES}
     if set(overrides) - allowed:
         raise ValueError(f"Evaluation overrides restricted to {sorted(allowed)}")
+    moons_evaluation = {key: overrides.pop(key) for key in MOONS_EVALUATION_OVERRIDES if key in overrides}
     config.update(overrides)
     config = normalize_config(config)
+    if moons_evaluation:
+        validate_moons_evaluation(config, moons_evaluation, split_name, risk_scope)
     check_device(config)
     torch.set_num_threads(config["threads"])
-    data = load_data(config, include_test=split_name == "test")
+    data = load_data(config, include_test=split_name == "test" and not moons_evaluation)
     train_data, val_data, test_data, input_dim, classes, split = data
     split_matches = {}
     for key in ("train_indices_hash", "validation_indices_hash"):
@@ -701,11 +721,15 @@ def evaluate_checkpoint(checkpoint: Path, overrides_path: str | None, output: Pa
     if recorded_bank_hash is not None and saved_bank_hash != recorded_bank_hash:
         raise ValueError("Saved channel-bank buffers differ from the recorded bank hash")
     selected = {"train": train_data, "validation": val_data, "test": test_data}[split_name]
+    if moons_evaluation:
+        x, y = sample_moons_iid(moons_evaluation["moons_eval_size"], config["moon_noise"],
+                               moons_evaluation["moons_eval_data_seed"])
+        selected = TensorDataset(torch.tensor(x, dtype=torch.float32), torch.tensor(y, dtype=torch.long))
     loader = make_loader(selected, config)
     result = evaluate(model, bank, loader, config, config["eval_draws"], config["eval_seed"])
     report = dict(checkpoint=str(checkpoint.resolve()), split=split_name, risk_scope=risk_scope,
                   checkpoint_source_fingerprints=checkpoint_sources,
-                  evaluation_config=config, selected_epoch=metadata.get("selected_epoch"),
+                  evaluation_config={**config, **moons_evaluation}, selected_epoch=metadata.get("selected_epoch"),
                   heldout_gibbs_mc=result,
                   channel_shift_diagnostic=channel_shift_diagnostic(config["deployment_channel"],
                                                                    config["train_channel"], config["width"]),

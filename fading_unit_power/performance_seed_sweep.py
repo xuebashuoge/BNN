@@ -17,6 +17,8 @@ from .performance_sweep_report import file_record
 
 TEST_DRAWS = 128
 TEST_EVAL_OFFSET = 2_000_007
+AUDIT_EVAL_OFFSET = 3_000_019
+AUDIT_POPULATION = dict(moons_eval_data_seed=261125901, moons_eval_size=30000)
 CHECKPOINT_FILES = {"weights": "weights.pt", "metadata": "metadata.json"}
 
 
@@ -79,6 +81,9 @@ def validation_design(source, dataset, manifest, source_phase, bank_size, entry_
         provenance["fixed_bank_size"] = m
     if planned.get("schedule_panel"):
         provenance["search_origin"] = "schedule-panel"
+    if planned.get("strength_panel"):
+        provenance["search_origin"] = "strength-panel"
+        provenance["validation_evaluation"] = regularization.strength_validation_evaluation()
     return (m,), validation_seeds, {(m, method): names for method, names in profiles.items()}, provenance
 
 
@@ -102,7 +107,7 @@ def verify_initial_scores(source, dataset, candidates, banks, seeds):
         raise ValueError(f"Initial search scores differ from the validation results for {dataset}")
 
 
-def plan(output, source, dataset, *, source_phase="refine", bank_size=None):
+def plan(output, source, dataset, *, source_phase="refine", bank_size=None, audit_population=False):
     if source == output:
         raise ValueError("Use a separate output directory for seed tuning")
     manifest = performance.manifest_path(source, dataset, source_phase)
@@ -113,7 +118,10 @@ def plan(output, source, dataset, *, source_phase="refine", bank_size=None):
             raise ValueError(f"Bank size {bank_size} is unavailable for {dataset}; available sizes are {banks}")
         provenance["fixed_bank_size"] = bank_size
     initial_search = provenance.get("search_origin") == "initial"
-    search_draws = (sweep if initial_search else regularization).EVAL_DRAWS["search"]
+    validation_evaluation = provenance.get("validation_evaluation", {})
+    search_draws = validation_evaluation.get("eval_draws", (sweep if initial_search else regularization).EVAL_DRAWS["search"])
+    if audit_population and provenance.get("search_origin") != "strength-panel":
+        raise ValueError("The independent IID audit requires a Two moons strength-panel selection")
     by_id = {entry["task_id"]: entry for entry in entries}
     candidates = defaultdict(dict)
     profile_configs = {}
@@ -126,13 +134,16 @@ def plan(output, source, dataset, *, source_phase="refine", bank_size=None):
         if profiles is not None:
             if (seed not in seeds or entry["candidate"] not in profiles.get((m, method), ()) or
                     config["method"] != sweep.METHOD_OBJECTIVE[method] or
-                    entry["evaluation"]["eval_draws"] != search_draws):
+                    entry["evaluation"]["eval_draws"] != search_draws or
+                    any(entry["evaluation"].get(key) != value for key, value in validation_evaluation.items())):
                 raise ValueError(f"Search entry differs from its validation design: {entry['task_id']}")
             settings = {field: value for field, value in config.items() if field not in regularization.SEED_FIELDS}
             if settings != profile_configs.setdefault((m, method, entry["candidate"]), settings):
                 raise ValueError(f"Unpaired search profile configuration: {entry['task_id']}")
         report = performance.evaluate_result(source, entry)
         score = report["heldout_gibbs_mc"]
+        if score["examples"] != validation_evaluation.get("moons_eval_size", score["examples"]):
+            raise ValueError(f"Validation report has the wrong IID sample size: {entry['task_id']}")
         settings = (config["data_seed"], config["channel_seed"], entry["evaluation"]["eval_seed"],
                     score["draws"], score["examples"])
         if settings != pairing.setdefault(seed, settings):
@@ -167,6 +178,9 @@ def plan(output, source, dataset, *, source_phase="refine", bank_size=None):
     selected = min(leaderboard, key=lambda row: (
         -row["validation_gap_pp"], *rank(row["winners"][row["proposed"]])[:2], row["m"], row["seed"]))
     evaluation = dict(eval_draws=TEST_DRAWS, eval_seed=selected["seed"] + TEST_EVAL_OFFSET)
+    if audit_population:
+        evaluation.update(AUDIT_POPULATION, eval_seed=selected["seed"] + AUDIT_EVAL_OFFSET)
+        provenance["audit_population"] = AUDIT_POPULATION
     tasks = []
     for method in sweep.METHODS:
         entry = by_id[selected["winners"][method]["task_id"]]
@@ -206,6 +220,13 @@ def validate_bank(selection, dataset):
     if any(task["entry"]["config"]["m"] != bank_size or
            task["entry"]["evaluation"].get("m", bank_size) != bank_size for task in selection["tasks"]):
         raise ValueError(f"Selected tasks differ from bank size {bank_size} for {dataset}")
+    if "audit_population" in selection:
+        expected = dict(eval_draws=TEST_DRAWS, eval_seed=selection["selected"]["seed"] + AUDIT_EVAL_OFFSET,
+                        **AUDIT_POPULATION)
+        if (dataset != "moons" or selection.get("search_origin") != "strength-panel" or
+                selection["audit_population"] != AUDIT_POPULATION or
+                any(task["entry"]["evaluation"] != expected for task in selection["tasks"])):
+            raise ValueError(f"Invalid IID audit population for {dataset}")
 
 
 def run(output, dataset, index):
@@ -236,6 +257,7 @@ def summarize(output, dataset=None):
     results = {}
     validation_source = None
     fixed_bank_size = None
+    audit_population = None
     for current in (dataset,) if dataset else sweep.DATASETS:
         path = selection_path(output, current)
         selection = performance.read_json(path)
@@ -244,11 +266,16 @@ def summarize(output, dataset=None):
         if results and bank != fixed_bank_size:
             raise ValueError(f"Inconsistent fixed bank size for {current}")
         fixed_bank_size = bank
+        population = selection.get("audit_population")
+        if results and population != audit_population:
+            raise ValueError(f"Inconsistent evaluation population for {current}")
+        audit_population = population
         phase = selection.get("source_phase", "refine")
         origin = selection.get("search_origin")
         source = {("refine", None): "refinement", ("search", None): "regularization",
                   ("search", "initial"): "initial search",
-                  ("search", "schedule-panel"): "schedule panel"}.get((phase, origin))
+                  ("search", "schedule-panel"): "schedule panel",
+                  ("search", "strength-panel"): "shrinkage panel"}.get((phase, origin))
         if source is None or (validation_source is not None and source != validation_source):
             raise ValueError(f"Inconsistent validation source phase for {current}")
         validation_source = source
@@ -258,6 +285,8 @@ def summarize(output, dataset=None):
             entry = task["entry"]
             method = entry["method"]
             mc = test_report(output, task)["heldout_gibbs_mc"]
+            if audit_population is not None and mc["examples"] != audit_population["moons_eval_size"]:
+                raise ValueError(f"Unexpected IID audit sample size for {entry['task_id']}")
             methods[method] = dict(test_accuracy_pct=100 * mc["accuracy"], test_cross_entropy=mc["cross_entropy"],
                                    validation_accuracy_pct=100 * selected["winners"][method]["accuracy"],
                                    test_draws=mc["draws"], test_examples=mc["examples"],
@@ -276,6 +305,8 @@ def summarize(output, dataset=None):
         print(f"{current}: {proposed} vs {formatted}")
     suffix = f"-{dataset}" if dataset else ""
     restriction = {} if fixed_bank_size is None else dict(fixed_bank_size=fixed_bank_size)
+    if audit_population is not None:
+        restriction["audit_population"] = audit_population
     performance.write_json(output / f"seed_sweep_summary{suffix}.json", dict(
         analysis=f"Exploratory single training seed selected on {validation_source} validation",
         all_reported_datasets_have_validation_selected_proposed_wins=all(
@@ -295,11 +326,14 @@ def main():
     commands.choices["plan"].add_argument("--source-phase", choices=("refine", "search"), default="refine",
                                          help="Use refinement or search validation")
     commands.choices["plan"].add_argument("--bank-size", type=int, help="Use one fixed channel bank size")
+    commands.choices["plan"].add_argument("--audit-population", action="store_true",
+                                         help="Evaluate the same Two moons selection on an independent IID test sample")
     commands.choices["run"].add_argument("--index", type=int, choices=range(len(sweep.METHODS)), required=True)
     args = parser.parse_args()
     output = args.output.resolve()
     if args.command == "plan":
-        plan(output, args.source.resolve(), args.dataset, source_phase=args.source_phase, bank_size=args.bank_size)
+        plan(output, args.source.resolve(), args.dataset, source_phase=args.source_phase, bank_size=args.bank_size,
+             audit_population=args.audit_population)
     elif args.command == "run":
         run(output, args.dataset, args.index)
     else:

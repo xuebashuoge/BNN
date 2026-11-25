@@ -3,7 +3,7 @@ set -eo pipefail
 
 usage() {
     printf 'Usage: %s RUN_DIRECTORY [--resume]\n' "$0"
-    printf '       %s RUN_DIRECTORY --regularization-from PERFORMANCE_DIRECTORY [--bank-size M [--schedule-panel]] DATASET [DATASET ...]\n' "$0"
+    printf '       %s RUN_DIRECTORY --regularization-from PERFORMANCE_DIRECTORY [--bank-size M [--schedule-panel|--strength-panel]] DATASET [DATASET ...]\n' "$0"
 }
 
 if [[ ${1:-} == --help ]]; then
@@ -13,7 +13,7 @@ fi
 resume=
 regularization_source=
 bank_size=
-schedule_panel=
+panel_mode=
 datasets=(moons mnist fashionmnist cifar10)
 if [[ $# == 2 && $2 == --resume ]]; then
     resume=1
@@ -25,9 +25,9 @@ elif [[ $# -ge 4 && $2 == --regularization-from ]]; then
         bank_size=$5
         launch_datasets=("${launch_datasets[@]:2}")
     fi
-    if [[ ${launch_datasets[0]:-} == --schedule-panel ]]; then
+    if [[ ${launch_datasets[0]:-} == --schedule-panel || ${launch_datasets[0]:-} == --strength-panel ]]; then
         if [[ -z "$bank_size" || ${#launch_datasets[@]} -lt 2 ]]; then usage >&2; exit 2; fi
-        schedule_panel=1
+        panel_mode=${launch_datasets[0]}
         launch_datasets=("${launch_datasets[@]:1}")
     fi
     datasets=("${launch_datasets[@]}")
@@ -60,6 +60,7 @@ flock -n 9 || { printf 'Submission already in progress for %s\n' "$run_dir" >&2;
 regularization_plan="$run_dir/regularization-plan.txt"
 fixed_bank_file="$run_dir/fixed-bank-size.txt"
 schedule_panel_file="$run_dir/schedule-panel.txt"
+strength_panel_file="$run_dir/strength-panel.txt"
 if [[ -n "$resume" && -f "$regularization_plan" ]]; then
     {
         IFS= read -r regularization_source
@@ -69,7 +70,12 @@ if [[ -n "$resume" && -f "$regularization_plan" ]]; then
         done
     } < "$regularization_plan"
     if [[ -f "$fixed_bank_file" ]]; then IFS= read -r bank_size < "$fixed_bank_file"; fi
-    if [[ -f "$schedule_panel_file" ]]; then schedule_panel=1; fi
+    if [[ -f "$schedule_panel_file" && -f "$strength_panel_file" ]]; then
+        printf 'Multiple panel modes in %s\n' "$run_dir" >&2
+        exit 2
+    fi
+    if [[ -f "$schedule_panel_file" ]]; then panel_mode=--schedule-panel; fi
+    if [[ -f "$strength_panel_file" ]]; then panel_mode=--strength-panel; fi
 fi
 if [[ -n "$regularization_source" ]]; then
     seen=' '
@@ -91,7 +97,8 @@ if [[ -n "$regularization_source" ]]; then
     if [[ ! -f "$regularization_plan" ]]; then
         printf '%s\n' "$regularization_source" "${datasets[@]}" > "$regularization_plan"
         if [[ -n "$bank_size" ]]; then printf '%s\n' "$bank_size" > "$fixed_bank_file"; fi
-        if [[ -n "$schedule_panel" ]]; then printf '%s\n' "schedule-panel" > "$schedule_panel_file"; fi
+        if [[ "$panel_mode" == --schedule-panel ]]; then printf '%s\n' "schedule-panel" > "$schedule_panel_file"; fi
+        if [[ "$panel_mode" == --strength-panel ]]; then printf '%s\n' "strength-panel" > "$strength_panel_file"; fi
     fi
 fi
 
@@ -132,7 +139,7 @@ if [[ -n "$regularization_source" ]]; then
     for dataset in "${datasets[@]}"; do
         plan_command=("${sweep[@]}" plan --output "$performance_dir" --source "$regularization_source" --dataset "$dataset")
         if [[ -n "$bank_size" ]]; then plan_command+=(--bank-size "$bank_size"); fi
-        if [[ -n "$schedule_panel" ]]; then plan_command+=(--schedule-panel); fi
+        if [[ -n "$panel_mode" ]]; then plan_command+=("$panel_mode"); fi
         "${plan_command[@]}"
     done
 else
