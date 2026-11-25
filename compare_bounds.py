@@ -93,11 +93,9 @@ def main():
                  arrowprops=dict(arrowstyle='->', lw=0.7, color='black'),
                  fontsize=6, ha='center')
 
-    ax1.set_xlabel(r'$m$', labelpad=1)
+    ax1.set_xlabel('$m$\n(a) $n = 10$', labelpad=1, linespacing=1.1)
     ax1.set_ylabel('Complexity Value')
     ax1.grid(True, which='both', linestyle=':', alpha=0.5, lw=0.5)
-    ax1.text(0.5, -0.3, r'(a) $n = 10$', transform=ax1.transAxes, 
-             fontsize=8, fontweight='bold', ha='center', va='top')
 
     # Subplot 2: n = m (Balanced case)
     b1_nn = bound1(m_range, m_range, alpha, beta, X, delta)
@@ -108,21 +106,19 @@ def main():
     ax2.semilogx(m_range, b2_eq_nn, color='#1f77b4', linestyle='--')
     ax2.semilogx(m_range, b2_sm_nn, color='#2ca02c', linestyle='-')
 
-    ax2.set_xlabel(r'$m$', labelpad=1)
+    ax2.set_xlabel('$m$\n(b) $n = m$', labelpad=1, linespacing=1.1)
     ax2.grid(True, which='both', linestyle=':', alpha=0.5, lw=0.5)
-    ax2.text(0.5, -0.3, r'(b) $n = m$', transform=ax2.transAxes, 
-             fontsize=8, fontweight='bold', ha='center', va='top')
 
     # Single top legend for clarity and space saving
     handles, labels = ax1.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 0.99), 
-               ncol=3, frameon=False, fontsize=6.5, handlelength=1.5)
+               ncol=3, frameon=False, fontsize=6.5, handlelength=1.5,
+               columnspacing=1.0, handletextpad=0.5)
 
-    plt.tight_layout()
-    plt.subplots_adjust(top=0.86, bottom=0.30, wspace=0.35)
+    fig.subplots_adjust(top=0.89, bottom=0.24, wspace=0.30)
 
     for output_path in ["bound_comparison.pdf", "bound_comparison.png"]:
-        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        fig.savefig(output_path, dpi=300, bbox_inches='tight', pad_inches=0.02)
 
 if __name__ == '__main__':
     main()

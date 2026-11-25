@@ -1,0 +1,62 @@
+\relax 
+\citation{mnist_dataset}
+\citation{fashion_mnist}
+\citation{cifar10}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Numerical Results}{1}{}\protected@file@percent }
+\newlabel{sec:simulation}{{V}{1}{}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Experimental Setup}{1}{}\protected@file@percent }
+\newlabel{sec:sim_setup}{{\mbox  {V-A}}{1}{}{subsection.5.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-A}1}Data and split networks}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-A}2}Channel laws and finite observations}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-A}3}Bounded loss and optimization}{1}{}\protected@file@percent }
+\newlabel{equ:sim_bounded_loss}{{1}{1}{}{equation.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-A}4}Selection and evaluation}{1}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Settings of the Main Experiments}}{2}{}\protected@file@percent }
+\newlabel{tab:sim_setup}{{I}{2}{}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Deployment Performance Under Analog Fading}{2}{}\protected@file@percent }
+\newlabel{sec:sim_performance}{{\mbox  {V-B}}{2}{}{subsection.5.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {V-B}1}CIFAR-10 with a convolutional transmitter}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Generalization From a Finite Channel Bank}{2}{}\protected@file@percent }
+\newlabel{sec:sim_channel_bank}{{\mbox  {V-C}}{2}{}{subsection.5.3}{}}
+\newlabel{equ:sim_channel_gap}{{2}{2}{}{equation.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Choice of the Training Channel Distribution}{2}{}\protected@file@percent }
+\newlabel{sec:sim_mismatch}{{\mbox  {V-D}}{2}{}{subsection.5.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Deployment performance under matched Gaussian fading and additive noise. Accuracy is in percent; bounded risk uses the smooth loss in~\eqref  {equ:sim_bounded_loss}. Entries are mean $\pm $ sample standard deviation over three initialization/channel-bank seeds for MNIST and two for FashionMNIST, with ten fresh Gibbs/channel draws per checkpoint. Perfect refers to training only; all models face the same deployment law. Bold identifies the best reported mean within each metric.}}{3}{}\protected@file@percent }
+\newlabel{tab:sim_accuracy_risk}{{II}{3}{}{table.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Effect of the reusable channel-bank size under matched feature erasures: $p_{\rm  tr}=p_{\rm  ch}=0.5$, $n=512$, and $d=8$. Curves show means over three initialization/channel-bank seeds; shading shows one sample standard deviation and points retain individual seeds. The data, number of optimizer updates, and deployment law are fixed across $m$. Perfect-trained references are reused across bank sizes. The right panel isolates the observed channel generalization gap in normalized-loss units.}}{3}{}\protected@file@percent }
+\newlabel{fig:sim_channel_bank}{{1}{3}{}{figure.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces CIFAR-10 deployment performance under Gaussian fading and additive noise. Entries are mean $\pm $ sample standard deviation across initialization/channel-bank seeds conditional on the fixed data split, using ten fresh Gibbs/channel draws per checkpoint. Full data: $n=45,000$, 100 epochs, 3 paired seeds. Configurations use aggregate validation accuracy; checkpoints use validation accuracy. Perfect refers to the training forward channel only. Bold marks the best mean within each metric.}}{3}{}\protected@file@percent }
+\newlabel{tab:sim_cifar}{{III}{3}{}{table.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Bound Decomposition and Numerical Risk Guarantees}{3}{}\protected@file@percent }
+\newlabel{sec:sim_bounds}{{\mbox  {V-E}}{3}{}{subsection.5.5}{}}
+\newlabel{equ:sim_signed_decomposition}{{3}{3}{}{equation.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Fixed deployment feature-erasure probability $p_{\rm  ch}=0.5$ and varying training probability, with $n=800$, $d=16$, and $m=100$. Perfect training is the point $p_{\rm  tr}=0$; its data-only PAC objective is common to the proposed perfect-channel specialization. Means and one sample standard deviation use all three listed seeds. The vertical line marks matched training.}}{4}{}\protected@file@percent }
+\newlabel{fig:sim_training_mismatch}{{2}{4}{}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Unweighted bound terms and signed observed gaps for perfect, matched, and mismatched training, at the same deployment law $p_{\rm  ch}=0.5$, $n=800$, $d=16$, and $m=100$. Each column evaluates the frozen posterior learned under its stated training law. Stacked theoretical terms are those of T1; markers evaluate T2 at the same posterior. The per-run nominal failure budget is $0.05$. Shift uses the bounded-loss total-variation specialization. These illustrative gap estimates do not include the additional MC correction used in Table~\ref {tab:sim_certificate}.}}{4}{}\protected@file@percent }
+\newlabel{fig:sim_bound_decomposition}{{3}{4}{}{figure.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Two population-risk bounds evaluated at the same frozen T1-trained posterior ($d=8$, $n=512$, $m=2000$). A fresh 100-draw empirical-risk estimate is shared by both bounds. The total failure budget is $0.05$: $0.04$ is split across both theorems and 21 declared setups, and $0.01$ controls Monte Carlo error. Values concern normalized bounded loss, not classification error.}}{4}{}\protected@file@percent }
+\newlabel{tab:sim_certificate}{{IV}{4}{}{table.4}{}}
+\@writefile{toc}{\contentsline {section}{Appendix\nobreakspace  A: Supplementary Numerical Results}{5}{}\protected@file@percent }
+\newlabel{app:simulation_results}{{A}{5}{}{section.Appendix.A}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-A}}Additional Channel-Bank Comparisons}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Reduced-data MNIST under the same analog deployment law ($n=10{,}000$, $d=128$, 35 epochs). Entries use all two paired initialization/channel-bank seeds and ten fresh draws per checkpoint; settings were selected on validation data.}}{5}{}\protected@file@percent }
+\newlabel{tab:app_reduced_mnist}{{V}{5}{}{table.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces Initial reduced-data MNIST screen ($n=10{,}000$, $d=128$, $m=100$, 25 epochs). These entries use five inference draws and two seeds, and are kept separate from the ten-draw final comparisons.}}{5}{}\protected@file@percent }
+\newlabel{tab:app_screen_mnist}{{VI}{5}{}{table.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-B}}Data Size and Optimization Budget}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-C}}Internal Objective Ablations and Selected Cases}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-D}}Selected Optimization Settings}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {A-E}}CIFAR-10 Screening and Optimization Settings}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {VII}{\ignorespaces Width-64 IID two-moons feature-erasure refinement ($n=800$, erasure probability $0.5$, 150 epochs). Entries use two seeds and ten inference draws. A matched L2 run is unavailable for this cohort and is not substituted from another experiment.}}{6}{}\protected@file@percent }
+\newlabel{tab:app_toy_erasure}{{VII}{6}{}{table.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {VIII}{\ignorespaces Exploratory data-size slice for T1 on IID two moons ($d=8$, $m=100$). Accuracy is mean $\pm $ sample standard deviation over three initialization/channel-bank seeds. The same 150 epochs imply different optimizer-update counts. Negative observed data gaps and the changing optimization budget preclude interpreting this slice as a quantitative validation of the theoretical $n$-rate.}}{6}{}\protected@file@percent }
+\newlabel{tab:app_data_size}{{VIII}{6}{}{table.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IX}{\ignorespaces Validation-selected settings for Table~\ref {tab:sim_accuracy_risk}. The active coefficients are the L2 weight $\lambda _2$, T1 channel/data weights $(\eta _1,\eta _2)$, T2 joint weight $\eta $, or the perfect-training data weight $\eta _2$. The initial posterior standard deviation is $s_0$; dashes denote deterministic models or no penalty. Posterior means use fan-in-scaled uniform initialization with zero biases, separately from $s_0$; the fixed prior has standard deviation one. These are selected configurations from conditional grids, not an exhaustive or full-factorial search.}}{6}{}\protected@file@percent }
+\newlabel{tab:app_hyperparameters}{{IX}{6}{}{table.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {X}{\ignorespaces CIFAR-10 deployment performance under Gaussian fading and additive noise. Entries are mean $\pm $ sample standard deviation across initialization/channel-bank seeds conditional on the fixed data split, using ten fresh Gibbs/channel draws per checkpoint. Screen: $n=10,000$, 30 epochs, 2 paired seeds. Configurations use aggregate validation accuracy; checkpoints use validation accuracy. Perfect refers to the training forward channel only. Bold marks the best mean within each metric.}}{6}{}\protected@file@percent }
+\newlabel{tab:app_cifar_screen}{{X}{6}{}{table.10}{}}
+\bibcite{mnist_dataset}{1}
+\bibcite{fashion_mnist}{2}
+\bibcite{cifar10}{3}
+\@writefile{toc}{\contentsline {section}{References}{7}{}\protected@file@percent }
+\gdef \@abspage@last{7}

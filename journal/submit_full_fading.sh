@@ -2,7 +2,7 @@
 # Submit independently backfillable Spartan jobs from the pinned Git checkout.
 set -euo pipefail
 
-phase=${1:?Use pilot, sweep, sweep-extended, bounds, bounds-compact, comparison, comparison-refine, or all}
+phase=${1:?Use pilot, sweep, sweep-extended, bounds, bounds-compact, comparison, comparison-refine, comparison-refine-rates, or all}
 : "${FULL_FADING_OUTPUT:?Set an absolute results directory on project storage}"
 : "${DATASET:?Set the prepared dataset root}"
 : "${JOURNAL_GIT_SHA:?Export the committed Git revision}"
@@ -63,7 +63,11 @@ run_pilot() {
     if [[ ! -f "$manifest" ]]; then
         "$python_bin" -m journal.full_fading_mnist_sweep build --output "$manifest" --pilot
     fi
-    for device in cpu "$image_device"; do
+    local devices=(cpu)
+    if [[ "$image_device" == cuda ]]; then
+        devices+=(cuda)
+    fi
+    for device in "${devices[@]}"; do
         local resources=("${cpu[@]}")
         if [[ "$device" == cuda ]]; then
             resources=("${gpu[@]}")
@@ -160,17 +164,21 @@ run_comparison() {
     elif [[ "$dataset" == cifar10 ]]; then
         time_limit=00:25:00
     fi
-    local segment=screen controller=confirm
-    if [[ "$phase" == comparison-refine ]]; then
-        segment=refine
-        controller=confirm-refinement
-    fi
+    local segment=screen controller=confirm round_args=()
+    case "$phase" in
+        comparison-refine) segment=refine; controller=confirm-refinement ;;
+        comparison-refine-rates)
+            segment=rate-refine
+            controller=confirm-rate-refinement
+            round_args=(--round 2)
+            ;;
+    esac
     local manifest="$stage/$segment.jsonl"
     mkdir -p "$stage"
     if [[ ! -f "$manifest" ]]; then
-        if [[ "$segment" == refine ]]; then
+        if [[ "$segment" != screen ]]; then
             "$python_bin" -m journal.full_fading_comparison refine-screen --output "$manifest" \
-                --screen-manifest "$stage/screen.jsonl"
+                --screen-manifest "$stage/screen.jsonl" "${round_args[@]}"
         else
             "$python_bin" -m journal.full_fading_comparison screen --output "$manifest" \
                 --datasets "$dataset" --m 2000
@@ -186,6 +194,9 @@ run_comparison() {
     if [[ "$segment" == refine ]]; then
         select_job="$stage/refined-select.job"
         dependency="$screen_job:$(cat "$stage/select.job")"
+    elif [[ "$segment" == rate-refine ]]; then
+        select_job="$stage/rate-select.job"
+        dependency="$screen_job:$(cat "$stage/refined-select.job")"
     fi
     submit "$select_job" "fading_${segment}_select_$dataset" "${cpu[@]}" --time=00:05:00 \
         --dependency="afterok:$dependency" -- bash journal/submit_full_fading.sh "$controller" "$dataset"
@@ -206,10 +217,15 @@ run_confirmation() {
         time_limit=00:30:00
     fi
     local cohort=confirm refine_args=() report_job="$stage/report.job"
-    if [[ "$phase" == confirm-refinement ]]; then
+    if [[ "$phase" != confirm ]]; then
         cohort=refined-confirm
         refine_args=(--refinement-manifest "$stage/refine.jsonl" --refinement-root "$stage/refine")
         report_job="$stage/refined-report.job"
+    fi
+    if [[ "$phase" == confirm-rate-refinement ]]; then
+        cohort=rate-confirm
+        refine_args+=(--second-refinement-manifest "$stage/rate-refine.jsonl" --second-refinement-root "$stage/rate-refine")
+        report_job="$stage/rate-report.job"
     fi
     local manifest="$stage/$cohort.jsonl"
     if [[ ! -f "$manifest" ]]; then
@@ -234,11 +250,15 @@ case "$phase" in
     bounds) run_bounds ;;
     bounds-compact) run_compact_bounds ;;
     bound-task) run_bound_task "$2" ;;
-    confirm|confirm-refinement) run_confirmation "$2" ;;
-    comparison|comparison-refine|all)
+    confirm|confirm-refinement|confirm-rate-refinement) run_confirmation "$2" ;;
+    comparison|comparison-refine|comparison-refine-rates|all)
         if [[ "$phase" == all ]]; then
             run_sweep sweep
             run_bounds
+        fi
+        if [[ "$phase" == comparison-refine-rates && "$comparison_datasets" != cifar10 ]]; then
+            echo "Set FULL_FADING_COMPARISON_DATASETS=cifar10 for the second CIFAR refinement" >&2
+            exit 2
         fi
         IFS=, read -ra datasets <<< "$comparison_datasets"
         for dataset in "${datasets[@]}"; do

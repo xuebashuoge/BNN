@@ -396,11 +396,14 @@ def report(manifest, root):
     if entries != confirmation_entries(selection):
         raise ValueError("Confirmation tasks differ from the validation selection")
     rows = [validate_test(item, row, root) for item, row in zip(entries, read_results(root, entries))]
+    for row in rows:
+        config = row["config"]
+        row.update(train_size=config["train_size"], width=config["width"], rho_c=config["deployment_channel"]["rho_c"])
     seeds = CONFIRM_SEEDS[selection["stage"]]
     groups = group_results(rows, seeds)
     for group in groups:
         subset = [row for row in rows if row["group"] == group["group"]]
-        group["rho_c"] = subset[0]["config"]["deployment_channel"]["rho_c"]
+        group.update({field: subset[0][field] for field in ("rho_c", "train_size", "width")})
         group["mean_ranking"] = ranking({label: metrics["test_accuracy"]["mean"]
                                          for label, metrics in group["methods"].items()})
         group["descriptive_ranking_by_seed"] = {
@@ -416,7 +419,7 @@ def report(manifest, root):
         summary["finalist_protocol"] = {key: value for key, value in protocol.items()
                                         if key not in {"preliminary_validation_trials", "finalists"}}
     write_csv(root / "accuracy_by_seed.csv", rows,
-              ["dataset", "channel", "m", "method_label", "seed", "variant_id", "validation_accuracy",
+              ["dataset", "channel", "rho_c", "m", "train_size", "width", "method_label", "seed", "variant_id", "validation_accuracy",
                "test_accuracy", "test_cross_entropy", "test_bounded_loss", "task_id"])
     export_accuracy_means(groups, root)
     save_json(root / "accuracy_summary.json", summary)

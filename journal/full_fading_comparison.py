@@ -38,11 +38,16 @@ METHODS = {
 SCREEN_SEEDS = (92101, 92102)
 CONFIRM_SEEDS = (93101, 93102, 93103)
 REFINED_CONFIRM_SEEDS = (94101, 94102, 94103)
+SECOND_REFINED_CONFIRM_SEEDS = (95101, 95102, 95103)
 PILOT_SEEDS = (92000,)
 STAGES = {"pilot": "full_fading_accuracy_pilot", "screen": "full_fading_accuracy_screen",
           "confirm": "full_fading_accuracy_confirm", "refine": "full_fading_accuracy_refine",
-          "refined_confirm": "full_fading_accuracy_refined_confirm"}
-CONFIRMATION_COHORTS = {"confirm": CONFIRM_SEEDS, "refined_confirm": REFINED_CONFIRM_SEEDS}
+          "refined_confirm": "full_fading_accuracy_refined_confirm",
+          "second_refine": "full_fading_accuracy_second_refine",
+          "second_refined_confirm": "full_fading_accuracy_second_refined_confirm"}
+REFINEMENT_STAGES = {1: "refine", 2: "second_refine"}
+CONFIRMATION_COHORTS = {"confirm": CONFIRM_SEEDS, "refined_confirm": REFINED_CONFIRM_SEEDS,
+                        "second_refined_confirm": SECOND_REFINED_CONFIRM_SEEDS}
 TEST_SEED_OFFSET = 1000003
 EXECUTION_SETTINGS = {"device", "threads"}
 GAUSSIAN_BASE_CHANNEL = {"full_fading": "analog", "outage": "outage"}
@@ -54,7 +59,9 @@ def variants(config, method, perfect, refinement=False):
     cifar_refinement = refinement and config["dataset"] == "cifar10"
     if method == "erm":
         learning_rates = (.0006, .002, .006, .02) if refinement else (.0003, .001, .003, .01)
-        if cifar_refinement:
+        if refinement == 2:
+            learning_rates = (.00033, .00045, .0005, .00075)
+        elif cifar_refinement:
             learning_rates = (.00012, .0002, .0004, .0006)
         for lr in learning_rates:
             yield dict(config, lr=lr)
@@ -69,6 +76,9 @@ def variants(config, method, perfect, refinement=False):
     if cifar_refinement:
         learning_rates = (.0002, .0003)
         strengths = {"l2": (5e-7, 5e-6)}.get(method, (.003, .03) if perfect else (.0003, .003))
+    if refinement == 2:
+        learning_rates = (.00045, .0006)
+        strengths = {"l2": (5e-7, 5e-6)}.get(method, (.003, .01) if perfect else (.0003, .001))
     for lr in learning_rates:
         for strength in strengths:
             candidate = dict(config, lr=lr)
@@ -94,10 +104,12 @@ def entry(config, seed, group, label, stage):
 def screening_entries(datasets, channels, m, pilot, refinement=False):
     if m < 2:
         raise ValueError("A matched training bank requires m >= 2")
+    if refinement == 2 and set(datasets) != {"cifar10"}:
+        raise ValueError("The second refinement requires a CIFAR-10 screen manifest")
     if pilot:
         stage, seeds = "pilot", PILOT_SEEDS
     else:
-        stage, seeds = "refine" if refinement else "screen", SCREEN_SEEDS
+        stage, seeds = REFINEMENT_STAGES[refinement] if refinement else "screen", SCREEN_SEEDS
     entries = []
     for dataset in datasets:
         for channel in channels:
@@ -216,9 +228,9 @@ def screen_scope(entries):
     return conditions
 
 
-def refinement_entries(conditions):
+def refinement_entries(conditions, refinement_round=1):
     return [item for dataset, channel, m in conditions
-            for item in screening_entries((dataset,), (channel,), m, pilot=False, refinement=True)]
+            for item in screening_entries((dataset,), (channel,), m, pilot=False, refinement=refinement_round)]
 
 
 def confirmation_entries(selected, eval_draws, stage="confirm"):
@@ -231,20 +243,28 @@ def confirmation_entries(selected, eval_draws, stage="confirm"):
 
 
 def prepare_confirmation(screen_manifest, screen_root, output, eval_draws,
-                         refinement_manifest=None, refinement_root=None):
-    if (refinement_manifest is None) != (refinement_root is None):
-        raise ValueError("Specify both the refinement manifest and its results root")
+                         refinement_manifest=None, refinement_root=None,
+                         second_refinement_manifest=None, second_refinement_root=None):
+    refinement_sources = ((refinement_manifest, refinement_root),
+                          (second_refinement_manifest, second_refinement_root))
+    for manifest, root in refinement_sources:
+        if (manifest is None) != (root is None):
+            raise ValueError("Specify both the refinement manifest and its results root")
+    if second_refinement_manifest is not None and refinement_manifest is None:
+        raise ValueError("The second refinement requires the complete first refinement")
     entries = stage_entries(screen_manifest, "screen")
     conditions = screen_scope(entries)
     rows = read_results(screen_root, entries)
     stage = "confirm"
-    if refinement_manifest is not None:
-        additional = stage_entries(refinement_manifest, "refine")
-        if not variant_grid(additional, refinement_entries(conditions)):
-            raise ValueError("Refinement must cover every initial validation group and candidate")
-        rows.extend(read_results(refinement_root, additional))
+    for refinement_round, (manifest, root) in enumerate(refinement_sources, 1):
+        if manifest is None:
+            continue
+        additional = stage_entries(manifest, REFINEMENT_STAGES[refinement_round])
+        if not variant_grid(additional, refinement_entries(conditions, refinement_round)):
+            raise ValueError(f"Refinement round {refinement_round} must cover every declared group and candidate")
+        rows.extend(read_results(root, additional))
         entries.extend(additional)
-        stage = "refined_confirm"
+        stage = "refined_confirm" if refinement_round == 1 else "second_refined_confirm"
     for row in rows:
         if any(metric in row for metric in ("test_accuracy", "test_cross_entropy", "test_status")):
             raise ValueError("Confirmation selection requires validation-only training results")
@@ -264,6 +284,9 @@ def prepare_confirmation(screen_manifest, screen_root, output, eval_draws,
                          validation_candidates_per_method=8,
                          validation_by_seed=[{key: row[key] for key in fields} for row in rows],
                          confirmation_sampling="Fresh initialization, bank, posterior and channel seeds on the same official test examples")
+    if second_refinement_manifest is not None:
+        selection.update(second_refinement_manifest=file_fingerprint(second_refinement_manifest),
+                         validation_candidates_per_method=12)
     write_once(output.with_suffix(".selection.json"), json.dumps(selection, indent=2, allow_nan=False) + "\n")
     return write_manifest(output, final)
 
@@ -378,7 +401,7 @@ def report(manifest, root):
     summary = dict(manifest=file_fingerprint(manifest), selection=file_fingerprint(selection_path), confirmation_seeds=seeds,
                    trials=len(rows), groups=groups,
                    all_groups_t1_or_t2_strictly_highest=all(group["t1_or_t2_strictly_highest"] for group in groups))
-    if stage == "refined_confirm":
+    if stage != "confirm":
         summary["confirmation_sampling"] = selection["confirmation_sampling"]
     save_json(root / "accuracy_summary.json", summary)
     write_csv(root / "accuracy_by_seed.csv", rows,
@@ -438,6 +461,7 @@ def main():
     screen.add_argument("--pilot", action="store_true")
     refine = commands.add_parser("refine-screen")
     refine.add_argument("--screen-manifest", type=Path, required=True)
+    refine.add_argument("--round", type=int, choices=(1, 2), default=1)
     refine.add_argument("--output", type=Path, required=True)
     combine = commands.add_parser("combine")
     combine.add_argument("--summary", type=Path, action="append", required=True)
@@ -455,6 +479,8 @@ def main():
     confirm.add_argument("--screen-root", type=Path, required=True)
     confirm.add_argument("--refinement-manifest", type=Path)
     confirm.add_argument("--refinement-root", type=Path)
+    confirm.add_argument("--second-refinement-manifest", type=Path)
+    confirm.add_argument("--second-refinement-root", type=Path)
     confirm.add_argument("--output", type=Path, required=True)
     confirm.add_argument("--eval-draws", type=int, default=20)
     args = parser.parse_args()
@@ -464,7 +490,7 @@ def main():
         result = write_manifest(args.output, entries)
     elif args.command == "refine-screen":
         entries = stage_entries(args.screen_manifest, "screen")
-        result = write_manifest(args.output, refinement_entries(screen_scope(entries)))
+        result = write_manifest(args.output, refinement_entries(screen_scope(entries), args.round))
     elif args.command == "task":
         if args.threads < 1:
             parser.error("--threads must be positive")
@@ -474,7 +500,8 @@ def main():
         if args.eval_draws < 1:
             parser.error("--eval-draws must be positive")
         result = prepare_confirmation(args.screen_manifest, args.screen_root, args.output, args.eval_draws,
-                                      args.refinement_manifest, args.refinement_root)
+                                      args.refinement_manifest, args.refinement_root,
+                                      args.second_refinement_manifest, args.second_refinement_root)
     elif args.command == "combine":
         result = combine_reports(args.summary, args.output)
     else:

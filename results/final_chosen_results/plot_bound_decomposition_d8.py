@@ -15,13 +15,13 @@ from matplotlib.patches import Patch
 
 
 COMPONENTS = [
-    ("Empirical loss", "#777777"),
-    ("Sample complexity", "#009e73"),
+    ("Empirical risk", "#777777"),
+    ("Data complexity", "#009e73"),
     ("Channel complexity", "#0072b2"),
     ("Joint complexity (T2)", "#935d99"),
     ("Channel shift", "#e69f00"),
 ]
-STACK_ORDER = (0, 4, 2, 1, 3)
+STACK_ORDER = (0, 1, 2, 3, 4)
 
 CASES = ("perfect", "t1_matched", "t2_matched", "t1_mismatch", "t2_mismatch")
 FIELDS = ("empirical", "sample", "channel", "joint", "shift")
