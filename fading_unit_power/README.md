@@ -94,3 +94,5 @@ The two seed campaigns select the same checkpoints using validation. The audit r
 ### Smaller-bank validation pilot
 
 `python -m fading_unit_power.performance_bank_pilot plan --dataset mnist --output "$pilot"` prepares the sweep at $m=128,144,160,176,192,200$ and the $m=2000$ control. Each method gets its archived 128- and 2000-bank validation winner profiles on the same two fresh paired seeds. The T1 and T2 coefficients are rescaled to preserve their initial mean-weight penalty gradients at each bank. The `summarize` command reports absolute validation accuracy and both paired gaps against ERM and L2.
+
+Pass `--margin-search` on both commands for the wider MNIST fading follow-up at $m=200$ and $m=2000$. It compares six profiles per method on the same three fresh paired seeds. The report includes T1−ERM, T1−L2, T2−ERM, and T2−L2, measured on validation.

@@ -109,9 +109,11 @@ case "$stage" in
         fi
         exec "${summary[@]}"
         ;;
-    bank-pilot-summary)
-        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_bank_pilot summarize \
-            --output "$performance_dir" --dataset "$target"
+    bank-pilot-summary|bank-margin-summary)
+        summary=("${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_bank_pilot summarize
+                 --output "$performance_dir" --dataset "$target")
+        if [[ "$stage" == bank-margin-summary ]]; then summary+=(--margin-search); fi
+        exec "${summary[@]}"
         ;;
     seed-plan|seed-regularization-plan|seed-fixed-plan|seed-strength-audit-plan)
         source_phase=refine
