@@ -1,0 +1,3 @@
+stage	job_id	dependency	array
+mnist-bank-pilot	35678385		0-111%32
+mnist-bank-summary	35678386	afterany:35678385	
