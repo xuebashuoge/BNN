@@ -90,3 +90,7 @@ bash -l fading_unit_power/submit_seed_sweep_spartan.sh "$strength_run" "$audit_r
 ```
 
 The two seed campaigns select the same checkpoints using validation. The audit runs 128 deployment draws on a separately seeded 30,000-example IID test sample.
+
+### Smaller-bank validation pilot
+
+`python -m fading_unit_power.performance_bank_pilot plan --dataset mnist --output "$pilot"` prepares the sweep at $m=128,144,160,176,192,200$ and the $m=2000$ control. Each method gets its archived 128- and 2000-bank validation winner profiles on the same two fresh paired seeds. The T1 and T2 coefficients are rescaled to preserve their initial mean-weight penalty gradients at each bank. The `summarize` command reports absolute validation accuracy and both paired gaps against ERM and L2.

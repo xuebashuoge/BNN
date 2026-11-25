@@ -109,6 +109,10 @@ case "$stage" in
         fi
         exec "${summary[@]}"
         ;;
+    bank-pilot-summary)
+        exec "${worker[@]}" "$python_bin" -u -m fading_unit_power.performance_bank_pilot summarize \
+            --output "$performance_dir" --dataset "$target"
+        ;;
     seed-plan|seed-regularization-plan|seed-fixed-plan|seed-strength-audit-plan)
         source_phase=refine
         if [[ "$stage" == seed-regularization-plan || "$stage" == seed-strength-audit-plan ]]; then source_phase=search; fi
