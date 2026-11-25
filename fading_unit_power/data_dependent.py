@@ -43,6 +43,9 @@ import traceback
 REPO = Path(__file__).resolve().parents[1]
 SELECTED = REPO / "results" / "final_chosen_results"
 PUBLISH = SELECTED / "data_dependent"
+# A construction-restricted rerun (see --constructions) sets these to tagged names.
+SELECTION_NAME = "selection.json"
+CONFIRM_NAME = "confirm.jsonl"
 CONSTRUCTIONS = ("perfect", "independent_bank", "fresh")
 STD_MULTIPLIERS = (3., 10., 30., 100.)
 ETA_MULTIPLIERS = (1., 10., 100.)
@@ -339,7 +342,7 @@ def plan_performance(root: Path, phase: str):
                     tasks.extend(t1_pair("performance", t1, variant, root, [validation_eval(new_run_config(t1))],
                                          dict(dataset=dataset, channel=channel, seed=t1["seed"]), PRIOR_COUNT))
         return dedupe(tasks)
-    selection = read_json(root / "selection.json")
+    selection = read_json(root / SELECTION_NAME)
     for (dataset, channel), seeds in sorted(sources.items()):
         variant = selection[f"{dataset}/{channel}"]["variant"]
         for source in seeds:
@@ -377,7 +380,7 @@ def render_performance_table(rows, caption):
 
 
 def summarize_performance(root: Path):
-    tasks = read_manifest(root / "manifests" / "confirm.jsonl")
+    tasks = read_manifest(root / "manifests" / CONFIRM_NAME)
     records = {record["task_id"]: record for record in done_records(root, tasks)}
     baselines = performance_baselines()
     new_rows, comparison = [], []
@@ -417,7 +420,7 @@ def summarize_performance(root: Path):
     write_json(output / "comparison.json", comparison)
     (output / "performance_table.tex").write_text(render_performance_table(
         rows, r"Deployment accuracy (\%) comparison at channel-set size $m=2000$."))
-    write_json(output / "selection.json", read_json(root / "selection.json"))
+    write_json(output / "selection.json", read_json(root / SELECTION_NAME))
     print(json.dumps(comparison, indent=1))
 
 
@@ -452,7 +455,7 @@ def plan_mnist(root: Path, phase: str):
                     tasks.extend(t1_pair("mnist", t1, variant, root, [validation_eval(new_run_config(t1))],
                                          dict(m=m, seed=t1["seed"]), PRIOR_COUNT))
         return dedupe(tasks)
-    variant = read_json(root / "selection.json")["all"]["variant"]
+    variant = read_json(root / SELECTION_NAME)["all"]["variant"]
     for source in sources:
         test = dict(name="test_full", split="test", scope="full",
                     overrides={**source["evaluation"], "device": "cpu", "threads": 1})
@@ -465,7 +468,7 @@ def plan_mnist(root: Path, phase: str):
 def summarize_mnist(root: Path):
     from .fixed_studies_plots import plot_mnist
 
-    tasks = read_manifest(root / "manifests" / "confirm.jsonl")
+    tasks = read_manifest(root / "manifests" / CONFIRM_NAME)
     observations = []
     for task in tasks:
         if task["meta"].get("role") != "stage2":
@@ -488,7 +491,7 @@ def summarize_mnist(root: Path):
     observations.sort(key=lambda row: (row["m"], row["seed"]))
     output = PUBLISH / "mnist_bank"
     write_csv(output / "observations.csv", observations)
-    write_json(output / "selection.json", read_json(root / "selection.json"))
+    write_json(output / "selection.json", read_json(root / SELECTION_NAME))
     plot_mnist(observations, PUBLISH / "mnist_analog_finite_channel_generalization")
 
 
@@ -526,7 +529,7 @@ def plan_mismatch(root: Path, phase: str):
                     tasks.extend(t1_pair("mismatch", t1, variant, root, [validation_eval(new_run_config(t1))],
                                          dict(p=p, seed=t1["seed"]), PRIOR_COUNT))
         return dedupe(tasks)
-    variant = read_json(root / "selection.json")["all"]["variant"]
+    variant = read_json(root / SELECTION_NAME)["all"]["variant"]
     for source in sources:
         test = dict(name="test_full", split="test", scope="full",
                     overrides={**source["evaluation"], "device": "cpu", "threads": 1})
@@ -537,7 +540,7 @@ def plan_mismatch(root: Path, phase: str):
 
 
 def summarize_mismatch(root: Path):
-    tasks = read_manifest(root / "manifests" / "confirm.jsonl")
+    tasks = read_manifest(root / "manifests" / CONFIRM_NAME)
     with (MISMATCH_DATA / "observations.csv").open(newline="") as stream:
         archived = list(csv.DictReader(stream))
     # p_tr = 0 has a deterministic bank and no channel complexity, so the
@@ -555,7 +558,7 @@ def summarize_mismatch(root: Path):
                          bounded_test_risk=report["heldout_gibbs_mc"]["bounded_loss"]))
     output = PUBLISH / "cifar10_mismatch"
     write_csv(output / "observations.csv", rows)
-    write_json(output / "selection.json", read_json(root / "selection.json"))
+    write_json(output / "selection.json", read_json(root / SELECTION_NAME))
     from results.final_chosen_results import draw_cifar10_channel_mismatch as drawing
     drawing.SOURCE = output / "observations.csv"
     drawing.OUTPUT_DIR = PUBLISH
@@ -572,8 +575,27 @@ STUDIES = {
 }
 
 
-def pipeline(study: str, root: Path, workers: int, stop_after: str | None = None):
+def restrict(constructions):
+    """Select only among the given stage-1 constructions; publish under a tag.
+
+    The tuning fits are shared, so a restricted selection needs no new tuning.
+    The union bound keeps the full prior family (PRIOR_COUNT), which is
+    conservative and leaves task hashes unchanged.
+    """
+    global SELECTION_NAME, CONFIRM_NAME, PUBLISH
+    unknown = set(constructions) - set(CONSTRUCTIONS)
+    if unknown:
+        raise ValueError(f"Unknown constructions {sorted(unknown)}")
+    tag = "only_" + "_".join(sorted(constructions))
+    SELECTION_NAME, CONFIRM_NAME = f"selection-{tag}.json", f"confirm-{tag}.jsonl"
+    PUBLISH = SELECTED / "data_dependent" / tag
+    return tag
+
+
+def pipeline(study: str, root: Path, workers: int, stop_after: str | None = None, constructions=None):
     root.mkdir(parents=True, exist_ok=True)
+    if constructions and study == "bounds":
+        raise ValueError("The bounds study certifies over every construction")
     if study == "bounds":
         from . import dd_bounds
         dd_bounds.pipeline(root, workers)
@@ -584,11 +606,14 @@ def pipeline(study: str, root: Path, workers: int, stop_after: str | None = None
         write_manifest(tune_path, planner(root, "tune"))
     tune = read_manifest(tune_path)
     run_pool(tune, root, workers)
-    if not (root / "selection.json").exists():
-        write_json(root / "selection.json", select_variant(done_records(root, tune), group))
+    if not (root / SELECTION_NAME).exists():
+        records = done_records(root, tune)
+        if constructions:
+            records = [record for record in records if record["meta"]["variant"][0] in constructions]
+        write_json(root / SELECTION_NAME, select_variant(records, group))
     if stop_after == "tune":
         return
-    confirm_path = root / "manifests" / "confirm.jsonl"
+    confirm_path = root / "manifests" / CONFIRM_NAME
     if not confirm_path.exists():
         write_manifest(confirm_path, planner(root, "confirm"))
     run_pool(read_manifest(confirm_path), root, workers)
@@ -604,10 +629,14 @@ def main():
                                                            if hasattr(os, "sched_getaffinity") else os.cpu_count()))
     parser.add_argument("--phase", choices=("tune", "confirm"), default="tune")
     parser.add_argument("--stop-after", choices=("tune",))
+    parser.add_argument("--constructions", nargs="+", choices=CONSTRUCTIONS,
+                        help="Select only among these stage-1 constructions (tagged outputs)")
     args = parser.parse_args()
     root = args.root.resolve()
+    if args.constructions:
+        restrict(args.constructions)
     if args.command == "pipeline":
-        pipeline(args.study, root, args.workers, args.stop_after)
+        pipeline(args.study, root, args.workers, args.stop_after, args.constructions)
     elif args.command == "plan":
         tasks = STUDIES[args.study][0](root, args.phase)
         print(json.dumps(dict(tasks=len(tasks), stage2=sum(t["meta"]["role"] == "stage2" for t in tasks))))

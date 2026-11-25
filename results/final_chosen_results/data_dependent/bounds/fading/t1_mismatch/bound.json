@@ -1,0 +1,432 @@
+{
+  "dataset": "moons",
+  "family": "fading",
+  "regime": "mismatch",
+  "certificate": "T1",
+  "fallback": false,
+  "config": {
+    "dataset": "moons",
+    "architecture": "bounded_mlp",
+    "method": "proposed",
+    "predictor": "gaussian",
+    "training_loss": "bounded_ce_smooth",
+    "loss_epsilon": 0.01,
+    "selection_metric": "accuracy",
+    "validation_seed_policy": "fixed",
+    "width": 8,
+    "train_size": 800,
+    "val_size": 200,
+    "batch_size": 128,
+    "epochs": 120,
+    "lr": 0.006,
+    "eta_channel": 0.2,
+    "eta_data": 0.1,
+    "prior_std": 0.24,
+    "posterior_std": 0.1,
+    "m": 2000,
+    "seed": 92601,
+    "data_seed": 92604,
+    "channel_seed": 92602,
+    "eval_seed": 92603,
+    "eval_draws": 10,
+    "val_draws": 8,
+    "clip_ce": 10.0,
+    "delta": 0.05,
+    "l2": 0.0001,
+    "device": "cpu",
+    "threads": 1,
+    "cpu_flush_denormal": false,
+    "transmit_unit_power": false,
+    "rho_lr_scale": 0.0,
+    "download": false,
+    "moon_noise": 0.3,
+    "moons_sampler": "iid",
+    "train_channel": {
+      "kind": "diagonal_fading",
+      "rho_c": 0.15
+    },
+    "deployment_channel": {
+      "kind": "diagonal_fading",
+      "rho_c": 0.35
+    },
+    "bounded_feature_norm": 1.0,
+    "bounded_receiver_norm": 0.075,
+    "channel_prior": "independent_bank",
+    "channel_prior_checkpoint": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+    "channel_prior_count": 18,
+    "channel_prior_std": 0.15000000000000002,
+    "posterior_mean_clip": 0.25
+  },
+  "checkpoint_weights": "5342474a816b5ee4c37d737d866fc6cffac6447be1ea54aad485fda9defd463f",
+  "saved_bank_hash": "cc1d36f1f2584cbe90e18cc08926668b480f483b43a5908c46e5e47f765aab0e",
+  "selected_epoch": 114,
+  "empirical": {
+    "mean": 0.14742616271972656,
+    "iid_observations": 20000,
+    "examples_per_observation": 1,
+    "total_evaluations": 20000,
+    "seed": 314159
+  },
+  "test": {
+    "cross_entropy": 0.6882675601434707,
+    "bounded_loss": 0.1473101179897785,
+    "accuracy": 0.54809,
+    "feature_power_per_coordinate": 0.062433928370475775,
+    "draws": 20,
+    "examples": 10000,
+    "channel_source": "deployment",
+    "bounded_loss_definition": "-log(epsilon+(1-epsilon)*p_y)/(-log(epsilon)); epsilon=0.01",
+    "posterior_rule": "one weight draw fixed across entire loader per replicate",
+    "predictor": {
+      "family": "diagonal_gaussian",
+      "stochastic": true
+    },
+    "replicate_statistics": [
+      {
+        "cross_entropy": 0.6886309416770935,
+        "bounded_loss": 0.14738759651184083,
+        "accuracy": 0.5469,
+        "feature_power_per_coordinate": 0.08090606067180633
+      },
+      {
+        "cross_entropy": 0.6873271983146667,
+        "bounded_loss": 0.1471101580619812,
+        "accuracy": 0.5512,
+        "feature_power_per_coordinate": 0.06477976546287537
+      },
+      {
+        "cross_entropy": 0.6902718750953675,
+        "bounded_loss": 0.147736736369133,
+        "accuracy": 0.5357,
+        "feature_power_per_coordinate": 0.05115979933738708
+      },
+      {
+        "cross_entropy": 0.686679949092865,
+        "bounded_loss": 0.1469722959280014,
+        "accuracy": 0.5652,
+        "feature_power_per_coordinate": 0.052752799701690674
+      },
+      {
+        "cross_entropy": 0.686970038318634,
+        "bounded_loss": 0.14703348715305328,
+        "accuracy": 0.5588,
+        "feature_power_per_coordinate": 0.0683197234749794
+      },
+      {
+        "cross_entropy": 0.6892525822639465,
+        "bounded_loss": 0.1475193099498749,
+        "accuracy": 0.5362,
+        "feature_power_per_coordinate": 0.061571101945638654
+      },
+      {
+        "cross_entropy": 0.6891625901222229,
+        "bounded_loss": 0.14750069031715393,
+        "accuracy": 0.5456,
+        "feature_power_per_coordinate": 0.07572963548898697
+      },
+      {
+        "cross_entropy": 0.6889413124084472,
+        "bounded_loss": 0.14745307035446167,
+        "accuracy": 0.5391,
+        "feature_power_per_coordinate": 0.05329263988137245
+      },
+      {
+        "cross_entropy": 0.6894224508285522,
+        "bounded_loss": 0.14755688219070434,
+        "accuracy": 0.5464,
+        "feature_power_per_coordinate": 0.048145792025327684
+      },
+      {
+        "cross_entropy": 0.6883019837379456,
+        "bounded_loss": 0.1473178517818451,
+        "accuracy": 0.5491,
+        "feature_power_per_coordinate": 0.07504200154542923
+      },
+      {
+        "cross_entropy": 0.6872341879844666,
+        "bounded_loss": 0.14709001059532165,
+        "accuracy": 0.5509,
+        "feature_power_per_coordinate": 0.07844252824783325
+      },
+      {
+        "cross_entropy": 0.6871949640274048,
+        "bounded_loss": 0.1470816656589508,
+        "accuracy": 0.5492,
+        "feature_power_per_coordinate": 0.06640583192110061
+      },
+      {
+        "cross_entropy": 0.6884754614830018,
+        "bounded_loss": 0.14735427329540252,
+        "accuracy": 0.5476,
+        "feature_power_per_coordinate": 0.053002336782217024
+      },
+      {
+        "cross_entropy": 0.6880305173873902,
+        "bounded_loss": 0.1472594792842865,
+        "accuracy": 0.5455,
+        "feature_power_per_coordinate": 0.06731373184919358
+      },
+      {
+        "cross_entropy": 0.6893067142486572,
+        "bounded_loss": 0.14753081545829774,
+        "accuracy": 0.5379,
+        "feature_power_per_coordinate": 0.056291177487373355
+      },
+      {
+        "cross_entropy": 0.689709525680542,
+        "bounded_loss": 0.14761810312271118,
+        "accuracy": 0.5403,
+        "feature_power_per_coordinate": 0.05103975832462311
+      },
+      {
+        "cross_entropy": 0.6864101514816284,
+        "bounded_loss": 0.14691386976242066,
+        "accuracy": 0.5629,
+        "feature_power_per_coordinate": 0.07454878220558167
+      },
+      {
+        "cross_entropy": 0.6877447235107422,
+        "bounded_loss": 0.14719948918819428,
+        "accuracy": 0.5523,
+        "feature_power_per_coordinate": 0.06680067759752274
+      },
+      {
+        "cross_entropy": 0.686676069355011,
+        "bounded_loss": 0.14697033491134642,
+        "accuracy": 0.5602,
+        "feature_power_per_coordinate": 0.051623566830158236
+      },
+      {
+        "cross_entropy": 0.6896079658508301,
+        "bounded_loss": 0.14759623990058898,
+        "accuracy": 0.5408,
+        "feature_power_per_coordinate": 0.05151085662841797
+      }
+    ],
+    "mc_note": "Finite-data Gibbs Monte Carlo estimates, not population-risk certificates",
+    "bounded_loss_mc_upper_radius_95pct": 0.2736664152555987
+  },
+  "theory": "Theorem 1 with data-dependent channel prior Q_{W|S}",
+  "posterior_kl": 27.146625518798828,
+  "channel_prior": {
+    "selected": {
+      "construction": "independent_bank",
+      "std": 0.1,
+      "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+      "kl": 0.9693809747695923,
+      "channel": 0.061330020408995885
+    },
+    "family_size": 18,
+    "family": [
+      {
+        "construction": "perfect",
+        "std": 0.1,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 98.89833068847656,
+        "channel": 0.1680947830068797
+      },
+      {
+        "construction": "perfect",
+        "std": 0.125,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 65.10696411132812,
+        "channel": 0.14072593362988856
+      },
+      {
+        "construction": "perfect",
+        "std": 0.15000000000000002,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 49.31768035888672,
+        "channel": 0.12591462508422324
+      },
+      {
+        "construction": "perfect",
+        "std": 0.2,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 38.086769104003906,
+        "channel": 0.11421628793735962
+      },
+      {
+        "construction": "perfect",
+        "std": 0.30000000000000004,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 38.46375274658203,
+        "channel": 0.11462832759559462
+      },
+      {
+        "construction": "perfect",
+        "std": 0.5,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 51.3923225402832,
+        "channel": 0.12795863712720723
+      },
+      {
+        "construction": "independent_bank",
+        "std": 0.1,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+        "kl": 0.9693809747695923,
+        "channel": 0.061330020408995885
+      },
+      {
+        "construction": "independent_bank",
+        "std": 0.125,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+        "kl": 2.4324326515197754,
+        "channel": 0.06424420048145563
+      },
+      {
+        "construction": "independent_bank",
+        "std": 0.15000000000000002,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+        "kl": 5.793705940246582,
+        "channel": 0.07048443790673888
+      },
+      {
+        "construction": "independent_bank",
+        "std": 0.2,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+        "kl": 13.604527473449707,
+        "channel": 0.08319698438911062
+      },
+      {
+        "construction": "independent_bank",
+        "std": 0.30000000000000004,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+        "kl": 27.582759857177734,
+        "channel": 0.10206882217650232
+      },
+      {
+        "construction": "independent_bank",
+        "std": 0.5,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-independent_bank-1dd1b62d5e37",
+        "kl": 47.47516632080078,
+        "channel": 0.1240710839442838
+      },
+      {
+        "construction": "fresh",
+        "std": 0.1,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-fresh-f2c9eae27a13",
+        "kl": 65.94291687011719,
+        "channel": 0.14146689058599224
+      },
+      {
+        "construction": "fresh",
+        "std": 0.125,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-fresh-f2c9eae27a13",
+        "kl": 44.0155029296875,
+        "channel": 0.12053333708592896
+      },
+      {
+        "construction": "fresh",
+        "std": 0.15000000000000002,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-fresh-f2c9eae27a13",
+        "kl": 34.670833587646484,
+        "channel": 0.11041263218290817
+      },
+      {
+        "construction": "fresh",
+        "std": 0.2,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-fresh-f2c9eae27a13",
+        "kl": 29.847911834716797,
+        "channel": 0.10480751757638013
+      },
+      {
+        "construction": "fresh",
+        "std": 0.30000000000000004,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-fresh-f2c9eae27a13",
+        "kl": 34.802040100097656,
+        "channel": 0.11056114770881102
+      },
+      {
+        "construction": "fresh",
+        "std": 0.5,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-fresh-f2c9eae27a13",
+        "kl": 50.07410430908203,
+        "channel": 0.12666370197473012
+      }
+    ],
+    "union_bound": "eps_1 / family_size"
+  },
+  "confidence": {
+    "family_failure": 0.05,
+    "family_size": 20,
+    "failure_each_theorem_and_mc": 0.00125,
+    "eps_1": 0.000625,
+    "eps_2": 0.000625
+  },
+  "empirical_mc_radius": 0.012927308041185456,
+  "components": {
+    "empirical": 0.14742616271972656,
+    "mc": 0.012927308041185456,
+    "sample": 0.15393603154898214,
+    "channel": 0.061330020408995885,
+    "shift": 0.2853865082895975
+  },
+  "channel_shift": {
+    "method": "T1 channel KL",
+    "analytic": true,
+    "upper": 0.2853865082895975,
+    "channel_kl": 0.16289091822745702
+  },
+  "uncapped_risk_upper": 0.6610060310084875,
+  "nonvacuous": true,
+  "selection": {
+    "rule": "smallest bound under an independent Monte Carlo seed",
+    "selection_mc_seed": 271828,
+    "candidates": 72,
+    "task_id": "bounds-fading-mismatch-T1-independent_bank-s1.5-e10-d5-f1634428d5b2",
+    "variant": "independent_bank-s1.5-e10-d5",
+    "leaderboard": [
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s1.5-e10-d5-f1634428d5b2",
+        "upper": 0.6610400703151281
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s3-e100-d5-aed001acdecc",
+        "upper": 0.6610743469383404
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s1-e10-d5-38ef2b7310c2",
+        "upper": 0.6617609340849488
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s2-e1-d5-d1a9c5117adf",
+        "upper": 0.6618989951977663
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s3-e1-d5-daeab3863732",
+        "upper": 0.6619196666530587
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s2-e10-d5-67fc7b513790",
+        "upper": 0.6621009663720148
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s2-e100-d5-5964c26ac2a2",
+        "upper": 0.6622362513043716
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s1.5-e100-d5-47a9e6f7acd7",
+        "upper": 0.6625304968699539
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s1-e100-d5-f90117e7714d",
+        "upper": 0.6628453396476617
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-independent_bank-s1-e10-d1-0b0953db6c83",
+        "upper": 0.6629220091932693
+      }
+    ]
+  },
+  "previous_fixed_prior": {
+    "uncapped_risk_upper": 0.6911735795825694,
+    "components": {
+      "empirical": 0.14785448667816817,
+      "mc": 0.012927308041185456,
+      "sample": 0.1497360746778989,
+      "channel": 0.09526920189571939,
+      "shift": 0.2853865082895975
+    }
+  }
+}

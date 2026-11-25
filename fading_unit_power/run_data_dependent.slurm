@@ -6,12 +6,13 @@
 #SBATCH --ntasks=1
 #SBATCH --hint=nomultithread
 #SBATCH --open-mode=append
-# Usage (via submit_data_dependent.sh): sbatch ... run_data_dependent.slurm STUDY ROOT
+# Usage (via submit_data_dependent.sh): sbatch ... run_data_dependent.slurm STUDY ROOT [pipeline args]
 set -eo pipefail
 
 study=${1:?Pass the study: performance, mnist, cifar_mismatch or bounds}
 root=${2:?Pass the study output directory}
-expected_revision=$(cat "$root/git-revision.txt")
+shift 2
+expected_revision=$(cat "$root/${REVISION_FILE:-git-revision.txt}")
 if [[ "$(git rev-parse HEAD)" != "$expected_revision" ]]; then
     printf 'Expected worktree revision %s, found %s\n' "$expected_revision" "$(git rev-parse HEAD)" >&2
     exit 1
@@ -34,4 +35,4 @@ export PYTHONPATH=$PWD${PYTHONPATH:+:$PYTHONPATH}
 
 # One single-threaded training process per allocated CPU.
 exec "$python_bin" -u -m fading_unit_power.data_dependent pipeline --study "$study" --root "$root" \
-    --workers "$SLURM_CPUS_PER_TASK"
+    --workers "$SLURM_CPUS_PER_TASK" "$@"
