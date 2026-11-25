@@ -146,7 +146,14 @@ def certificate(root: Path, task: dict, stage1_dirs: dict, seed: int):
                 family=family, best=best, count=count, bank_hash=metadata["training_channel_bank_hash"])
 
 
-def pipeline(root: Path, workers: int):
+def pipeline(root: Path, workers: int, constructions=None):
+    """Certify T1; with ``constructions`` both the candidates and the prior family use only those.
+
+    A restricted certificate has K = len(constructions) * len(CERTIFICATE_STD_MULTIPLIERS), so it
+    is valid on its own only when the construction is fixed before U is used. Taking the minimum
+    over separately restricted certificates would need the full-family union bound instead.
+    """
+    constructions = tuple(constructions or campaign.CONSTRUCTIONS)
     tasks_path = root / "manifests" / "tasks.jsonl"
     if not tasks_path.exists():
         campaign.write_manifest(tasks_path, plan(root))
@@ -160,8 +167,10 @@ def pipeline(root: Path, workers: int):
         prefix = f"bounds-{family}-{regime}"
         stage1_dirs = {t["meta"]["construction"]: campaign.run_dir(root, t["task_id"]) for t in tasks
                        if t["task_id"].startswith(prefix) and t["meta"]["role"] == "stage1"
-                       and t["config"]["seed"] == old["config"]["seed"]}
-        candidates = [t for t in tasks if t["task_id"].startswith(prefix + "-T1")]
+                       and t["config"]["seed"] == old["config"]["seed"]
+                       and t["meta"]["construction"] in constructions}
+        candidates = [t for t in tasks if t["task_id"].startswith(prefix + "-T1")
+                      and t["meta"]["variant"][0] in constructions]
         scored = []
         for task in candidates:
             result = certificate(root, task, stage1_dirs, SELECTION_MC_SEED)
@@ -197,7 +206,7 @@ def pipeline(root: Path, workers: int):
                       previous_fixed_prior=dict(uncapped_risk_upper=old["uncapped_risk_upper"],
                                                 components=old["components"]))
         campaign.write_json(output / family / f"t1_{regime}" / "bound.json", record)
-        summary.append(dict(case=f"{family}/{regime}", new=upper, old=old["uncapped_risk_upper"],
+        summary.append(dict(case=f"{family}/{regime}", constructions=list(constructions), new=upper, old=old["uncapped_risk_upper"],
                             channel_new=components["channel"], channel_old=old["components"]["channel"],
                             variant=chosen["meta"]["label"], test_bounded_loss=test["heldout_gibbs_mc"]["bounded_loss"]))
     for family in ("fading", "erasure"):

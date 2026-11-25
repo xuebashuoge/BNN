@@ -594,11 +594,9 @@ def restrict(constructions):
 
 def pipeline(study: str, root: Path, workers: int, stop_after: str | None = None, constructions=None):
     root.mkdir(parents=True, exist_ok=True)
-    if constructions and study == "bounds":
-        raise ValueError("The bounds study certifies over every construction")
     if study == "bounds":
         from . import dd_bounds
-        dd_bounds.pipeline(root, workers)
+        dd_bounds.pipeline(root, workers, constructions)
         return
     planner, summarize, group = STUDIES[study]
     tune_path = root / "manifests" / "tune.jsonl"
