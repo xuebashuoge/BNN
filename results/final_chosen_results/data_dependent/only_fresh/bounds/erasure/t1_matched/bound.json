@@ -1,0 +1,348 @@
+{
+  "dataset": "moons",
+  "family": "erasure",
+  "regime": "matched",
+  "certificate": "T1",
+  "fallback": false,
+  "config": {
+    "dataset": "moons",
+    "architecture": "bounded_mlp",
+    "method": "proposed",
+    "predictor": "gaussian",
+    "training_loss": "bounded_ce_smooth",
+    "loss_epsilon": 0.01,
+    "selection_metric": "accuracy",
+    "validation_seed_policy": "fixed",
+    "width": 8,
+    "train_size": 800,
+    "val_size": 200,
+    "batch_size": 128,
+    "epochs": 120,
+    "lr": 0.006,
+    "eta_channel": 0.2,
+    "eta_data": 0.1,
+    "prior_std": 0.24,
+    "posterior_std": 0.1,
+    "m": 2000,
+    "seed": 92601,
+    "data_seed": 92604,
+    "channel_seed": 92602,
+    "eval_seed": 92603,
+    "eval_draws": 10,
+    "val_draws": 8,
+    "clip_ce": 10.0,
+    "delta": 0.05,
+    "l2": 0.0001,
+    "device": "cpu",
+    "threads": 1,
+    "cpu_flush_denormal": false,
+    "transmit_unit_power": false,
+    "rho_lr_scale": 0.0,
+    "download": false,
+    "moon_noise": 0.3,
+    "moons_sampler": "iid",
+    "train_channel": {
+      "kind": "outage",
+      "outage_prob": 0.5
+    },
+    "deployment_channel": {
+      "kind": "outage",
+      "outage_prob": 0.5
+    },
+    "bounded_feature_norm": 1.0,
+    "bounded_receiver_norm": 0.075,
+    "channel_prior": "fresh",
+    "channel_prior_checkpoint": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+    "channel_prior_count": 18,
+    "channel_prior_std": 0.2,
+    "posterior_mean_clip": 0.25
+  },
+  "checkpoint_weights": "47a5f9496a17ebc0b139e46f11a4d20a7d50c37324f799a64112d02d02f8a2dd",
+  "saved_bank_hash": "39e3815620464d954d43ad4a6316e5060a7779cbf7975a906262b9b8d07c2ccb",
+  "selected_epoch": 1,
+  "empirical": {
+    "mean": 0.14691387939453124,
+    "iid_observations": 20000,
+    "examples_per_observation": 1,
+    "total_evaluations": 20000,
+    "seed": 314159
+  },
+  "test": {
+    "cross_entropy": 0.6859219385242462,
+    "bounded_loss": 0.146816010928154,
+    "accuracy": 0.7229050000000001,
+    "feature_power_per_coordinate": 0.07613541049331427,
+    "draws": 20,
+    "examples": 10000,
+    "channel_source": "deployment",
+    "bounded_loss_definition": "-log(epsilon+(1-epsilon)*p_y)/(-log(epsilon)); epsilon=0.01",
+    "posterior_rule": "one weight draw fixed across entire loader per replicate",
+    "predictor": {
+      "family": "diagonal_gaussian",
+      "stochastic": true
+    },
+    "replicate_statistics": [
+      {
+        "cross_entropy": 0.6866641151428222,
+        "bounded_loss": 0.14697405259609223,
+        "accuracy": 0.7293,
+        "feature_power_per_coordinate": 0.08373820604085923
+      },
+      {
+        "cross_entropy": 0.6867250179290771,
+        "bounded_loss": 0.14698708765506743,
+        "accuracy": 0.7175,
+        "feature_power_per_coordinate": 0.07259209779500961
+      },
+      {
+        "cross_entropy": 0.6861097080230713,
+        "bounded_loss": 0.14685608568191527,
+        "accuracy": 0.7411,
+        "feature_power_per_coordinate": 0.07106197288036346
+      },
+      {
+        "cross_entropy": 0.6857839853286744,
+        "bounded_loss": 0.1467867038965225,
+        "accuracy": 0.7292,
+        "feature_power_per_coordinate": 0.06546709768772126
+      },
+      {
+        "cross_entropy": 0.6854635459899903,
+        "bounded_loss": 0.14671837668418886,
+        "accuracy": 0.6921,
+        "feature_power_per_coordinate": 0.07882523610591888
+      },
+      {
+        "cross_entropy": 0.685304486465454,
+        "bounded_loss": 0.14668465242385864,
+        "accuracy": 0.7279,
+        "feature_power_per_coordinate": 0.07198925482034683
+      },
+      {
+        "cross_entropy": 0.6860818780899048,
+        "bounded_loss": 0.14685006675720214,
+        "accuracy": 0.7036,
+        "feature_power_per_coordinate": 0.1043117155790329
+      },
+      {
+        "cross_entropy": 0.6885062563896179,
+        "bounded_loss": 0.1473663149356842,
+        "accuracy": 0.6961,
+        "feature_power_per_coordinate": 0.05800173372030258
+      },
+      {
+        "cross_entropy": 0.6862107178688049,
+        "bounded_loss": 0.14687751488685608,
+        "accuracy": 0.7239,
+        "feature_power_per_coordinate": 0.06332420747876168
+      },
+      {
+        "cross_entropy": 0.6867009371757508,
+        "bounded_loss": 0.1469816692829132,
+        "accuracy": 0.6812,
+        "feature_power_per_coordinate": 0.09096840785741805
+      },
+      {
+        "cross_entropy": 0.6859335802078247,
+        "bounded_loss": 0.14681848285198212,
+        "accuracy": 0.7554,
+        "feature_power_per_coordinate": 0.07254797532558441
+      },
+      {
+        "cross_entropy": 0.6844183904647827,
+        "bounded_loss": 0.14649587097167968,
+        "accuracy": 0.7571,
+        "feature_power_per_coordinate": 0.0889574694275856
+      },
+      {
+        "cross_entropy": 0.6848555492401123,
+        "bounded_loss": 0.14658900759220123,
+        "accuracy": 0.7086,
+        "feature_power_per_coordinate": 0.08022196855545044
+      },
+      {
+        "cross_entropy": 0.6852064366340638,
+        "bounded_loss": 0.14666370089054107,
+        "accuracy": 0.7303,
+        "feature_power_per_coordinate": 0.07276491160392762
+      },
+      {
+        "cross_entropy": 0.6864685052871704,
+        "bounded_loss": 0.14693234434127808,
+        "accuracy": 0.7357,
+        "feature_power_per_coordinate": 0.07219131985902787
+      },
+      {
+        "cross_entropy": 0.6865966202735901,
+        "bounded_loss": 0.14695976183414458,
+        "accuracy": 0.7498,
+        "feature_power_per_coordinate": 0.06743455417156219
+      },
+      {
+        "cross_entropy": 0.6858544118881226,
+        "bounded_loss": 0.1468011825799942,
+        "accuracy": 0.6213,
+        "feature_power_per_coordinate": 0.07611972875595092
+      },
+      {
+        "cross_entropy": 0.6863492740631103,
+        "bounded_loss": 0.14690709891319276,
+        "accuracy": 0.7612,
+        "feature_power_per_coordinate": 0.07535117808580398
+      },
+      {
+        "cross_entropy": 0.6840596228599548,
+        "bounded_loss": 0.14641939182281494,
+        "accuracy": 0.7148,
+        "feature_power_per_coordinate": 0.08106804765462876
+      },
+      {
+        "cross_entropy": 0.6851457311630249,
+        "bounded_loss": 0.14665085196495056,
+        "accuracy": 0.782,
+        "feature_power_per_coordinate": 0.07577112646102906
+      }
+    ],
+    "mc_note": "Finite-data Gibbs Monte Carlo estimates, not population-risk certificates",
+    "bounded_loss_mc_upper_radius_95pct": 0.2736664152555987
+  },
+  "theory": "Theorem 1 with data-dependent channel prior Q_{W|S}",
+  "posterior_kl": 28.783233642578125,
+  "channel_prior": {
+    "selected": {
+      "construction": "fresh",
+      "std": 0.1,
+      "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+      "kl": 1.7026487588882446,
+      "channel": 0.0605804389743254
+    },
+    "family_size": 6,
+    "family": [
+      {
+        "construction": "fresh",
+        "std": 0.1,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+        "kl": 1.7026487588882446,
+        "channel": 0.0605804389743254
+      },
+      {
+        "construction": "fresh",
+        "std": 0.125,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+        "kl": 2.901723861694336,
+        "channel": 0.0630072084875296
+      },
+      {
+        "construction": "fresh",
+        "std": 0.15000000000000002,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+        "kl": 6.119603157043457,
+        "channel": 0.0690997871296163
+      },
+      {
+        "construction": "fresh",
+        "std": 0.2,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+        "kl": 13.787842750549316,
+        "channel": 0.08180953177465732
+      },
+      {
+        "construction": "fresh",
+        "std": 0.30000000000000004,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+        "kl": 27.66423225402832,
+        "channel": 0.10081484157332465
+      },
+      {
+        "construction": "fresh",
+        "std": 0.5,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-erasure-matched-stage1-fresh-bcaa057ec436",
+        "kl": 47.504493713378906,
+        "channel": 0.12298853165889605
+      }
+    ],
+    "union_bound": "eps_1 / family_size"
+  },
+  "confidence": {
+    "family_failure": 0.05,
+    "family_size": 20,
+    "failure_each_theorem_and_mc": 0.00125,
+    "eps_1": 0.000625,
+    "eps_2": 0.000625
+  },
+  "empirical_mc_radius": 0.012927308041185456,
+  "components": {
+    "empirical": 0.14691387939453124,
+    "mc": 0.012927308041185456,
+    "sample": 0.15722742154840047,
+    "channel": 0.0605804389743254,
+    "shift": 0.0
+  },
+  "channel_shift": {
+    "method": "T1 channel KL",
+    "analytic": true,
+    "upper": 0.0,
+    "channel_kl": 0.0
+  },
+  "uncapped_risk_upper": 0.37764904795844256,
+  "nonvacuous": true,
+  "selection": {
+    "rule": "smallest bound under an independent Monte Carlo seed",
+    "selection_mc_seed": 271828,
+    "candidates": 24,
+    "task_id": "bounds-erasure-matched-T1-fresh-s2-e10-d5-cae8f0a90281",
+    "variant": "fresh-s2-e10-d5",
+    "leaderboard": [
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s2-e10-d5-cae8f0a90281",
+        "upper": 0.37762887583930194
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s1-e1-d5-c3babe2912ef",
+        "upper": 0.3777127797874121
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s3-e10-d5-0dad7b5f992c",
+        "upper": 0.3777788689337616
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s1.5-e10-d5-b3a6018f1aec",
+        "upper": 0.377799736631106
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s1.5-e1-d5-1f8d3d2741e0",
+        "upper": 0.3778169845313643
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s2-e1-d5-47c67c43574a",
+        "upper": 0.3778623647340088
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s3-e1-d5-9866a131d5c9",
+        "upper": 0.37788739233897045
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s3-e100-d5-eb74db9f0cc0",
+        "upper": 0.37822087820298916
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s1-e10-d5-5defdff0daa6",
+        "upper": 0.3788232408038352
+      },
+      {
+        "task": "bounds-erasure-matched-T1-fresh-s2-e100-d5-9d92d033a4c9",
+        "upper": 0.37937687147867083
+      }
+    ]
+  },
+  "previous_fixed_prior": {
+    "uncapped_risk_upper": 0.41852969779071403,
+    "components": {
+      "empirical": 0.14685729165375233,
+      "mc": 0.012927308041185456,
+      "sample": 0.15817356006303931,
+      "channel": 0.10057153803273695,
+      "shift": 0.0
+    }
+  }
+}

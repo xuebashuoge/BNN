@@ -1,0 +1,738 @@
+{
+  "cifar10/Erasure": {
+    "variant": [
+      "independent_bank",
+      100.0,
+      1.0
+    ],
+    "label": "independent_bank-s100-e1",
+    "validation_accuracy": 0.66754,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s100-e1",
+        "mean": 0.66754,
+        "seeds": [
+          0.6660999999999999,
+          0.6689800000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.65634,
+        "seeds": [
+          0.66166,
+          0.65102
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e1",
+        "mean": 0.65237,
+        "seeds": [
+          0.6587,
+          0.6460400000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.65115,
+        "seeds": [
+          0.65604,
+          0.6462600000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e10",
+        "mean": 0.64984,
+        "seeds": [
+          0.65706,
+          0.64262
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.64975,
+        "seeds": [
+          0.6567999999999999,
+          0.6427
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e100",
+        "mean": 0.6494599999999999,
+        "seeds": [
+          0.6543599999999999,
+          0.64456
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.64926,
+        "seeds": [
+          0.65494,
+          0.64358
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e1",
+        "mean": 0.6491899999999999,
+        "seeds": [
+          0.65592,
+          0.64246
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e10",
+        "mean": 0.64864,
+        "seeds": [
+          0.6533,
+          0.64398
+        ]
+      }
+    ],
+    "candidates": 12
+  },
+  "cifar10/Fading": {
+    "variant": [
+      "independent_bank",
+      100.0,
+      100.0
+    ],
+    "label": "independent_bank-s100-e100",
+    "validation_accuracy": 0.5782499999999999,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s100-e100",
+        "mean": 0.5782499999999999,
+        "seeds": [
+          0.57746,
+          0.57904
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e1",
+        "mean": 0.57801,
+        "seeds": [
+          0.5784800000000001,
+          0.5775399999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e1",
+        "mean": 0.5774600000000001,
+        "seeds": [
+          0.5780600000000001,
+          0.57686
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e10",
+        "mean": 0.5773900000000001,
+        "seeds": [
+          0.57806,
+          0.57672
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.5767,
+        "seeds": [
+          0.57908,
+          0.5743199999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.5750299999999999,
+        "seeds": [
+          0.5772799999999999,
+          0.5727800000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.574,
+        "seeds": [
+          0.5732799999999999,
+          0.57472
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.57355,
+        "seeds": [
+          0.57426,
+          0.57284
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e1",
+        "mean": 0.57284,
+        "seeds": [
+          0.57686,
+          0.5688200000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e10",
+        "mean": 0.56999,
+        "seeds": [
+          0.5741799999999999,
+          0.5658
+        ]
+      }
+    ],
+    "candidates": 12
+  },
+  "fashionmnist/Erasure": {
+    "variant": [
+      "independent_bank",
+      100.0,
+      10.0
+    ],
+    "label": "independent_bank-s100-e10",
+    "validation_accuracy": 0.87479,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.87479,
+        "seeds": [
+          0.8727599999999999,
+          0.87682
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e1",
+        "mean": 0.8743500000000001,
+        "seeds": [
+          0.8729800000000001,
+          0.87572
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e100",
+        "mean": 0.87429,
+        "seeds": [
+          0.8733000000000001,
+          0.8752800000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e10",
+        "mean": 0.8742099999999999,
+        "seeds": [
+          0.8731199999999999,
+          0.8753
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e1",
+        "mean": 0.87399,
+        "seeds": [
+          0.8732600000000001,
+          0.8747199999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e1",
+        "mean": 0.8733899999999999,
+        "seeds": [
+          0.87266,
+          0.8741199999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e100",
+        "mean": 0.8731499999999999,
+        "seeds": [
+          0.87196,
+          0.8743399999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.87312,
+        "seeds": [
+          0.8730600000000001,
+          0.87318
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.8730199999999999,
+        "seeds": [
+          0.87232,
+          0.8737199999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.873,
+        "seeds": [
+          0.87226,
+          0.8737400000000001
+        ]
+      }
+    ],
+    "candidates": 12
+  },
+  "fashionmnist/Fading": {
+    "variant": [
+      "independent_bank",
+      30.0,
+      1.0
+    ],
+    "label": "independent_bank-s30-e1",
+    "validation_accuracy": 0.71538,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s30-e1",
+        "mean": 0.71538,
+        "seeds": [
+          0.71194,
+          0.71882
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e1",
+        "mean": 0.7144999999999999,
+        "seeds": [
+          0.7091999999999999,
+          0.7197999999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.7137099999999998,
+        "seeds": [
+          0.7100799999999999,
+          0.7173399999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.71353,
+        "seeds": [
+          0.70838,
+          0.71868
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.71329,
+        "seeds": [
+          0.70884,
+          0.7177399999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.71315,
+        "seeds": [
+          0.7094400000000001,
+          0.7168599999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e100",
+        "mean": 0.7125900000000001,
+        "seeds": [
+          0.70762,
+          0.71756
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e10",
+        "mean": 0.7124900000000001,
+        "seeds": [
+          0.70842,
+          0.71656
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e1",
+        "mean": 0.71213,
+        "seeds": [
+          0.70808,
+          0.71618
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e10",
+        "mean": 0.7116,
+        "seeds": [
+          0.7064,
+          0.7168
+        ]
+      }
+    ],
+    "candidates": 12
+  },
+  "mnist/Erasure": {
+    "variant": [
+      "independent_bank",
+      30.0,
+      100.0
+    ],
+    "label": "independent_bank-s30-e100",
+    "validation_accuracy": 0.9601799999999999,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.9601799999999999,
+        "seeds": [
+          0.9599599999999999,
+          0.9603999999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.96016,
+        "seeds": [
+          0.95922,
+          0.9611000000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e100",
+        "mean": 0.96007,
+        "seeds": [
+          0.9599,
+          0.96024
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e100",
+        "mean": 0.9599900000000001,
+        "seeds": [
+          0.9598600000000002,
+          0.9601200000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e10",
+        "mean": 0.9599300000000001,
+        "seeds": [
+          0.9601200000000001,
+          0.95974
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e10",
+        "mean": 0.9597,
+        "seeds": [
+          0.9597999999999999,
+          0.9596
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e1",
+        "mean": 0.9596600000000001,
+        "seeds": [
+          0.95902,
+          0.9603000000000002
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e100",
+        "mean": 0.9595499999999999,
+        "seeds": [
+          0.9601,
+          0.959
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.95949,
+        "seeds": [
+          0.95914,
+          0.95984
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.9594400000000001,
+        "seeds": [
+          0.95932,
+          0.9595600000000001
+        ]
+      }
+    ],
+    "candidates": 12
+  },
+  "mnist/Fading": {
+    "variant": [
+      "independent_bank",
+      10.0,
+      1.0
+    ],
+    "label": "independent_bank-s10-e1",
+    "validation_accuracy": 0.76606,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.76606,
+        "seeds": [
+          0.76454,
+          0.7675799999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.76581,
+        "seeds": [
+          0.76432,
+          0.7673
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e10",
+        "mean": 0.7655299999999999,
+        "seeds": [
+          0.7625799999999999,
+          0.7684799999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e100",
+        "mean": 0.76511,
+        "seeds": [
+          0.7642,
+          0.7660199999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e1",
+        "mean": 0.76498,
+        "seeds": [
+          0.7621800000000001,
+          0.76778
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e1",
+        "mean": 0.76492,
+        "seeds": [
+          0.76232,
+          0.76752
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.76424,
+        "seeds": [
+          0.76076,
+          0.76772
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.76389,
+        "seeds": [
+          0.76082,
+          0.76696
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e1",
+        "mean": 0.76386,
+        "seeds": [
+          0.7606400000000001,
+          0.76708
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e100",
+        "mean": 0.7616900000000001,
+        "seeds": [
+          0.7584000000000001,
+          0.7649800000000001
+        ]
+      }
+    ],
+    "candidates": 12
+  },
+  "moons/Erasure": {
+    "variant": [
+      "independent_bank",
+      100.0,
+      100.0
+    ],
+    "label": "independent_bank-s100-e100",
+    "validation_accuracy": 0.874995,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s100-e100",
+        "mean": 0.874995,
+        "seeds": [
+          0.8746750000000001,
+          0.875315
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.8749425,
+        "seeds": [
+          0.8752699999999999,
+          0.874615
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.8748225000000001,
+        "seeds": [
+          0.87449,
+          0.875155
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e1",
+        "mean": 0.8748075,
+        "seeds": [
+          0.8736900000000001,
+          0.875925
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.8741300000000001,
+        "seeds": [
+          0.87355,
+          0.87471
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e1",
+        "mean": 0.8739975,
+        "seeds": [
+          0.873945,
+          0.8740499999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e100",
+        "mean": 0.8738499999999999,
+        "seeds": [
+          0.8738999999999999,
+          0.8737999999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e100",
+        "mean": 0.87373,
+        "seeds": [
+          0.873845,
+          0.873615
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e10",
+        "mean": 0.87357,
+        "seeds": [
+          0.873845,
+          0.873295
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.8735474999999999,
+        "seeds": [
+          0.87361,
+          0.873485
+        ]
+      }
+    ],
+    "candidates": 12
+  },
+  "moons/Fading": {
+    "variant": [
+      "independent_bank",
+      10.0,
+      10.0
+    ],
+    "label": "independent_bank-s10-e10",
+    "validation_accuracy": 0.7149224999999999,
+    "leaderboard": [
+      {
+        "label": "independent_bank-s10-e10",
+        "mean": 0.7149224999999999,
+        "seeds": [
+          0.715355,
+          0.7144899999999998
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e100",
+        "mean": 0.7147275,
+        "seeds": [
+          0.7150399999999999,
+          0.714415
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e1",
+        "mean": 0.7140774999999999,
+        "seeds": [
+          0.713715,
+          0.71444
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e10",
+        "mean": 0.7137800000000001,
+        "seeds": [
+          0.7138150000000001,
+          0.7137450000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e10",
+        "mean": 0.71378,
+        "seeds": [
+          0.7137849999999999,
+          0.713775
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e1",
+        "mean": 0.713765,
+        "seeds": [
+          0.7137499999999999,
+          0.7137800000000001
+        ]
+      },
+      {
+        "label": "independent_bank-s30-e1",
+        "mean": 0.713755,
+        "seeds": [
+          0.71374,
+          0.71377
+        ]
+      },
+      {
+        "label": "independent_bank-s100-e100",
+        "mean": 0.7136324999999999,
+        "seeds": [
+          0.71354,
+          0.7137249999999999
+        ]
+      },
+      {
+        "label": "independent_bank-s10-e1",
+        "mean": 0.71362,
+        "seeds": [
+          0.7135100000000001,
+          0.71373
+        ]
+      },
+      {
+        "label": "independent_bank-s3-e10",
+        "mean": 0.7131275,
+        "seeds": [
+          0.71214,
+          0.714115
+        ]
+      }
+    ],
+    "candidates": 12
+  }
+}

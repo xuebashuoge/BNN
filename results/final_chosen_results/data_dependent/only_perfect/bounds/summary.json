@@ -1,0 +1,50 @@
+[
+  {
+    "case": "fading/matched",
+    "constructions": [
+      "perfect"
+    ],
+    "new": 0.3791755731384724,
+    "old": 0.40581382461947113,
+    "channel_new": 0.0598877849062149,
+    "channel_old": 0.09527774402224319,
+    "variant": "perfect-s1.5-e10-d5",
+    "test_bounded_loss": 0.1470563204419613
+  },
+  {
+    "case": "fading/mismatch",
+    "constructions": [
+      "perfect"
+    ],
+    "new": 0.6646092466442015,
+    "old": 0.6911735795825694,
+    "channel_new": 0.0601557270154381,
+    "channel_old": 0.09526920189571939,
+    "variant": "perfect-s1-e1-d5",
+    "test_bounded_loss": 0.14708065215349198
+  },
+  {
+    "case": "erasure/matched",
+    "constructions": [
+      "perfect"
+    ],
+    "new": 0.3817613601746692,
+    "old": 0.41852969779071403,
+    "channel_new": 0.06152542811401325,
+    "channel_old": 0.10057153803273695,
+    "variant": "perfect-s1-e1-d5",
+    "test_bounded_loss": 0.1467089820122719
+  },
+  {
+    "case": "erasure/mismatch",
+    "constructions": [
+      "perfect"
+    ],
+    "new": 0.523391294477682,
+    "old": 0.5639384897438079,
+    "channel_new": 0.06142459229412379,
+    "channel_old": 0.10206478887254626,
+    "variant": "perfect-s1-e1-d5",
+    "test_bounded_loss": 0.14670544449090955
+  }
+]

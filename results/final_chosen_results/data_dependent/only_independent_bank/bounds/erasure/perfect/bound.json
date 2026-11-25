@@ -1,0 +1,231 @@
+{
+  "dataset": "moons",
+  "family": "erasure",
+  "regime": "perfect",
+  "certificate": "C1",
+  "fallback": true,
+  "config": {
+    "dataset": "moons",
+    "architecture": "bounded_mlp",
+    "method": "proposed",
+    "predictor": "gaussian",
+    "training_loss": "bounded_ce_smooth",
+    "loss_epsilon": 0.01,
+    "selection_metric": "accuracy",
+    "validation_seed_policy": "fixed",
+    "width": 8,
+    "train_size": 800,
+    "val_size": 200,
+    "batch_size": 128,
+    "epochs": 120,
+    "lr": 0.006,
+    "eta_channel": 0.0,
+    "eta_data": 0.02,
+    "prior_std": 0.24,
+    "posterior_std": 0.1,
+    "m": 2000,
+    "seed": 92601,
+    "data_seed": 92604,
+    "channel_seed": 92602,
+    "eval_seed": 92603,
+    "eval_draws": 10,
+    "val_draws": 8,
+    "clip_ce": 10.0,
+    "delta": 0.05,
+    "l2": 0.0001,
+    "device": "cpu",
+    "threads": 1,
+    "cpu_flush_denormal": false,
+    "rho_lr_scale": 0.0,
+    "download": false,
+    "moon_noise": 0.3,
+    "moons_sampler": "iid",
+    "train_channel": {
+      "kind": "perfect"
+    },
+    "deployment_channel": {
+      "kind": "outage",
+      "outage_prob": 0.5
+    },
+    "bounded_feature_norm": 1.0,
+    "bounded_receiver_norm": 0.075,
+    "posterior_mean_clip": 0.25
+  },
+  "checkpoint_weights": {
+    "sha256": "1055ded0c95e4c919a51ed04e8cb458f233523fa78ff7b39b7871a5d82be7321",
+    "bytes": 130747
+  },
+  "saved_bank_hash": "6dff2b75529d9b38dcc3ff5335d6f6cf5f41ed6ad4745fc25bf7c7c20591c75f",
+  "selected_epoch": 120,
+  "empirical": {
+    "mean": 0.14487445416003467,
+    "iid_observations": 20000,
+    "examples_per_observation": 1,
+    "total_evaluations": 20000,
+    "seed": 170160
+  },
+  "test": {
+    "cross_entropy": 0.6845105707693101,
+    "bounded_loss": 0.14651549682497972,
+    "accuracy": 0.744935,
+    "feature_power_per_coordinate": 0.09109811169326307,
+    "draws": 20,
+    "examples": 10000,
+    "channel_source": "deployment",
+    "bounded_loss_definition": "-log(epsilon+(1-epsilon)*p_y)/(-log(epsilon)); epsilon=0.01",
+    "posterior_rule": "one weight draw fixed across entire loader per replicate",
+    "predictor": {
+      "family": "diagonal_gaussian",
+      "stochastic": true
+    },
+    "replicate_statistics": [
+      {
+        "cross_entropy": 0.684592050075531,
+        "bounded_loss": 0.14653282599449158,
+        "accuracy": 0.7301,
+        "feature_power_per_coordinate": 0.10635106272697449
+      },
+      {
+        "cross_entropy": 0.6849322876930237,
+        "bounded_loss": 0.1466051221370697,
+        "accuracy": 0.7136,
+        "feature_power_per_coordinate": 0.09326804928779601
+      },
+      {
+        "cross_entropy": 0.6829397487640381,
+        "bounded_loss": 0.14618109855651856,
+        "accuracy": 0.7748,
+        "feature_power_per_coordinate": 0.09696246861219406
+      },
+      {
+        "cross_entropy": 0.6850254471778869,
+        "bounded_loss": 0.14662515664100648,
+        "accuracy": 0.7535,
+        "feature_power_per_coordinate": 0.09148704755306244
+      },
+      {
+        "cross_entropy": 0.6843417928695679,
+        "bounded_loss": 0.14647958245277404,
+        "accuracy": 0.7558,
+        "feature_power_per_coordinate": 0.09690540235042572
+      },
+      {
+        "cross_entropy": 0.6829903598785401,
+        "bounded_loss": 0.14619189281463624,
+        "accuracy": 0.7822,
+        "feature_power_per_coordinate": 0.09935165543556214
+      },
+      {
+        "cross_entropy": 0.6839760857582092,
+        "bounded_loss": 0.14640174250602722,
+        "accuracy": 0.7695,
+        "feature_power_per_coordinate": 0.08217624462842942
+      },
+      {
+        "cross_entropy": 0.6849891109466553,
+        "bounded_loss": 0.14661737582683562,
+        "accuracy": 0.7327,
+        "feature_power_per_coordinate": 0.08177382338047028
+      },
+      {
+        "cross_entropy": 0.6838412727355957,
+        "bounded_loss": 0.14637295637130737,
+        "accuracy": 0.7534,
+        "feature_power_per_coordinate": 0.09631167719364166
+      },
+      {
+        "cross_entropy": 0.6844759992599487,
+        "bounded_loss": 0.14650816552639007,
+        "accuracy": 0.7578,
+        "feature_power_per_coordinate": 0.09420387471914292
+      },
+      {
+        "cross_entropy": 0.6856288896560669,
+        "bounded_loss": 0.14675374019145965,
+        "accuracy": 0.7741,
+        "feature_power_per_coordinate": 0.06484834463596344
+      },
+      {
+        "cross_entropy": 0.6856396019935608,
+        "bounded_loss": 0.1467559934616089,
+        "accuracy": 0.7545,
+        "feature_power_per_coordinate": 0.08178499255180359
+      },
+      {
+        "cross_entropy": 0.6837749729156494,
+        "bounded_loss": 0.14635892753601074,
+        "accuracy": 0.7726,
+        "feature_power_per_coordinate": 0.09950623784065246
+      },
+      {
+        "cross_entropy": 0.684014680480957,
+        "bounded_loss": 0.1464099666595459,
+        "accuracy": 0.7595,
+        "feature_power_per_coordinate": 0.09339425106048584
+      },
+      {
+        "cross_entropy": 0.6858095615386963,
+        "bounded_loss": 0.14679214746952057,
+        "accuracy": 0.7396,
+        "feature_power_per_coordinate": 0.08378579578399659
+      },
+      {
+        "cross_entropy": 0.6846736961364747,
+        "bounded_loss": 0.14655017476081847,
+        "accuracy": 0.7416,
+        "feature_power_per_coordinate": 0.11578668086528777
+      },
+      {
+        "cross_entropy": 0.6843368992805481,
+        "bounded_loss": 0.14647853610515593,
+        "accuracy": 0.7571,
+        "feature_power_per_coordinate": 0.09224539532661438
+      },
+      {
+        "cross_entropy": 0.6846718034744262,
+        "bounded_loss": 0.1465497632265091,
+        "accuracy": 0.7246,
+        "feature_power_per_coordinate": 0.07805598115921021
+      },
+      {
+        "cross_entropy": 0.6850947929382324,
+        "bounded_loss": 0.14663955111503602,
+        "accuracy": 0.6296,
+        "feature_power_per_coordinate": 0.08272949289083481
+      },
+      {
+        "cross_entropy": 0.6844623618125916,
+        "bounded_loss": 0.14650521714687348,
+        "accuracy": 0.7221,
+        "feature_power_per_coordinate": 0.09103375586271285
+      }
+    ],
+    "mc_note": "Finite-data Gibbs Monte Carlo estimates, not population-risk certificates",
+    "bounded_loss_mc_upper_radius_95pct": 0.2736664152555987
+  },
+  "theory": "Corollary 1",
+  "posterior_kl": 34.72926173789986,
+  "confidence": {
+    "family_failure": 0.05,
+    "family_size": 20,
+    "failure_each_theorem_and_mc": 0.00125
+  },
+  "empirical_mc_radius": 0.012927308041185456,
+  "components": {
+    "empirical": 0.14487445416003467,
+    "mc": 0.012927308041185456,
+    "sample": 0.1673547776667459,
+    "channel": 0.0,
+    "shift": 0.04519953873386808
+  },
+  "channel_shift": {
+    "method": "C1 first",
+    "metric": "Frobenius mask distance",
+    "analytic": true,
+    "expectation": 1.9624718051620464,
+    "upper": 0.04519953873386808,
+    "uniform_lipschitz": 0.02303194298892658
+  },
+  "uncapped_risk_upper": 0.3703560786018341,
+  "nonvacuous": true
+}

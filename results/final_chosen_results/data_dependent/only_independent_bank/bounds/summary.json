@@ -1,0 +1,50 @@
+[
+  {
+    "case": "fading/matched",
+    "constructions": [
+      "independent_bank"
+    ],
+    "new": 0.37477921589287666,
+    "old": 0.40581382461947113,
+    "channel_new": 0.05937567218252814,
+    "channel_old": 0.09527774402224319,
+    "variant": "independent_bank-s1.5-e10-d5",
+    "test_bounded_loss": 0.14724737038373942
+  },
+  {
+    "case": "fading/mismatch",
+    "constructions": [
+      "independent_bank"
+    ],
+    "new": 0.6587190549168148,
+    "old": 0.6911735795825694,
+    "channel_new": 0.057934115366682734,
+    "channel_old": 0.09526920189571939,
+    "variant": "independent_bank-s3-e100-d5",
+    "test_bounded_loss": 0.1472643312048912
+  },
+  {
+    "case": "erasure/matched",
+    "constructions": [
+      "independent_bank"
+    ],
+    "new": 0.37787025360402965,
+    "old": 0.41852969779071403,
+    "channel_new": 0.059414645074392126,
+    "channel_old": 0.10057153803273695,
+    "variant": "independent_bank-s1.5-e10-d5",
+    "test_bounded_loss": 0.14674668767809868
+  },
+  {
+    "case": "erasure/mismatch",
+    "constructions": [
+      "independent_bank"
+    ],
+    "new": 0.5204562983075186,
+    "old": 0.5639384897438079,
+    "channel_new": 0.059309921101476364,
+    "channel_old": 0.10206478887254626,
+    "variant": "independent_bank-s1.5-e10-d5",
+    "test_bounded_loss": 0.14670312777638433
+  }
+]

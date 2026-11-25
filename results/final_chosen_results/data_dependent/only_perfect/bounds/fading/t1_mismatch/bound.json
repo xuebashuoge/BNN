@@ -1,0 +1,348 @@
+{
+  "dataset": "moons",
+  "family": "fading",
+  "regime": "mismatch",
+  "certificate": "T1",
+  "fallback": false,
+  "config": {
+    "dataset": "moons",
+    "architecture": "bounded_mlp",
+    "method": "proposed",
+    "predictor": "gaussian",
+    "training_loss": "bounded_ce_smooth",
+    "loss_epsilon": 0.01,
+    "selection_metric": "accuracy",
+    "validation_seed_policy": "fixed",
+    "width": 8,
+    "train_size": 800,
+    "val_size": 200,
+    "batch_size": 128,
+    "epochs": 120,
+    "lr": 0.006,
+    "eta_channel": 0.02,
+    "eta_data": 0.1,
+    "prior_std": 0.24,
+    "posterior_std": 0.1,
+    "m": 2000,
+    "seed": 92601,
+    "data_seed": 92604,
+    "channel_seed": 92602,
+    "eval_seed": 92603,
+    "eval_draws": 10,
+    "val_draws": 8,
+    "clip_ce": 10.0,
+    "delta": 0.05,
+    "l2": 0.0001,
+    "device": "cpu",
+    "threads": 1,
+    "cpu_flush_denormal": false,
+    "transmit_unit_power": false,
+    "rho_lr_scale": 0.0,
+    "download": false,
+    "moon_noise": 0.3,
+    "moons_sampler": "iid",
+    "train_channel": {
+      "kind": "diagonal_fading",
+      "rho_c": 0.15
+    },
+    "deployment_channel": {
+      "kind": "diagonal_fading",
+      "rho_c": 0.35
+    },
+    "bounded_feature_norm": 1.0,
+    "bounded_receiver_norm": 0.075,
+    "channel_prior": "perfect",
+    "channel_prior_checkpoint": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+    "channel_prior_count": 18,
+    "channel_prior_std": 0.1,
+    "posterior_mean_clip": 0.25
+  },
+  "checkpoint_weights": "5ac9e1529d68f279ae77b75773a8480969fededef24be2bddf54d7c2edf3df15",
+  "saved_bank_hash": "cc1d36f1f2584cbe90e18cc08926668b480f483b43a5908c46e5e47f765aab0e",
+  "selected_epoch": 1,
+  "empirical": {
+    "mean": 0.14718379516601562,
+    "iid_observations": 20000,
+    "examples_per_observation": 1,
+    "total_evaluations": 20000,
+    "seed": 314159
+  },
+  "test": {
+    "cross_entropy": 0.6871913675212861,
+    "bounded_loss": 0.14708065215349198,
+    "accuracy": 0.5546249999999999,
+    "feature_power_per_coordinate": 0.07711526486784219,
+    "draws": 20,
+    "examples": 10000,
+    "channel_source": "deployment",
+    "bounded_loss_definition": "-log(epsilon+(1-epsilon)*p_y)/(-log(epsilon)); epsilon=0.01",
+    "posterior_rule": "one weight draw fixed across entire loader per replicate",
+    "predictor": {
+      "family": "diagonal_gaussian",
+      "stochastic": true
+    },
+    "replicate_statistics": [
+      {
+        "cross_entropy": 0.6885947746276856,
+        "bounded_loss": 0.14737950148582457,
+        "accuracy": 0.5498,
+        "feature_power_per_coordinate": 0.08632988183498383
+      },
+      {
+        "cross_entropy": 0.6871350687026978,
+        "bounded_loss": 0.14706921145915985,
+        "accuracy": 0.5604,
+        "feature_power_per_coordinate": 0.07620836522579193
+      },
+      {
+        "cross_entropy": 0.6874803106307983,
+        "bounded_loss": 0.14714237685203552,
+        "accuracy": 0.5523,
+        "feature_power_per_coordinate": 0.07379903101921081
+      },
+      {
+        "cross_entropy": 0.6863858262062073,
+        "bounded_loss": 0.14690912721157073,
+        "accuracy": 0.5653,
+        "feature_power_per_coordinate": 0.06318713401556016
+      },
+      {
+        "cross_entropy": 0.6868414875984192,
+        "bounded_loss": 0.14700598795413972,
+        "accuracy": 0.5525,
+        "feature_power_per_coordinate": 0.07736808199882507
+      },
+      {
+        "cross_entropy": 0.6882489419937133,
+        "bounded_loss": 0.14730542907714844,
+        "accuracy": 0.545,
+        "feature_power_per_coordinate": 0.07073392761945725
+      },
+      {
+        "cross_entropy": 0.6871514617919922,
+        "bounded_loss": 0.14707180285453797,
+        "accuracy": 0.5589,
+        "feature_power_per_coordinate": 0.10463332769870758
+      },
+      {
+        "cross_entropy": 0.6897122138977051,
+        "bounded_loss": 0.14761725821495056,
+        "accuracy": 0.5312,
+        "feature_power_per_coordinate": 0.05155742458701134
+      },
+      {
+        "cross_entropy": 0.6872840028762818,
+        "bounded_loss": 0.14710065338611603,
+        "accuracy": 0.5509,
+        "feature_power_per_coordinate": 0.06559468916654587
+      },
+      {
+        "cross_entropy": 0.6889043015480042,
+        "bounded_loss": 0.1474453182220459,
+        "accuracy": 0.5431,
+        "feature_power_per_coordinate": 0.08614214178323745
+      },
+      {
+        "cross_entropy": 0.6864482946395875,
+        "bounded_loss": 0.14692262003421783,
+        "accuracy": 0.5582,
+        "feature_power_per_coordinate": 0.07471204516887665
+      },
+      {
+        "cross_entropy": 0.6863433272361755,
+        "bounded_loss": 0.14689976937770843,
+        "accuracy": 0.5538,
+        "feature_power_per_coordinate": 0.09202571182250976
+      },
+      {
+        "cross_entropy": 0.6866117664337158,
+        "bounded_loss": 0.14695685985088347,
+        "accuracy": 0.555,
+        "feature_power_per_coordinate": 0.08353737305402756
+      },
+      {
+        "cross_entropy": 0.6865775532722473,
+        "bounded_loss": 0.14694970982074737,
+        "accuracy": 0.5575,
+        "feature_power_per_coordinate": 0.07496671068668366
+      },
+      {
+        "cross_entropy": 0.6868694291114807,
+        "bounded_loss": 0.14701181597709656,
+        "accuracy": 0.5622,
+        "feature_power_per_coordinate": 0.07434465488195419
+      },
+      {
+        "cross_entropy": 0.686890933227539,
+        "bounded_loss": 0.14701758584976196,
+        "accuracy": 0.558,
+        "feature_power_per_coordinate": 0.06653287092447281
+      },
+      {
+        "cross_entropy": 0.6864126392364502,
+        "bounded_loss": 0.14691412425041198,
+        "accuracy": 0.559,
+        "feature_power_per_coordinate": 0.08235094383955002
+      },
+      {
+        "cross_entropy": 0.6877025022506714,
+        "bounded_loss": 0.14719063172340394,
+        "accuracy": 0.5534,
+        "feature_power_per_coordinate": 0.08261505426168442
+      },
+      {
+        "cross_entropy": 0.6863882528305054,
+        "bounded_loss": 0.14690875844955445,
+        "accuracy": 0.5561,
+        "feature_power_per_coordinate": 0.07787481920719147
+      },
+      {
+        "cross_entropy": 0.6858442623138428,
+        "bounded_loss": 0.14679450101852418,
+        "accuracy": 0.5699,
+        "feature_power_per_coordinate": 0.07779110856056214
+      }
+    ],
+    "mc_note": "Finite-data Gibbs Monte Carlo estimates, not population-risk certificates",
+    "bounded_loss_mc_upper_radius_95pct": 0.2736664152555987
+  },
+  "theory": "Theorem 1 with data-dependent channel prior Q_{W|S}",
+  "posterior_kl": 29.656570434570312,
+  "channel_prior": {
+    "selected": {
+      "construction": "perfect",
+      "std": 0.1,
+      "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+      "kl": 1.4976389408111572,
+      "channel": 0.0601557270154381
+    },
+    "family_size": 6,
+    "family": [
+      {
+        "construction": "perfect",
+        "std": 0.1,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 1.4976389408111572,
+        "channel": 0.0601557270154381
+      },
+      {
+        "construction": "perfect",
+        "std": 0.125,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 2.770517587661743,
+        "channel": 0.06274623768716436
+      },
+      {
+        "construction": "perfect",
+        "std": 0.15000000000000002,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 6.028487682342529,
+        "channel": 0.06893468152933725
+      },
+      {
+        "construction": "perfect",
+        "std": 0.2,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 13.736591339111328,
+        "channel": 0.08173114600137406
+      },
+      {
+        "construction": "perfect",
+        "std": 0.30000000000000004,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 27.64145278930664,
+        "channel": 0.10078657929712968
+      },
+      {
+        "construction": "perfect",
+        "std": 0.5,
+        "stage1": "/data/gpfs/projects/punim2792/yangshuo/data-dependent-prior-20261126/bounds/runs/bounds-fading-mismatch-stage1-perfect-105d5a6838f7",
+        "kl": 47.49629211425781,
+        "channel": 0.12298019147048948
+      }
+    ],
+    "union_bound": "eps_1 / family_size"
+  },
+  "confidence": {
+    "family_failure": 0.05,
+    "family_size": 20,
+    "failure_each_theorem_and_mc": 0.00125,
+    "eps_1": 0.000625,
+    "eps_2": 0.000625
+  },
+  "empirical_mc_radius": 0.012927308041185456,
+  "components": {
+    "empirical": 0.14718379516601562,
+    "mc": 0.012927308041185456,
+    "sample": 0.1589559081319649,
+    "channel": 0.0601557270154381,
+    "shift": 0.2853865082895975
+  },
+  "channel_shift": {
+    "method": "T1 channel KL",
+    "analytic": true,
+    "upper": 0.2853865082895975,
+    "channel_kl": 0.16289091822745702
+  },
+  "uncapped_risk_upper": 0.6646092466442015,
+  "nonvacuous": true,
+  "selection": {
+    "rule": "smallest bound under an independent Monte Carlo seed",
+    "selection_mc_seed": 271828,
+    "candidates": 24,
+    "task_id": "bounds-fading-mismatch-T1-perfect-s1-e1-d5-2fd6aaa0237b",
+    "variant": "perfect-s1-e1-d5",
+    "leaderboard": [
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s1-e1-d5-2fd6aaa0237b",
+        "upper": 0.6645432554332641
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s1.5-e10-d5-9a0124431fed",
+        "upper": 0.6645820038439463
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s3-e10-d5-74a92b9fe00b",
+        "upper": 0.6646231926685986
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s1.5-e1-d5-23aaa29a4333",
+        "upper": 0.664679588220819
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s2-e1-d5-78425e951557",
+        "upper": 0.6647394707160126
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s3-e1-d5-bf514fa1cc6c",
+        "upper": 0.6647762478465624
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s3-e100-d5-894f29871257",
+        "upper": 0.664920533813514
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s1-e10-d5-383152a94f7b",
+        "upper": 0.6655061620847689
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s2-e10-d5-ca082c2b5b3a",
+        "upper": 0.6658921069328119
+      },
+      {
+        "task": "bounds-fading-mismatch-T1-perfect-s2-e100-d5-6e989369ba70",
+        "upper": 0.6661574991435916
+      }
+    ]
+  },
+  "previous_fixed_prior": {
+    "uncapped_risk_upper": 0.6911735795825694,
+    "components": {
+      "empirical": 0.14785448667816817,
+      "mc": 0.012927308041185456,
+      "sample": 0.1497360746778989,
+      "channel": 0.09526920189571939,
+      "shift": 0.2853865082895975
+    }
+  }
+}
