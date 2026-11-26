@@ -1,0 +1,154 @@
+[
+  {
+    "dataset": "moons",
+    "channel": "Fading",
+    "m": 20,
+    "ERM-Matched": 66.55633333333334,
+    "L2-Matched": 66.79233333333332,
+    "T2-Matched": 66.8145,
+    "T1-Matched": 71.0665,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "L2-Matched",
+    "gap_pp": 4.274166666666687,
+    "m2000_fresh_gap_pp": 0.17216666666666924,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x100",
+      "T2-Matched": "t2-x10",
+      "T1-Matched": "fresh-s3-e100"
+    }
+  },
+  {
+    "dataset": "moons",
+    "channel": "Erasure",
+    "m": 20,
+    "ERM-Matched": 86.37010000000001,
+    "L2-Matched": 86.33529999999999,
+    "T2-Matched": 86.3342,
+    "T1-Matched": 86.4138,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "ERM-Matched",
+    "gap_pp": 0.04369999999998697,
+    "m2000_fresh_gap_pp": 0.2828000000000088,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x10",
+      "T2-Matched": "t2-x0.1",
+      "T1-Matched": "fresh-s300-e1-d10"
+    }
+  },
+  {
+    "dataset": "mnist",
+    "channel": "Fading",
+    "m": 20,
+    "ERM-Matched": 63.395,
+    "L2-Matched": 64.90883333333333,
+    "T2-Matched": 61.27766666666667,
+    "T1-Matched": 78.08183333333334,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "L2-Matched",
+    "gap_pp": 13.173000000000002,
+    "m2000_fresh_gap_pp": 0.6266666666666652,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x10",
+      "T2-Matched": "t2-x1",
+      "T1-Matched": "fresh-s3-e10"
+    }
+  },
+  {
+    "dataset": "mnist",
+    "channel": "Erasure",
+    "m": 20,
+    "ERM-Matched": 91.25930000000001,
+    "L2-Matched": 91.21000000000001,
+    "T2-Matched": 89.56099999999999,
+    "T1-Matched": 96.358,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "ERM-Matched",
+    "gap_pp": 5.098699999999994,
+    "m2000_fresh_gap_pp": 0.12689999999999202,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x1",
+      "T2-Matched": "t2-x1",
+      "T1-Matched": "fresh-s3-e100"
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "channel": "Fading",
+    "m": 20,
+    "ERM-Matched": 60.249833333333335,
+    "L2-Matched": 59.441,
+    "T2-Matched": 58.43033333333333,
+    "T1-Matched": 70.86000000000001,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "ERM-Matched",
+    "gap_pp": 10.610166666666679,
+    "m2000_fresh_gap_pp": 0.8013333333333321,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x100",
+      "T2-Matched": "t2-x10",
+      "T1-Matched": "fresh-s3-e100"
+    }
+  },
+  {
+    "dataset": "fashionmnist",
+    "channel": "Erasure",
+    "m": 20,
+    "ERM-Matched": 79.65933333333334,
+    "L2-Matched": 79.67411111111112,
+    "T2-Matched": 80.91283333333334,
+    "T1-Matched": 86.41922222222223,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "L2-Matched",
+    "gap_pp": 6.745111111111115,
+    "m2000_fresh_gap_pp": 0.4462222222222323,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x1",
+      "T2-Matched": "t2-x1",
+      "T1-Matched": "fresh-s3-e1"
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "channel": "Fading",
+    "m": 20,
+    "ERM-Matched": 34.943666666666665,
+    "L2-Matched": 40.476499999999994,
+    "T2-Matched": 35.15033333333333,
+    "T1-Matched": 57.11733333333334,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "L2-Matched",
+    "gap_pp": 16.640833333333347,
+    "m2000_fresh_gap_pp": 2.6168333333333322,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x100",
+      "T2-Matched": "t2-x1",
+      "T1-Matched": "fresh-s10-e100"
+    }
+  },
+  {
+    "dataset": "cifar10",
+    "channel": "Erasure",
+    "m": 20,
+    "ERM-Matched": 56.5476,
+    "L2-Matched": 57.5149,
+    "T2-Matched": 56.5006,
+    "T1-Matched": 65.212,
+    "best_proposed": "T1-Matched",
+    "best_baseline": "L2-Matched",
+    "gap_pp": 7.697100000000006,
+    "m2000_fresh_gap_pp": 0.9359000000000037,
+    "variants": {
+      "ERM-Matched": "erm",
+      "L2-Matched": "l2-x1",
+      "T2-Matched": "t2-x10",
+      "T1-Matched": "fresh-s30-e10"
+    }
+  }
+]
