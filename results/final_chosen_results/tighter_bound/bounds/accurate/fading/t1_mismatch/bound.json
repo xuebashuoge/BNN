@@ -1,0 +1,393 @@
+{
+ "dataset": "moons",
+ "family": "fading",
+ "regime": "mismatch",
+ "certificate": "T1",
+ "theory": "Theorem 1 with fresh data-dependent Q_{W|S}",
+ "config": {
+  "dataset": "moons",
+  "architecture": "bounded_mlp",
+  "method": "proposed",
+  "predictor": "gaussian",
+  "training_loss": "bounded_ce_smooth",
+  "loss_epsilon": 0.01,
+  "selection_metric": "accuracy",
+  "validation_seed_policy": "fixed",
+  "width": 8,
+  "train_size": 800,
+  "val_size": 200,
+  "batch_size": 128,
+  "epochs": 120,
+  "lr": 0.006,
+  "eta_channel": 0.02,
+  "eta_data": 0.02,
+  "prior_std": 0.24,
+  "posterior_std": 0.1,
+  "m": 2000,
+  "seed": 92601,
+  "data_seed": 92604,
+  "channel_seed": 92602,
+  "eval_seed": 92603,
+  "eval_draws": 10,
+  "val_draws": 8,
+  "clip_ce": 10.0,
+  "delta": 0.05,
+  "l2": 0.0001,
+  "device": "cpu",
+  "threads": 1,
+  "cpu_flush_denormal": false,
+  "transmit_unit_power": false,
+  "rho_lr_scale": 1.0,
+  "download": false,
+  "moon_noise": 0.3,
+  "moons_sampler": "iid",
+  "train_channel": {
+   "kind": "diagonal_fading",
+   "rho_c": 0.15
+  },
+  "deployment_channel": {
+   "kind": "diagonal_fading",
+   "rho_c": 0.35
+  },
+  "bounded_feature_norm": 1.0,
+  "bounded_receiver_norm": 0.075,
+  "posterior_mean_clip": 0.0
+ },
+ "posterior_kl": 109.61751556396484,
+ "posterior": {
+  "objective": "empirical bounded loss + weight x exact certificate complexity",
+  "learned_std": true,
+  "label": "stage2-lr0.003-w1-cap1-step100",
+  "std_mean": 0.06282800436019897,
+  "std_min": 0.035627368837594986,
+  "std_max": 0.12344786524772644,
+  "mean_norm": 2.8202831745147705
+ },
+ "confidence": {
+  "family_failure": 0.05,
+  "family_size": 20,
+  "architectures": 1,
+  "theorem": 0.00125,
+  "eps_1": 0.000625,
+  "eps_2": 0.000625,
+  "mc": 0.00125
+ },
+ "empirical": {
+  "mean": 0.14741874951171874,
+  "iid_observations": 2000000,
+  "seed": 314159,
+  "train_accuracy": 0.573077
+ },
+ "empirical_mc_radius": 0.0012927308041185458,
+ "components": {
+  "empirical": 0.14741874951171874,
+  "mc": 0.0012927308041185458,
+  "sample": 0.27441778779029846,
+  "channel": 0.06378380209207535,
+  "shift": 0.2853865082895975
+ },
+ "channel_shift": {
+  "method": "T1 channel KL",
+  "analytic": true,
+  "upper": 0.2853865082895975,
+  "channel_kl": 0.16289091822745702
+ },
+ "uncapped_risk_upper": 0.7722995784878086,
+ "nonvacuous": true,
+ "gap_to_population": 0.6249475800747226,
+ "test": {
+  "bounded_loss": 0.14735199841308594,
+  "accuracy": 0.577599,
+  "examples": 10000,
+  "replicates": 100,
+  "channel_source": "deployment",
+  "posterior_rule": "independent weight and channel draw per example"
+ },
+ "selection": {
+  "rule": "accurate",
+  "description": "smallest bound among candidates within 0.01 of the best validation accuracy under an independent Monte Carlo seed",
+  "selection_mc_seed": 271828,
+  "validation_accuracy": 0.57805,
+  "best_validation_accuracy": 0.5807,
+  "candidates": 60,
+  "leaderboard": [
+   {
+    "label": "stage2-lr0.001-w1-cap1-step3000",
+    "upper": 0.7457365403497344,
+    "empirical": 0.14753082275390625,
+    "validation_accuracy": 0.56135
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap1-step1000",
+    "upper": 0.745737832564128,
+    "empirical": 0.14752876220703126,
+    "validation_accuracy": 0.56065
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap1-step3000",
+    "upper": 0.7457382065737372,
+    "empirical": 0.1475281005859375,
+    "validation_accuracy": 0.56065
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap1-step3000",
+    "upper": 0.7457912961804991,
+    "empirical": 0.1474889892578125,
+    "validation_accuracy": 0.56265
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap1-step3000",
+    "upper": 0.7457984789836531,
+    "empirical": 0.1474869482421875,
+    "validation_accuracy": 0.56265
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap1-step1000",
+    "upper": 0.7458050072634345,
+    "empirical": 0.14748570556640625,
+    "validation_accuracy": 0.5634
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap8-step1000",
+    "upper": 0.7458424677360183,
+    "empirical": 0.14752333740234375,
+    "validation_accuracy": 0.56225
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap8-step3000",
+    "upper": 0.7458438831651335,
+    "empirical": 0.14750924072265625,
+    "validation_accuracy": 0.563
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap8-step3000",
+    "upper": 0.7458483002412444,
+    "empirical": 0.14751520751953126,
+    "validation_accuracy": 0.56215
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap32-step3000",
+    "upper": 0.7459070592892295,
+    "empirical": 0.1475207470703125,
+    "validation_accuracy": 0.5626
+   }
+  ],
+  "frontier": [
+   {
+    "label": "stage2-lr0.001-w1-cap1-step3000",
+    "upper": 0.7457365403497344,
+    "validation_accuracy": 0.56135
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap1-step3000",
+    "upper": 0.7457912961804991,
+    "validation_accuracy": 0.56265
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap1-step3000",
+    "upper": 0.7457984789836531,
+    "validation_accuracy": 0.56265
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap1-step1000",
+    "upper": 0.7458050072634345,
+    "validation_accuracy": 0.5634
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap1-step1000",
+    "upper": 0.7460910119044906,
+    "validation_accuracy": 0.5636
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap1-step1000",
+    "upper": 0.7461518157374983,
+    "validation_accuracy": 0.5647
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap8-step1000",
+    "upper": 0.7462963678133613,
+    "validation_accuracy": 0.5653
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap1-step300",
+    "upper": 0.746617997885955,
+    "validation_accuracy": 0.5664
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap8-step3000",
+    "upper": 0.7466546218121176,
+    "validation_accuracy": 0.56665
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap8-step1000",
+    "upper": 0.7466645223868018,
+    "validation_accuracy": 0.5676
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap8-step3000",
+    "upper": 0.7466885506141311,
+    "validation_accuracy": 0.5677
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap32-step3000",
+    "upper": 0.7471040980374938,
+    "validation_accuracy": 0.5678
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap8-step1000",
+    "upper": 0.7472192839062338,
+    "validation_accuracy": 0.5688
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap1-step100",
+    "upper": 0.7750952393949156,
+    "validation_accuracy": 0.57805
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap1-step100",
+    "upper": 0.7751485831201201,
+    "validation_accuracy": 0.57825
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap1-step300",
+    "upper": 0.7756313910186415,
+    "validation_accuracy": 0.57835
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap1-step300",
+    "upper": 0.7757566831863051,
+    "validation_accuracy": 0.57855
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap8-step300",
+    "upper": 0.7763546750104552,
+    "validation_accuracy": 0.5786
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap8-step100",
+    "upper": 0.7775104220235473,
+    "validation_accuracy": 0.5793
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap8-step300",
+    "upper": 0.7808063518023616,
+    "validation_accuracy": 0.58015
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap1-step100",
+    "upper": 0.7850571189522868,
+    "validation_accuracy": 0.58045
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap8-step100",
+    "upper": 0.7851362015032893,
+    "validation_accuracy": 0.58045
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap1-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap8-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.001-w1-cap32-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap1-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap8-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.001-w0.3-cap32-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap1-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap8-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.003-w1-cap32-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap1-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap8-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   },
+   {
+    "label": "stage2-lr0.003-w0.3-cap32-step0",
+    "upper": 0.790214922908557,
+    "validation_accuracy": 0.5807
+   }
+  ]
+ },
+ "previous": {
+  "archived_upper": 0.6911735795825694,
+  "archived_test": 0.14770227975845335,
+  "archived_accuracy": 0.53611,
+  "only_fresh_upper": 0.6651455780122897,
+  "only_fresh_test": 0.14705525480508808,
+  "only_fresh_accuracy": 0.5562699999999999
+ },
+ "channel_prior": {
+  "construction": "fresh",
+  "family_size": 3,
+  "scales": [
+   1.0,
+   1.5,
+   2.0
+  ],
+  "selected_scale": 1.5,
+  "family": [
+   {
+    "scale": 1.0,
+    "kl": 11.182720184326172,
+    "channel": 0.07660169154405594
+   },
+   {
+    "scale": 1.5,
+    "kl": 3.988534927368164,
+    "channel": 0.06378380209207535
+   },
+   {
+    "scale": 2.0,
+    "kl": 7.592878818511963,
+    "channel": 0.07049758732318878
+   }
+  ],
+  "stage1": {
+   "label": "init0.1-lr0.01-w0-cap32-step250",
+   "criterion": 0.4453075729179382,
+   "fresh_empirical": 0.14738621337890626,
+   "accuracy": 0.577085,
+   "kl": 131.1138458251953,
+   "sigma_mean": 0.04799657315015793,
+   "selection": "S only: fresh-channel empirical + sample term, within 0.01 of the best S accuracy"
+  },
+  "union_bound": "eps_1 / family_size"
+ }
+}

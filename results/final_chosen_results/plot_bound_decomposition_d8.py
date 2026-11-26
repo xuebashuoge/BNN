@@ -27,6 +27,7 @@ BOUNDS = Path(__file__).resolve().parent / "data" / "bounds"
 STEM = Path(__file__).with_name("bound_decomposition_d8_t1_t2_both_channels")
 CASES = ("perfect", "t1_matched", "t2_matched", "t1_mismatch", "t2_mismatch")
 FIELDS = ("empirical", "sample", "channel", "joint", "shift")
+YMAX = dict(fading=1.05, erasure=.60)
 
 
 def read_panel(family):
@@ -62,8 +63,8 @@ def main():
     positions = [0, .88, 1.46, 2.34, 2.92]
     display_order = (0, 3, 4, 1, 2)
     panels = [
-        (*read_panel("fading"), "(a)", 1.05),
-        (*read_panel("erasure"), "(b)", .60),
+        (*read_panel("fading"), "(a)", YMAX["fading"]),
+        (*read_panel("erasure"), "(b)", YMAX["erasure"]),
     ]
     for ax, (rows, test_risks, title, ymax) in zip(axes, panels):
         for x, index in zip(positions, display_order):
@@ -80,7 +81,7 @@ def main():
                    edgecolors="white", linewidths=.45, zorder=4)
         ax.set_title(title, fontsize=9, pad=2)
         ax.set_ylim(0, ymax)
-        ax.set_yticks([0, .25, .50, .75, 1] if ymax > 1 else [0, .2, .4, .6])
+        ax.set_yticks([t for t in ((0, .25, .50, .75, 1) if ymax > 1 else (0, .2, .4, .6)) if t <= ymax])
         ax.tick_params(axis="both", labelsize=7.5, length=2.5)
         ax.set_axisbelow(True)
         ax.grid(axis="y", color="#ededed")
