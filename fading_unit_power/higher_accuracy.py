@@ -19,9 +19,11 @@ Protocol
      * T1  with the fresh prior, s x {3, 10, 30, 100} posterior_std and
        eta_channel x {1, 10, 100}.
    All are scored on deployment accuracy on validation.
-2. ``select``: for each m pick each method's best candidate per row, then the m
-   whose smallest row gap max(T1, T2) - max(ERM, L2) is largest (ties: mean gap).
-3. ``confirm``: refit the selected candidates at that m on the archived paired
+2. ``boost``: no m won every row in the screen, so m is fixed at FIXED_M = 20
+   (largest mean gap). The saturated Moons erasure row is refit at that m on six
+   tuning seeds with wider grids for every method (BOOST_*).
+3. ``select``: each method's best mean validation candidate per row at FIXED_M.
+4. ``confirm``: refit the selected candidates at that m on the archived paired
    training seeds with the archived test-evaluation seeds.
 
 The fresh stage-1 fits keep the archived m = 2000 in their configs (m is unused
@@ -53,6 +55,19 @@ L2_MULTIPLIERS = (1., 10., 100.)
 T2_MULTIPLIERS = (1., 10., 100.)
 T1_GRID = [("fresh", s, e) for s in dd.STD_MULTIPLIERS for e in dd.ETA_MULTIPLIERS]
 PRIOR_COUNT = len(dd.STD_MULTIPLIERS)  # union bound over the fresh scales only
+# The screen showed no m wins all eight rows: m=20 wins seven by 4.5-17.9 points and
+# ties Moons erasure (-0.04), while m=500 wins by about 1 point. So m is fixed at 20.
+FIXED_M = 20
+# Moons erasure is saturated (every method near 87.3%), so it gets a wider follow-up
+# on more tuning seeds. Every method's grid is widened; the archived candidates stay in.
+BOOST_ROWS = ("moons/Erasure",)
+BOOST_OFFSETS = tuple(10_000_000 * k for k in range(1, 7))
+BOOST_STD = (1., 3., 10., 30., 100., 300.)
+BOOST_ETA = (1., 10., 100., 1000.)
+BOOST_DATA = (.1, 1., 10.)
+BOOST_PRIOR_COUNT = len(BOOST_STD)
+BOOST_L2 = (.1, 1., 10., 100., 1000.)
+BOOST_T2 = (.1, 1., 10., 100., 1000.)
 # Longest fits first so the pool does not end on a CIFAR-10 tail.
 DATASET_ORDER = ("cifar10", "mnist", "fashionmnist", "moons")
 
@@ -91,14 +106,20 @@ def archived_sources():
 
 # --------------------------------------------------------------------------- task construction
 
-def candidates(method: str):
+def candidates(method: str, boost: bool = False):
     if method == "ERM-Matched":
         return [("erm",)]
     if method == "L2-Matched":
-        return [("l2", k) for k in L2_MULTIPLIERS]
+        return [("l2", k) for k in (BOOST_L2 if boost else L2_MULTIPLIERS)]
     if method == "T2-Matched":
-        return [("t2", k) for k in T2_MULTIPLIERS]
+        return [("t2", k) for k in (BOOST_T2 if boost else T2_MULTIPLIERS)]
+    if boost:
+        return [("fresh", s, e, d) for s in BOOST_STD for e in BOOST_ETA for d in BOOST_DATA]
     return T1_GRID
+
+
+def prior_count(row: str) -> int:
+    return BOOST_PRIOR_COUNT if row in BOOST_ROWS else PRIOR_COUNT
 
 
 def label(method: str, candidate) -> str:
@@ -107,14 +128,15 @@ def label(method: str, candidate) -> str:
     return candidate[0] if len(candidate) == 1 else f"{candidate[0]}-x{candidate[1]:g}"
 
 
-def method_tasks(method: str, candidate, archived: dict, m: int, root: Path, evals, meta: dict):
+def method_tasks(method: str, candidate, archived: dict, m: int, root: Path, evals, meta: dict,
+                 count: int = PRIOR_COUNT):
     """Tasks for one fit at bank size m; archived is the m=2000 config with the run's seeds."""
     meta = dict(meta, method=method, candidate=list(candidate), label=label(method, candidate), m=m)
     if method == "T1-Matched":
         stage1 = dd.new_run_config(dd.stage1_config(archived, "fresh"))
         s1_id = f"performance-stage1-fresh-{dd.digest(stage1)[:12]}"
         config = dd.new_run_config(dd.stage2_config({**archived, "m": m}, dd.run_dir(root, s1_id),
-                                                    candidate, PRIOR_COUNT))
+                                                    candidate, count))
         fit_id = f"ha-m{m}-T1-{label(method, candidate)}-{dd.digest(config)[:12]}"
         return [dict(task_id=s1_id, config=stage1, deps=[], evals=[], meta=dict(role="stage1", construction="fresh")),
                 dict(task_id=fit_id, config=config, deps=[s1_id], evals=evals, meta=dict(meta, role="stage2"))]
@@ -148,26 +170,44 @@ def plan_screen(root: Path, m_grid=M_GRID):
     return ordered(tasks)
 
 
+def plan_boost(root: Path, m: int = FIXED_M):
+    """Wider grids on more tuning seeds for the saturated rows, at the fixed m."""
+    tasks = []
+    for (dataset, channel, method), seeds in sorted(archived_sources().items()):
+        row = f"{dataset}/{channel}"
+        if row not in BOOST_ROWS:
+            continue
+        for offset in BOOST_OFFSETS:
+            archived = dd.with_seeds(seeds[0]["config"], offset)
+            evals = [dd.validation_eval(dd.new_run_config(archived))]
+            for candidate in candidates(method, boost=True):
+                tasks.extend(method_tasks(method, candidate, archived, m, root, evals,
+                                          dict(dataset=dataset, channel=channel, seed=archived["seed"],
+                                               phase="boost"), prior_count(row)))
+    return ordered(tasks)
+
+
 def plan_confirm(root: Path):
     selection = dd.read_json(root / "selection.json")
     m = selection["m"]
     tasks = []
     for (dataset, channel, method), seeds in sorted(archived_sources().items()):
-        candidate = selection["rows"][f"{dataset}/{channel}"]["methods"][method]["candidate"]
+        row = f"{dataset}/{channel}"
+        candidate = selection["rows"][row][method]["candidate"]
         for source in seeds:
             test = dict(name="test", split="test", scope="deployment",
                         overrides={**source["evaluation"], "device": "cpu", "threads": 1})
             tasks.extend(method_tasks(method, tuple(candidate), source["config"], m, root, [test],
                                       dict(dataset=dataset, channel=channel, seed=source["seed"], phase="confirm",
-                                           baseline_task=source["baseline_task"])))
+                                           baseline_task=source["baseline_task"]), prior_count(row)))
     return ordered(tasks)
 
 
 # --------------------------------------------------------------------------- selection
 
-def screen_scores(root: Path):
+def scores_from(root: Path, manifest: str):
     """{(m, row, method): {label: (candidate, [validation accuracy per seed])}}."""
-    tasks = dd.read_manifest(root / "manifests" / "screen.jsonl")
+    tasks = dd.read_manifest(root / "manifests" / manifest)
     scores = {}
     for record in dd.done_records(root, tasks):
         meta = record["meta"]
@@ -177,34 +217,50 @@ def screen_scores(root: Path):
     return scores
 
 
-def select(root: Path):
-    scores = screen_scores(root)
-    per_m = {}
+def best_per_group(scores, seeds: int):
+    best = {}
     for (m, row, method), by_label in scores.items():
         counts = {len(values) for _, values in by_label.values()}
-        if counts != {len(dd.TUNING_OFFSETS)}:
+        if counts != {seeds}:
             raise ValueError(f"Incomplete tuning seeds for {m} {row} {method}: {counts}")
         ranked = sorted(by_label.items(), key=lambda item: -statistics.fmean(item[1][1]))
         best_label, (candidate, values) = ranked[0]
-        per_m.setdefault(m, {}).setdefault(row, {})[method] = dict(
-            candidate=candidate, label=best_label, validation_accuracy=statistics.fmean(values),
+        best.setdefault(m, {}).setdefault(row, {})[method] = dict(
+            candidate=candidate, label=best_label, validation_accuracy=statistics.fmean(values), seeds=seeds,
+            candidates=len(ranked),
             leaderboard=[dict(label=k, mean=statistics.fmean(v), seeds=v) for k, (_, v) in ranked[:6]])
-    summary = []
-    for m, rows in sorted(per_m.items()):
-        gaps = {}
-        for row, methods in rows.items():
-            if set(methods) != set(METHODS):
-                raise ValueError(f"Missing methods at m={m} for {row}")
-            proposed = max(methods[k]["validation_accuracy"] for k in PROPOSED)
-            baseline = max(methods[k]["validation_accuracy"] for k in BASELINES)
-            gaps[row] = 100 * (proposed - baseline)
-        summary.append(dict(m=m, min_gap_pp=min(gaps.values()), mean_gap_pp=statistics.fmean(gaps.values()),
-                            gaps_pp=gaps))
-    best = max(summary, key=lambda item: (item["min_gap_pp"], item["mean_gap_pp"]))
-    selection = dict(m=best["m"], rule="largest smallest-row validation gap max(T1,T2) - max(ERM,L2); ties: mean",
-                     screen=summary, rows=per_m[best["m"]], all_m=per_m)
+    return best
+
+
+def row_gaps(rows):
+    gaps = {}
+    for row, methods in rows.items():
+        if set(methods) != set(METHODS):
+            raise ValueError(f"Missing methods for {row}")
+        proposed = max(methods[k]["validation_accuracy"] for k in PROPOSED)
+        baseline = max(methods[k]["validation_accuracy"] for k in BASELINES)
+        gaps[row] = 100 * (proposed - baseline)
+    return gaps
+
+
+def select(root: Path, m: int = FIXED_M):
+    """Each method's best candidate per row at the fixed m; boosted rows use the follow-up."""
+    per_m = best_per_group(scores_from(root, "screen.jsonl"), len(dd.TUNING_OFFSETS))
+    screen = []
+    for size, rows in sorted(per_m.items()):
+        gaps = row_gaps(rows)
+        screen.append(dict(m=size, min_gap_pp=min(gaps.values()), mean_gap_pp=statistics.fmean(gaps.values()),
+                           gaps_pp=gaps))
+    rows = dict(per_m[m])
+    if BOOST_ROWS:
+        boosted = best_per_group(scores_from(root, "boost.jsonl"), len(BOOST_OFFSETS))[m]
+        rows.update({row: boosted[row] for row in BOOST_ROWS})
+    gaps = row_gaps(rows)
+    selection = dict(m=m, rule=f"m fixed at {m} from the screen (largest mean gap; no m wins every row); "
+                               "each method's best mean validation accuracy per row",
+                     boost_rows=list(BOOST_ROWS), selected_gaps_pp=gaps, screen=screen, rows=rows, all_m=per_m)
     dd.write_json(root / "selection.json", selection)
-    print(json.dumps(summary, indent=1))
+    print(json.dumps(dict(screen=screen, selected_gaps_pp=gaps), indent=1))
     return selection
 
 
@@ -251,7 +307,7 @@ def summarize(root: Path):
                 gap_pp=max(means[k] for k in PROPOSED) - max(means[k] for k in BASELINES),
                 m2000_fresh_gap_pp=max(reference["t1_data_dependent"], reference["T2-Matched"])
                 - max(reference["ERM-Matched"], reference["L2-Matched"]),
-                variants={method: selection["rows"][f"{dataset}/{channel}"]["methods"][method]["label"]
+                variants={method: selection["rows"][f"{dataset}/{channel}"][method]["label"]
                           for method in METHODS}))
     output = PUBLISH / "performance"
     dd.write_csv(output / "deployment_by_seed.csv", rows)
@@ -281,17 +337,18 @@ def reuse_stage1(tasks, root: Path, source: Path):
 
 def pipeline(root: Path, workers: int, stage1_source: Path | None, stop_after: str | None):
     root.mkdir(parents=True, exist_ok=True)
-    screen_path = root / "manifests" / "screen.jsonl"
-    if not screen_path.exists():
-        dd.write_manifest(screen_path, plan_screen(root))
-    screen = dd.read_manifest(screen_path)
-    if stage1_source:
-        reuse_stage1(screen, root, stage1_source)
-    dd.run_pool(screen, root, workers)
+    for name, planner in (("screen.jsonl", plan_screen), ("boost.jsonl", plan_boost)):
+        path = root / "manifests" / name
+        if not path.exists():
+            dd.write_manifest(path, planner(root))
+        tasks = dd.read_manifest(path)
+        if stage1_source:
+            reuse_stage1(tasks, root, stage1_source)
+        dd.run_pool(tasks, root, workers)
+        if stop_after == name.split(".")[0]:
+            return
     if not (root / "selection.json").exists():
         select(root)
-    if stop_after == "screen":
-        return
     confirm_path = root / "manifests" / "confirm.jsonl"
     if not confirm_path.exists():
         dd.write_manifest(confirm_path, plan_confirm(root))
@@ -310,7 +367,7 @@ def main():
                                                            if hasattr(os, "sched_getaffinity") else os.cpu_count()))
     parser.add_argument("--reuse-stage1", type=Path,
                         help="Earlier data_dependent performance root whose fresh stage-1 fits to link")
-    parser.add_argument("--stop-after", choices=("screen",))
+    parser.add_argument("--stop-after", choices=("screen", "boost"))
     args = parser.parse_args()
     root = args.root.resolve()
     if args.command == "pipeline":
