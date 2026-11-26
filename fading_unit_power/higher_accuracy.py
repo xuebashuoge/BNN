@@ -61,6 +61,18 @@ FIXED_M = 20
 # Moons erasure is saturated (every method near 87.3%), so it gets a wider follow-up
 # on more tuning seeds. Every method's grid is widened; the archived candidates stay in.
 BOOST_ROWS = ("moons/Erasure",)
+# Other shared bank sizes run as their own campaigns (``--m``), screened at that m only.
+# At m=200 both Moons rows are near parity in the m=20 screen's neighbours (m=100, 500),
+# so both get the follow-up.
+BOOST_ROWS_BY_M = {20: ("moons/Erasure",), 200: ("moons/Fading", "moons/Erasure")}
+
+
+def configure(m: int):
+    """Point the campaign at shared bank size m; m=20 keeps the original layout."""
+    global FIXED_M, BOOST_ROWS, PUBLISH
+    FIXED_M = m
+    BOOST_ROWS = BOOST_ROWS_BY_M.get(m, ("moons/Erasure",))
+    PUBLISH = dd.SELECTED / "higher_accuracy" / ("" if m == 20 else f"m{m}")
 BOOST_OFFSETS = tuple(10_000_000 * k for k in range(1, 7))
 BOOST_STD = (1., 3., 10., 30., 100., 300.)
 BOOST_ETA = (1., 10., 100., 1000.)
@@ -170,8 +182,9 @@ def plan_screen(root: Path, m_grid=M_GRID):
     return ordered(tasks)
 
 
-def plan_boost(root: Path, m: int = FIXED_M):
+def plan_boost(root: Path, m: int | None = None):
     """Wider grids on more tuning seeds for the saturated rows, at the fixed m."""
+    m = FIXED_M if m is None else m
     tasks = []
     for (dataset, channel, method), seeds in sorted(archived_sources().items()):
         row = f"{dataset}/{channel}"
@@ -243,8 +256,9 @@ def row_gaps(rows):
     return gaps
 
 
-def select(root: Path, m: int = FIXED_M):
+def select(root: Path, m: int | None = None):
     """Each method's best candidate per row at the fixed m; boosted rows use the follow-up."""
+    m = FIXED_M if m is None else m
     per_m = best_per_group(scores_from(root, "screen.jsonl"), len(dd.TUNING_OFFSETS))
     screen = []
     for size, rows in sorted(per_m.items()):
@@ -320,30 +334,34 @@ def summarize(root: Path):
 
 # --------------------------------------------------------------------------- driver
 
-def reuse_stage1(tasks, root: Path, source: Path):
-    """Symlink finished stage-1 checkpoints with identical task IDs from an earlier campaign."""
+def reuse_stage1(tasks, root: Path, sources):
+    """Symlink finished stage-1 checkpoints with identical task IDs from earlier campaigns."""
     linked = 0
+    sources = [Path(source) for source in sources]
     for task in tasks:
         if task["meta"]["role"] != "stage1":
             continue
-        target, origin = dd.run_dir(root, task["task_id"]), dd.run_dir(source, task["task_id"])
+        target = dd.run_dir(root, task["task_id"])
         # The task ID hashes the full stage-1 config, so equal IDs mean equal fits.
-        if not target.exists() and (origin / "done.json").exists():
+        origin = next((dd.run_dir(source, task["task_id"]) for source in sources
+                       if (dd.run_dir(source, task["task_id"]) / "done.json").exists()), None)
+        if not target.exists() and origin is not None:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.symlink_to(origin.resolve(), target_is_directory=True)
             linked += 1
-    print(json.dumps(dict(event="reuse_stage1", linked=linked, source=str(source))), flush=True)
+    print(json.dumps(dict(event="reuse_stage1", linked=linked, sources=[str(s) for s in sources])), flush=True)
 
 
-def pipeline(root: Path, workers: int, stage1_source: Path | None, stop_after: str | None):
+def pipeline(root: Path, workers: int, stage1_sources, stop_after: str | None):
     root.mkdir(parents=True, exist_ok=True)
-    for name, planner in (("screen.jsonl", plan_screen), ("boost.jsonl", plan_boost)):
+    screen_grid = M_GRID if FIXED_M == 20 else (FIXED_M,)
+    for name, planner in (("screen.jsonl", lambda r: plan_screen(r, screen_grid)), ("boost.jsonl", plan_boost)):
         path = root / "manifests" / name
         if not path.exists():
             dd.write_manifest(path, planner(root))
         tasks = dd.read_manifest(path)
-        if stage1_source:
-            reuse_stage1(tasks, root, stage1_source)
+        if stage1_sources:
+            reuse_stage1(tasks, root, stage1_sources)
         dd.run_pool(tasks, root, workers)
         if stop_after == name.split(".")[0]:
             return
@@ -353,8 +371,8 @@ def pipeline(root: Path, workers: int, stage1_source: Path | None, stop_after: s
     if not confirm_path.exists():
         dd.write_manifest(confirm_path, plan_confirm(root))
     confirm = dd.read_manifest(confirm_path)
-    if stage1_source:
-        reuse_stage1(confirm, root, stage1_source)
+    if stage1_sources:
+        reuse_stage1(confirm, root, stage1_sources)
     dd.run_pool(confirm, root, workers)
     summarize(root)
 
@@ -365,15 +383,17 @@ def main():
     parser.add_argument("--root", required=True, type=Path)
     parser.add_argument("--workers", type=int, default=max(1, len(os.sched_getaffinity(0))
                                                            if hasattr(os, "sched_getaffinity") else os.cpu_count()))
-    parser.add_argument("--reuse-stage1", type=Path,
-                        help="Earlier data_dependent performance root whose fresh stage-1 fits to link")
+    parser.add_argument("--reuse-stage1", type=Path, nargs="+",
+                        help="Earlier campaign roots whose finished fresh stage-1 fits to link")
+    parser.add_argument("--m", type=int, default=20, help="Shared bank size (20 is the original campaign)")
     parser.add_argument("--stop-after", choices=("screen", "boost"))
     args = parser.parse_args()
     root = args.root.resolve()
+    configure(args.m)
     if args.command == "pipeline":
         pipeline(root, args.workers, args.reuse_stage1, args.stop_after)
     elif args.command == "plan":
-        tasks = plan_screen(root)
+        tasks = plan_screen(root, M_GRID if args.m == 20 else (args.m,))
         fits = [task for task in tasks if task["meta"]["role"] == "stage2"]
         by_dataset = {}
         for task in fits:
