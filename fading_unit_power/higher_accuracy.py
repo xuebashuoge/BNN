@@ -62,9 +62,10 @@ FIXED_M = 20
 # on more tuning seeds. Every method's grid is widened; the archived candidates stay in.
 BOOST_ROWS = ("moons/Erasure",)
 # Other shared bank sizes run as their own campaigns (``--m``), screened at that m only.
-# At m=200 both Moons rows are near parity in the m=20 screen's neighbours (m=100, 500),
+# At m=200 and m=1000 both Moons rows are near parity in the m=20 screen (m=100, 500),
 # so both get the follow-up.
-BOOST_ROWS_BY_M = {20: ("moons/Erasure",), 200: ("moons/Fading", "moons/Erasure")}
+BOOST_ROWS_BY_M = {20: ("moons/Erasure",), 200: ("moons/Fading", "moons/Erasure"),
+                   1000: ("moons/Fading", "moons/Erasure")}
 
 
 def configure(m: int):
