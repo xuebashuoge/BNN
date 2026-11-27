@@ -1,6 +1,6 @@
 """Two-moons (width 8, m = 2000) bound decomposition with the split-U prior for T1.
 
-Same S, U, seeds, channels, Q_W = N(0, 0.24^2 I), loss and confidence allocation as
+Same U, seeds, channels, Q_W = N(0, 0.24^2 I), loss and confidence allocation as
 the archived figure, with three changes.
 
 1. T1 uses Q_{W|S,U_1}. The bank is split by index into U_1 = U[:m_1] and
@@ -27,6 +27,13 @@ the archived figure, with three changes.
    using one Monte Carlo seed, then certifies with an independent seed. The
    ``tightest`` rule (no accuracy constraint) is reported for reference only.
 
+5. The training sample has n = TRAIN_SIZE = 8000 points instead of the archived
+   800. Every sample term scales like 1/sqrt(n), and it dominated the n = 800
+   bounds. The validation split grows to 2000 points (10 Monte Carlo passes
+   instead of 100 over 200 points, so selection cost is unchanged), and each
+   training step uses one weight/channel draw per example instead of four.
+   The n = 800 results stay in split_u/bounds/.
+
 C1 (perfect training) and T2 use the archived Corollary 1 and Theorem 2 with the
 same posterior training as tighter_bound.py, at each L.
 """
@@ -43,7 +50,10 @@ from types import SimpleNamespace
 
 from . import tighter_bound as tb
 
-PUBLISH = tb.REPO / "results" / "final_chosen_results" / "split_u" / "bounds"
+PUBLISH = tb.REPO / "results" / "final_chosen_results" / "split_u" / "bounds_n8000"
+TRAIN_SIZE, VAL_SIZE = 8000, 2000
+tb.REPLICATES = 1                      # draws per example per step (n x 1 rows, against 800 x 4 before)
+tb.VALIDATION_REPLICATES = 10
 RECEIVER_NORMS = (.075, .25, .5, 1., 2., 4.)
 WIDTH = 8
 FEATURE_NORMS = (1., math.sqrt(WIDTH))  # per-coordinate power <= 1/8 (archived) or <= 1
@@ -69,7 +79,7 @@ def case_config(family, case, receiver_norm, feature_norm):
     config = tb.case_config(family, case, receiver_norm)
     if config["width"] != WIDTH:
         raise ValueError("FEATURE_NORMS assume width 8")
-    return {**config, "bounded_feature_norm": feature_norm}
+    return {**config, "bounded_feature_norm": feature_norm, "train_size": TRAIN_SIZE, "val_size": VAL_SIZE}
 
 
 def m_cut(config, fraction):
@@ -304,6 +314,8 @@ def certify_case(args):
                            learned_std=True, label=chosen["label"],
                            std_mean=float(F.softplus(chosen["state"]["rho"]).mean()),
                            mean_norm=float(chosen["state"]["mu"].norm())),
+            sample=dict(train_size=config["train_size"], val_size=config["val_size"],
+                        training_draws_per_example=tb.REPLICATES, validation_replicates=tb.VALIDATION_REPLICATES),
             confidence=dict(family_failure=.05, family_size=20, architectures=ARCHITECTURES,
                             receiver_norms=list(RECEIVER_NORMS), feature_norms=list(FEATURE_NORMS),
                             **tb.failures(kind, ARCHITECTURES), mc=tb.MC_FAILURE),

@@ -1,11 +1,13 @@
 """Write the manuscript deployment tables from the published per-seed CSVs.
 
-* performance_table.tex: m = 2000, T1 with the fresh data-dependent prior Q_{W|S}
-  (data_dependent/only_fresh/performance).
+* performance_table.tex: m = 2000, T1 with the split-U prior Q_{W|S,U_1}
+  (split_u/performance_m2000).
 * bank_size_table.tex: best baseline max(ERM, L2) against best proposed max(T1, T2) at
-  m = 20, 200, 1000 (higher_accuracy/) and 2000 (only_fresh).
+  m = 20, 200, 1000 and 2000 (split_u/performance_m*).
 
-Pass --check to compare against the saved files instead of writing them.
+Pass --fresh to write the earlier tables, with T1 using the fresh prior (higher_accuracy/ and
+data_dependent/only_fresh/), to data/performance/*_fresh.tex. Pass --check to compare against the
+saved files instead of writing them.
 """
 import argparse
 import csv
@@ -13,11 +15,15 @@ import statistics
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+SPLIT_U = {m: ROOT / "split_u" / f"performance_m{m}" / "deployment_by_seed.csv" for m in (20, 200, 1000, 2000)}
+OUTPUTS = (ROOT / "performance_table.tex", ROOT / "bank_size_table.tex")
 MAIN = ROOT / "data_dependent" / "only_fresh" / "performance" / "deployment_by_seed.csv"
-SWEEP = {20: ROOT / "higher_accuracy" / "performance" / "deployment_by_seed.csv",
+FRESH = {20: ROOT / "higher_accuracy" / "performance" / "deployment_by_seed.csv",
          200: ROOT / "higher_accuracy" / "m200" / "performance" / "deployment_by_seed.csv",
          1000: ROOT / "higher_accuracy" / "m1000" / "performance" / "deployment_by_seed.csv",
          2000: MAIN}
+FRESH_OUTPUTS = (ROOT / "data" / "performance" / "performance_table_fresh.tex",
+                 ROOT / "data" / "performance" / "bank_size_table_fresh.tex")
 METHODS = ("ERM-Matched", "L2-Matched", "T1-Matched", "T2-Matched", "Proposed-Perfect")
 DATASETS = {"moons": "Two moons", "mnist": "MNIST", "fashionmnist": "Fashion-MNIST", "cifar10": "CIFAR-10"}
 CHANNELS = ("Fading", "Erasure")
@@ -117,10 +123,11 @@ def sweep_table(sweep):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--check", action="store_true", help="Compare with the saved tables instead of writing")
+    parser.add_argument("--fresh", action="store_true", help="Write the earlier fresh-prior tables to data/performance/")
     args = parser.parse_args()
-    sweep = {m: accuracies(path, m) for m, path in SWEEP.items()}
-    for path, content in [(ROOT / "performance_table.tex", main_table(sweep[2000])),
-                          (ROOT / "bank_size_table.tex", sweep_table(sweep))]:
+    sources, outputs = (FRESH, FRESH_OUTPUTS) if args.fresh else (SPLIT_U, OUTPUTS)
+    sweep = {m: accuracies(path, m) for m, path in sources.items()}
+    for path, content in zip(outputs, (main_table(sweep[2000]), sweep_table(sweep))):
         if args.check:
             if path.read_text() != content:
                 raise ValueError(f"Regenerated table differs from {path.name}")
