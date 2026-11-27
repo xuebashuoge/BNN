@@ -9,9 +9,9 @@ run_dir=${1:?Pass the campaign directory}
 shift
 studies=("$@")
 [[ ${#studies[@]} -gt 0 ]] || studies=(performance mismatch bounds)
-declare -A cpus=([performance]=40 [mismatch]=16 [bounds]=8)
-declare -A memory=([performance]=160G [mismatch]=64G [bounds]=32G)
-declare -A hours=([performance]=48:00:00 [mismatch]=24:00:00 [bounds]=24:00:00)
+declare -A cpus=([performance]=40 [mismatch]=16 [bounds]=8 [boost]=64)
+declare -A memory=([performance]=160G [mismatch]=64G [bounds]=32G [boost]=256G)
+declare -A hours=([performance]=48:00:00 [mismatch]=24:00:00 [bounds]=24:00:00 [boost]=72:00:00)
 
 repo=$(git -C "$(dirname -- "$0")" rev-parse --show-toplevel)
 revision=$(git -C "$repo" rev-parse HEAD)

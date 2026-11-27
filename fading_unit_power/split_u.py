@@ -23,6 +23,12 @@ Studies
   the archived table for m = 2000), so only T1 is trained.
 * ``mismatch``: the CIFAR-10 erasure training-probability sweep at m = 2000 with
   the archived ERM, L2 and T2.
+* ``boost``: a second, wider round for the (m, row) pairs where neither T1 nor
+  T2 beat max(ERM, L2) after ``performance`` (BOOST_ROWS). It adds m_1/m = 0.75,
+  wider s and eta_channel, eta_data multipliers, and stage 2 started either at
+  mu_{S,U_1} or at the usual random initialization. Two moons rows use six
+  tuning seeds. Its root must be a sibling of the ``performance`` root, whose
+  confirmed fits it keeps for every other row.
 """
 from __future__ import annotations
 
@@ -39,6 +45,7 @@ from . import higher_accuracy as ha
 
 PUBLISH = dd.SELECTED / "split_u"
 SPLITS = {"split25": .25, "split50": .5}           # m_1 / m
+FRACTIONS = {**SPLITS, "split75": .75}
 STD_MULTIPLIERS = dd.STD_MULTIPLIERS               # s / posterior_std: 3, 10, 30, 100
 ETA_MULTIPLIERS = dd.ETA_MULTIPLIERS               # eta_channel x 1, 10, 100
 PRIOR_COUNT = len(SPLITS) * len(STD_MULTIPLIERS)   # K = 8
@@ -53,6 +60,21 @@ BASELINE_TABLES = {
 }
 DATASET_ORDER = ha.DATASET_ORDER
 
+# Second round, only where the first left max(T1, T2) <= max(ERM, L2) on test.
+BOOST_ROWS = {
+    20: ("moons/Erasure", "mnist/Fading", "fashionmnist/Fading", "cifar10/Fading", "cifar10/Erasure"),
+    200: ("moons/Erasure", "mnist/Fading", "fashionmnist/Fading", "cifar10/Erasure"),
+    1000: ("mnist/Fading", "fashionmnist/Fading"),
+    2000: ("mnist/Fading",),
+}
+BOOST_SPLITS = ("split25", "split50", "split75")
+BOOST_STD = (10., 100., 1000.)
+BOOST_ETA = (.1, 1., 10.)
+BOOST_DATA = (1., 10., 100.)
+BOOST_INIT = ("mu", "base")       # stage 2 starts at mu_{S,U_1} or at the seed's random initialization
+BOOST_PRIOR_COUNT = len(BOOST_SPLITS) * len(BOOST_STD)   # K = 9
+MOONS_BOOST_OFFSETS = ha.BOOST_OFFSETS                    # six tuning seeds; validation cannot separate fewer
+
 
 def grid():
     return list(itertools.product(SPLITS, STD_MULTIPLIERS, ETA_MULTIPLIERS))
@@ -60,7 +82,16 @@ def grid():
 
 def bank_cut(m: int, construction: str) -> int:
     """m_1, keeping at least two channels on each side."""
-    return min(m - 2, max(2, round(SPLITS[construction] * m)))
+    return min(m - 2, max(2, round(FRACTIONS[construction] * m)))
+
+
+def boost_grid():
+    return list(itertools.product(BOOST_SPLITS, BOOST_STD, BOOST_ETA, BOOST_DATA, BOOST_INIT))
+
+
+def label(variant) -> str:
+    text = dd.variant_label(variant[:4])
+    return text + ("-base" if len(variant) > 4 and variant[4] == "base" else "")
 
 
 def stage1_config(t1: dict, construction: str) -> dict:
@@ -78,6 +109,8 @@ def stage2_config(t1: dict, stage1_dir: Path, variant, prior_count: int) -> dict
                   eta_channel=t1["eta_channel"] * eta_multiplier, bank_split=bank_cut(t1["m"], construction))
     if len(variant) > 3:
         config["eta_data"] = t1["eta_data"] * variant[3]
+    if len(variant) > 4 and variant[4] == "base":
+        config["init_from_prior"] = False
     return config
 
 
@@ -85,11 +118,11 @@ def t1_pair(study: str, t1: dict, variant, root: Path, evals, meta: dict, prior_
     s1 = dd.new_run_config(stage1_config(t1, variant[0]))
     s1_id = f"{study}-stage1-{variant[0]}-{dd.digest(s1)[:12]}"
     s2 = dd.new_run_config(stage2_config(t1, dd.run_dir(root, s1_id), variant, prior_count))
-    s2_id = f"{study}-T1-{dd.variant_label(variant)}-{dd.digest(s2)[:12]}"
+    s2_id = f"{study}-T1-{label(variant)}-{dd.digest(s2)[:12]}"
     return [dict(task_id=s1_id, config=s1, deps=[], evals=[],
                  meta=dict(role="stage1", construction=variant[0], bank_split=s1["bank_split"])),
             dict(task_id=s2_id, config=s2, deps=[s1_id], evals=evals,
-                 meta=dict(meta, role="stage2", variant=list(variant), label=dd.variant_label(variant),
+                 meta=dict(meta, role="stage2", variant=list(variant), label=label(variant),
                            bank_split=s2["bank_split"]))]
 
 
@@ -136,11 +169,17 @@ def performance_group(record):
     return f"m{meta['m']}/{meta['dataset']}/{meta['channel']}"
 
 
+def confirmed(root: Path):
+    """(task, root) for every confirmed stage-2 fit under root."""
+    return [(task, root) for task in dd.read_manifest(root / "manifests" / "confirm.jsonl")
+            if task["meta"]["role"] == "stage2"]
+
+
 def summarize_performance(root: Path, m_grid=M_GRID):
-    tasks = [task for task in dd.read_manifest(root / "manifests" / "confirm.jsonl")
-             if task["meta"]["role"] == "stage2"]
-    records = {record["task_id"]: record for record in dd.done_records(root, tasks)}
-    selection = dd.read_json(root / "selection.json")
+    write_performance(confirmed(root), dd.read_json(root / "selection.json"), m_grid)
+
+
+def write_performance(pairs, selection: dict, m_grid=M_GRID):
     overview = []
     for m in m_grid:
         with BASELINE_TABLES[m].open(newline="") as stream:
@@ -149,10 +188,11 @@ def summarize_performance(root: Path, m_grid=M_GRID):
         rows = [dict(row, variant=row.get("variant", ""), channel_kl=row.get("channel_kl", ""),
                      channel_complexity=row.get("channel_complexity", ""))
                 for row in baseline if row["method"] != "T1-Matched"]
-        for task in tasks:
+        for task, root in pairs:
             meta = task["meta"]
             if meta["m"] != m:
                 continue
+            record = dd.read_json(dd.run_dir(root, task["task_id"]) / "done.json")
             report = dd.read_json(dd.run_dir(root, task["task_id"]) / "test" / "evaluation.json")
             heldout = report["heldout_gibbs_mc"]
             if report["evaluation_config"]["deployment_channel"]["kind"] == "diagonal_fading":
@@ -163,7 +203,7 @@ def summarize_performance(root: Path, m_grid=M_GRID):
                              seed=str(meta["seed"]), m=str(m), test_accuracy_pct=100 * heldout["accuracy"],
                              draws=heldout["draws"], examples=heldout["examples"], task_id=task["task_id"],
                              training_revision=dd.read_json(dd.run_dir(root, task["task_id"]) / "metadata.json")["git_sha"],
-                             archive_key=f"split_u/{task['task_id']}", weights_sha256=records[task["task_id"]]["weights_sha256"],
+                             archive_key=f"split_u/{task['task_id']}", weights_sha256=record["weights_sha256"],
                              variant=meta["label"], channel_kl=complexities["channel_kl"],
                              channel_complexity=complexities["channel_complexity"]))
         rows = [{key: row.get(key, "") for key in rows[0]} for row in rows]
@@ -184,7 +224,8 @@ def summarize_performance(root: Path, m_grid=M_GRID):
                                        best_proposed=max(ha.PROPOSED, key=means.get),
                                        best_baseline=max(ha.BASELINES, key=means.get),
                                        gap_pp=proposed - baseline_best,
-                                       variant=selection[f"m{m}/{dataset}/{channel}"]["label"]))
+                                       variant=selection[f"m{m}/{dataset}/{channel}"]["label"],
+                                       boosted=bool(selection[f"m{m}/{dataset}/{channel}"].get("boosted"))))
         output = PUBLISH / f"performance_m{m}"
         dd.write_csv(output / "deployment_by_seed.csv", rows)
         dd.write_json(output / "comparison.json", comparison)
@@ -192,11 +233,75 @@ def summarize_performance(root: Path, m_grid=M_GRID):
             rows, rf"Deployment accuracy (\%) comparison at channel-set size $m={m}$, T1 with $Q_{{W|S,U_1}}$."))
         gaps = [row["gap_pp"] for row in comparison]
         overview.append(dict(m=m, rows_won=sum(gap > 0 for gap in gaps), mean_gap_pp=statistics.fmean(gaps),
+                             boosted_rows=[f"{r['dataset']}/{r['channel']}" for r in comparison if r["boosted"]],
                              min_gap_pp=min(gaps),
                              gaps_pp={f"{r['dataset']}/{r['channel']}": r["gap_pp"] for r in comparison}))
     dd.write_json(PUBLISH / "performance_overview.json", overview)
     dd.write_json(PUBLISH / "performance_selection.json", selection)
     print(json.dumps(overview, indent=1))
+
+
+# --------------------------------------------------------------------------- second round
+
+def plan_boost(root: Path, phase: str):
+    tasks = []
+    sources = t1_sources()
+    if phase == "tune":
+        for (dataset, channel), seeds in sorted(sources.items()):
+            offsets = MOONS_BOOST_OFFSETS if dataset == "moons" else dd.TUNING_OFFSETS
+            for m, rows in BOOST_ROWS.items():
+                if f"{dataset}/{channel}" not in rows:
+                    continue
+                for offset in offsets:
+                    base = dd.with_seeds(seeds[0]["config"], offset)
+                    evals = [dd.validation_eval(dd.new_run_config(base))]
+                    for variant in boost_grid():
+                        tasks.extend(t1_pair(f"boost-m{m}", {**base, "m": m}, variant, root, evals,
+                                             dict(dataset=dataset, channel=channel, m=m, seed=base["seed"]),
+                                             BOOST_PRIOR_COUNT))
+        return ordered(tasks)
+    selection = dd.read_json(root / "selection.json")
+    for (dataset, channel), seeds in sorted(sources.items()):
+        for m, rows in BOOST_ROWS.items():
+            if f"{dataset}/{channel}" not in rows:
+                continue
+            variant = selection[f"m{m}/{dataset}/{channel}"]["variant"]
+            for source in seeds:
+                test = dict(name="test", split="test", scope="deployment",
+                            overrides={**source["evaluation"], "device": "cpu", "threads": 1})
+                tasks.extend(t1_pair(f"boost-m{m}", {**source["config"], "m": m}, variant, root, [test],
+                                     dict(dataset=dataset, channel=channel, m=m, seed=source["seed"], phase="confirm",
+                                          baseline_task=source["baseline_task"]), BOOST_PRIOR_COUNT))
+    return ordered(tasks)
+
+
+def select_boost(records):
+    """Highest mean validation accuracy per (m, row); ties favour larger penalty."""
+    scores = {}
+    for record in records:
+        scores.setdefault(performance_group(record), {}).setdefault(
+            tuple(record["meta"]["variant"]), []).append(record["evaluations"]["validation"]["accuracy"])
+    selection = {}
+    for group, variants in scores.items():
+        counts = {len(values) for values in variants.values()}
+        if len(counts) != 1:
+            raise ValueError(f"Unequal tuning seeds in {group}")
+        ranked = sorted(variants.items(), key=lambda item: (-statistics.fmean(item[1]), -item[0][2], -item[0][1]))
+        selection[group] = dict(variant=list(ranked[0][0]), label=label(ranked[0][0]),
+                                validation_accuracy=statistics.fmean(ranked[0][1]), seeds=counts.pop(),
+                                candidates=len(ranked), prior_count=BOOST_PRIOR_COUNT, boosted=True,
+                                leaderboard=[dict(label=label(v), mean=statistics.fmean(a), seeds=a)
+                                             for v, a in ranked[:10]])
+    return selection
+
+
+def summarize_boost(root: Path):
+    """First-round fits for every other row, second-round fits for BOOST_ROWS."""
+    first = root.parent / "performance"
+    boosted = dd.read_json(root / "selection.json")
+    selection = {**dd.read_json(first / "selection.json"), **boosted}
+    pairs = [(task, first) for task, _ in confirmed(first) if performance_group(task) not in boosted]
+    write_performance(pairs + confirmed(root), selection)
 
 
 # --------------------------------------------------------------------------- CIFAR-10 mismatch
@@ -253,21 +358,23 @@ def summarize_mismatch(root: Path):
 # --------------------------------------------------------------------------- driver
 
 STUDIES = {
-    "performance": (plan_performance, summarize_performance, performance_group),
-    "mismatch": (plan_mismatch, summarize_mismatch, lambda record: "all"),
+    "performance": (plan_performance, summarize_performance,
+                    lambda records: dd.select_variant(records, performance_group)),
+    "mismatch": (plan_mismatch, summarize_mismatch, lambda records: dd.select_variant(records, lambda r: "all")),
+    "boost": (plan_boost, summarize_boost, select_boost),
 }
 
 
 def pipeline(study: str, root: Path, workers: int, stop_after: str | None = None):
     root.mkdir(parents=True, exist_ok=True)
-    planner, summarize, group = STUDIES[study]
+    planner, summarize, select = STUDIES[study]
     tune_path = root / "manifests" / "tune.jsonl"
     if not tune_path.exists():
         dd.write_manifest(tune_path, planner(root, "tune"))
     tune = dd.read_manifest(tune_path)
     dd.run_pool(tune, root, workers)
     if not (root / "selection.json").exists():
-        dd.write_json(root / "selection.json", dd.select_variant(dd.done_records(root, tune), group))
+        dd.write_json(root / "selection.json", select(dd.done_records(root, tune)))
     if stop_after == "tune":
         return
     confirm_path = root / "manifests" / "confirm.jsonl"

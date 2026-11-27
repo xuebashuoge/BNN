@@ -9,7 +9,7 @@
 # Usage (via submit_split_u.sh): sbatch ... run_split_u.slurm STUDY ROOT
 set -eo pipefail
 
-study=${1:?Pass the study: performance, mismatch or bounds}
+study=${1:?Pass the study: performance, mismatch, bounds or boost}
 root=${2:?Pass the study output directory}
 expected_revision=$(cat "$root/git-revision.txt")
 if [[ "$(git rev-parse HEAD)" != "$expected_revision" ]]; then
