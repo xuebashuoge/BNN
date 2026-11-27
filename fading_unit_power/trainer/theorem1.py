@@ -275,10 +275,23 @@ class ChannelBank(nn.Module):
         self.config = validate_channel(config)
         self.transmit_unit_power = transmit_unit_power
         self._fading_factors = {}
+        # Training draws bank indices from [lo, hi); restrict() selects a split of U.
+        self.lo, self.hi = 0, m
         generator = torch.Generator().manual_seed(seed)
         gain, noise = self.draw(m, self.config, generator)
         self.register_buffer("gain", gain)
         self.register_buffer("noise", noise)
+
+    def restrict(self, lo: int, hi: int) -> "ChannelBank":
+        """Draw bank indices only from [lo, hi), e.g. U_1 = U[:m1] or U_2 = U[m1:].
+
+        The m entries are i.i.d. draws from one generator, so a split by index
+        is fixed before U is seen and both parts are i.i.d. samples of P_tr.
+        """
+        if not 0 <= lo < hi <= self.m:
+            raise ValueError(f"Bank split [{lo}, {hi}) is outside [0, {self.m})")
+        self.lo, self.hi = lo, hi
+        return self
 
     def transmit(self, features: torch.Tensor) -> torch.Tensor:
         """Normalize each vector before any channel gain or receiver noise."""
@@ -331,7 +344,7 @@ class ChannelBank(nn.Module):
             return hidden
         generator = generator or torch.default_generator
         if source == "bank":
-            indices = torch.randint(self.m, (len(hidden),), generator=generator,
+            indices = torch.randint(self.lo, self.hi, (len(hidden),), generator=generator,
                                     device=generator.device).to(hidden.device)
             gain, noise = self.gain[indices], self.noise[indices]
         elif source == "deployment":

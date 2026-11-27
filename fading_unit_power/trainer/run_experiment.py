@@ -59,8 +59,11 @@ OPTIONAL_OPTIMIZATION_DEFAULTS = dict(lr_decay=1., train_mc=1)
 # The sample complexity always keeps the fixed N(0, prior_std^2 I) prior.
 # Omitted fields keep the configuration and hash of older runs.
 OPTIONAL_PRIOR_DEFAULTS = dict(channel_prior="fixed", channel_prior_std=None, channel_prior_checkpoint=None,
-                               channel_prior_count=1, init_from_prior=True, train_channel_source="bank")
-CHANNEL_PRIORS = {"fixed", "perfect", "independent_bank", "fresh"}
+                               channel_prior_count=1, init_from_prior=True, train_channel_source="bank",
+                               bank_split=None, bank_part="all")
+CHANNEL_PRIORS = {"fixed", "perfect", "independent_bank", "fresh", "split"}
+# bank_part selects the training channels: all of U, U_1 = U[:bank_split] or U_2 = U[bank_split:].
+BANK_PARTS = {"all", "first", "second"}
 PRIOR_COMPATIBILITY_KEYS = ("dataset", "architecture", "width", "train_size", "val_size", "data_seed",
                             "moon_noise", "moons_sampler", "transmit_unit_power", "training_loss",
                             "loss_epsilon", "prior_std", *BOUNDED_MODEL_DEFAULTS)
@@ -225,6 +228,16 @@ def validate_prior_config(config: dict) -> None:
     count = prior_setting(config, "channel_prior_count")
     if not isinstance(count, int) or isinstance(count, bool) or count < 1:
         raise ValueError("channel_prior_count must be a positive integer")
+    part, cut = prior_setting(config, "bank_part"), prior_setting(config, "bank_split")
+    if part not in BANK_PARTS:
+        raise ValueError(f"bank_part must be one of {sorted(BANK_PARTS)}")
+    if cut is not None:
+        if not isinstance(cut, int) or isinstance(cut, bool) or not 2 <= cut <= config["m"] - 2:
+            raise ValueError("bank_split must be an integer with 2 <= bank_split <= m - 2")
+        if config["train_channel"]["kind"] == "perfect" or prior_setting(config, "train_channel_source") != "bank":
+            raise ValueError("A bank split needs a nonperfect channel bank used for training")
+    elif part != "all" or kind == "split":
+        raise ValueError("bank_part other than 'all' and channel_prior='split' require bank_split")
     std, path = prior_setting(config, "channel_prior_std"), prior_setting(config, "channel_prior_checkpoint")
     if kind == "fixed":
         if std is not None or path is not None:
@@ -238,6 +251,8 @@ def validate_prior_config(config: dict) -> None:
         raise ValueError("Perfect training has no channel complexity; use channel_prior='fixed'")
     if prior_setting(config, "train_channel_source") != "bank":
         raise ValueError("The stage-2 posterior must train on its channel bank U")
+    if kind == "split" and part == "first":
+        raise ValueError("A split-U posterior cannot train on U_1 alone")
 
 
 def load_channel_prior(config: dict, split: dict | None = None):
@@ -246,7 +261,10 @@ def load_channel_prior(config: dict, split: dict | None = None):
     Validity of Theorem 1 needs Q_{W|S} independent of the bank U. Stage 1
     therefore must share S (same split hashes) and must not train on the
     stage-2 bank: it uses the perfect channel, a different bank seed, or fresh
-    simulator draws, according to the declared construction.
+    simulator draws, according to the declared construction. With "split", the
+    bank is U = (U_1, U_2): stage 1 trains on U_1 = U[:bank_split] only, and the
+    channel complexity is the conditional bound given (S, U_1) over U_2, with
+    m_2 = m - bank_split channels.
     """
     kind = prior_setting(config, "channel_prior")
     if kind == "fixed":
@@ -265,6 +283,11 @@ def load_channel_prior(config: dict, split: dict | None = None):
     elif kind == "independent_bank":
         valid = (source == "bank" and prior_config["train_channel"] == config["train_channel"]
                  and prior_config["channel_seed"] != config["channel_seed"])
+    elif kind == "split":
+        valid = (source == "bank" and prior_config["train_channel"] == config["train_channel"]
+                 and prior_config["channel_seed"] == config["channel_seed"] and prior_config["m"] == config["m"]
+                 and prior_setting(prior_config, "bank_part") == "first"
+                 and prior_setting(prior_config, "bank_split") == prior_setting(config, "bank_split"))
     else:
         valid = source == "fresh" and prior_config["train_channel"] == config["train_channel"]
     if not valid:
@@ -281,6 +304,8 @@ def load_channel_prior(config: dict, split: dict | None = None):
                   stage1_config_hash=digest(prior_config), stage1_selected_epoch=metadata.get("selected_epoch"),
                   stage1_train_channel=prior_config["train_channel"], stage1_channel_seed=prior_config["channel_seed"],
                   stage1_train_channel_source=source, prior_std=prior_setting(config, "channel_prior_std"),
+                  stage1_bank_part=prior_setting(prior_config, "bank_part"),
+                  bank_split=prior_setting(config, "bank_split"),
                   candidate_count=prior_setting(config, "channel_prior_count"))
     return prior_mu, record
 
@@ -433,6 +458,11 @@ def make_models(config: dict, input_dim: int, classes: int):
     bank = ChannelBank(config["width"], config["m"], config["train_channel"],
                        config["channel_seed"],
                        transmit_unit_power=config["transmit_unit_power"]).to(config["device"])
+    part, cut = prior_setting(config, "bank_part"), prior_setting(config, "bank_split")
+    if part == "first":
+        bank.restrict(0, cut)
+    elif part == "second":
+        bank.restrict(cut, config["m"])
     return model, bank
 
 
@@ -480,6 +510,9 @@ def complexities(model, config: dict) -> dict:
         terms = theorem1_terms(kl, **kwargs)
         return {"kl": kl, **terms, "joint_complexity": joint_complexity(kl, **kwargs)}
     channel_kl = gaussian_kl_to_prior(model.mu, model.rho, prior_mu, prior_setting(config, "channel_prior_std"))
+    if prior_setting(config, "channel_prior") == "split":
+        # Conditional on (S, U_1) the bound is over U_2 alone.
+        kwargs["m"] = config["m"] - prior_setting(config, "bank_split")
     terms = theorem1_terms(kl, **kwargs, channel_kl=channel_kl,
                            channel_prior_count=prior_setting(config, "channel_prior_count"))
     return {"kl": kl, "channel_kl": channel_kl, **terms, "joint_complexity": joint_complexity(kl, **kwargs)}
