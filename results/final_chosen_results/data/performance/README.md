@@ -1,6 +1,8 @@
-# Deployment accuracy at m = 2000
+# Deployment accuracy at m = 2000 with the fixed prior Q_W
 
-Run `python results/final_chosen_results/rebuild_performance_table.py` from the repository root with the torch28 environment. It reads the archived test evaluations and writes `performance_table.tex` and `data/performance/deployment_by_seed.csv`. Pass `--check` to verify both outputs. A clean checkout has all required inputs.
+This was the manuscript table before T1 switched to the fresh data-dependent prior. The current table is `../../performance_table.tex`, built by `../../rebuild_final_tables.py`.
+
+Run `python results/final_chosen_results/rebuild_performance_table.py` from the repository root with the torch28 environment. It reads the archived test evaluations and writes `performance_table_fixed_prior.tex` (in this directory) and `data/performance/deployment_by_seed.csv`. Pass `--check` to verify both outputs. A clean checkout has all required inputs.
 
 ## Trials
 

@@ -1,4 +1,9 @@
-# Deployment accuracy at shared m = 20 (T1 with the fresh Q_{W|S})
+# Deployment accuracy at smaller shared m (T1 with the fresh Q_{W|S})
+
+> **Manuscript use.** The paper's main deployment table stays at m = 2000
+> ([`../performance_table.tex`](../performance_table.tex), from `../data_dependent/only_fresh`). The
+> runs here at m = 20, 200 and 1000 feed the bank-size table
+> ([`../bank_size_table.tex`](../bank_size_table.tex)), which shows the lead growing as m shrinks.
 
 Goal: in every row of the deployment table, the better of T1 and T2 should beat the better of ERM and
 L2, by as wide a margin as possible. One channel-bank size m is shared by all eight rows and all

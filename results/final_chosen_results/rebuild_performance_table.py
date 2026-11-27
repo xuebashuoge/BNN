@@ -1,4 +1,7 @@
-"""Rebuild the m=2000 deployment table from the archived held-out evaluations."""
+"""Rebuild the fixed-prior (Q_W) m=2000 deployment table from the archived held-out evaluations.
+
+The manuscript table now uses the fresh Q_{W|S}; see rebuild_final_tables.py.
+"""
 import argparse
 import csv
 import hashlib
@@ -107,7 +110,7 @@ def main():
     writer.writeheader()
     writer.writerows(rows)
     for path, content in [(DATA / "deployment_by_seed.csv", stream.getvalue()),
-                          (ROOT / "performance_table.tex", render_table(rows))]:
+                          (DATA / "performance_table_fixed_prior.tex", render_table(rows))]:
         if args.check:
             if path.read_text() != content:
                 raise ValueError(f"Regenerated data differ from {path.name}")
