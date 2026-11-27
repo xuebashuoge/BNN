@@ -28,6 +28,38 @@ The m = 2000 column is max(T1, T2) − max(ERM, L2) from `only_fresh`. "Seeds T1
 seeds where T1 beats both ERM and L2 trained on the same seed. The perfect-training column of the
 table does not depend on m and is copied from the archived table.
 
+## Other shared bank sizes: m = 200 and m = 1000
+
+Separate campaigns (`--m 200`, `--m 1000`) use the same protocol, with a screen at that m only. Both
+Moons rows get the six-seed follow-up with the wider grids. Tables:
+[`m200/performance/performance_table.tex`](m200/performance/performance_table.tex) and
+[`m1000/performance/performance_table.tex`](m1000/performance/performance_table.tex).
+
+Test lead of max(T1, T2) over max(ERM, L2), in points, with paired seeds won in parentheses:
+
+| row | m = 20 | m = 200 | m = 1000 | m = 2000 (`only_fresh`) |
+|---|---|---|---|---|
+| Moons fading | **+4.27** (3/3) | +0.74 (3/3) | −0.09 (1/3) | +0.17 |
+| Moons erasure | +0.04 (3/5) | −0.07 (2/5) | +0.02 (3/5), T2 | +0.28 |
+| MNIST fading | **+13.17** (3/3) | +6.09 (3/3) | +1.29 (3/3) | +0.63 |
+| MNIST erasure | **+5.10** (5/5) | +0.36 (5/5) | +0.14 (5/5) | +0.13 |
+| F-MNIST fading | **+10.61** (3/3) | +4.48 (3/3) | +1.36 (3/3) | +0.80 |
+| F-MNIST erasure | **+6.75** (9/9) | +0.33 (9/9) | +0.52 (9/9) | +0.45 |
+| CIFAR-10 fading | **+16.64** (3/3) | +6.85 (3/3) | +3.70 (3/3) | +2.62 |
+| CIFAR-10 erasure | **+7.70** (5/5) | +0.89 (4/5) | +1.23 (4/5) | +0.94 |
+| rows won | 8/8 | 7/8 | 7/8 | 8/8 |
+| mean lead | **+8.04** | +2.46 | +1.02 | +0.75 |
+
+T1 is the better proposed method everywhere except Moons erasure at m = 1000, where T2 edges T1 by
+0.003 points. T1's accuracy hardly changes with m: MNIST fading is 78.1% at all three sizes. The
+lead grows as m shrinks because ERM, L2 and T2 lose accuracy. Moons erasure is a tie at every m.
+
+Spartan: m = 200 ran at revision 4681a13 (job 35841053) in
+`/data/gpfs/projects/punim2792/yangshuo/higher-accuracy-m200-20261127`; m = 1000 ran at 4a8ff2a
+(job 35842542) in `/data/gpfs/projects/punim2792/yangshuo/higher-accuracy-m1000-20261127`. Fresh
+stage-1 fits are linked from the data-dependent and m = 20 campaigns. The selected candidates are in
+each folder's `performance/selection.json`.
+
 ## Why a small m
 
 The fresh stage-1 mean μ_S is trained on S with a new P_tr draw for every minibatch, so it never
