@@ -1,0 +1,37 @@
+\begin{table*}[htb]
+\centering
+\caption{Deployment accuracy (\%) comparison at channel-set size $m=1000$, T1 with $Q_{W|S,U_1}$.}
+\label{tab:performance}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llccccc@{}}
+\toprule
+\multirow{2}{*}{Dataset} & \multirow{2}{*}{Channel}
+& \multicolumn{4}{c}{Matched training} & \multirow{2}{*}{Perfect training} \\
+\cmidrule(lr){3-6}
+& & ERM & L2 & T1 & T2 &  \\
+\midrule
+\multirow{2}{*}{Two moons}
+& Fading
+& $70.59\pm0.28$ & $71.21\pm0.19$ & $\mathbf{71.30}\pm0.19$ & $71.07\pm0.21$ & $62.83\pm2.64$ \\
+& Erasure
+& $86.98\pm0.21$ & $86.92\pm0.19$ & $86.83\pm0.67$ & $\mathbf{86.99}\pm0.37$ & $82.68\pm0.47$ \\
+\midrule
+\multirow{2}{*}{MNIST}
+& Fading
+& $76.53\pm0.12$ & $\mathbf{76.85}\pm0.32$ & $76.18\pm0.14$ & $76.21\pm0.31$ & $63.55\pm0.79$ \\
+& Erasure
+& $96.16\pm0.11$ & $96.22\pm0.08$ & $\mathbf{96.31}\pm0.07$ & $96.19\pm0.08$ & $87.59\pm0.58$ \\
+\midrule
+\multirow{2}{*}{Fashion-MNIST}
+& Fading
+& $69.53\pm0.29$ & $69.65\pm0.33$ & $\mathbf{70.12}\pm0.31$ & $69.20\pm0.19$ & $57.98\pm0.20$ \\
+& Erasure
+& $86.26\pm0.10$ & $86.28\pm0.12$ & $\mathbf{86.68}\pm0.18$ & $86.30\pm0.16$ & $77.81\pm0.58$ \\
+\midrule
+\multirow{2}{*}{CIFAR-10}
+& Fading
+& $53.29\pm0.89$ & $53.77\pm0.95$ & $\mathbf{56.27}\pm1.11$ & $52.87\pm1.16$ & $23.06\pm0.60$ \\
+& Erasure
+& $64.27\pm1.36$ & $65.36\pm0.39$ & $\mathbf{66.14}\pm0.74$ & $64.80\pm0.56$ & $37.07\pm1.94$ \\
+\bottomrule
+\end{tabular*}
+\end{table*}

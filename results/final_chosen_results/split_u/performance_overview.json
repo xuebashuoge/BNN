@@ -1,0 +1,86 @@
+[
+  {
+    "m": 20,
+    "rows_won": 4,
+    "mean_gap_pp": -0.6115222222222254,
+    "boosted_rows": [
+      "moons/Erasure",
+      "mnist/Fading",
+      "fashionmnist/Fading",
+      "cifar10/Fading",
+      "cifar10/Erasure"
+    ],
+    "min_gap_pp": -3.893666666666661,
+    "gaps_pp": {
+      "moons/Fading": 0.02216666666667777,
+      "moons/Erasure": -0.035900000000012255,
+      "mnist/Fading": -3.255833333333335,
+      "mnist/Erasure": 0.3334999999999724,
+      "fashionmnist/Fading": -1.1636666666666713,
+      "fashionmnist/Erasure": 1.238722222222222,
+      "cifar10/Fading": -3.893666666666661,
+      "cifar10/Erasure": 1.8625000000000043
+    }
+  },
+  {
+    "m": 200,
+    "rows_won": 6,
+    "mean_gap_pp": 0.18090138888888418,
+    "boosted_rows": [
+      "moons/Erasure",
+      "mnist/Fading",
+      "fashionmnist/Fading",
+      "cifar10/Erasure"
+    ],
+    "min_gap_pp": -1.6724999999999994,
+    "gaps_pp": {
+      "moons/Fading": 0.010166666666663104,
+      "moons/Erasure": 0.3143000000000029,
+      "mnist/Fading": -1.6724999999999994,
+      "mnist/Erasure": 0.0490999999999957,
+      "fashionmnist/Fading": -0.5530000000000257,
+      "fashionmnist/Erasure": 0.4359444444444449,
+      "cifar10/Fading": 1.268500000000003,
+      "cifar10/Erasure": 1.594699999999989
+    }
+  },
+  {
+    "m": 1000,
+    "rows_won": 7,
+    "mean_gap_pp": 0.4626680555555547,
+    "boosted_rows": [
+      "mnist/Fading",
+      "fashionmnist/Fading"
+    ],
+    "min_gap_pp": -0.6398333333333426,
+    "gaps_pp": {
+      "moons/Fading": 0.08199999999999363,
+      "moons/Erasure": 0.01630000000000109,
+      "mnist/Fading": -0.6398333333333426,
+      "mnist/Erasure": 0.0864000000000118,
+      "fashionmnist/Fading": 0.4688333333333219,
+      "fashionmnist/Erasure": 0.3981111111111062,
+      "cifar10/Fading": 2.5063333333333375,
+      "cifar10/Erasure": 0.7832000000000079
+    }
+  },
+  {
+    "m": 2000,
+    "rows_won": 8,
+    "mean_gap_pp": 0.4380722222222202,
+    "boosted_rows": [
+      "mnist/Fading"
+    ],
+    "min_gap_pp": 0.0257000000000005,
+    "gaps_pp": {
+      "moons/Fading": 0.23383333333332246,
+      "moons/Erasure": 0.2828000000000088,
+      "mnist/Fading": 0.3795000000000073,
+      "mnist/Erasure": 0.0257000000000005,
+      "fashionmnist/Fading": 0.28616666666665935,
+      "fashionmnist/Erasure": 0.45877777777778306,
+      "cifar10/Fading": 0.6314999999999955,
+      "cifar10/Erasure": 1.2062999999999846
+    }
+  }
+]

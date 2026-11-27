@@ -1,0 +1,237 @@
+{
+ "dataset": "moons",
+ "family": "fading",
+ "regime": "matched",
+ "certificate": "T1",
+ "theory": "Theorem 1 with split-U prior Q_{W|S,U_1}",
+ "config": {
+  "dataset": "moons",
+  "architecture": "bounded_mlp",
+  "method": "proposed",
+  "predictor": "gaussian",
+  "training_loss": "bounded_ce_smooth",
+  "loss_epsilon": 0.01,
+  "selection_metric": "accuracy",
+  "validation_seed_policy": "fixed",
+  "width": 8,
+  "train_size": 800,
+  "val_size": 200,
+  "batch_size": 128,
+  "epochs": 120,
+  "lr": 0.006,
+  "eta_channel": 0.02,
+  "eta_data": 0.02,
+  "prior_std": 0.24,
+  "posterior_std": 0.1,
+  "m": 2000,
+  "seed": 92601,
+  "data_seed": 92604,
+  "channel_seed": 92602,
+  "eval_seed": 92603,
+  "eval_draws": 10,
+  "val_draws": 8,
+  "clip_ce": 10.0,
+  "delta": 0.05,
+  "l2": 0.0001,
+  "device": "cpu",
+  "threads": 1,
+  "cpu_flush_denormal": false,
+  "transmit_unit_power": false,
+  "rho_lr_scale": 1.0,
+  "download": false,
+  "moon_noise": 0.3,
+  "moons_sampler": "iid",
+  "train_channel": {
+   "kind": "diagonal_fading",
+   "rho_c": 0.35
+  },
+  "deployment_channel": {
+   "kind": "diagonal_fading",
+   "rho_c": 0.35
+  },
+  "bounded_feature_norm": 1.0,
+  "bounded_receiver_norm": 0.25,
+  "posterior_mean_clip": 0.0
+ },
+ "receiver_norm": 0.25,
+ "posterior_kl": 123.63873291015625,
+ "posterior": {
+  "objective": "empirical bounded loss + weight x exact certificate complexity",
+  "learned_std": true,
+  "label": "split0.1-second-lr0.001-w1-step3000",
+  "std_mean": 0.11717306822538376,
+  "mean_norm": 3.5292155742645264
+ },
+ "confidence": {
+  "family_failure": 0.05,
+  "family_size": 20,
+  "architectures": 6,
+  "receiver_norms": [
+   0.075,
+   0.25,
+   0.5,
+   1.0,
+   2.0,
+   4.0
+  ],
+  "theorem": 0.00020833333333333335,
+  "eps_1": 0.00010416666666666667,
+  "eps_2": 0.00010416666666666667,
+  "mc": 0.00125
+ },
+ "empirical": {
+  "mean": 0.14453780297851562,
+  "iid_observations": 2000000,
+  "seed": 314159,
+  "train_accuracy": 0.5762365,
+  "channels": "S x U_2"
+ },
+ "empirical_mc_radius": 0.0012927308041185458,
+ "components": {
+  "empirical": 0.14453780297851562,
+  "mc": 0.0012927308041185458,
+  "sample": 0.2918914258480072,
+  "channel": 0.0799623504281044,
+  "shift": 0.0
+ },
+ "channel_shift": {
+  "method": "T1 channel KL",
+  "analytic": true,
+  "upper": 0.0,
+  "channel_kl": 0.0
+ },
+ "uncapped_risk_upper": 0.5176843100587458,
+ "nonvacuous": true,
+ "chance_loss": 0.1483543109406693,
+ "better_than_chance_population": true,
+ "gap_to_population": 0.3737878059083552,
+ "test": {
+  "bounded_loss": 0.14389650415039063,
+  "accuracy": 0.581739,
+  "examples": 10000,
+  "replicates": 100,
+  "channel_source": "deployment",
+  "posterior_rule": "independent weight and channel draw per example"
+ },
+ "selection": {
+  "rule": "accurate",
+  "tolerance": 0.01,
+  "selection_mc_seed": 271828,
+  "validation_accuracy": 0.58405,
+  "best_validation_accuracy": 0.5933,
+  "candidates": 720,
+  "leaderboard": [
+   {
+    "label": "split0.1-second-lr0.001-w1-step3000",
+    "receiver_norm": 2.0,
+    "upper": 0.37525351801156054,
+    "validation_accuracy": 0.53115
+   },
+   {
+    "label": "split0.1-second-lr0.001-w1-step3000",
+    "receiver_norm": 4.0,
+    "upper": 0.3752551542949582,
+    "validation_accuracy": 0.5312
+   },
+   {
+    "label": "split0.1-all-lr0.001-w1-step3000",
+    "receiver_norm": 2.0,
+    "upper": 0.37525582992552764,
+    "validation_accuracy": 0.53145
+   },
+   {
+    "label": "split0.1-second-lr0.003-w1-step1000",
+    "receiver_norm": 2.0,
+    "upper": 0.3752563545107747,
+    "validation_accuracy": 0.5325
+   },
+   {
+    "label": "split0.1-second-lr0.003-w1-step3000",
+    "receiver_norm": 2.0,
+    "upper": 0.3752571084356213,
+    "validation_accuracy": 0.5316
+   },
+   {
+    "label": "split0.1-all-lr0.001-w1-step3000",
+    "receiver_norm": 4.0,
+    "upper": 0.37525748393057834,
+    "validation_accuracy": 0.53145
+   },
+   {
+    "label": "split0.1-second-lr0.003-w1-step1000",
+    "receiver_norm": 4.0,
+    "upper": 0.37525800860165603,
+    "validation_accuracy": 0.53255
+   },
+   {
+    "label": "split0.1-second-lr0.003-w1-step3000",
+    "receiver_norm": 4.0,
+    "upper": 0.37525872632502566,
+    "validation_accuracy": 0.53165
+   },
+   {
+    "label": "split0.1-all-lr0.003-w1-step1000",
+    "receiver_norm": 2.0,
+    "upper": 0.37526842485188494,
+    "validation_accuracy": 0.53225
+   },
+   {
+    "label": "split0.1-all-lr0.003-w1-step3000",
+    "receiver_norm": 2.0,
+    "upper": 0.3752689368128682,
+    "validation_accuracy": 0.53195
+   }
+  ]
+ },
+ "previous": {
+  "archived_upper": 0.40581382461947113,
+  "archived_accuracy": 0.5362000000000001,
+  "tighter_bound_tightest_upper": 0.28714332280889454,
+  "tighter_bound_tightest_accuracy": 0.50058
+ },
+ "channel_prior": {
+  "construction": "split_U",
+  "split_fraction": 0.1,
+  "m_1": 200,
+  "m_2": 1800,
+  "splits": [
+   0.1,
+   0.25,
+   0.5
+  ],
+  "scales": [
+   1.0,
+   1.5,
+   2.0
+  ],
+  "family_size": 9,
+  "selected_scale": 2.0,
+  "family": [
+   {
+    "scale": 1.0,
+    "kl": 88.93733978271484,
+    "channel": 0.17005692422389984
+   },
+   {
+    "scale": 1.5,
+    "kl": 24.367984771728516,
+    "channel": 0.10475426912307739
+   },
+   {
+    "scale": 2.0,
+    "kl": 7.891017436981201,
+    "channel": 0.0799623504281044
+   }
+  ],
+  "stage1": {
+   "label": "init0.1-lr0.01-w0-step250",
+   "criterion": 0.48780290558815004,
+   "u1_empirical": 0.1429410107421875,
+   "u1_accuracy": 0.6041,
+   "kl": 177.53787231445312,
+   "sigma_mean": 0.048941511660814285,
+   "selection": "(S, U_1) only: S x U_1 empirical + sample term, within 0.01 of the best S x U_1 accuracy"
+  },
+  "union_bound": "eps_1 / family_size"
+ }
+}

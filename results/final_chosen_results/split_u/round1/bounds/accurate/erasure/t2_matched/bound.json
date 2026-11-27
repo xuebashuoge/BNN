@@ -1,0 +1,189 @@
+{
+ "dataset": "moons",
+ "family": "erasure",
+ "regime": "matched",
+ "certificate": "T2",
+ "theory": "Theorem 2",
+ "config": {
+  "dataset": "moons",
+  "architecture": "bounded_mlp",
+  "method": "joint",
+  "predictor": "gaussian",
+  "training_loss": "bounded_ce_smooth",
+  "loss_epsilon": 0.01,
+  "selection_metric": "accuracy",
+  "validation_seed_policy": "fixed",
+  "width": 8,
+  "train_size": 800,
+  "val_size": 200,
+  "batch_size": 128,
+  "epochs": 120,
+  "lr": 0.006,
+  "eta_channel": 0.0,
+  "eta_data": 0.02,
+  "prior_std": 0.24,
+  "posterior_std": 0.1,
+  "m": 2000,
+  "seed": 92601,
+  "data_seed": 92604,
+  "channel_seed": 92602,
+  "eval_seed": 92603,
+  "eval_draws": 10,
+  "val_draws": 8,
+  "clip_ce": 10.0,
+  "delta": 0.05,
+  "l2": 0.0001,
+  "device": "cpu",
+  "threads": 1,
+  "cpu_flush_denormal": false,
+  "transmit_unit_power": false,
+  "rho_lr_scale": 1.0,
+  "download": false,
+  "moon_noise": 0.3,
+  "moons_sampler": "iid",
+  "train_channel": {
+   "kind": "outage",
+   "outage_prob": 0.5
+  },
+  "deployment_channel": {
+   "kind": "outage",
+   "outage_prob": 0.5
+  },
+  "bounded_feature_norm": 1.0,
+  "bounded_receiver_norm": 2.0,
+  "posterior_mean_clip": 0.0
+ },
+ "receiver_norm": 2.0,
+ "posterior_kl": 872.853515625,
+ "posterior": {
+  "objective": "empirical bounded loss + weight x exact certificate complexity",
+  "learned_std": true,
+  "label": "init0.24-lr0.003-w0-step8000",
+  "std_mean": 0.006749079562723637,
+  "mean_norm": 9.235586166381836
+ },
+ "confidence": {
+  "family_failure": 0.05,
+  "family_size": 20,
+  "architectures": 6,
+  "receiver_norms": [
+   0.075,
+   0.25,
+   0.5,
+   1.0,
+   2.0,
+   4.0
+  ],
+  "theorem": 0.00020833333333333335,
+  "mc": 0.00125
+ },
+ "empirical": {
+  "mean": 0.10259732666015625,
+  "iid_observations": 2000000,
+  "seed": 314159,
+  "train_accuracy": 0.828229,
+  "channels": "S x U"
+ },
+ "empirical_mc_radius": 0.0012927308041185458,
+ "components": {
+  "empirical": 0.10259732666015625,
+  "mc": 0.0012927308041185458,
+  "joint": 0.882167637348175,
+  "shift": 0.0
+ },
+ "channel_shift": {
+  "method": "T2 channel KL",
+  "analytic": true,
+  "upper": 0.0,
+  "channel_kl": 0.0
+ },
+ "uncapped_risk_upper": 0.9860576948124499,
+ "nonvacuous": true,
+ "chance_loss": 0.1483543109406693,
+ "better_than_chance_population": true,
+ "gap_to_population": 0.8845213226811022,
+ "test": {
+  "bounded_loss": 0.10153637213134765,
+  "accuracy": 0.840225,
+  "examples": 10000,
+  "replicates": 100,
+  "channel_source": "deployment",
+  "posterior_rule": "independent weight and channel draw per example"
+ },
+ "selection": {
+  "rule": "accurate",
+  "tolerance": 0.01,
+  "selection_mc_seed": 271828,
+  "validation_accuracy": 0.8733,
+  "best_validation_accuracy": 0.88305,
+  "candidates": 900,
+  "leaderboard": [
+   {
+    "label": "init0.1-lr0.003-w1-step2000",
+    "receiver_norm": 0.075,
+    "upper": 0.2694267111921216,
+    "validation_accuracy": 0.5073
+   },
+   {
+    "label": "init0.1-lr0.003-w1-step1000",
+    "receiver_norm": 0.075,
+    "upper": 0.26942672339915286,
+    "validation_accuracy": 0.5076
+   },
+   {
+    "label": "init0.03-lr0.003-w1-step2000",
+    "receiver_norm": 0.075,
+    "upper": 0.2694267408680821,
+    "validation_accuracy": 0.5075
+   },
+   {
+    "label": "init0.1-lr0.003-w1-step4000",
+    "receiver_norm": 0.075,
+    "upper": 0.26942675038098346,
+    "validation_accuracy": 0.5076
+   },
+   {
+    "label": "init0.03-lr0.003-w1-step4000",
+    "receiver_norm": 0.075,
+    "upper": 0.2694267677235509,
+    "validation_accuracy": 0.50765
+   },
+   {
+    "label": "init0.24-lr0.003-w1-step1000",
+    "receiver_norm": 0.075,
+    "upper": 0.269426780056944,
+    "validation_accuracy": 0.5076
+   },
+   {
+    "label": "init0.24-lr0.003-w1-step2000",
+    "receiver_norm": 0.075,
+    "upper": 0.26942683898924835,
+    "validation_accuracy": 0.5073
+   },
+   {
+    "label": "init0.24-lr0.003-w1-step4000",
+    "receiver_norm": 0.075,
+    "upper": 0.26942684378623016,
+    "validation_accuracy": 0.5076
+   },
+   {
+    "label": "init0.1-lr0.01-w1-step250",
+    "receiver_norm": 0.075,
+    "upper": 0.2694268557000066,
+    "validation_accuracy": 0.50755
+   },
+   {
+    "label": "init0.03-lr0.003-w1-step1000",
+    "receiver_norm": 0.075,
+    "upper": 0.26942710645197876,
+    "validation_accuracy": 0.5077
+   }
+  ]
+ },
+ "previous": {
+  "archived_upper": 0.35876165475478033,
+  "archived_accuracy": 0.720105,
+  "tighter_bound_tightest_upper": 0.2597248613854975,
+  "tighter_bound_tightest_accuracy": 0.500254
+ }
+}

@@ -1,0 +1,253 @@
+{
+ "dataset": "moons",
+ "family": "erasure",
+ "regime": "mismatch",
+ "certificate": "T1",
+ "theory": "Theorem 1 with split-U prior Q_{W|S,U_1}",
+ "config": {
+  "dataset": "moons",
+  "architecture": "bounded_mlp",
+  "method": "proposed",
+  "predictor": "gaussian",
+  "training_loss": "bounded_ce_smooth",
+  "loss_epsilon": 0.01,
+  "selection_metric": "accuracy",
+  "validation_seed_policy": "fixed",
+  "width": 8,
+  "train_size": 800,
+  "val_size": 200,
+  "batch_size": 128,
+  "epochs": 120,
+  "lr": 0.006,
+  "eta_channel": 0.02,
+  "eta_data": 0.02,
+  "prior_std": 0.24,
+  "posterior_std": 0.1,
+  "m": 2000,
+  "seed": 92601,
+  "data_seed": 92604,
+  "channel_seed": 92602,
+  "eval_seed": 92603,
+  "eval_draws": 10,
+  "val_draws": 8,
+  "clip_ce": 10.0,
+  "delta": 0.05,
+  "l2": 0.0001,
+  "device": "cpu",
+  "threads": 1,
+  "cpu_flush_denormal": false,
+  "transmit_unit_power": false,
+  "rho_lr_scale": 1.0,
+  "download": false,
+  "moon_noise": 0.3,
+  "moons_sampler": "iid",
+  "train_channel": {
+   "kind": "outage",
+   "outage_prob": 0.45
+  },
+  "deployment_channel": {
+   "kind": "outage",
+   "outage_prob": 0.5
+  },
+  "bounded_feature_norm": 2.8284271247461903,
+  "bounded_receiver_norm": 4.0,
+  "posterior_mean_clip": 0.0
+ },
+ "receiver_norm": 4.0,
+ "feature_norm": 2.8284271247461903,
+ "feature_power_per_coordinate_max": 1.0000000000000002,
+ "posterior_kl": 6133.259765625,
+ "posterior": {
+  "objective": "empirical bounded loss + weight x exact certificate complexity",
+  "learned_std": true,
+  "label": "split0.1-second-lr0.001-w1-step100",
+  "std_mean": 0.010980470106005669,
+  "mean_norm": 26.33220672607422
+ },
+ "confidence": {
+  "family_failure": 0.05,
+  "family_size": 20,
+  "architectures": 12,
+  "receiver_norms": [
+   0.075,
+   0.25,
+   0.5,
+   1.0,
+   2.0,
+   4.0
+  ],
+  "feature_norms": [
+   1.0,
+   2.8284271247461903
+  ],
+  "theorem": 0.00010416666666666667,
+  "eps_1": 5.208333333333334e-05,
+  "eps_2": 5.208333333333334e-05,
+  "mc": 0.00125
+ },
+ "empirical": {
+  "mean": 0.06952458142089844,
+  "iid_observations": 2000000,
+  "seed": 314159,
+  "train_accuracy": 0.870041,
+  "channels": "S x U_2"
+ },
+ "empirical_mc_radius": 0.0012927308041185458,
+ "components": {
+  "empirical": 0.06952458142089844,
+  "mc": 0.0012927308041185458,
+  "sample": 1.9612109661102295,
+  "channel": 0.06689468026161194,
+  "shift": 0.14177683769573546
+ },
+ "channel_shift": {
+  "method": "T1 channel KL",
+  "analytic": true,
+  "upper": 0.14177683769573546,
+  "channel_kl": 0.04020134341400583
+ },
+ "uncapped_risk_upper": 2.240699796292594,
+ "nonvacuous": false,
+ "chance_loss": 0.1483543109406693,
+ "better_than_chance_population": true,
+ "gap_to_population": 2.16548371670275,
+ "test": {
+  "bounded_loss": 0.07521607958984375,
+  "accuracy": 0.854371,
+  "examples": 10000,
+  "replicates": 100,
+  "channel_source": "deployment",
+  "posterior_rule": "independent weight and channel draw per example"
+ },
+ "selection": {
+  "rule": "accurate",
+  "tolerance": 0.01,
+  "selection_mc_seed": 271828,
+  "validation_accuracy": 0.87425,
+  "best_validation_accuracy": 0.8743,
+  "candidates": 1440,
+  "leaderboard": [
+   {
+    "label": "split0.25-second-lr0.001-w1-step3000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5193913129412018,
+    "validation_accuracy": 0.65705
+   },
+   {
+    "label": "split0.25-all-lr0.001-w1-step3000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5193915838967643,
+    "validation_accuracy": 0.65705
+   },
+   {
+    "label": "split0.25-second-lr0.003-w1-step1000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5193918583475433,
+    "validation_accuracy": 0.65705
+   },
+   {
+    "label": "split0.25-all-lr0.003-w1-step1000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5193930763899169,
+    "validation_accuracy": 0.65745
+   },
+   {
+    "label": "split0.25-second-lr0.003-w1-step3000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5193936350046479,
+    "validation_accuracy": 0.65695
+   },
+   {
+    "label": "split0.25-all-lr0.003-w1-step3000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5193938029753051,
+    "validation_accuracy": 0.65655
+   },
+   {
+    "label": "split0.25-all-lr0.001-w1-step1000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.519589754396566,
+    "validation_accuracy": 0.6644
+   },
+   {
+    "label": "split0.25-second-lr0.001-w1-step1000",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.51959026882995,
+    "validation_accuracy": 0.6643
+   },
+   {
+    "label": "split0.25-all-lr0.003-w1-step300",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5198837021933876,
+    "validation_accuracy": 0.6683
+   },
+   {
+    "label": "split0.25-second-lr0.003-w1-step300",
+    "receiver_norm": 0.5,
+    "feature_norm": 1.0,
+    "upper": 0.5198839573513351,
+    "validation_accuracy": 0.6684
+   }
+  ]
+ },
+ "previous": {
+  "archived_upper": 0.5639384897438079,
+  "archived_accuracy": 0.7041700000000002,
+  "tighter_bound_tightest_upper": 0.42876975916080756,
+  "tighter_bound_tightest_accuracy": 0.500273
+ },
+ "channel_prior": {
+  "construction": "split_U",
+  "split_fraction": 0.1,
+  "m_1": 200,
+  "m_2": 1800,
+  "splits": [
+   0.1,
+   0.25,
+   0.5
+  ],
+  "scales": [
+   1.0,
+   1.5,
+   2.0
+  ],
+  "family_size": 9,
+  "selected_scale": 1.0,
+  "family": [
+   {
+    "scale": 1.0,
+    "kl": 0.29302340745925903,
+    "channel": 0.06689468026161194
+   },
+   {
+    "scale": 1.5,
+    "kl": 4.6368021965026855,
+    "channel": 0.07538019865751266
+   },
+   {
+    "scale": 2.0,
+    "kl": 12.279435157775879,
+    "channel": 0.08835331350564957
+   }
+  ],
+  "stage1": {
+   "label": "init0.24-lr0.01-w0-step4000",
+   "criterion": 2.033219740600586,
+   "u1_empirical": 0.07078497192382813,
+   "u1_accuracy": 0.867515,
+   "kl": 6140.9326171875,
+   "sigma_mean": 0.010585004463791847,
+   "selection": "(S, U_1) only: S x U_1 empirical + sample term, within 0.01 of the best S x U_1 accuracy"
+  },
+  "union_bound": "eps_1 / family_size"
+ }
+}
