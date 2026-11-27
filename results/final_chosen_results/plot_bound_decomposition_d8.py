@@ -1,8 +1,10 @@
 """Plot saved d=8 results with held-out Gibbs loss markers and without the Monte Carlo correction.
 
-Components and held-out losses come from the selected case reports under data/bounds/.
-Bar labels show the sum of displayed components.
+Components and held-out losses come from the tightest-rule case reports under
+tighter_bound/bounds/tightest/ (the manuscript figure). ``--archived`` instead redraws the earlier
+figure from data/bounds/ into data/bounds/. Bar labels show the sum of displayed components.
 """
+import argparse
 import json
 import math
 from pathlib import Path
@@ -23,11 +25,12 @@ COMPONENTS = [
 ]
 STACK_ORDER = (0, 1, 2, 3, 4)
 
-BOUNDS = Path(__file__).resolve().parent / "data" / "bounds"
-STEM = Path(__file__).with_name("bound_decomposition_d8_t1_t2_both_channels")
+HERE = Path(__file__).resolve().parent
+BOUNDS = HERE / "tighter_bound" / "bounds" / "tightest"
+STEM = HERE / "bound_decomposition_d8_t1_t2_both_channels"
 CASES = ("perfect", "t1_matched", "t2_matched", "t1_mismatch", "t2_mismatch")
 FIELDS = ("empirical", "sample", "channel", "joint", "shift")
-YMAX = dict(fading=1.05, erasure=.60)
+YMAX = dict(fading=.65, erasure=.50)
 
 
 def read_panel(family):
@@ -110,4 +113,11 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--archived", action="store_true",
+                        help="redraw the earlier figure from data/bounds/ with its original axis limits")
+    if parser.parse_args().archived:
+        BOUNDS = HERE / "data" / "bounds"
+        STEM = BOUNDS / "bound_decomposition_d8_t1_t2_both_channels_archived"
+        YMAX = dict(fading=1.05, erasure=.60)
     main()

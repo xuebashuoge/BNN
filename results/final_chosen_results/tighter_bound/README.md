@@ -25,7 +25,7 @@ checkpoints (`*.pt`) stay there.
    gives 0.596. The first inequality with Jensen gives K·sqrt(E D²) = 0.138, and the second inequality
    with Q = P_ch gives 0.139. All three are deterministic, so the smallest is used.
 5. **Monte Carlo.** The empirical risk uses 2,000,000 i.i.d. draws, so the Hoeffding radius drops from
-   0.0129 to 0.0018. The population loss uses 10,000 test points × 100 draws under the deployment law.
+   0.0129 to 0.0013. The population loss uses 10,000 test points × 100 draws under the deployment law.
 
 The bounds hold simultaneously for every posterior, so any selection rule is valid. Each rule picks
 with one Monte Carlo seed and certifies with an independent one:
@@ -53,8 +53,9 @@ case.
 | erasure/t2_mismatch | 0.503 / — / 72.7 | 0.402 / 0.1484 / 50.0 | 0.590 / 0.1460 / 82.7 | 0.728 / 0.1459 / 84.4 |
 
 **Final choice: `tightest`.** The paper figure is
-`bounds/bound_decomposition_d8_t1_t2_both_channels_tightest.*`, with y-axis limits of 0.65 for panel
-(a), fading, and 0.5 for panel (b), erasure. Its bar labels omit the Monte Carlo radius (about 0.002),
+`bounds/bound_decomposition_d8_t1_t2_both_channels_tightest.*`, redrawn identically by
+`../plot_bound_decomposition_d8.py` as `../bound_decomposition_d8_t1_t2_both_channels.*`, with y-axis limits of 0.65 for panel
+(a), fading, and 0.5 for panel (b), erasure. Its bar labels omit the Monte Carlo radius (0.0013),
 like the archived figure.
 
 Figures: `bounds/bound_decomposition_d8_t1_t2_both_channels_<rule>.*` and
