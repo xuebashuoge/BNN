@@ -15,8 +15,14 @@ the archived figure, with three changes.
    At L = 0.075 every logit is below about 0.08, so every predictor's bounded
    loss is within a few hundredths of chance (0.148) whatever its accuracy.
    Every certificate (C1, T1, T2) divides its failure probability by
-   G = len(RECEIVER_NORMS), so any L may be selected after the fact.
-3. Selection requires accuracy. A rule picks the smallest certified bound among
+   G (below), so any L may be selected after the fact.
+3. The feature cap F is chosen from FEATURE_NORMS. The archived F = 1 over
+   width 8 gives each coordinate power at most 1/8; with unit-variance fading
+   noise that is about -8 dB, and no two-moons fading predictor exceeds about
+   58% accuracy, so every bounded loss stays near chance. F = sqrt(width) keeps
+   each coordinate's power at most 1. The union bound covers every (F, L) pair:
+   G = len(FEATURE_NORMS) * len(RECEIVER_NORMS).
+4. Selection requires accuracy. A rule picks the smallest certified bound among
    posteriors whose validation accuracy is within a tolerance of the best one,
    using one Monte Carlo seed, then certifies with an independent seed. The
    ``tightest`` rule (no accuracy constraint) is reported for reference only.
@@ -33,15 +39,18 @@ import math
 import os
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+from types import SimpleNamespace
 
 from . import tighter_bound as tb
 
 PUBLISH = tb.REPO / "results" / "final_chosen_results" / "split_u" / "bounds"
 RECEIVER_NORMS = (.075, .25, .5, 1., 2., 4.)
+WIDTH = 8
+FEATURE_NORMS = (1., math.sqrt(WIDTH))  # per-coordinate power <= 1/8 (archived) or <= 1
 SPLITS = (.1, .25, .5)                 # m_1 / m
 PRIOR_SCALES = tb.PRIOR_SCALES         # c in Q = N(mu, (c sigma)^2)
 PRIOR_COUNT = len(SPLITS) * len(PRIOR_SCALES)
-ARCHITECTURES = len(RECEIVER_NORMS)
+ARCHITECTURES = len(RECEIVER_NORMS) * len(FEATURE_NORMS)   # G
 INIT_STDS, LEARNING_RATES, PENALTY_WEIGHTS = tb.INIT_STDS, tb.LEARNING_RATES, tb.PENALTY_WEIGHTS
 CHECKPOINTS = tb.CHECKPOINTS
 STAGE2_LEARNING_RATES, STAGE2_PENALTY_WEIGHTS = tb.STAGE2_LEARNING_RATES, tb.STAGE2_PENALTY_WEIGHTS
@@ -54,6 +63,13 @@ TOLERANCES = tb.TOLERANCES            # tightest: None, balanced: 0.03, accurate
 def chance_loss(config):
     eps = config["loss_epsilon"]
     return math.log(eps + (1 - eps) / 2) / math.log(eps)
+
+
+def case_config(family, case, receiver_norm, feature_norm):
+    config = tb.case_config(family, case, receiver_norm)
+    if config["width"] != WIDTH:
+        raise ValueError("FEATURE_NORMS assume width 8")
+    return {**config, "bounded_feature_norm": feature_norm}
 
 
 def m_cut(config, fraction):
@@ -110,19 +126,30 @@ def t1_terms(model, config, prior, m2):
                                  for s, k, c in zip(PRIOR_SCALES, channel_kls, channels)]))
 
 
-def score(config, kind, candidate, seed, observations):
-    """Certified bound of one candidate; T1 uses S x U_2 and m_2."""
-    model, *_ = tb.load_state(config, candidate["state"])
+def score(config, kind, candidate, seed, observations, *, empirical=None, model=None):
+    """Certified bound of one candidate; T1 uses S x U_2 and m_2.
+
+    With ``empirical`` (a stored selection-seed estimate) no Monte Carlo is run; the
+    complexity terms are recomputed at the current G. The shift is posterior-free,
+    so ``model`` may be any model built from ``config``.
+    """
+    if model is None:
+        model, *_ = tb.load_state(config, candidate["state"])
+    state = candidate["state"]
+    posterior = SimpleNamespace(mu=state["mu"], rho=state["rho"])
     radius = math.sqrt(math.log(1 / tb.MC_FAILURE) / (2 * observations))
+    accuracy = None
     if kind == "T1":
         cut = candidate["cut"]
-        empirical, accuracy = tb.mc_empirical(part_config(config, cut, "second"), candidate["state"], seed,
-                                              observations, "bank")
-        terms, extra = t1_terms(model, config, candidate["prior"], config["m"] - cut)
+        if empirical is None:
+            empirical, accuracy = tb.mc_empirical(part_config(config, cut, "second"), state, seed,
+                                                  observations, "bank")
+        terms, extra = t1_terms(posterior, config, candidate["prior"], config["m"] - cut)
     else:
         source = "perfect" if config["train_channel"]["kind"] == "perfect" else "bank"
-        empirical, accuracy = tb.mc_empirical(config, candidate["state"], seed, observations, source)
-        terms, extra = tb.complexity(kind, model, config, None, ARCHITECTURES)
+        if empirical is None:
+            empirical, accuracy = tb.mc_empirical(config, state, seed, observations, source)
+        terms, extra = tb.complexity(kind, posterior, config, None, ARCHITECTURES)
     shift = tb.shift_term(config, kind, model)
     components = dict(empirical=empirical, mc=radius, **{k: float(v) for k, v in terms.items()}, shift=shift["upper"])
     extra = {k: (float(v) if hasattr(v, "item") else v) for k, v in extra.items()}
@@ -200,17 +227,17 @@ def unit_t1(config, fraction):
 
 
 def run_unit(args):
-    family, case, receiver_norm, fraction, path = args
+    family, case, receiver_norm, feature_norm, fraction, path = args
     import torch
 
     torch.set_num_threads(1)
     if path.exists():
         return str(path)
-    config = tb.case_config(family, case, receiver_norm)
+    config = case_config(family, case, receiver_norm, feature_norm)
     kind = tb.certificate_kind(case)
     candidates = unit_t1(config, fraction) if kind == "T1" else unit_c1_t2(config, kind)
     for c in candidates:
-        c["receiver_norm"] = receiver_norm
+        c["receiver_norm"], c["feature_norm"] = receiver_norm, feature_norm
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
     torch.save(candidates, temporary)
@@ -221,11 +248,14 @@ def run_unit(args):
 def units(root: Path):
     jobs = []
     for family, case in itertools.product(tb.FAMILIES, tb.CASES):
-        for receiver_norm in RECEIVER_NORMS:
+        for feature_norm, receiver_norm in itertools.product(FEATURE_NORMS, RECEIVER_NORMS):
             fractions = SPLITS if tb.certificate_kind(case) == "T1" else (None,)
             for fraction in fractions:
-                name = f"L{receiver_norm:g}" + ("" if fraction is None else f"-split{fraction:g}")
-                jobs.append((family, case, receiver_norm, fraction, root / "units" / family / case / f"{name}.pt"))
+                # F = 1 keeps the first run's file names, so those units are reused.
+                name = (f"L{receiver_norm:g}" + ("" if feature_norm == 1. else f"-F{feature_norm:.4g}")
+                        + ("" if fraction is None else f"-split{fraction:g}"))
+                jobs.append((family, case, receiver_norm, feature_norm, fraction,
+                             root / "units" / family / case / f"{name}.pt"))
     # T1 units are the longest; start them first.
     return sorted(jobs, key=lambda job: job[3] is None)
 
@@ -242,13 +272,24 @@ def certify_case(args):
     pool = []
     for path in sorted((root / "units" / family / case).glob("*.pt")):
         pool += torch.load(path, weights_only=False)
+    # Units store selection scores at the G of their run; recompute every score at
+    # the current G from the stored selection-seed empirical risk (no new draws).
+    models = {}
+    for c in pool:
+        c.setdefault("feature_norm", 1.)
+        key = (c["receiver_norm"], c["feature_norm"])
+        config = case_config(family, case, *key)
+        if key not in models:
+            models[key] = tb.load_state(config, c["state"])[0]
+        c["upper"] = score(config, kind, c, None, tb.SELECTION_OBSERVATIONS, empirical=c["empirical"],
+                           model=models[key])["upper"]
     archived = tb.archived(family, case)
     tightest = json.loads((tb.PUBLISH / "bounds" / "tightest" / family / case / "bound.json").read_text())
     summary = []
     for rule in RULES:
         candidates = [c for c in pool if kind != "T1" or c["prior_rule"] == rule]
         chosen = tb.select(candidates, rule) if TOLERANCES[rule] is not None else min(candidates, key=lambda c: c["upper"])
-        config = tb.case_config(family, case, chosen["receiver_norm"])
+        config = case_config(family, case, chosen["receiver_norm"], chosen["feature_norm"])
         result = score(config, kind, chosen, tb.CERTIFICATE_MC_SEED, tb.CERTIFICATE_OBSERVATIONS)
         test = tb.population(config, chosen["state"])
         chance = chance_loss(config)
@@ -257,13 +298,15 @@ def certify_case(args):
             dataset="moons", family=family, regime="perfect" if case == "perfect" else case.split("_")[-1],
             certificate=kind, theory={"C1": "Corollary 1", "T1": "Theorem 1 with split-U prior Q_{W|S,U_1}",
                                       "T2": "Theorem 2"}[kind],
-            config=config, receiver_norm=chosen["receiver_norm"], posterior_kl=result.get("kl"),
+            config=config, receiver_norm=chosen["receiver_norm"], feature_norm=chosen["feature_norm"],
+            feature_power_per_coordinate_max=chosen["feature_norm"] ** 2 / WIDTH, posterior_kl=result.get("kl"),
             posterior=dict(objective="empirical bounded loss + weight x exact certificate complexity",
                            learned_std=True, label=chosen["label"],
                            std_mean=float(F.softplus(chosen["state"]["rho"]).mean()),
                            mean_norm=float(chosen["state"]["mu"].norm())),
             confidence=dict(family_failure=.05, family_size=20, architectures=ARCHITECTURES,
-                            receiver_norms=list(RECEIVER_NORMS), **tb.failures(kind, ARCHITECTURES), mc=tb.MC_FAILURE),
+                            receiver_norms=list(RECEIVER_NORMS), feature_norms=list(FEATURE_NORMS),
+                            **tb.failures(kind, ARCHITECTURES), mc=tb.MC_FAILURE),
             empirical=dict(mean=result["components"]["empirical"], iid_observations=tb.CERTIFICATE_OBSERVATIONS,
                            seed=tb.CERTIFICATE_MC_SEED, train_accuracy=result["train_accuracy"],
                            channels="S x U_2" if kind == "T1" else "S x U" if case != "perfect" else "S, perfect"),
@@ -275,7 +318,8 @@ def certify_case(args):
                            validation_accuracy=chosen["accuracy"],
                            best_validation_accuracy=max(c["accuracy"] for c in candidates),
                            candidates=len(candidates),
-                           leaderboard=[dict(label=c["label"], receiver_norm=c["receiver_norm"], upper=c["upper"],
+                           leaderboard=[dict(label=c["label"], receiver_norm=c["receiver_norm"],
+                                             feature_norm=c["feature_norm"], upper=c["upper"],
                                              validation_accuracy=c["accuracy"]) for c in ranked[:10]]),
             previous=dict(archived_upper=archived["uncapped_risk_upper"], archived_accuracy=archived["test"]["accuracy"],
                           tighter_bound_tightest_upper=tightest["uncapped_risk_upper"],
@@ -292,6 +336,7 @@ def certify_case(args):
         torch.save(chosen["state"], target / "posterior.pt")
         summary.append(dict(rule=rule, case=f"{family}/{case}", upper=result["upper"], test=test["bounded_loss"],
                             chance=chance, accuracy=test["accuracy"], receiver_norm=chosen["receiver_norm"],
+                            feature_norm=chosen["feature_norm"],
                             label=chosen["label"], components=result["components"],
                             archived=archived["uncapped_risk_upper"], tightest_fresh=tightest["uncapped_risk_upper"]))
     return summary
@@ -321,7 +366,7 @@ def pipeline(root: Path, workers: int, output: Path = PUBLISH):
     output.mkdir(parents=True, exist_ok=True)
     (output / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     for row in sorted(summary, key=lambda r: (r["rule"], r["case"])):
-        print(f"{row['rule']:8s} {row['case']:20s} L={row['receiver_norm']:<5g} bound {row['upper']:.4f} "
+        print(f"{row['rule']:8s} {row['case']:20s} F={row['feature_norm']:.3g} L={row['receiver_norm']:<5g} bound {row['upper']:.4f} "
               f"population {row['test']:.4f} (chance {row['chance']:.4f}) acc {row['accuracy']:.3f}  "
               f"[archived {row['archived']:.4f}, tightest-fresh {row['tightest_fresh']:.4f}]  {row['label']}",
               flush=True)
@@ -336,7 +381,7 @@ def quick():
     INIT_STDS, LEARNING_RATES, PENALTY_WEIGHTS, CHECKPOINTS = (.03,), (.01,), (1., 0.), (50, 300)
     STAGE2_LEARNING_RATES, STAGE2_PENALTY_WEIGHTS, STAGE2_CHECKPOINTS = (.003,), (1.,), (0, 50)
     RECEIVER_NORMS, SPLITS = (.075, 1.), (.25,)
-    PRIOR_COUNT, ARCHITECTURES = len(SPLITS) * len(PRIOR_SCALES), len(RECEIVER_NORMS)
+    PRIOR_COUNT, ARCHITECTURES = len(SPLITS) * len(PRIOR_SCALES), len(RECEIVER_NORMS) * len(FEATURE_NORMS)
     tb.SELECTION_OBSERVATIONS, tb.CERTIFICATE_OBSERVATIONS = 20_000, 50_000
     tb.TEST_REPLICATES, tb.VALIDATION_REPLICATES = 3, 5
 
