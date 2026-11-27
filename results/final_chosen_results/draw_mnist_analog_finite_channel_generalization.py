@@ -1,6 +1,14 @@
-"""Draw the single-column MNIST figure from the spatially correlated diagonal fading sweep."""
+"""Draw the single-column MNIST figure from the spatially correlated diagonal fading sweep.
+
+The manuscript figure uses the unit-transmit-power sweep in
+fading_unit_power/data/mnist_bank: T1 with the fixed prior Q_W = N(0, I) in both
+complexity terms (Q_{W|S} = Q_W), drawn by fading_unit_power.fixed_studies_plots.
+With --archived, it redraws the earlier sweep without unit transmit power
+(data/mnist_bank) as data/mnist_bank/mnist_analog_finite_channel_generalization_archived.*.
+"""
 
 import csv
+import sys
 from collections import defaultdict
 from pathlib import Path
 from statistics import mean
@@ -12,10 +20,30 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedLocator, FormatStrFormatter, NullLocator, ScalarFormatter
 
 
+OUTPUT_DIR = Path(__file__).resolve().parent
+STEM = "mnist_analog_finite_channel_generalization"
+
+
 def main():
-    output_dir = Path(__file__).resolve().parent
-    source = output_dir / "data" / "mnist_bank" / "observations.csv"
-    output = output_dir / "mnist_analog_finite_channel_generalization"
+    """Draw the unit-power manuscript figure beside this script."""
+    sys.path.insert(0, str(OUTPUT_DIR.parents[1]))
+    from fading_unit_power.fixed_studies_plots import plot_mnist
+
+    source = OUTPUT_DIR / "fading_unit_power" / "data" / "mnist_bank" / "observations.csv"
+    with source.open(newline="") as file:
+        rows = [dict(row, m=int(row["m"]), seed=int(row["seed"]),
+                     generalization_error=float(row["generalization_error"]),
+                     test_accuracy=float(row["test_accuracy"]))
+                for row in csv.DictReader(file) if row["method"] == "T1"]
+    if any(abs(float(row["feature_power_per_coordinate"]) - 1) > 2e-5 for row in rows):
+        raise ValueError("Every MNIST observation must have unit transmit power")
+    plot_mnist(rows, OUTPUT_DIR / STEM)
+
+
+def main_archived():
+    """Redraw the earlier sweep, which predates unit transmit power."""
+    source = OUTPUT_DIR / "data" / "mnist_bank" / "observations.csv"
+    output = OUTPUT_DIR / "data" / "mnist_bank" / f"{STEM}_archived"
     bank_sizes = [2, 3, 5, 8, 12, 20, 35, 50, 75, 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600]
     ticks = [2, 5, 20, 100, 800, 3200, 25600]
 
@@ -88,4 +116,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if sys.argv[1:] == ["--archived"]:
+        main_archived()
+    elif sys.argv[1:]:
+        sys.exit("Usage: draw_mnist_analog_finite_channel_generalization.py [--archived]")
+    else:
+        main()
