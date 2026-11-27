@@ -1,6 +1,12 @@
-"""Draw CIFAR-10 deployment accuracy from the m=2000 channel-mismatch sweep."""
+"""Draw CIFAR-10 deployment accuracy from the m=2000 channel-mismatch sweep.
+
+T1 uses the fresh data-dependent prior Q_{W|S} (data_dependent/only_fresh). With
+--fixed-prior, T1 uses the earlier fixed prior Q_W instead and the figure is
+written to data/cifar10_mismatch/cifar10_channel_mismatch_fixed_prior.*.
+"""
 
 import csv
+import sys
 import math
 from collections import defaultdict
 from pathlib import Path
@@ -15,7 +21,8 @@ from matplotlib.lines import Line2D
 
 OUTPUT_DIR = Path(__file__).resolve().parent
 BANK_SIZE = 2000
-SOURCE = OUTPUT_DIR / "data" / "cifar10_mismatch" / "observations.csv"
+SOURCE = OUTPUT_DIR / "data_dependent" / "only_fresh" / "cifar10_mismatch" / "observations.csv"
+STEM = "cifar10_channel_mismatch_all_methods"
 PROBABILITIES = (0.0, 0.025, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
 SEEDS = {75101, 75102, 75103}
 METHOD_STYLES = {
@@ -93,7 +100,7 @@ def draw(accuracies):
         fontsize=6.8,
     )
 
-    output = OUTPUT_DIR / "cifar10_channel_mismatch_all_methods"
+    output = OUTPUT_DIR / STEM
     export_options = {"bbox_inches": "tight", "pad_inches": 0.025}
     figure.savefig(
         output.with_suffix(".pdf"),
@@ -116,5 +123,16 @@ def main():
     draw(load_means())
 
 
+def use_fixed_prior():
+    global SOURCE, OUTPUT_DIR, STEM
+    OUTPUT_DIR = OUTPUT_DIR / "data" / "cifar10_mismatch"
+    SOURCE = OUTPUT_DIR / "observations.csv"
+    STEM = "cifar10_channel_mismatch_fixed_prior"
+
+
 if __name__ == "__main__":
+    if sys.argv[1:] == ["--fixed-prior"]:
+        use_fixed_prior()
+    elif sys.argv[1:]:
+        sys.exit("Usage: draw_cifar10_channel_mismatch.py [--fixed-prior]")
     main()
