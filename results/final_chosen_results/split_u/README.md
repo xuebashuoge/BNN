@@ -54,7 +54,37 @@ The setup uses bank size 2000 with deployment erasure probability 0.50. ERM, L2 
 * At p_tr = 0.05, L2 is highest (40.78 vs T1 39.71 and T2 39.73).
 * At the deployment-matched p_tr = 0.50, T1 reaches 54.12% against 52.05% for L2.
 
-## Two-moons bound decomposition (`bounds/`)
+## Two-moons bound decomposition at n = 8000 (`bounds_n8000/`, recommended)
+
+The n = 800 study below was dominated by the data (sample) term, which scales like 1/sqrt(n). This run keeps everything else (width 8, m = 2000, the (F, L) grid with G = 12, the split family, the posterior grids and the selection rules) and changes only the two-moons sample:
+
+* n = 8000 training points instead of 800;
+* a 2000-point validation split (10 Monte Carlo passes) instead of 200 points (100 passes), at the same cost;
+* one weight/channel draw per example per training step instead of four.
+
+`balanced` rule results; chance bounded loss is 0.1484. The n = 800 bound is shown for comparison.
+
+| Channel | Case | F | L | Bound | n = 800 bound | Test loss | Accuracy |
+|---|---|---|---|---|---|---|---|
+| Fading | C1 | √8 | 0.075 | 0.525 | 0.772 | 0.144 | 63.7% |
+| Fading | T1 matched | √8 | 2 | 0.281 | 0.461 | 0.138 | 62.4% |
+| Fading | T1 mismatch | √8 | 0.25 | 0.579 | 0.748 | 0.136 | 63.9% |
+| Fading | T2 matched | √8 | 2 | 0.360 | 0.491 | 0.133 | 64.8% |
+| Fading | T2 mismatch | √8 | 1 | 0.613 | 0.785 | 0.135 | 64.0% |
+| Erasure | C1 | √8 | 0.075 | 0.427 | 0.783 | 0.141 | 82.2% |
+| Erasure | T1 matched | √8 | 2 | 0.242 | 0.404 | 0.089 | 82.8% |
+| Erasure | T1 mismatch | 1 | 2 | 0.387 | 0.550 | 0.106 | 81.7% |
+| Erasure | T2 matched | 1 | 2 | 0.290 | 0.431 | 0.103 | 83.1% |
+| Erasure | T2 mismatch | 1 | 2 | 0.428 | 0.573 | 0.103 | 83.1% |
+
+* All ten bounds are non-vacuous and all ten test losses are below chance.
+* T1 is tighter than T2 in all four pairs.
+* What remains is mostly the channel shift in the mismatch and C1 cases (0.285–0.293 for fading, 0.128–0.142 for erasure), which does not depend on n, and T1's channel term (about 0.067), which depends on m_2.
+* The `tightest` rule again sits at chance for most cases. The `accurate` rule stays non-vacuous at n = 8000 but is looser than `balanced` for T1.
+
+Each case folder has the same files as below, and `bound.json` records the sample sizes under `sample`. Spartan run: `/data/gpfs/projects/punim2792/yangshuo/split-u-n8000-20261128` (job 35917535, revision 3410b77).
+
+## Two-moons bound decomposition at n = 800 (`bounds/`)
 
 The study uses width 8 and m = 2000. The candidate grid covers six receiver caps, L ∈ {0.075, 0.25, 0.5, 1, 2, 4}, and two feature caps:
 
@@ -100,6 +130,7 @@ The C1 shift term grows with F and L, so C1 picks L = 0.075. `round1/bounds/` ke
 |---|---|---|
 | Performance round 1, mismatch | `/data/gpfs/projects/punim2792/yangshuo/split-u-20261127` | 07cf053 |
 | Performance second round (`boost`) | same, root `boost/` (job 35881436) | f0ebe55 |
-| Bounds (F, L grid) | `/data/gpfs/projects/punim2792/yangshuo/split-u-20261128` | 5f04af0 |
+| Bounds (F, L grid), n = 800 | `/data/gpfs/projects/punim2792/yangshuo/split-u-20261128` | 5f04af0 |
+| Bounds, n = 8000 | `/data/gpfs/projects/punim2792/yangshuo/split-u-n8000-20261128` | 3410b77 |
 
 Each revision ran from a detached worktree `/data/gpfs/projects/punim2792/yangshuo/bnn-split-u-<sha7>`. The trained models for the performance studies stay on Spartan. The bound posteriors are small and are committed here.
